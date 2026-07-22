@@ -1,0 +1,44 @@
+name: Bootstrap Shader Library v1 Source
+
+on:
+  push:
+    branches:
+      - agent/extract-shader-library-v1
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    if: github.event.head_commit.message != 'chore: extract shader library v1 source'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/extract-shader-library-v1
+          fetch-depth: 0
+
+      - name: Extract validated source archive
+        run: |
+          set -euo pipefail
+          archive='packages/shader-library-v1/melodicbloom-shader-library-v1-source.zip'
+          source_dir='packages/shader-library-v1/source'
+          unzip -tq "$archive"
+          rm -rf "$source_dir"
+          mkdir -p "$source_dir"
+          unzip -q "$archive" -d "$source_dir"
+          printf '%s\n' 'Extracted from melodicbloom-shader-library-v1-source.zip' > "$source_dir/.extracted-source"
+
+      - name: Commit extracted source
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add packages/shader-library-v1/source
+          if git diff --cached --quiet; then
+            echo 'Source is already extracted.'
+            exit 0
+          fi
+          git commit -m 'chore: extract shader library v1 source'
+          git push origin HEAD:agent/extract-shader-library-v1
