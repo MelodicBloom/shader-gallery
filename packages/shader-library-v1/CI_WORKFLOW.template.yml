@@ -1,0 +1,44 @@
+name: Shader Library v1 CI
+
+on:
+  pull_request:
+    paths:
+      - "packages/shader-library-v1/**"
+  push:
+    branches: [main]
+    paths:
+      - "packages/shader-library-v1/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install native validator dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc libegl1-mesa-dev libgles2-mesa-dev unzip
+      - name: Extract package
+        run: |
+          mkdir -p .ci/shader-library-v1
+          unzip -q packages/shader-library-v1/melodicbloom-shader-library-v1-source.zip -d .ci/shader-library-v1
+      - name: Validate metadata and shaders
+        working-directory: .ci/shader-library-v1
+        env:
+          EGL_PLATFORM: surfaceless
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: npm test
+      - name: Build gallery
+        working-directory: .ci/shader-library-v1
+        env:
+          EGL_PLATFORM: surfaceless
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: npm run build:docs
