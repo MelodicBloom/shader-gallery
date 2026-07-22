@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><style>html,body{margin:0;background:#000}canvas{width:512px;height:512px}</style></head>
+<body>
+<canvas id="canvas" width="512" height="512"></canvas>
+<script type="module">
+  import { ShaderPlayer } from "/src/core/ShaderPlayer.js";
+
+  window.testShader = async ({ shader, meta }) => {
+    const canvas = document.getElementById("canvas");
+    const player = new ShaderPlayer(canvas, shader, {
+      pixelRatio: 1,
+      autoResize: false,
+      trackPointer: false,
+      preserveDrawingBuffer: true
+    });
+
+    try {
+      await player.init();
+      player.resize(512, 512);
+      for (const [name, def] of Object.entries(meta.uniforms || {})) {
+        if (!["u_time", "u_resolution", "u_mouse"].includes(name)) {
+          player.setUniform(name, def.type, def.default);
+        }
+      }
+      player.renderOnce({ time: meta.preview?.time ?? 1.2345 });
+
+      const gl = player.gl;
+      const pixels = new Uint8Array(4 * 32 * 32);
+      gl.readPixels(240, 240, 32, 32, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+      let sum = 0;
+      let variance = 0;
+      for (let i = 0; i < pixels.length; i += 4) {
+        const luminance = pixels[i] + pixels[i + 1] + pixels[i + 2];
+        sum += luminance;
+        variance += luminance * luminance;
+      }
+      const count = pixels.length / 4;
+      const mean = sum / count;
+      variance = variance / count - mean * mean;
+      const dataURL = player.captureDataURL();
+      player.destroy();
+      return { ok: mean > 0.5 && variance >= 0, mean, variance, dataURL };
+    } catch (error) {
+      player.destroy();
+      return { ok: false, error: error.stack || String(error) };
+    }
+  };
+</script>
+</body>
+</html>
