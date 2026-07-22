@@ -1,0 +1,61 @@
+name: Shader Library v1 CI
+
+on:
+  pull_request:
+    paths:
+      - "packages/shader-library-v1/**"
+      - ".github/workflows/shader-library-v1-ci.yml"
+  push:
+    branches: [main]
+    paths:
+      - "packages/shader-library-v1/**"
+      - ".github/workflows/shader-library-v1-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-shader-library:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: packages/shader-library-v1/source
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install EGL and GLES validator dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc libegl1-mesa-dev libgles2-mesa-dev
+
+      - name: Validate metadata and compile, link, and render all shaders
+        env:
+          EGL_PLATFORM: surfaceless
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: npm test
+
+      - name: Generate deterministic shader previews
+        env:
+          EGL_PLATFORM: surfaceless
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: npm run generate:previews
+
+      - name: Build package gallery
+        run: npm run build:docs
+
+      - name: Upload generated gallery
+        uses: actions/upload-artifact@v4
+        with:
+          name: shader-library-v1-gallery
+          path: packages/shader-library-v1/source/docs
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MelodicBloom Shader Metadata",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "name",
+    "slug",
+    "category",
+    "family",
+    "author",
+    "description",
+    "status",
+    "renderer",
+    "uniforms",
+    "preview",
+    "compatibility"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+/[a-z0-9-]+$"
+    },
+    "category": {
+      "type": "string"
+    },
+    "family": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "experimental",
+        "stable",
+        "deprecated"
+      ]
+    },
+    "renderer": {
+      "type": "object"
+    },
+    "uniforms": {
+      "type": "object"
+    },
+    "preview": {
+      "type": "object"
+    },
+    "compatibility": {
+      "type": "object"
+    }
+  }
+}

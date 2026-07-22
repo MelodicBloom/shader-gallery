@@ -1,0 +1,28 @@
+name: Shader CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install software GLES validator dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc libegl1-mesa-dev libgles2-mesa-dev
+      - name: Validate metadata and compile/render shaders
+        env:
+          EGL_PLATFORM: surfaceless
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: npm test
+      - name: Generate previews
+        run: npm run generate:previews
+      - name: Build static gallery
+        run: npm run build:docs

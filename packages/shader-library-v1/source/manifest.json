@@ -1,0 +1,140 @@
+{
+  "schemaVersion": "1.0.0",
+  "shaders": [
+    {
+      "slug": "materials/oil-slick",
+      "name": "Oil Slick",
+      "category": "Materials",
+      "family": "Thin-Film Interference",
+      "shader": "shaders/materials/oil-slick/shader.glsl",
+      "meta": "shaders/materials/oil-slick/meta.json",
+      "preview": "shaders/materials/oil-slick/preview.png"
+    },
+    {
+      "slug": "materials/thin-film",
+      "name": "Thin Film",
+      "category": "Materials",
+      "family": "Analytic Thin-Film",
+      "shader": "shaders/materials/thin-film/shader.glsl",
+      "meta": "shaders/materials/thin-film/meta.json",
+      "preview": "shaders/materials/thin-film/preview.png"
+    },
+    {
+      "slug": "materials/soap-bubble",
+      "name": "Soap Bubble",
+      "category": "Materials",
+      "family": "Membrane Interference",
+      "shader": "shaders/materials/soap-bubble/shader.glsl",
+      "meta": "shaders/materials/soap-bubble/meta.json",
+      "preview": "shaders/materials/soap-bubble/preview.png"
+    },
+    {
+      "slug": "materials/pearl-sheen",
+      "name": "Pearl Sheen",
+      "category": "Materials",
+      "family": "Soft Fresnel Sheen",
+      "shader": "shaders/materials/pearl-sheen/shader.glsl",
+      "meta": "shaders/materials/pearl-sheen/meta.json",
+      "preview": "shaders/materials/pearl-sheen/preview.png"
+    },
+    {
+      "slug": "aurora/abalone",
+      "name": "Abalone",
+      "category": "Aurora",
+      "family": "Layered Organic Interference",
+      "shader": "shaders/aurora/abalone/shader.glsl",
+      "meta": "shaders/aurora/abalone/meta.json",
+      "preview": "shaders/aurora/abalone/preview.png"
+    },
+    {
+      "slug": "flow/chromatic-flow",
+      "name": "Chromatic Flow",
+      "category": "Flow",
+      "family": "Flow Field Dispersion",
+      "shader": "shaders/flow/chromatic-flow/shader.glsl",
+      "meta": "shaders/flow/chromatic-flow/meta.json",
+      "preview": "shaders/flow/chromatic-flow/preview.png"
+    },
+    {
+      "slug": "materials/opal-core",
+      "name": "Opal Core",
+      "category": "Materials",
+      "family": "Subsurface Glow",
+      "shader": "shaders/materials/opal-core/shader.glsl",
+      "meta": "shaders/materials/opal-core/meta.json",
+      "preview": "shaders/materials/opal-core/preview.png"
+    },
+    {
+      "slug": "optical/holographic",
+      "name": "Holographic",
+      "category": "Optical",
+      "family": "Prismatic Grid",
+      "shader": "shaders/optical/holographic/shader.glsl",
+      "meta": "shaders/optical/holographic/meta.json",
+      "preview": "shaders/optical/holographic/preview.png"
+    },
+    {
+      "slug": "aurora/aurora-wave",
+      "name": "Aurora Wave",
+      "category": "Aurora",
+      "family": "Layered Sinusoidal Aurora",
+      "shader": "shaders/aurora/aurora-wave/shader.glsl",
+      "meta": "shaders/aurora/aurora-wave/meta.json",
+      "preview": "shaders/aurora/aurora-wave/preview.png"
+    },
+    {
+      "slug": "optical/interference",
+      "name": "Interference",
+      "category": "Optical",
+      "family": "Multi-Band Interference",
+      "shader": "shaders/optical/interference/shader.glsl",
+      "meta": "shaders/optical/interference/meta.json",
+      "preview": "shaders/optical/interference/preview.png"
+    },
+    {
+      "slug": "atmospheric/celestial-veil",
+      "name": "Celestial Veil",
+      "category": "Atmospheric",
+      "family": "Starfield Veil",
+      "shader": "shaders/atmospheric/celestial-veil/shader.glsl",
+      "meta": "shaders/atmospheric/celestial-veil/meta.json",
+      "preview": "shaders/atmospheric/celestial-veil/preview.png"
+    },
+    {
+      "slug": "materials/liquid-crystal",
+      "name": "Liquid Crystal",
+      "category": "Materials",
+      "family": "Anisotropic Banding",
+      "shader": "shaders/materials/liquid-crystal/shader.glsl",
+      "meta": "shaders/materials/liquid-crystal/meta.json",
+      "preview": "shaders/materials/liquid-crystal/preview.png"
+    },
+    {
+      "slug": "atmospheric/prismatic-fog",
+      "name": "Prismatic Fog",
+      "category": "Atmospheric",
+      "family": "Volumetric Dispersion",
+      "shader": "shaders/atmospheric/prismatic-fog/shader.glsl",
+      "meta": "shaders/atmospheric/prismatic-fog/meta.json",
+      "preview": "shaders/atmospheric/prismatic-fog/preview.png"
+    },
+    {
+      "slug": "glow/euphoric-glow",
+      "name": "Euphoric Glow",
+      "category": "Glow",
+      "family": "Hue-Cycled Bloom",
+      "shader": "shaders/glow/euphoric-glow/shader.glsl",
+      "meta": "shaders/glow/euphoric-glow/meta.json",
+      "preview": "shaders/glow/euphoric-glow/preview.png"
+    },
+    {
+      "slug": "materials/ethereal-sheen",
+      "name": "Ethereal Sheen",
+      "category": "Materials",
+      "family": "Thin-Film Noise Sheen",
+      "shader": "shaders/materials/ethereal-sheen/shader.glsl",
+      "meta": "shaders/materials/ethereal-sheen/meta.json",
+      "preview": "shaders/materials/ethereal-sheen/preview.png"
+    }
+  ]
+}

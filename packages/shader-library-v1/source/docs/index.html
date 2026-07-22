@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MelodicBloom Shader Library</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#070910;color:#f2f3f7}
+*{box-sizing:border-box}body{margin:0}.shell{max-width:1320px;margin:auto;padding:32px}
+header{padding:48px 0 32px}h1{font-size:clamp(2.5rem,7vw,6rem);margin:0;letter-spacing:-.06em}
+p{color:#aab0c2;max-width:64ch}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.card{background:#111521;border:1px solid #252b3b;border-radius:18px;overflow:hidden}
+.card img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:#000}
+.card div{padding:15px}.card h2{margin:0 0 5px;font-size:1rem}.card small{color:#818aa2}
+</style>
+</head>
+<body><main class="shell"><header><h1>Shader Library</h1><p>Fifteen compile-validated WebGL2 material, optical, atmospheric, flow, aurora, and glow studies.</p></header><section id="grid" class="grid"></section></main>
+<script type="module">
+const manifest=await fetch("./manifest.json").then(r=>r.json());
+const grid=document.querySelector("#grid");
+for(const shader of manifest.shaders){
+ const card=document.createElement("article");card.className="card";
+ card.innerHTML=`<img src="${shader.preview}" alt="${shader.name} preview"><div><h2>${shader.name}</h2><small>${shader.family}</small></div>`;
+ grid.append(card);
+}
+</script></body></html>

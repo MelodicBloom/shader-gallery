@@ -1,0 +1,5 @@
+Local validation completed before publication:
+- 15 metadata files validated
+- 15 WebGL2 shaders compiled, linked, rendered, and checked for visible output
+- deterministic previews generated for all 15 shaders
+- static docs build completed after preview generation
