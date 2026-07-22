@@ -1,0 +1,1 @@
+This package is intentionally isolated on a feature branch and should be reviewed through its draft pull request before any root-level integration.
