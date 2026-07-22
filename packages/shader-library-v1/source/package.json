@@ -1,0 +1,32 @@
+{
+  "name": "@melodicbloom/shader-gallery",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "Compile-validated WebGL2 shader library and deterministic preview runtime.",
+  "exports": {
+    ".": "./src/index.js",
+    "./core": "./src/core/index.js",
+    "./manifest": "./manifest.json"
+  },
+  "scripts": {
+    "validate:meta": "node tools/validate-meta.mjs",
+    "validate:shaders": "node tools/validate-shaders.mjs",
+    "generate:previews": "node tools/generate-previews.mjs",
+    "test": "npm run validate:meta && npm run validate:shaders",
+    "build:docs": "node tools/build-docs.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "sideEffects": false,
+  "files": [
+    "src",
+    "shaders",
+    "schemas",
+    "manifest.json",
+    "README.md",
+    "LICENSE"
+  ]
+}
