@@ -4,13 +4,17 @@ on:
   push:
     branches:
       - agent/extract-shader-library-v1
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write
 
 jobs:
   extract:
-    if: github.event.head_commit.message != 'chore: extract shader library v1 source'
+    if: github.event_name == 'pull_request' || github.event.head_commit.message != 'chore: extract shader library v1 source'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
