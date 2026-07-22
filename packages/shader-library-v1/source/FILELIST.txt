@@ -1,0 +1,2 @@
+Shader Library v1 source extraction.
+Canonical file inventory is represented by the committed tree under this directory.
