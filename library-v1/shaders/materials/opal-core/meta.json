@@ -1,0 +1,98 @@
+{
+  "$schema": "../../../schemas/shader-meta.schema.json",
+  "schemaVersion": "1.0.0",
+  "name": "Opal Core",
+  "slug": "materials/opal-core",
+  "category": "Materials",
+  "family": "Subsurface Glow",
+  "author": "Jennipher Troup",
+  "description": "A gem-like opalescent core using radial attenuation and color scattering to suggest subsurface illumination.",
+  "tags": [
+    "opal",
+    "gem",
+    "subsurface",
+    "glow",
+    "core"
+  ],
+  "status": "stable",
+  "renderer": {
+    "api": "webgl2",
+    "glslVersion": "300 es",
+    "entryPoint": "main",
+    "vertexContract": "fullscreen-quad-v_uv",
+    "alphaMode": "opaque"
+  },
+  "uniforms": {
+    "u_time": {
+      "type": "float",
+      "default": 1.2345,
+      "ui": "hidden",
+      "semanticRole": "animation-time"
+    },
+    "u_resolution": {
+      "type": "vec2",
+      "default": [
+        512,
+        512
+      ],
+      "ui": "hidden",
+      "semanticRole": "viewport-size"
+    },
+    "u_mouse": {
+      "type": "vec2",
+      "default": [
+        0.5,
+        0.5
+      ],
+      "ui": "hidden",
+      "semanticRole": "pointer-position"
+    },
+    "scatter": {
+      "type": "float",
+      "default": 0.55,
+      "ui": "slider",
+      "semanticRole": "scatter",
+      "min": 0,
+      "max": 1,
+      "step": 0.01
+    },
+    "glow": {
+      "type": "float",
+      "default": 1.1,
+      "ui": "slider",
+      "semanticRole": "glow",
+      "min": 0,
+      "max": 3,
+      "step": 0.01
+    }
+  },
+  "preview": {
+    "image": "preview.png",
+    "width": 512,
+    "height": 512,
+    "time": 1.2345,
+    "seed": 42,
+    "background": "#000000"
+  },
+  "compatibility": {
+    "webgl2": true,
+    "mobileTier": "medium",
+    "reducedMotion": "freeze",
+    "requiresTextures": false
+  },
+  "aliases": [
+    "opal/default"
+  ],
+  "usage": {
+    "bestFor": [
+      "gem accents",
+      "orb controls",
+      "status indicators",
+      "jewel-like UI"
+    ],
+    "avoidFor": [
+      "long-form body text backgrounds",
+      "accessibility-critical information without a static fallback"
+    ]
+  }
+}

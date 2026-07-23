@@ -1,0 +1,99 @@
+{
+  "$schema": "../../../schemas/shader-meta.schema.json",
+  "schemaVersion": "1.0.0",
+  "name": "Celestial Veil",
+  "slug": "atmospheric/celestial-veil",
+  "category": "Atmospheric",
+  "family": "Starfield Veil",
+  "author": "Jennipher Troup",
+  "description": "A dark celestial overlay with sparse star points and a softly tinted atmospheric field.",
+  "tags": [
+    "celestial",
+    "starfield",
+    "veil",
+    "atmospheric",
+    "overlay"
+  ],
+  "status": "stable",
+  "renderer": {
+    "api": "webgl2",
+    "glslVersion": "300 es",
+    "entryPoint": "main",
+    "vertexContract": "fullscreen-quad-v_uv",
+    "alphaMode": "opaque"
+  },
+  "uniforms": {
+    "u_time": {
+      "type": "float",
+      "default": 1.2345,
+      "ui": "hidden",
+      "semanticRole": "animation-time"
+    },
+    "u_resolution": {
+      "type": "vec2",
+      "default": [
+        512,
+        512
+      ],
+      "ui": "hidden",
+      "semanticRole": "viewport-size"
+    },
+    "u_mouse": {
+      "type": "vec2",
+      "default": [
+        0.5,
+        0.5
+      ],
+      "ui": "hidden",
+      "semanticRole": "pointer-position"
+    },
+    "density": {
+      "type": "float",
+      "default": 0.6,
+      "ui": "slider",
+      "semanticRole": "density",
+      "min": 0,
+      "max": 2,
+      "step": 0.01
+    },
+    "tint": {
+      "type": "vec3",
+      "default": [
+        0.2,
+        0.12,
+        0.45
+      ],
+      "ui": "color",
+      "semanticRole": "tint"
+    }
+  },
+  "preview": {
+    "image": "preview.png",
+    "width": 512,
+    "height": 512,
+    "time": 1.2345,
+    "seed": 42,
+    "background": "#000000"
+  },
+  "compatibility": {
+    "webgl2": true,
+    "mobileTier": "medium",
+    "reducedMotion": "freeze",
+    "requiresTextures": false
+  },
+  "aliases": [
+    "celestial/default"
+  ],
+  "usage": {
+    "bestFor": [
+      "atmospheric overlays",
+      "night sections",
+      "cosmic backgrounds",
+      "depth layers"
+    ],
+    "avoidFor": [
+      "long-form body text backgrounds",
+      "accessibility-critical information without a static fallback"
+    ]
+  }
+}
