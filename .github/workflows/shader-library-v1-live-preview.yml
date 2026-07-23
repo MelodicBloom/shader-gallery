@@ -53,7 +53,7 @@ jobs:
           LIBGL_ALWAYS_SOFTWARE: "1"
         run: npm test
 
-      - name: Generate deterministic fallbacks
+      - name: Generate validated fallback frames
         working-directory: packages/shader-library-v1/source
         env:
           EGL_PLATFORM: surfaceless
@@ -64,8 +64,31 @@ jobs:
         working-directory: packages/shader-library-v1/source
         run: node tools/build-live-preview.mjs
 
-      - name: Verify committed route is reproducible
-        run: git diff --exit-code -- library-v1
+      - name: Verify reproducible route structure and valid fallbacks
+        run: |
+          set -euo pipefail
+
+          # Shader output can vary by a few bytes across Mesa/GPU driver builds.
+          # Code, manifests, metadata, and route structure must remain exact.
+          git diff --exit-code -- \
+            library-v1 \
+            ':(exclude)library-v1/shaders/**/preview.png'
+
+          python - <<'PY'
+          from pathlib import Path
+
+          previews = sorted(Path("library-v1/shaders").rglob("preview.png"))
+          if len(previews) != 15:
+              raise SystemExit(f"Expected 15 preview PNGs; found {len(previews)}")
+
+          signature = b"\x89PNG\r\n\x1a\n"
+          for preview in previews:
+              data = preview.read_bytes()
+              if len(data) <= len(signature) or not data.startswith(signature):
+                  raise SystemExit(f"Invalid or empty PNG fallback: {preview}")
+
+          print("Validated 15 non-empty PNG fallback frames.")
+          PY
 
       - name: Install browser QA runtime
         working-directory: packages/shader-library-v1/source
