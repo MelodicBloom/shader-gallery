@@ -24,6 +24,12 @@ function copyFile(source, destination) {
   fs.copyFileSync(source, destination);
 }
 
+function copyJson(source, destination) {
+  fs.mkdirSync(path.dirname(destination), { recursive: true });
+  const value = JSON.parse(fs.readFileSync(source, "utf8"));
+  fs.writeFileSync(destination, `${JSON.stringify(value, null, 2)}\n`);
+}
+
 function requireFile(file) {
   if (!fs.existsSync(file) || !fs.statSync(file).isFile()) {
     throw new Error(`Required live-preview asset is missing: ${file}`);
@@ -44,14 +50,16 @@ for (const file of ["index.html", "app.js", "styles.css"]) {
   copyFile(path.join(packageRoot, "live", file), path.join(outputRoot, file));
 }
 copyFile(path.join(packageRoot, "src/core/ShaderPlayer.js"), path.join(outputRoot, "runtime/ShaderPlayer.js"));
-copyFile(manifestPath, path.join(outputRoot, "manifest.json"));
+copyJson(manifestPath, path.join(outputRoot, "manifest.json"));
 fs.writeFileSync(path.join(outputRoot, ".nojekyll"), "");
 
 for (const entry of manifest.shaders) {
   for (const relativePath of [entry.shader, entry.meta, entry.preview]) {
     const source = path.join(packageRoot, relativePath);
     requireFile(source);
-    copyFile(source, path.join(outputRoot, relativePath));
+    const destination = path.join(outputRoot, relativePath);
+    if (relativePath.endsWith(".json")) copyJson(source, destination);
+    else copyFile(source, destination);
   }
 }
 
