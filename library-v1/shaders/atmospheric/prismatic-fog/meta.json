@@ -1,0 +1,98 @@
+{
+  "$schema": "../../../schemas/shader-meta.schema.json",
+  "schemaVersion": "1.0.0",
+  "name": "Prismatic Fog",
+  "slug": "atmospheric/prismatic-fog",
+  "category": "Atmospheric",
+  "family": "Volumetric Dispersion",
+  "author": "Jennipher Troup",
+  "description": "A soft radial fog layer with prismatic tinting intended for depth, parallax, and atmospheric separation.",
+  "tags": [
+    "fog",
+    "prismatic",
+    "volumetric",
+    "depth",
+    "dispersion"
+  ],
+  "status": "stable",
+  "renderer": {
+    "api": "webgl2",
+    "glslVersion": "300 es",
+    "entryPoint": "main",
+    "vertexContract": "fullscreen-quad-v_uv",
+    "alphaMode": "straight"
+  },
+  "uniforms": {
+    "u_time": {
+      "type": "float",
+      "default": 1.2345,
+      "ui": "hidden",
+      "semanticRole": "animation-time"
+    },
+    "u_resolution": {
+      "type": "vec2",
+      "default": [
+        512,
+        512
+      ],
+      "ui": "hidden",
+      "semanticRole": "viewport-size"
+    },
+    "u_mouse": {
+      "type": "vec2",
+      "default": [
+        0.5,
+        0.5
+      ],
+      "ui": "hidden",
+      "semanticRole": "pointer-position"
+    },
+    "density": {
+      "type": "float",
+      "default": 0.75,
+      "ui": "slider",
+      "semanticRole": "density",
+      "min": 0,
+      "max": 2,
+      "step": 0.01
+    },
+    "falloff": {
+      "type": "float",
+      "default": 3.5,
+      "ui": "slider",
+      "semanticRole": "falloff",
+      "min": 0.1,
+      "max": 12,
+      "step": 0.05
+    }
+  },
+  "preview": {
+    "image": "preview.png",
+    "width": 512,
+    "height": 512,
+    "time": 1.2345,
+    "seed": 42,
+    "background": "#000000"
+  },
+  "compatibility": {
+    "webgl2": true,
+    "mobileTier": "medium",
+    "reducedMotion": "freeze",
+    "requiresTextures": false
+  },
+  "aliases": [
+    "prismatic-fog/default"
+  ],
+  "usage": {
+    "bestFor": [
+      "depth fog",
+      "parallax layers",
+      "scene transitions",
+      "soft overlays"
+    ],
+    "avoidFor": [
+      "long-form body text backgrounds",
+      "accessibility-critical information without a static fallback"
+    ]
+  }
+}

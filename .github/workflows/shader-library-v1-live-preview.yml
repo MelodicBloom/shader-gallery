@@ -1,0 +1,109 @@
+name: Shader Library v1 Live Preview
+
+on:
+  pull_request:
+    paths:
+      - "packages/shader-library-v1/source/live/**"
+      - "packages/shader-library-v1/source/tools/build-live-preview.mjs"
+      - "packages/shader-library-v1/source/tools/live-preview-qa.mjs"
+      - "packages/shader-library-v1/source/src/core/ShaderPlayer.js"
+      - "packages/shader-library-v1/source/manifest.json"
+      - "packages/shader-library-v1/source/shaders/**"
+      - "library-v1/**"
+      - ".github/workflows/shader-library-v1-live-preview.yml"
+  push:
+    branches: [main]
+    paths:
+      - "packages/shader-library-v1/source/live/**"
+      - "packages/shader-library-v1/source/tools/build-live-preview.mjs"
+      - "packages/shader-library-v1/source/tools/live-preview-qa.mjs"
+      - "packages/shader-library-v1/source/src/core/ShaderPlayer.js"
+      - "packages/shader-library-v1/source/manifest.json"
+      - "packages/shader-library-v1/source/shaders/**"
+      - "library-v1/**"
+      - ".github/workflows/shader-library-v1-live-preview.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-live-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install native shader validator dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc libegl1-mesa-dev libgles2-mesa-dev
+
+      - name: Validate metadata and all 15 shaders
+        working-directory: packages/shader-library-v1/source
+        env:
+          EGL_PLATFORM: surfaceless
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: npm test
+
+      - name: Generate validated fallback frames
+        working-directory: packages/shader-library-v1/source
+        env:
+          EGL_PLATFORM: surfaceless
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: npm run generate:previews
+
+      - name: Build isolated live route
+        working-directory: packages/shader-library-v1/source
+        run: node tools/build-live-preview.mjs
+
+      - name: Verify reproducible route structure and valid fallbacks
+        run: |
+          set -euo pipefail
+
+          # Shader output can vary by a few bytes across Mesa/GPU driver builds.
+          # Code, manifests, metadata, and route structure must remain exact.
+          git diff --exit-code -- \
+            library-v1 \
+            ':(exclude)library-v1/shaders/**/preview.png'
+
+          python - <<'PY'
+          from pathlib import Path
+
+          previews = sorted(Path("library-v1/shaders").rglob("preview.png"))
+          if len(previews) != 15:
+              raise SystemExit(f"Expected 15 preview PNGs; found {len(previews)}")
+
+          signature = b"\x89PNG\r\n\x1a\n"
+          for preview in previews:
+              data = preview.read_bytes()
+              if len(data) <= len(signature) or not data.startswith(signature):
+                  raise SystemExit(f"Invalid or empty PNG fallback: {preview}")
+
+          print("Validated 15 non-empty PNG fallback frames.")
+          PY
+
+      - name: Install browser QA runtime
+        working-directory: packages/shader-library-v1/source
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Run browser QA at mobile, tablet, and desktop widths
+        working-directory: packages/shader-library-v1/source
+        run: node tools/live-preview-qa.mjs
+
+      - name: Upload isolated live preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: shader-library-v1-live-preview
+          path: library-v1
+          if-no-files-found: error
+          retention-days: 14
