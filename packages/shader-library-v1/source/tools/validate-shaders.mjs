@@ -17,4 +17,4 @@ for (const entry of manifest.shaders) {
   }
 }
 if (failures) process.exit(1);
-console.log(`Compiled, linked, and rendered ${manifest.shaders.length} WebGL2 shaders with SwiftShader.`);
+console.log(`Compiled, linked, and rendered ${manifest.shaders.length} WebGL2 shaders.`);

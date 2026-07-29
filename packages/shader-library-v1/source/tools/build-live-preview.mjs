@@ -43,6 +43,19 @@ if (!Array.isArray(manifest.shaders) || manifest.shaders.length !== 15) {
   throw new Error(`Expected exactly 15 manifest entries; received ${manifest.shaders?.length ?? "none"}.`);
 }
 
+// Validate all required assets exist before touching the output directory so
+// that a missing file (e.g. a preview PNG that has not been generated yet)
+// does not leave the output tree in a half-rebuilt state.
+for (const file of ["index.html", "app.js", "styles.css"]) {
+  requireFile(path.join(packageRoot, "live", file));
+}
+requireFile(path.join(packageRoot, "src/core/ShaderPlayer.js"));
+for (const entry of manifest.shaders) {
+  for (const relativePath of [entry.shader, entry.meta, entry.preview]) {
+    requireFile(path.join(packageRoot, relativePath));
+  }
+}
+
 fs.rmSync(outputRoot, { recursive: true, force: true });
 fs.mkdirSync(outputRoot, { recursive: true });
 
@@ -56,7 +69,6 @@ fs.writeFileSync(path.join(outputRoot, ".nojekyll"), "");
 for (const entry of manifest.shaders) {
   for (const relativePath of [entry.shader, entry.meta, entry.preview]) {
     const source = path.join(packageRoot, relativePath);
-    requireFile(source);
     const destination = path.join(outputRoot, relativePath);
     if (relativePath.endsWith(".json")) copyJson(source, destination);
     else copyFile(source, destination);
