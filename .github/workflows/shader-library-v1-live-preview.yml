@@ -3,8 +3,10 @@ name: Shader Library v1 Live Preview
 on:
   pull_request:
     paths:
+      - "packages/shader-library-v1/source/package.json"
       - "packages/shader-library-v1/source/live/**"
       - "packages/shader-library-v1/source/tools/build-live-preview.mjs"
+      - "packages/shader-library-v1/source/tools/test-build-live-preview.mjs"
       - "packages/shader-library-v1/source/tools/live-preview-qa.mjs"
       - "packages/shader-library-v1/source/src/core/ShaderPlayer.js"
       - "packages/shader-library-v1/source/manifest.json"
@@ -14,8 +16,10 @@ on:
   push:
     branches: [main]
     paths:
+      - "packages/shader-library-v1/source/package.json"
       - "packages/shader-library-v1/source/live/**"
       - "packages/shader-library-v1/source/tools/build-live-preview.mjs"
+      - "packages/shader-library-v1/source/tools/test-build-live-preview.mjs"
       - "packages/shader-library-v1/source/tools/live-preview-qa.mjs"
       - "packages/shader-library-v1/source/src/core/ShaderPlayer.js"
       - "packages/shader-library-v1/source/manifest.json"

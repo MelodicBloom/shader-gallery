@@ -12,8 +12,9 @@
   "scripts": {
     "validate:meta": "node tools/validate-meta.mjs",
     "validate:shaders": "node tools/validate-shaders.mjs",
+    "test:live-preview-build": "node tools/test-build-live-preview.mjs",
     "generate:previews": "node tools/generate-previews.mjs",
-    "test": "npm run validate:meta && npm run validate:shaders",
+    "test": "npm run validate:meta && npm run validate:shaders && npm run test:live-preview-build",
     "build:docs": "node tools/build-docs.mjs"
   },
   "engines": {
