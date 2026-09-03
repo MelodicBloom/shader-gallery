@@ -1,6 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
-import { runShader } from "./native-runner.mjs";
+import { ensureNativeValidator, runShader } from "./native-runner.mjs";
+
+try {
+  ensureNativeValidator();
+} catch (error) {
+  console.error(error.message);
+  process.exit(1);
+}
 
 const root=process.cwd();
 const manifest=JSON.parse(fs.readFileSync(path.join(root,"manifest.json"),"utf8"));
