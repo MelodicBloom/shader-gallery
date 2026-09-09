@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shader-grammar.dev/v0.1/parameter.schema.json",
+  "title": "Shader Grammar Parameter Catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ontologyVersion", "parameters"],
+  "properties": {
+    "ontologyVersion": { "const": "0.1" },
+    "parameters": {
+      "type": "array", "minItems": 1,
+      "items": { "$ref": "#/$defs/parameter" }
+    }
+  },
+  "$defs": {
+    "range": {
+      "type": "object", "additionalProperties": false,
+      "required": ["min", "max", "default"],
+      "properties": {
+        "min": { "type": "number" }, "max": { "type": "number" },
+        "default": { "type": "number" },
+        "mapping": { "enum": ["linear", "log", "exponential", "signed", "piecewise", "perceptual"] }
+      }
+    },
+    "representation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["glsl", "wgsl"],
+      "properties": { "glsl": { "type": "string" }, "wgsl": { "type": "string" } }
+    },
+    "cost": {
+      "type": "object", "additionalProperties": false,
+      "required": ["tier", "notes"],
+      "properties": {
+        "tier": { "enum": ["negligible", "low", "medium", "high"] },
+        "notes": { "type": "string" }
+      }
+    },
+    "parameter": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "label", "category", "valueType", "dimensionality", "meaning", "artisticRange", "normalization", "representations", "cost", "compatibleFamilies"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+$" },
+        "label": { "type": "string", "minLength": 1 },
+        "category": { "enum": ["geometry", "optics", "appearance", "simulation", "lighting", "temporal", "postprocess"] },
+        "valueType": { "enum": ["float", "int", "bool", "vec2", "vec3", "vec4", "color", "enum", "curve", "spectrum"] },
+        "dimensionality": { "enum": ["scalar", "vector", "tensor", "spectral"] },
+        "meaning": { "type": "string", "minLength": 1 },
+        "mathematicalDefinition": { "type": "string" },
+        "physicalInterpretation": { "type": "string" },
+        "unit": { "type": "string" },
+        "artisticRange": { "$ref": "#/$defs/range" },
+        "physicalRange": {
+          "type": "object", "additionalProperties": false,
+          "properties": { "min": { "type": "number" }, "max": { "type": "number" }, "typicalMin": { "type": "number" }, "typicalMax": { "type": "number" }, "unit": { "type": "string" } }
+        },
+        "normalization": { "enum": ["linear", "log", "exponential", "signed", "piecewise", "perceptual"] },
+        "modulationSources": { "type": "array", "items": { "enum": ["constant", "texture", "field", "curve", "audio", "time", "vertex_attribute", "instance_attribute"] }, "uniqueItems": true },
+        "representations": { "$ref": "#/$defs/representation" },
+        "cost": { "$ref": "#/$defs/cost" },
+        "compatibleFamilies": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" }, "uniqueItems": true }
+      }
+    }
+  }
+}

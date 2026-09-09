@@ -1,0 +1,13 @@
+{
+  "name": "shader-grammar-v0.1",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Typed, implementation-neutral ontology for composable shader materials",
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "test": "node scripts/validate.mjs --strict"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

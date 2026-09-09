@@ -1,0 +1,40 @@
+ontologyVersion: "0.1"
+description: Orthogonal material families classify morphology and dominant transport; specimen names are never ontology primitives.
+families:
+  - id: surface_film
+    label: Surface film
+    definition: A wavelength-scale layer whose thickness alters reflected spectral phase.
+    mechanisms: [thin_film_interference, fresnel_reflection]
+  - id: layered_dielectric
+    label: Layered dielectric
+    definition: Stacked nonconductive layers with internal reflection, absorption, or scattering.
+    mechanisms: [fresnel_reflection, beer_lambert_absorption, interference]
+  - id: periodic_microstructure
+    label: Periodic microstructure
+    definition: Oriented microgeometry with spacing comparable to visible wavelengths.
+    mechanisms: [diffraction, anisotropic_scattering]
+  - id: metallic_surface
+    label: Metallic surface
+    definition: Conductive surface dominated by reflected environment radiance.
+    mechanisms: [conductor_reflection, rough_microfacet_scattering]
+  - id: refractive_volume
+    label: Refractive volume
+    definition: Transmissive body with interfaces and finite optical path length.
+    mechanisms: [refraction, absorption, internal_reflection]
+  - id: participating_medium
+    label: Participating medium
+    definition: Volume with spatial density that absorbs, emits, and scatters light.
+    mechanisms: [extinction, single_scattering, emission]
+  - id: dynamic_interface
+    label: Dynamic interface
+    definition: Time-varying boundary shaped by waves, flow, displacement, or curvature.
+    mechanisms: [advection, differential_geometry, reflection_refraction]
+axes:
+  dimensionality: [surface, interface, volume]
+  transport: [reflective, transmissive, emissive, scattering]
+  structure_scale: [macro, meso, micro, wavelength]
+  evolution: [static, animated, simulated]
+rules:
+  - Recipes may select multiple families.
+  - Specimen labels belong in recipes, never in primitive identifiers.
+  - Optical mechanism and morphology remain separate axes.

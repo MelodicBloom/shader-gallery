@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shader-grammar.dev/v0.1/recipe.schema.json",
+  "title": "Shader Grammar Material Recipe",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ontologyVersion",
+    "id",
+    "label",
+    "description",
+    "materialFamilies",
+    "parameterValues",
+    "fieldInstances",
+    "operatorInstances",
+    "graph",
+    "outputs",
+    "qualityTiers"
+  ],
+  "properties": {
+    "ontologyVersion": {
+      "const": "0.1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^recipe\\.[a-z][a-z0-9_]*$"
+    },
+    "label": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "materialFamilies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "uniqueItems": true
+    },
+    "parameterValues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "parameter",
+          "value"
+        ],
+        "properties": {
+          "parameter": {
+            "type": "string"
+          },
+          "value": {},
+          "modulatedBy": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "fieldInstances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "field"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "field": {
+            "type": "string"
+          },
+          "bindings": {
+            "type": "object"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "operatorInstances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "operator",
+          "inputs"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "operator": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "graph": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "from",
+          "to"
+        ],
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "semantic": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string"
+      },
+      "propertyNames": {
+        "enum": [
+          "baseColor",
+          "normal",
+          "roughness",
+          "metallic",
+          "emission",
+          "opacity",
+          "transmission",
+          "volumeDensity",
+          "displacement"
+        ]
+      }
+    },
+    "qualityTiers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preview",
+        "production"
+      ],
+      "properties": {
+        "preview": {
+          "type": "object",
+          "required": [
+            "maxCost"
+          ],
+          "properties": {
+            "maxCost": {
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            },
+            "notes": {
+              "type": "string"
+            }
+          }
+        },
+        "production": {
+          "type": "object",
+          "required": [
+            "maxCost"
+          ],
+          "properties": {
+            "maxCost": {
+              "enum": [
+                "medium",
+                "high",
+                "very_high"
+              ]
+            },
+            "notes": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,925 @@
+{
+  "ontologyVersion": "0.1",
+  "parameters": [
+    {
+      "id": "surface.roughness",
+      "label": "Surface roughness",
+      "category": "appearance",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Surface roughness",
+      "mathematicalDefinition": "Normalized control for surface.roughness.",
+      "unit": "ratio",
+      "artisticRange": {
+        "min": 0,
+        "max": 1,
+        "default": 0.25,
+        "mapping": "perceptual"
+      },
+      "physicalRange": {
+        "min": 0,
+        "max": 1,
+        "unit": "ratio"
+      },
+      "normalization": "perceptual",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float surface_roughness;",
+        "wgsl": "surface_roughness: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "surface.metallic",
+      "label": "Metallic response",
+      "category": "appearance",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Metallic response",
+      "mathematicalDefinition": "Normalized control for surface.metallic.",
+      "unit": "ratio",
+      "artisticRange": {
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "mapping": "linear"
+      },
+      "physicalRange": {
+        "min": 0,
+        "max": 1,
+        "unit": "ratio"
+      },
+      "normalization": "linear",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float surface_metallic;",
+        "wgsl": "surface_metallic: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "surface.transmission",
+      "label": "Transmission",
+      "category": "optics",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Transmission",
+      "mathematicalDefinition": "Normalized control for surface.transmission.",
+      "unit": "ratio",
+      "artisticRange": {
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "mapping": "linear"
+      },
+      "physicalRange": {
+        "min": 0,
+        "max": 1,
+        "unit": "ratio"
+      },
+      "normalization": "linear",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float surface_transmission;",
+        "wgsl": "surface_transmission: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "optical.ior",
+      "label": "Index of refraction",
+      "category": "optics",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Index of refraction",
+      "mathematicalDefinition": "Normalized control for optical.ior.",
+      "unit": "ratio",
+      "artisticRange": {
+        "min": 1,
+        "max": 3,
+        "default": 1.46,
+        "mapping": "linear"
+      },
+      "physicalRange": {
+        "min": 1,
+        "max": 3,
+        "unit": "ratio"
+      },
+      "normalization": "linear",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float optical_ior;",
+        "wgsl": "optical_ior: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "optical.absorption",
+      "label": "Absorption coefficient",
+      "category": "optics",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Absorption coefficient",
+      "mathematicalDefinition": "Normalized control for optical.absorption.",
+      "unit": "1/m",
+      "artisticRange": {
+        "min": 0,
+        "max": 20,
+        "default": 0.2,
+        "mapping": "log"
+      },
+      "physicalRange": {
+        "min": 0,
+        "max": 20,
+        "unit": "1/m"
+      },
+      "normalization": "log",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float optical_absorption;",
+        "wgsl": "optical_absorption: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "optical.scattering",
+      "label": "Scattering coefficient",
+      "category": "optics",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Scattering coefficient",
+      "mathematicalDefinition": "Normalized control for optical.scattering.",
+      "unit": "1/m",
+      "artisticRange": {
+        "min": 0,
+        "max": 50,
+        "default": 1,
+        "mapping": "log"
+      },
+      "physicalRange": {
+        "min": 0,
+        "max": 50,
+        "unit": "1/m"
+      },
+      "normalization": "log",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float optical_scattering;",
+        "wgsl": "optical_scattering: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "optical.phase_g",
+      "label": "Phase anisotropy",
+      "category": "optics",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Phase anisotropy",
+      "mathematicalDefinition": "Normalized control for optical.phase_g.",
+      "unit": "ratio",
+      "artisticRange": {
+        "min": -0.95,
+        "max": 0.95,
+        "default": 0.2,
+        "mapping": "signed"
+      },
+      "physicalRange": {
+        "min": -0.95,
+        "max": 0.95,
+        "unit": "ratio"
+      },
+      "normalization": "signed",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float optical_phase_g;",
+        "wgsl": "optical_phase_g: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "thin_film.thickness_nm",
+      "label": "Film thickness",
+      "category": "optics",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Film thickness",
+      "mathematicalDefinition": "Normalized control for thin_film.thickness_nm.",
+      "unit": "nm",
+      "artisticRange": {
+        "min": 50,
+        "max": 2000,
+        "default": 450,
+        "mapping": "log"
+      },
+      "physicalRange": {
+        "min": 50,
+        "max": 2000,
+        "unit": "nm"
+      },
+      "normalization": "log",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float thin_film_thickness_nm;",
+        "wgsl": "thin_film_thickness_nm: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "thin_film.variation",
+      "label": "Thickness variation",
+      "category": "appearance",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Thickness variation",
+      "mathematicalDefinition": "Normalized control for thin_film.variation.",
+      "unit": "ratio",
+      "artisticRange": {
+        "min": 0,
+        "max": 1,
+        "default": 0.35,
+        "mapping": "linear"
+      },
+      "physicalRange": {
+        "min": 0,
+        "max": 1,
+        "unit": "ratio"
+      },
+      "normalization": "linear",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float thin_film_variation;",
+        "wgsl": "thin_film_variation: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "spectral.strength",
+      "label": "Spectral effect strength",
+      "category": "appearance",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Spectral effect strength",
+      "mathematicalDefinition": "Normalized control for spectral.strength.",
+      "unit": "ratio",
+      "artisticRange": {
+        "min": 0,
+        "max": 1,
+        "default": 0.8,
+        "mapping": "perceptual"
+      },
+      "physicalRange": {
+        "min": 0,
+        "max": 1,
+        "unit": "ratio"
+      },
+      "normalization": "perceptual",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float spectral_strength;",
+        "wgsl": "spectral_strength: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "diffraction.spacing_nm",
+      "label": "Microstructure spacing",
+      "category": "optics",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Microstructure spacing",
+      "mathematicalDefinition": "Normalized control for diffraction.spacing_nm.",
+      "unit": "nm",
+      "artisticRange": {
+        "min": 200,
+        "max": 5000,
+        "default": 900,
+        "mapping": "log"
+      },
+      "physicalRange": {
+        "min": 200,
+        "max": 5000,
+        "unit": "nm"
+      },
+      "normalization": "log",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float diffraction_spacing_nm;",
+        "wgsl": "diffraction_spacing_nm: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "structure.anisotropy",
+      "label": "Directional anisotropy",
+      "category": "geometry",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Directional anisotropy",
+      "mathematicalDefinition": "Normalized control for structure.anisotropy.",
+      "unit": "ratio",
+      "artisticRange": {
+        "min": 0,
+        "max": 1,
+        "default": 0.5,
+        "mapping": "linear"
+      },
+      "physicalRange": {
+        "min": 0,
+        "max": 1,
+        "unit": "ratio"
+      },
+      "normalization": "linear",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float structure_anisotropy;",
+        "wgsl": "structure_anisotropy: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "geometry.displacement",
+      "label": "Displacement amplitude",
+      "category": "geometry",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Displacement amplitude",
+      "mathematicalDefinition": "Normalized control for geometry.displacement.",
+      "unit": "m",
+      "artisticRange": {
+        "min": 0,
+        "max": 1,
+        "default": 0.05,
+        "mapping": "log"
+      },
+      "physicalRange": {
+        "min": 0,
+        "max": 1,
+        "unit": "m"
+      },
+      "normalization": "log",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float geometry_displacement;",
+        "wgsl": "geometry_displacement: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "procedural.scale",
+      "label": "Procedural spatial scale",
+      "category": "appearance",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Procedural spatial scale",
+      "mathematicalDefinition": "Normalized control for procedural.scale.",
+      "unit": "1/m",
+      "artisticRange": {
+        "min": 0.01,
+        "max": 100,
+        "default": 2,
+        "mapping": "log"
+      },
+      "physicalRange": {
+        "min": 0.01,
+        "max": 100,
+        "unit": "1/m"
+      },
+      "normalization": "log",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float procedural_scale;",
+        "wgsl": "procedural_scale: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "procedural.warp",
+      "label": "Domain warp strength",
+      "category": "appearance",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Domain warp strength",
+      "mathematicalDefinition": "Normalized control for procedural.warp.",
+      "unit": "ratio",
+      "artisticRange": {
+        "min": 0,
+        "max": 2,
+        "default": 0.4,
+        "mapping": "linear"
+      },
+      "physicalRange": {
+        "min": 0,
+        "max": 2,
+        "unit": "ratio"
+      },
+      "normalization": "linear",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float procedural_warp;",
+        "wgsl": "procedural_warp: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "volume.density",
+      "label": "Volume density multiplier",
+      "category": "simulation",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Volume density multiplier",
+      "mathematicalDefinition": "Normalized control for volume.density.",
+      "unit": "ratio",
+      "artisticRange": {
+        "min": 0,
+        "max": 10,
+        "default": 1,
+        "mapping": "log"
+      },
+      "physicalRange": {
+        "min": 0,
+        "max": 10,
+        "unit": "ratio"
+      },
+      "normalization": "log",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float volume_density;",
+        "wgsl": "volume_density: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "volume.threshold",
+      "label": "Density threshold",
+      "category": "appearance",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Density threshold",
+      "mathematicalDefinition": "Normalized control for volume.threshold.",
+      "unit": "ratio",
+      "artisticRange": {
+        "min": 0,
+        "max": 1,
+        "default": 0.4,
+        "mapping": "linear"
+      },
+      "physicalRange": {
+        "min": 0,
+        "max": 1,
+        "unit": "ratio"
+      },
+      "normalization": "linear",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float volume_threshold;",
+        "wgsl": "volume_threshold: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "flow.speed",
+      "label": "Flow speed",
+      "category": "temporal",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Flow speed",
+      "mathematicalDefinition": "Normalized control for flow.speed.",
+      "unit": "m/s",
+      "artisticRange": {
+        "min": 0,
+        "max": 10,
+        "default": 0.2,
+        "mapping": "log"
+      },
+      "physicalRange": {
+        "min": 0,
+        "max": 10,
+        "unit": "m/s"
+      },
+      "normalization": "log",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float flow_speed;",
+        "wgsl": "flow_speed: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "emission.intensity",
+      "label": "Emission intensity",
+      "category": "lighting",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Emission intensity",
+      "mathematicalDefinition": "Normalized control for emission.intensity.",
+      "unit": "cd/m2",
+      "artisticRange": {
+        "min": 0,
+        "max": 100,
+        "default": 1,
+        "mapping": "log"
+      },
+      "physicalRange": {
+        "min": 0,
+        "max": 100,
+        "unit": "cd/m2"
+      },
+      "normalization": "log",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float emission_intensity;",
+        "wgsl": "emission_intensity: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    },
+    {
+      "id": "post.exposure",
+      "label": "Exposure",
+      "category": "postprocess",
+      "valueType": "float",
+      "dimensionality": "scalar",
+      "meaning": "Exposure",
+      "mathematicalDefinition": "Normalized control for post.exposure.",
+      "unit": "EV",
+      "artisticRange": {
+        "min": -10,
+        "max": 10,
+        "default": 0,
+        "mapping": "signed"
+      },
+      "physicalRange": {
+        "min": -10,
+        "max": 10,
+        "unit": "EV"
+      },
+      "normalization": "signed",
+      "modulationSources": [
+        "constant",
+        "texture",
+        "field",
+        "curve",
+        "time"
+      ],
+      "representations": {
+        "glsl": "uniform float post_exposure;",
+        "wgsl": "post_exposure: f32"
+      },
+      "cost": {
+        "tier": "negligible",
+        "notes": "Uniform storage and scalar remapping only."
+      },
+      "compatibleFamilies": [
+        "surface_film",
+        "layered_dielectric",
+        "periodic_microstructure",
+        "metallic_surface",
+        "refractive_volume",
+        "participating_medium",
+        "dynamic_interface"
+      ]
+    }
+  ]
+}

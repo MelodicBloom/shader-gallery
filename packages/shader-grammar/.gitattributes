@@ -1,0 +1,3 @@
+# Preserve the imported v0.1 bytes across platforms for checksum verification.
+* -text
+**/* -text

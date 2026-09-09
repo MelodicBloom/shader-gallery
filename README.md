@@ -1,5 +1,7 @@
 # 🌌 Shader Gallery
 
+Shader Grammar's canonical ontology prototype is maintained in [`packages/shader-grammar`](packages/shader-grammar/INTAKE.md). See its intake record for version boundaries, provenance, and validation; the package does not alter the live gallery.
+
 > An interactive collection of GLSL fragment shaders — live WebGL art you can explore, fork, and remix.
 
 ![GLSL](https://img.shields.io/badge/GLSL-WebGL-orange?style=flat-square)

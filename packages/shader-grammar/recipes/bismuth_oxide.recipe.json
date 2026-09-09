@@ -1,0 +1,170 @@
+{
+  "ontologyVersion": "0.1",
+  "id": "recipe.bismuth_oxide",
+  "label": "Bismuth Oxide",
+  "description": "Bismuth Oxide expressed only with shared Shader Grammar v0.1 primitives.",
+  "materialFamilies": [
+    "surface_film",
+    "metallic_surface"
+  ],
+  "parameterValues": [
+    {
+      "parameter": "thin_film.thickness_nm",
+      "value": 760,
+      "modulatedBy": "f5_thickness"
+    },
+    {
+      "parameter": "thin_film.variation",
+      "value": 0.56,
+      "modulatedBy": "o1_voronoi"
+    },
+    {
+      "parameter": "surface.metallic",
+      "value": 0.72
+    },
+    {
+      "parameter": "geometry.displacement",
+      "value": 0.08,
+      "modulatedBy": "f4_height"
+    }
+  ],
+  "fieldInstances": [
+    {
+      "id": "f1_uv",
+      "field": "field.uv"
+    },
+    {
+      "id": "f2_normal",
+      "field": "field.normal"
+    },
+    {
+      "id": "f3_view_direction",
+      "field": "field.view_direction"
+    },
+    {
+      "id": "f4_height",
+      "field": "field.height"
+    },
+    {
+      "id": "f5_thickness",
+      "field": "field.thickness"
+    }
+  ],
+  "operatorInstances": [
+    {
+      "id": "o1_voronoi",
+      "operator": "op.voronoi",
+      "inputs": {
+        "input": "f1_uv"
+      }
+    },
+    {
+      "id": "o2_gradient",
+      "operator": "op.gradient",
+      "inputs": {
+        "input": "o1_voronoi"
+      }
+    },
+    {
+      "id": "o3_normal_from_gradient",
+      "operator": "op.normal_from_gradient",
+      "inputs": {
+        "input": "o2_gradient"
+      }
+    },
+    {
+      "id": "o4_thin_film_interference",
+      "operator": "op.thin_film_interference",
+      "inputs": {
+        "input": "o3_normal_from_gradient"
+      }
+    },
+    {
+      "id": "o5_spectral_to_rgb",
+      "operator": "op.spectral_to_rgb",
+      "inputs": {
+        "input": "o4_thin_film_interference"
+      }
+    },
+    {
+      "id": "o6_reflection",
+      "operator": "op.reflection",
+      "inputs": {
+        "input": "o5_spectral_to_rgb"
+      }
+    },
+    {
+      "id": "o7_layer_mix",
+      "operator": "op.layer_mix",
+      "inputs": {
+        "input": "o6_reflection"
+      }
+    },
+    {
+      "id": "o8_tone_map",
+      "operator": "op.tone_map",
+      "inputs": {
+        "input": "o7_layer_mix"
+      }
+    }
+  ],
+  "graph": [
+    {
+      "from": "f1_uv",
+      "to": "o1_voronoi",
+      "semantic": "seed"
+    },
+    {
+      "from": "o1_voronoi",
+      "to": "o2_gradient",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o2_gradient",
+      "to": "o3_normal_from_gradient",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o3_normal_from_gradient",
+      "to": "o4_thin_film_interference",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o4_thin_film_interference",
+      "to": "o5_spectral_to_rgb",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o5_spectral_to_rgb",
+      "to": "o6_reflection",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o6_reflection",
+      "to": "o7_layer_mix",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o7_layer_mix",
+      "to": "o8_tone_map",
+      "semantic": "pipeline"
+    }
+  ],
+  "outputs": {
+    "baseColor": "o8_tone_map",
+    "roughness": "parameter:surface.roughness"
+  },
+  "qualityTiers": {
+    "preview": {
+      "maxCost": "medium",
+      "notes": "Reduce procedural octaves or spectral samples."
+    },
+    "production": {
+      "maxCost": "very_high",
+      "notes": "Use full spectral or volume integration where available."
+    }
+  },
+  "limitations": [
+    "Reference graph specifies semantics, not renderer-specific scheduling."
+  ]
+}

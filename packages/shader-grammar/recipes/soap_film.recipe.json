@@ -1,0 +1,153 @@
+{
+  "ontologyVersion": "0.1",
+  "id": "recipe.soap_film",
+  "label": "Soap Film",
+  "description": "Soap Film expressed only with shared Shader Grammar v0.1 primitives.",
+  "materialFamilies": [
+    "surface_film",
+    "dynamic_interface"
+  ],
+  "parameterValues": [
+    {
+      "parameter": "thin_film.thickness_nm",
+      "value": 380,
+      "modulatedBy": "f4_thickness"
+    },
+    {
+      "parameter": "thin_film.variation",
+      "value": 0.85,
+      "modulatedBy": "o1_voronoi"
+    },
+    {
+      "parameter": "optical.ior",
+      "value": 1.33
+    },
+    {
+      "parameter": "surface.roughness",
+      "value": 0.04
+    }
+  ],
+  "fieldInstances": [
+    {
+      "id": "f1_uv",
+      "field": "field.uv"
+    },
+    {
+      "id": "f2_normal",
+      "field": "field.normal"
+    },
+    {
+      "id": "f3_view_direction",
+      "field": "field.view_direction"
+    },
+    {
+      "id": "f4_thickness",
+      "field": "field.thickness"
+    }
+  ],
+  "operatorInstances": [
+    {
+      "id": "o1_voronoi",
+      "operator": "op.voronoi",
+      "inputs": {
+        "input": "f1_uv"
+      }
+    },
+    {
+      "id": "o2_fbm",
+      "operator": "op.fbm",
+      "inputs": {
+        "input": "o1_voronoi"
+      }
+    },
+    {
+      "id": "o3_thin_film_interference",
+      "operator": "op.thin_film_interference",
+      "inputs": {
+        "input": "o2_fbm"
+      }
+    },
+    {
+      "id": "o4_fresnel_dielectric",
+      "operator": "op.fresnel_dielectric",
+      "inputs": {
+        "input": "o3_thin_film_interference"
+      }
+    },
+    {
+      "id": "o5_spectral_to_rgb",
+      "operator": "op.spectral_to_rgb",
+      "inputs": {
+        "input": "o4_fresnel_dielectric"
+      }
+    },
+    {
+      "id": "o6_layer_mix",
+      "operator": "op.layer_mix",
+      "inputs": {
+        "input": "o5_spectral_to_rgb"
+      }
+    },
+    {
+      "id": "o7_tone_map",
+      "operator": "op.tone_map",
+      "inputs": {
+        "input": "o6_layer_mix"
+      }
+    }
+  ],
+  "graph": [
+    {
+      "from": "f1_uv",
+      "to": "o1_voronoi",
+      "semantic": "seed"
+    },
+    {
+      "from": "o1_voronoi",
+      "to": "o2_fbm",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o2_fbm",
+      "to": "o3_thin_film_interference",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o3_thin_film_interference",
+      "to": "o4_fresnel_dielectric",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o4_fresnel_dielectric",
+      "to": "o5_spectral_to_rgb",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o5_spectral_to_rgb",
+      "to": "o6_layer_mix",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o6_layer_mix",
+      "to": "o7_tone_map",
+      "semantic": "pipeline"
+    }
+  ],
+  "outputs": {
+    "baseColor": "o7_tone_map",
+    "roughness": "parameter:surface.roughness"
+  },
+  "qualityTiers": {
+    "preview": {
+      "maxCost": "medium",
+      "notes": "Reduce procedural octaves or spectral samples."
+    },
+    "production": {
+      "maxCost": "very_high",
+      "notes": "Use full spectral or volume integration where available."
+    }
+  },
+  "limitations": [
+    "Reference graph specifies semantics, not renderer-specific scheduling."
+  ]
+}

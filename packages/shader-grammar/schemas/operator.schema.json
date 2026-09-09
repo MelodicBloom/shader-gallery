@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shader-grammar.dev/v0.1/operator.schema.json",
+  "title": "Shader Grammar Operator Catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ontologyVersion",
+    "operators"
+  ],
+  "properties": {
+    "ontologyVersion": {
+      "const": "0.1"
+    },
+    "operators": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/operator"
+      }
+    }
+  },
+  "$defs": {
+    "port": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "type"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "type": {
+          "enum": [
+            "float",
+            "vec2",
+            "vec3",
+            "vec4",
+            "color",
+            "spectrum",
+            "field_float",
+            "field_vec2",
+            "field_vec3",
+            "field_spectrum"
+          ]
+        },
+        "optional": {
+          "type": "boolean"
+        }
+      }
+    },
+    "operator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "category",
+        "signature",
+        "mathematicalDefinition",
+        "representations",
+        "cost",
+        "constraints"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^op\\.[a-z][a-z0-9_]*$"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "enum": [
+            "coordinate",
+            "procedural",
+            "differential",
+            "flow",
+            "geometry",
+            "optical",
+            "volumetric",
+            "composition",
+            "postprocess"
+          ]
+        },
+        "signature": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "inputs",
+            "outputs"
+          ],
+          "properties": {
+            "inputs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/port"
+              }
+            },
+            "outputs": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/port"
+              }
+            }
+          }
+        },
+        "mathematicalDefinition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "representations": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "glsl",
+            "wgsl"
+          ],
+          "properties": {
+            "glsl": {
+              "type": "string"
+            },
+            "wgsl": {
+              "type": "string"
+            }
+          }
+        },
+        "cost": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "tier",
+            "textureReads",
+            "estimatedAlu"
+          ],
+          "properties": {
+            "tier": {
+              "enum": [
+                "low",
+                "medium",
+                "high",
+                "very_high"
+              ]
+            },
+            "textureReads": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "estimatedAlu": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "notes": {
+              "type": "string"
+            }
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "compatibleDomains": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "uv",
+              "surface",
+              "object",
+              "world",
+              "volume",
+              "time"
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}
