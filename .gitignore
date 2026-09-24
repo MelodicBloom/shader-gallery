@@ -1,0 +1,14 @@
+node_modules/
+__pycache__/
+*.pyc
+.env
+.env.*
+
+# Local evidence-graph dry-run output; CI uploads it as an artifact.
+artifacts/evidence-graph/
+
+# Local editor and OS state.
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

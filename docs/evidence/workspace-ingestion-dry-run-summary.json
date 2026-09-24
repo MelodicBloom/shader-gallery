@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "WorkspaceIngestionDryRunSummary/0.1.0",
+  "observedAt": "2026-09-22T17:55:40Z",
+  "source": "external-local-workspace-attachment-set",
+  "mode": "read-only",
+  "metrics": {
+    "inputFiles": 101,
+    "uniqueContentObjects": 99,
+    "duplicateAliases": 2,
+    "acceptedForGraphWrite": 99,
+    "rejectedOrQuarantined": 2,
+    "schemaValidRecords": 101,
+    "schemaInvalidRecords": 0,
+    "credentialFiles": 2,
+    "unsafeArchives": 0,
+    "archiveCount": 25,
+    "archiveMembersInspected": 1980,
+    "neo4jMutationCount": 0
+  },
+  "policyFindings": [
+    {
+      "code": "SEC-001",
+      "count": 2,
+      "disposition": "quarantine-and-rotate",
+      "valuesSerialized": false,
+      "fileNamesSerialized": false
+    }
+  ],
+  "limitations": [
+    "The dry-run generated proposed graph records but did not connect to Neo4j.",
+    "Archive member names were inspected without extraction.",
+    "Credential pattern detection is a guardrail, not proof of credential validity.",
+    "Repository authority and licensing were unresolved for workspace-external artifacts."
+  ]
+}

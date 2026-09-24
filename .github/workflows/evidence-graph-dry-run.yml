@@ -1,0 +1,67 @@
+name: Evidence Graph Dry Run
+
+on:
+  pull_request:
+    paths:
+      - "schemas/ecosystem-graph-record.schema.json"
+      - "tools/workspace_ingestion_dry_run.py"
+      - "tools/test_workspace_ingestion_dry_run.py"
+      - "docs/architecture/**"
+      - "docs/evidence/**"
+      - ".github/workflows/evidence-graph-dry-run.yml"
+  push:
+    branches: [main]
+    paths:
+      - "schemas/ecosystem-graph-record.schema.json"
+      - "tools/workspace_ingestion_dry_run.py"
+      - "tools/test_workspace_ingestion_dry_run.py"
+      - "docs/architecture/**"
+      - "docs/evidence/**"
+      - ".github/workflows/evidence-graph-dry-run.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dry-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Run ingestion unit tests
+        run: python3 -m unittest tools/test_workspace_ingestion_dry_run.py
+
+      - name: Generate repository dry-run receipt
+        run: |
+          python3 tools/workspace_ingestion_dry_run.py . \
+            --output artifacts/evidence-graph/repository-dry-run.json
+
+      - name: Enforce policy result
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path("artifacts/evidence-graph/repository-dry-run.json").read_text())
+          metrics = report["metrics"]
+          failures = {
+              "schemaInvalidRecords": metrics["schemaInvalidRecords"],
+              "credentialFiles": metrics["credentialFiles"],
+              "unsafeArchives": metrics["unsafeArchives"],
+              "neo4jMutationCount": metrics["neo4jMutationCount"],
+          }
+          if any(failures.values()):
+              raise SystemExit(f"Evidence graph policy failure: {failures}")
+          print(f"Evidence graph dry-run passed: {metrics['inputFiles']} files")
+          PY
+
+      - name: Upload dry-run receipt
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: evidence-graph-dry-run
+          path: artifacts/evidence-graph/repository-dry-run.json
+          if-no-files-found: error
+          retention-days: 14
