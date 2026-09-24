@@ -107,28 +107,80 @@ def _archive_findings(path: Path) -> dict[str, Any] | None:
     return result
 
 
-def _validate_record(record: dict[str, Any], schema: dict[str, Any]) -> list[str]:
+def _json_type_matches(value: Any, expected: str) -> bool:
+    return {
+        "object": isinstance(value, dict),
+        "array": isinstance(value, list),
+        "string": isinstance(value, str),
+        "number": isinstance(value, (int, float)) and not isinstance(value, bool),
+        "integer": isinstance(value, int) and not isinstance(value, bool),
+        "boolean": isinstance(value, bool),
+        "null": value is None,
+    }.get(expected, True)
+
+
+def _validate_schema_value(value: Any, schema: dict[str, Any], path: str = "$") -> list[str]:
+    """Validate the JSON Schema features used by the graph-record contract.
+
+    This intentionally has no third-party dependency so the dry-run remains
+    runnable in the same minimal Python environment as the GitHub workflow.
+    Unsupported schema keywords are not silently treated as assertions; the
+    contract currently uses only the keywords implemented below.
+    """
     errors: list[str] = []
-    for field in schema.get("required", []):
-        if field not in record:
-            errors.append(f"missing:{field}")
-    if not isinstance(record.get("id"), str) or not record.get("id"):
-        errors.append("id:non-empty-string")
-    if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", str(record.get("version", ""))):
-        errors.append("version:semver")
-    if record.get("kind") not in schema["properties"]["kind"]["enum"]:
-        errors.append("kind:enum")
-    if record.get("status") not in schema["properties"]["status"]["enum"]:
-        errors.append("status:enum")
-    provenance = record.get("provenance", {})
-    for field in schema["properties"]["provenance"]["required"]:
-        if field not in provenance:
-            errors.append(f"provenance.missing:{field}")
-    if not re.fullmatch(r"sha256:[a-f0-9]{64}", str(provenance.get("contentHash", ""))):
-        errors.append("provenance.contentHash:sha256")
-    if not isinstance(provenance.get("sourceFiles"), list) or not provenance.get("sourceFiles"):
-        errors.append("provenance.sourceFiles:minItems")
+    expected_type = schema.get("type")
+    if expected_type and not _json_type_matches(value, expected_type):
+        errors.append(f"{path}:type:{expected_type}")
+        return errors
+    if "const" in schema and value != schema["const"]:
+        errors.append(f"{path}:const")
+    if "enum" in schema and value not in schema["enum"]:
+        errors.append(f"{path}:enum")
+    if isinstance(value, str):
+        if len(value) < schema.get("minLength", 0):
+            errors.append(f"{path}:minLength")
+        if "pattern" in schema and not re.search(schema["pattern"], value):
+            errors.append(f"{path}:pattern")
+        if schema.get("format") == "date-time":
+            try:
+                datetime.fromisoformat(value.replace("Z", "+00:00"))
+            except ValueError:
+                errors.append(f"{path}:format:date-time")
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        if value < schema.get("minimum", value):
+            errors.append(f"{path}:minimum")
+        if value > schema.get("maximum", value):
+            errors.append(f"{path}:maximum")
+    if isinstance(value, list):
+        if len(value) < schema.get("minItems", 0):
+            errors.append(f"{path}:minItems")
+        if "maxItems" in schema and len(value) > schema["maxItems"]:
+            errors.append(f"{path}:maxItems")
+        if schema.get("uniqueItems"):
+            canonical = [json.dumps(item, sort_keys=True, separators=(",", ":")) for item in value]
+            if len(canonical) != len(set(canonical)):
+                errors.append(f"{path}:uniqueItems")
+        item_schema = schema.get("items")
+        if isinstance(item_schema, dict):
+            for index, item in enumerate(value):
+                errors.extend(_validate_schema_value(item, item_schema, f"{path}[{index}]"))
+    if isinstance(value, dict):
+        for field in schema.get("required", []):
+            if field not in value:
+                errors.append(f"{path}:required:{field}")
+        properties = schema.get("properties", {})
+        if schema.get("additionalProperties") is False:
+            for field in value:
+                if field not in properties:
+                    errors.append(f"{path}:additionalProperties:{field}")
+        for field, field_schema in properties.items():
+            if field in value:
+                errors.extend(_validate_schema_value(value[field], field_schema, f"{path}.{field}"))
     return errors
+
+
+def _validate_record(record: dict[str, Any], schema: dict[str, Any]) -> list[str]:
+    return _validate_schema_value(record, schema)
 
 
 def _is_ignored(path: Path, root: Path) -> bool:

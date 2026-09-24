@@ -3,19 +3,21 @@ name: Evidence Graph Dry Run
 on:
   pull_request:
     paths:
-      - "schemas/ecosystem-graph-record.schema.json"
+      - "schemas/**"
       - "tools/workspace_ingestion_dry_run.py"
       - "tools/test_workspace_ingestion_dry_run.py"
       - "docs/architecture/**"
+      - "docs/ecosystem/**"
       - "docs/evidence/**"
       - ".github/workflows/evidence-graph-dry-run.yml"
   push:
     branches: [main]
     paths:
-      - "schemas/ecosystem-graph-record.schema.json"
+      - "schemas/**"
       - "tools/workspace_ingestion_dry_run.py"
       - "tools/test_workspace_ingestion_dry_run.py"
       - "docs/architecture/**"
+      - "docs/ecosystem/**"
       - "docs/evidence/**"
       - ".github/workflows/evidence-graph-dry-run.yml"
   workflow_dispatch:

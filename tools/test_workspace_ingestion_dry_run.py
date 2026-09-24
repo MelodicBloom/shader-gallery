@@ -4,7 +4,7 @@ import unittest
 import zipfile
 from pathlib import Path
 
-from tools.workspace_ingestion_dry_run import scan_workspace
+from tools.workspace_ingestion_dry_run import _validate_record, scan_workspace
 
 
 class WorkspaceIngestionDryRunTests(unittest.TestCase):
@@ -86,6 +86,23 @@ class WorkspaceIngestionDryRunTests(unittest.TestCase):
 
             self.assertEqual(report["metrics"]["inputFiles"], 1)
             self.assertEqual(report["files"][0]["file"], "kept.md")
+
+    def test_rejects_additional_properties_and_invalid_relations(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "artifact.md").write_text("artifact\n", encoding="utf-8")
+            report = scan_workspace(root)
+            record = report["files"][0]["record"]
+            record["unexpected"] = True
+            record["relations"].append({"type": "not-a-relation", "target": "x"})
+
+            errors = _validate_record(record, json.loads(
+                (Path(__file__).resolve().parents[1] / "schemas" / "ecosystem-graph-record.schema.json").read_text()
+            ))
+
+            self.assertIn("$:additionalProperties:unexpected", errors)
+            self.assertIn("$.relations[0]:required:evidenceState", errors)
+            self.assertIn("$.relations[0].type:enum", errors)
 
 
 if __name__ == "__main__":
