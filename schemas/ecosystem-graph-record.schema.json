@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://melodicbloom.dev/schemas/ecosystem-graph-record.schema.json",
+  "title": "Federated Ecosystem Graph Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "kind", "version", "status", "provenance", "relations", "unknowns"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "kind": {"type": "string", "enum": ["artifact", "claim", "experiment", "snapshot", "receipt", "token", "platform", "review", "run"]},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "intent": {"type": "string"},
+    "purpose": {"type": "string"},
+    "status": {"type": "string", "enum": ["unknown", "proposed", "blocked", "capture-prepared", "capture-authorized", "evidence-complete-pending-review", "rejected", "superseded", "canonical"]},
+    "evidenceClass": {"type": "string", "enum": ["EXACT_MATH", "DERIVED_MATH", "PHYSICAL_MODEL", "EMPIRICAL", "HISTORICAL", "PROJECT_INTERPRETATION", "HYPOTHESIS"]},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "repository": {"type": "string"},
+        "ref": {"type": "string"},
+        "sha": {"type": "string"},
+        "owner": {"type": "string"}
+      }
+    },
+    "parents": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "children": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "platforms": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contentHash", "observedAt", "actor", "sourceFiles"],
+      "properties": {
+        "contentHash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "observedAt": {"type": "string", "format": "date-time"},
+        "actor": {"type": "string"},
+        "sourceFiles": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "toolVersions": {"type": "array", "items": {"type": "string"}},
+        "license": {"type": "string"},
+        "rightsStatus": {"type": "string", "enum": ["known", "unknown", "restricted", "rejected"]}
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "target", "evidenceState"],
+        "properties": {
+          "type": {"type": "string", "enum": ["contains", "derived_from", "supersedes", "forked_from", "implements", "tests", "measures", "supports_claim", "contradicts", "blocked_by", "enables", "consumes", "produces", "publishes_to", "requires", "owned_by", "reviewed_by"]},
+          "target": {"type": "string"},
+          "evidenceState": {"type": "string", "enum": ["observed", "derived", "inferred", "proposed", "unknown"]},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "receipt": {"type": "string"}
+        }
+      }
+    },
+    "unknowns": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "claims": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "tags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://melodicbloom.dev/schemas/shader-evidence-receipt.schema.json",
+  "title": "Shader Evidence Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "version", "receiptType", "status", "evidenceClass", "provenance", "authority", "shader", "apparatus", "outputs", "unknowns"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^receipt:shader:[A-Za-z0-9._:/-]+$"},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "receiptType": {"type": "string", "enum": ["identity", "schema", "toolchain", "compile", "link", "render", "capture", "control", "replay", "performance", "mobile", "integration", "gate"]},
+    "status": {"type": "string", "enum": ["pass", "fail", "blocked", "unknown", "pending-review"]},
+    "evidenceClass": {"type": "string", "enum": ["EXACT_MATH", "DERIVED_MATH", "PHYSICAL_MODEL", "EMPIRICAL", "HYPOTHESIS"]},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contentHash", "observedAt", "actor", "sourceFiles", "toolVersions"],
+      "properties": {
+        "contentHash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "observedAt": {"type": "string", "format": "date-time"},
+        "actor": {"type": "string", "minLength": 1},
+        "sourceFiles": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+        "toolVersions": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "ref", "sha", "workingTree"],
+      "properties": {
+        "repository": {"const": "MelodicBloom/shader-gallery"},
+        "ref": {"type": "string", "minLength": 1},
+        "sha": {"type": "string", "pattern": "^[a-f0-9]{7,40}$"},
+        "workingTree": {"type": "string", "enum": ["clean", "dirty", "unknown"]}
+      }
+    },
+    "shader": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["shaderId", "sourceHash", "runtimeHash", "metadataHash"],
+      "properties": {
+        "shaderId": {"type": "string", "minLength": 1},
+        "canonicalRole": {"type": "string"},
+        "sourceHash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "runtimeHash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "metadataHash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+      }
+    },
+    "apparatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["renderer", "geometry", "emitter", "receiver", "observer", "material", "presentation"],
+      "properties": {
+        "renderer": {"type": "string", "minLength": 1},
+        "geometry": {},
+        "emitter": {},
+        "receiver": {},
+        "observer": {},
+        "material": {},
+        "presentation": {}
+      }
+    },
+    "temporal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clockOrigin", "units", "direction", "wrap", "referenceTime", "frameIndex", "sampling"],
+      "properties": {
+        "clockOrigin": {"type": "string"},
+        "units": {"type": "string", "enum": ["seconds", "milliseconds", "frames"]},
+        "direction": {"type": "string", "enum": ["forward", "reverse", "static"]},
+        "wrap": {"type": "string"},
+        "referenceTime": {"type": "number"},
+        "frameIndex": {"type": "integer", "minimum": 0},
+        "sampling": {"type": "string"}
+      }
+    },
+    "independentFamilies": {
+      "type": "array",
+      "items": {"type": "string", "enum": ["geometry", "emitter", "receiver", "observer", "material", "presentation", "temporal", "renderer"]},
+      "maxItems": 1,
+      "uniqueItems": true
+    },
+    "controlledFamilies": {
+      "type": "array",
+      "items": {"type": "string", "enum": ["geometry", "emitter", "receiver", "observer", "material", "presentation", "temporal", "renderer"]},
+      "uniqueItems": true
+    },
+    "metrics": {"type": "object", "additionalProperties": true},
+    "command": {"type": "string"},
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["files", "outputHash"],
+      "properties": {
+        "files": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+        "outputHash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+      }
+    },
+    "unknowns": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"receiptType": {"enum": ["replay", "performance", "mobile"]}}},
+      "then": {"required": ["temporal"]}
+    }
+  ]
+}
