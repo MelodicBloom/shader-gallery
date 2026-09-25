@@ -1,0 +1,157 @@
+{
+  "ontologyVersion": "0.1",
+  "id": "recipe.nacre",
+  "label": "Nacre",
+  "description": "Nacre expressed only with shared Shader Grammar v0.1 primitives.",
+  "materialFamilies": [
+    "layered_dielectric",
+    "periodic_microstructure"
+  ],
+  "parameterValues": [
+    {
+      "parameter": "thin_film.thickness_nm",
+      "value": 510,
+      "modulatedBy": "f5_thickness"
+    },
+    {
+      "parameter": "structure.anisotropy",
+      "value": 0.5,
+      "modulatedBy": "f4_orientation"
+    },
+    {
+      "parameter": "surface.roughness",
+      "value": 0.23
+    },
+    {
+      "parameter": "spectral.strength",
+      "value": 0.62
+    }
+  ],
+  "fieldInstances": [
+    {
+      "id": "f1_uv",
+      "field": "field.uv"
+    },
+    {
+      "id": "f2_normal",
+      "field": "field.normal"
+    },
+    {
+      "id": "f3_view_direction",
+      "field": "field.view_direction"
+    },
+    {
+      "id": "f4_orientation",
+      "field": "field.orientation"
+    },
+    {
+      "id": "f5_thickness",
+      "field": "field.thickness"
+    }
+  ],
+  "operatorInstances": [
+    {
+      "id": "o1_domain_warp",
+      "operator": "op.domain_warp",
+      "inputs": {
+        "input": "f1_uv"
+      }
+    },
+    {
+      "id": "o2_thin_film_interference",
+      "operator": "op.thin_film_interference",
+      "inputs": {
+        "input": "o1_domain_warp"
+      }
+    },
+    {
+      "id": "o3_fresnel_dielectric",
+      "operator": "op.fresnel_dielectric",
+      "inputs": {
+        "input": "o2_thin_film_interference"
+      }
+    },
+    {
+      "id": "o4_spectral_to_rgb",
+      "operator": "op.spectral_to_rgb",
+      "inputs": {
+        "input": "o3_fresnel_dielectric"
+      }
+    },
+    {
+      "id": "o5_reflection",
+      "operator": "op.reflection",
+      "inputs": {
+        "input": "o4_spectral_to_rgb"
+      }
+    },
+    {
+      "id": "o6_layer_mix",
+      "operator": "op.layer_mix",
+      "inputs": {
+        "input": "o5_reflection"
+      }
+    },
+    {
+      "id": "o7_tone_map",
+      "operator": "op.tone_map",
+      "inputs": {
+        "input": "o6_layer_mix"
+      }
+    }
+  ],
+  "graph": [
+    {
+      "from": "f1_uv",
+      "to": "o1_domain_warp",
+      "semantic": "seed"
+    },
+    {
+      "from": "o1_domain_warp",
+      "to": "o2_thin_film_interference",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o2_thin_film_interference",
+      "to": "o3_fresnel_dielectric",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o3_fresnel_dielectric",
+      "to": "o4_spectral_to_rgb",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o4_spectral_to_rgb",
+      "to": "o5_reflection",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o5_reflection",
+      "to": "o6_layer_mix",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o6_layer_mix",
+      "to": "o7_tone_map",
+      "semantic": "pipeline"
+    }
+  ],
+  "outputs": {
+    "baseColor": "o7_tone_map",
+    "roughness": "parameter:surface.roughness"
+  },
+  "qualityTiers": {
+    "preview": {
+      "maxCost": "medium",
+      "notes": "Reduce procedural octaves or spectral samples."
+    },
+    "production": {
+      "maxCost": "very_high",
+      "notes": "Use full spectral or volume integration where available."
+    }
+  },
+  "limitations": [
+    "Reference graph specifies semantics, not renderer-specific scheduling."
+  ]
+}

@@ -1,0 +1,281 @@
+{
+  "ontologyVersion": "0.1",
+  "fields": [
+    {
+      "id": "field.uv",
+      "label": "Surface UV",
+      "category": "coordinate",
+      "domain": "uv",
+      "codomain": "vec2",
+      "definition": "Parameterized surface coordinate.",
+      "inputs": [],
+      "parameterDependencies": [],
+      "continuity": "smooth",
+      "sampling": {
+        "mode": "analytic",
+        "bandLimitRequired": false
+      },
+      "representations": {
+        "glsl": "vec3 field_uv(vec3 p)",
+        "wgsl": "fn field_uv(p: vec3<f32>) -> vec3<f32>"
+      },
+      "cost": "negligible"
+    },
+    {
+      "id": "field.world_position",
+      "label": "World position",
+      "category": "coordinate",
+      "domain": "world",
+      "codomain": "vec3",
+      "definition": "World-space sample position.",
+      "inputs": [],
+      "parameterDependencies": [],
+      "continuity": "smooth",
+      "sampling": {
+        "mode": "analytic",
+        "bandLimitRequired": false
+      },
+      "representations": {
+        "glsl": "vec3 field_world_position(vec3 p)",
+        "wgsl": "fn field_world_position(p: vec3<f32>) -> vec3<f32>"
+      },
+      "cost": "negligible"
+    },
+    {
+      "id": "field.normal",
+      "label": "Surface normal",
+      "category": "geometric",
+      "domain": "surface",
+      "codomain": "vec3",
+      "definition": "Normalized surface differential normal.",
+      "inputs": [],
+      "parameterDependencies": [],
+      "continuity": "smooth",
+      "sampling": {
+        "mode": "analytic",
+        "bandLimitRequired": false
+      },
+      "representations": {
+        "glsl": "vec3 field_normal(vec3 p)",
+        "wgsl": "fn field_normal(p: vec3<f32>) -> vec3<f32>"
+      },
+      "cost": "negligible"
+    },
+    {
+      "id": "field.view_direction",
+      "label": "View direction",
+      "category": "geometric",
+      "domain": "world",
+      "codomain": "vec3",
+      "definition": "Normalized direction toward the camera.",
+      "inputs": [],
+      "parameterDependencies": [],
+      "continuity": "smooth",
+      "sampling": {
+        "mode": "analytic",
+        "bandLimitRequired": false
+      },
+      "representations": {
+        "glsl": "vec3 field_view_direction(vec3 p)",
+        "wgsl": "fn field_view_direction(p: vec3<f32>) -> vec3<f32>"
+      },
+      "cost": "negligible"
+    },
+    {
+      "id": "field.light_direction",
+      "label": "Light direction",
+      "category": "geometric",
+      "domain": "world",
+      "codomain": "vec3",
+      "definition": "Normalized direction toward a light.",
+      "inputs": [],
+      "parameterDependencies": [],
+      "continuity": "smooth",
+      "sampling": {
+        "mode": "analytic",
+        "bandLimitRequired": false
+      },
+      "representations": {
+        "glsl": "vec3 field_light_direction(vec3 p)",
+        "wgsl": "fn field_light_direction(p: vec3<f32>) -> vec3<f32>"
+      },
+      "cost": "negligible"
+    },
+    {
+      "id": "field.time",
+      "label": "Time",
+      "category": "temporal",
+      "domain": "time",
+      "codomain": "float",
+      "definition": "Continuous animation time.",
+      "inputs": [],
+      "parameterDependencies": [],
+      "continuity": "smooth",
+      "sampling": {
+        "mode": "analytic",
+        "bandLimitRequired": false
+      },
+      "representations": {
+        "glsl": "float field_time(vec3 p)",
+        "wgsl": "fn field_time(p: vec3<f32>) -> f32"
+      },
+      "cost": "negligible"
+    },
+    {
+      "id": "field.height",
+      "label": "Height",
+      "category": "geometric",
+      "domain": "surface",
+      "codomain": "float",
+      "definition": "Scalar displacement over a surface.",
+      "inputs": [],
+      "parameterDependencies": [
+        "geometry.displacement"
+      ],
+      "continuity": "smooth",
+      "sampling": {
+        "mode": "procedural",
+        "bandLimitRequired": true
+      },
+      "representations": {
+        "glsl": "float field_height(vec3 p)",
+        "wgsl": "fn field_height(p: vec3<f32>) -> f32"
+      },
+      "cost": "low"
+    },
+    {
+      "id": "field.thickness",
+      "label": "Optical thickness",
+      "category": "optical",
+      "domain": "surface",
+      "codomain": "float",
+      "definition": "Local wavelength-scale film or path thickness.",
+      "inputs": [],
+      "parameterDependencies": [
+        "thin_film.thickness_nm",
+        "thin_film.variation"
+      ],
+      "continuity": "smooth",
+      "sampling": {
+        "mode": "procedural",
+        "bandLimitRequired": true
+      },
+      "representations": {
+        "glsl": "float field_thickness(vec3 p)",
+        "wgsl": "fn field_thickness(p: vec3<f32>) -> f32"
+      },
+      "cost": "low"
+    },
+    {
+      "id": "field.orientation",
+      "label": "Orientation",
+      "category": "geometric",
+      "domain": "surface",
+      "codomain": "vec3",
+      "definition": "Local principal microstructure direction.",
+      "inputs": [],
+      "parameterDependencies": [
+        "structure.anisotropy"
+      ],
+      "continuity": "smooth",
+      "sampling": {
+        "mode": "procedural",
+        "bandLimitRequired": true
+      },
+      "representations": {
+        "glsl": "vec3 field_orientation(vec3 p)",
+        "wgsl": "fn field_orientation(p: vec3<f32>) -> vec3<f32>"
+      },
+      "cost": "low"
+    },
+    {
+      "id": "field.density",
+      "label": "Density",
+      "category": "volumetric",
+      "domain": "volume",
+      "codomain": "float",
+      "definition": "Extinction or mass density in a volume.",
+      "inputs": [],
+      "parameterDependencies": [
+        "volume.density",
+        "volume.threshold"
+      ],
+      "continuity": "smooth",
+      "sampling": {
+        "mode": "procedural",
+        "bandLimitRequired": true
+      },
+      "representations": {
+        "glsl": "float field_density(vec3 p)",
+        "wgsl": "fn field_density(p: vec3<f32>) -> f32"
+      },
+      "cost": "medium"
+    },
+    {
+      "id": "field.optical_depth",
+      "label": "Optical depth",
+      "category": "optical",
+      "domain": "volume",
+      "codomain": "float",
+      "definition": "Integrated extinction along a path.",
+      "inputs": [],
+      "parameterDependencies": [
+        "optical.absorption"
+      ],
+      "continuity": "smooth",
+      "sampling": {
+        "mode": "raymarch",
+        "bandLimitRequired": false
+      },
+      "representations": {
+        "glsl": "float field_optical_depth(vec3 p)",
+        "wgsl": "fn field_optical_depth(p: vec3<f32>) -> f32"
+      },
+      "cost": "medium"
+    },
+    {
+      "id": "field.flow",
+      "label": "Velocity field",
+      "category": "simulation",
+      "domain": "volume",
+      "codomain": "vec3",
+      "definition": "Time-varying advection velocity.",
+      "inputs": [],
+      "parameterDependencies": [
+        "flow.speed"
+      ],
+      "continuity": "smooth",
+      "sampling": {
+        "mode": "simulation",
+        "bandLimitRequired": false
+      },
+      "representations": {
+        "glsl": "vec3 field_flow(vec3 p)",
+        "wgsl": "fn field_flow(p: vec3<f32>) -> vec3<f32>"
+      },
+      "cost": "medium"
+    },
+    {
+      "id": "field.spectral_response",
+      "label": "Spectral response",
+      "category": "optical",
+      "domain": "surface",
+      "codomain": "spectrum",
+      "definition": "Wavelength-indexed radiometric response.",
+      "inputs": [],
+      "parameterDependencies": [
+        "spectral.strength"
+      ],
+      "continuity": "smooth",
+      "sampling": {
+        "mode": "procedural",
+        "bandLimitRequired": true
+      },
+      "representations": {
+        "glsl": "vec3 field_spectral_response(vec3 p)",
+        "wgsl": "fn field_spectral_response(p: vec3<f32>) -> vec3<f32>"
+      },
+      "cost": "medium"
+    }
+  ]
+}

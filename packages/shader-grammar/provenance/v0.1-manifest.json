@@ -1,0 +1,147 @@
+{
+  "version": "0.1",
+  "originalArchiveSha256": "c9ce9719372f3bf8c63b4e974ccf15df7989cc1aa3dce51ee628239b0cfd4742",
+  "sourcePreservationCommit": "7c4f535359aefbfe80261c262ed789d2936cf387",
+  "files": [
+    {
+      "relativePath": "examples/glsl-thin-film.glsl",
+      "sha256": "4179a0f92307837ecf05d6d13c2f9f6e20c82e9c9e0ad32912220339d39204ac",
+      "bytes": 289
+    },
+    {
+      "relativePath": "examples/minimal-thin-film.recipe.json",
+      "sha256": "53d899d90a0aa2dbe4314c4272d6052c35f41607732a528c56580807bfecb415",
+      "bytes": 3204
+    },
+    {
+      "relativePath": "examples/wgsl-thin-film.wgsl",
+      "sha256": "6f70996eab350017539221fad187aba25c1189a74aa3c9a02cfd57af51dbf47b",
+      "bytes": 331
+    },
+    {
+      "relativePath": "HANDOFF.md",
+      "sha256": "99c740b48b3c27f09a437d684515ef699da197d65e8200ca3cd4d9b1661fa825",
+      "bytes": 8112
+    },
+    {
+      "relativePath": "material-taxonomy.yaml",
+      "sha256": "15c851bf2196149688447c4e788255612acce92c3a5b490caf5c7d64aac68b55",
+      "bytes": 2011
+    },
+    {
+      "relativePath": "ontology/fields.json",
+      "sha256": "409f601cd41682b4c2f6193b5f773c245a5f77549698cbedc02745037077abf4",
+      "bytes": 7729
+    },
+    {
+      "relativePath": "ontology/operators.json",
+      "sha256": "af9028d8a149322c8b2d96f6d291f52729d3bd49d84cf1a164f6120c40c828af",
+      "bytes": 16956
+    },
+    {
+      "relativePath": "ontology/parameters.json",
+      "sha256": "db1b16b9390cb76f480e430093aec1f0c46024e23023e070711bf5c1ba049fd6",
+      "bytes": 23620
+    },
+    {
+      "relativePath": "package.json",
+      "sha256": "dd3843cadb10da10bfee28a654a52516cfc88e204f5386266cea322f23674b0f",
+      "bytes": 321
+    },
+    {
+      "relativePath": "README.md",
+      "sha256": "a7d33e42857619befcc789edcb6e4b3ae026d2f25315e5c9e074a7ebcbb80b82",
+      "bytes": 1838
+    },
+    {
+      "relativePath": "recipes/bismuth_oxide.recipe.json",
+      "sha256": "47d912af3b008896f159911b0aadd741edfa2e5b3cbed1d04d2224242a1cff64",
+      "bytes": 3569
+    },
+    {
+      "relativePath": "recipes/butterfly_structural_color.recipe.json",
+      "sha256": "20ee08847b679e2a3a76dd2429ca37a856af3c24906b45cfccde6e5c7881d9aa",
+      "bytes": 3064
+    },
+    {
+      "relativePath": "recipes/caustic_water.recipe.json",
+      "sha256": "8ff42b0effc333b529d0e1e8611b1f7438b143e2e1f583fd3298001413352f80",
+      "bytes": 3582
+    },
+    {
+      "relativePath": "recipes/cloud.recipe.json",
+      "sha256": "12f18b7ccae66b041e795cb0fa858959ed08309111541aa28b3c5a27711c576f",
+      "bytes": 3658
+    },
+    {
+      "relativePath": "recipes/holographic_foil.recipe.json",
+      "sha256": "5d69758f033ceb4f381e03aac03bece7a11f0b824f8ecc175dfd6f3373b76a5e",
+      "bytes": 3031
+    },
+    {
+      "relativePath": "recipes/labradorite.recipe.json",
+      "sha256": "c9d722443e956f6b2e8bb7fc982a704fdb1bcf6824bc19f572d1dac0a82455d9",
+      "bytes": 3272
+    },
+    {
+      "relativePath": "recipes/molten_chrome.recipe.json",
+      "sha256": "4f995d59c740f3738c4283ddca678cbd764e9fb483321818d1a2cca51920752b",
+      "bytes": 3208
+    },
+    {
+      "relativePath": "recipes/nacre.recipe.json",
+      "sha256": "8ff6d5e5bf86710e541732466f1dbd604d1da64ec839a444f1784c385f261339",
+      "bytes": 3317
+    },
+    {
+      "relativePath": "recipes/nebula.recipe.json",
+      "sha256": "af124ebbd68b66e17281d6ebfb6d3822a66db1b8d4f42e846f0f58ff86dc709c",
+      "bytes": 3964
+    },
+    {
+      "relativePath": "recipes/oil_slick.recipe.json",
+      "sha256": "53d899d90a0aa2dbe4314c4272d6052c35f41607732a528c56580807bfecb415",
+      "bytes": 3204
+    },
+    {
+      "relativePath": "recipes/opalescent_glass.recipe.json",
+      "sha256": "603ecff417d5143ec4d9d76ec253620512010f9c5bc0e3a07608fa0a49bf47bb",
+      "bytes": 3871
+    },
+    {
+      "relativePath": "recipes/soap_film.recipe.json",
+      "sha256": "1188fb53691cabe87618df0fd21191fefa5a0f35b7b8e4f2a02c746913badd05",
+      "bytes": 3174
+    },
+    {
+      "relativePath": "reports/validation-matrix.md",
+      "sha256": "9b0d174ff08051c9d88500f88ebfea2baca38f9830be99e59d153530d485685a",
+      "bytes": 6902
+    },
+    {
+      "relativePath": "schemas/field.schema.json",
+      "sha256": "1260755b588063d11e9ebfc9ca1a963f31fa64b09d1af02ce5f963e54645a6ee",
+      "bytes": 2270
+    },
+    {
+      "relativePath": "schemas/operator.schema.json",
+      "sha256": "8bcf6853d8e8d2193f95fc74511e891562a8c4d85d41d5a9ed2c47dc3f31cac9",
+      "bytes": 4069
+    },
+    {
+      "relativePath": "schemas/parameter.schema.json",
+      "sha256": "ea50747fe5f0f52fb45c82a96a0e6a6b3e27e64ca49402b4369e7b22d892f260",
+      "bytes": 3141
+    },
+    {
+      "relativePath": "schemas/recipe.schema.json",
+      "sha256": "b1675afdce70b60cc99e3e58bed322cfa8721060634b8cc6f3b9dffd3fcc1c33",
+      "bytes": 4436
+    },
+    {
+      "relativePath": "scripts/validate.mjs",
+      "sha256": "d9227fb1bc2eb7107e1ca8c2efed795d8f9562f171336751b85d4aede7e53833",
+      "bytes": 8603
+    }
+  ]
+}

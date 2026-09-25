@@ -1,0 +1,40 @@
+name: Shader Grammar QA
+on:
+  pull_request:
+    paths:
+      - 'packages/shader-grammar/**'
+      - '.github/workflows/shader-grammar-ci.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'packages/shader-grammar/**'
+      - '.github/workflows/shader-grammar-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node: [22, 24]
+    defaults:
+      run:
+        working-directory: packages/shader-grammar/qa
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '${{ matrix.node }}'
+          cache: npm
+          cache-dependency-path: packages/shader-grammar/qa/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npm test
+      - run: npm run benchmark
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shader-grammar-qa-node-${{ matrix.node }}
+          path: packages/shader-grammar/.qa-tmp/
+          if-no-files-found: warn

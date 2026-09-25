@@ -1,0 +1,173 @@
+{
+  "ontologyVersion": "0.1",
+  "id": "recipe.caustic_water",
+  "label": "Caustic Water",
+  "description": "Caustic Water expressed only with shared Shader Grammar v0.1 primitives.",
+  "materialFamilies": [
+    "refractive_volume",
+    "dynamic_interface"
+  ],
+  "parameterValues": [
+    {
+      "parameter": "optical.ior",
+      "value": 1.333
+    },
+    {
+      "parameter": "optical.absorption",
+      "value": 0.12,
+      "modulatedBy": "f6_optical_depth"
+    },
+    {
+      "parameter": "surface.transmission",
+      "value": 0.97
+    },
+    {
+      "parameter": "geometry.displacement",
+      "value": 0.12,
+      "modulatedBy": "f5_height"
+    }
+  ],
+  "fieldInstances": [
+    {
+      "id": "f1_uv",
+      "field": "field.uv"
+    },
+    {
+      "id": "f2_normal",
+      "field": "field.normal"
+    },
+    {
+      "id": "f3_view_direction",
+      "field": "field.view_direction"
+    },
+    {
+      "id": "f4_light_direction",
+      "field": "field.light_direction"
+    },
+    {
+      "id": "f5_height",
+      "field": "field.height"
+    },
+    {
+      "id": "f6_optical_depth",
+      "field": "field.optical_depth"
+    }
+  ],
+  "operatorInstances": [
+    {
+      "id": "o1_fbm",
+      "operator": "op.fbm",
+      "inputs": {
+        "input": "f1_uv"
+      }
+    },
+    {
+      "id": "o2_gradient",
+      "operator": "op.gradient",
+      "inputs": {
+        "input": "o1_fbm"
+      }
+    },
+    {
+      "id": "o3_normal_from_gradient",
+      "operator": "op.normal_from_gradient",
+      "inputs": {
+        "input": "o2_gradient"
+      }
+    },
+    {
+      "id": "o4_refraction",
+      "operator": "op.refraction",
+      "inputs": {
+        "input": "o3_normal_from_gradient"
+      }
+    },
+    {
+      "id": "o5_caustic_convergence",
+      "operator": "op.caustic_convergence",
+      "inputs": {
+        "input": "o4_refraction"
+      }
+    },
+    {
+      "id": "o6_beer_lambert",
+      "operator": "op.beer_lambert",
+      "inputs": {
+        "input": "o5_caustic_convergence"
+      }
+    },
+    {
+      "id": "o7_layer_mix",
+      "operator": "op.layer_mix",
+      "inputs": {
+        "input": "o6_beer_lambert"
+      }
+    },
+    {
+      "id": "o8_tone_map",
+      "operator": "op.tone_map",
+      "inputs": {
+        "input": "o7_layer_mix"
+      }
+    }
+  ],
+  "graph": [
+    {
+      "from": "f1_uv",
+      "to": "o1_fbm",
+      "semantic": "seed"
+    },
+    {
+      "from": "o1_fbm",
+      "to": "o2_gradient",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o2_gradient",
+      "to": "o3_normal_from_gradient",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o3_normal_from_gradient",
+      "to": "o4_refraction",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o4_refraction",
+      "to": "o5_caustic_convergence",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o5_caustic_convergence",
+      "to": "o6_beer_lambert",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o6_beer_lambert",
+      "to": "o7_layer_mix",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o7_layer_mix",
+      "to": "o8_tone_map",
+      "semantic": "pipeline"
+    }
+  ],
+  "outputs": {
+    "baseColor": "o8_tone_map",
+    "roughness": "parameter:surface.roughness"
+  },
+  "qualityTiers": {
+    "preview": {
+      "maxCost": "medium",
+      "notes": "Reduce procedural octaves or spectral samples."
+    },
+    "production": {
+      "maxCost": "very_high",
+      "notes": "Use full spectral or volume integration where available."
+    }
+  },
+  "limitations": [
+    "Reference graph specifies semantics, not renderer-specific scheduling."
+  ]
+}

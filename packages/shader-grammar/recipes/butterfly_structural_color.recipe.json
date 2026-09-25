@@ -1,0 +1,144 @@
+{
+  "ontologyVersion": "0.1",
+  "id": "recipe.butterfly_structural_color",
+  "label": "Butterfly Structural Color",
+  "description": "Butterfly Structural Color expressed only with shared Shader Grammar v0.1 primitives.",
+  "materialFamilies": [
+    "periodic_microstructure",
+    "layered_dielectric"
+  ],
+  "parameterValues": [
+    {
+      "parameter": "diffraction.spacing_nm",
+      "value": 700,
+      "modulatedBy": "f4_orientation"
+    },
+    {
+      "parameter": "structure.anisotropy",
+      "value": 0.96
+    },
+    {
+      "parameter": "surface.roughness",
+      "value": 0.18
+    },
+    {
+      "parameter": "spectral.strength",
+      "value": 1
+    }
+  ],
+  "fieldInstances": [
+    {
+      "id": "f1_uv",
+      "field": "field.uv"
+    },
+    {
+      "id": "f2_normal",
+      "field": "field.normal"
+    },
+    {
+      "id": "f3_view_direction",
+      "field": "field.view_direction"
+    },
+    {
+      "id": "f4_orientation",
+      "field": "field.orientation"
+    },
+    {
+      "id": "f5_spectral_response",
+      "field": "field.spectral_response"
+    }
+  ],
+  "operatorInstances": [
+    {
+      "id": "o1_fbm",
+      "operator": "op.fbm",
+      "inputs": {
+        "input": "f1_uv"
+      }
+    },
+    {
+      "id": "o2_diffraction_grating",
+      "operator": "op.diffraction_grating",
+      "inputs": {
+        "input": "o1_fbm"
+      }
+    },
+    {
+      "id": "o3_fresnel_dielectric",
+      "operator": "op.fresnel_dielectric",
+      "inputs": {
+        "input": "o2_diffraction_grating"
+      }
+    },
+    {
+      "id": "o4_spectral_to_rgb",
+      "operator": "op.spectral_to_rgb",
+      "inputs": {
+        "input": "o3_fresnel_dielectric"
+      }
+    },
+    {
+      "id": "o5_layer_mix",
+      "operator": "op.layer_mix",
+      "inputs": {
+        "input": "o4_spectral_to_rgb"
+      }
+    },
+    {
+      "id": "o6_tone_map",
+      "operator": "op.tone_map",
+      "inputs": {
+        "input": "o5_layer_mix"
+      }
+    }
+  ],
+  "graph": [
+    {
+      "from": "f1_uv",
+      "to": "o1_fbm",
+      "semantic": "seed"
+    },
+    {
+      "from": "o1_fbm",
+      "to": "o2_diffraction_grating",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o2_diffraction_grating",
+      "to": "o3_fresnel_dielectric",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o3_fresnel_dielectric",
+      "to": "o4_spectral_to_rgb",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o4_spectral_to_rgb",
+      "to": "o5_layer_mix",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o5_layer_mix",
+      "to": "o6_tone_map",
+      "semantic": "pipeline"
+    }
+  ],
+  "outputs": {
+    "baseColor": "o6_tone_map",
+    "roughness": "parameter:surface.roughness"
+  },
+  "qualityTiers": {
+    "preview": {
+      "maxCost": "medium",
+      "notes": "Reduce procedural octaves or spectral samples."
+    },
+    "production": {
+      "maxCost": "very_high",
+      "notes": "Use full spectral or volume integration where available."
+    }
+  },
+  "limitations": [
+    "Reference graph specifies semantics, not renderer-specific scheduling."
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "ontologyVersion": "0.1",
+  "id": "recipe.molten_chrome",
+  "label": "Molten Chrome",
+  "description": "Molten Chrome expressed only with shared Shader Grammar v0.1 primitives.",
+  "materialFamilies": [
+    "metallic_surface",
+    "dynamic_interface"
+  ],
+  "parameterValues": [
+    {
+      "parameter": "surface.metallic",
+      "value": 1
+    },
+    {
+      "parameter": "surface.roughness",
+      "value": 0.08
+    },
+    {
+      "parameter": "geometry.displacement",
+      "value": 0.18,
+      "modulatedBy": "f4_height"
+    },
+    {
+      "parameter": "flow.speed",
+      "value": 0.35,
+      "modulatedBy": "f5_flow"
+    }
+  ],
+  "fieldInstances": [
+    {
+      "id": "f1_world_position",
+      "field": "field.world_position"
+    },
+    {
+      "id": "f2_normal",
+      "field": "field.normal"
+    },
+    {
+      "id": "f3_view_direction",
+      "field": "field.view_direction"
+    },
+    {
+      "id": "f4_height",
+      "field": "field.height"
+    },
+    {
+      "id": "f5_flow",
+      "field": "field.flow"
+    }
+  ],
+  "operatorInstances": [
+    {
+      "id": "o1_fbm",
+      "operator": "op.fbm",
+      "inputs": {
+        "input": "f1_world_position"
+      }
+    },
+    {
+      "id": "o2_advection",
+      "operator": "op.advection",
+      "inputs": {
+        "input": "o1_fbm"
+      }
+    },
+    {
+      "id": "o3_gradient",
+      "operator": "op.gradient",
+      "inputs": {
+        "input": "o2_advection"
+      }
+    },
+    {
+      "id": "o4_normal_from_gradient",
+      "operator": "op.normal_from_gradient",
+      "inputs": {
+        "input": "o3_gradient"
+      }
+    },
+    {
+      "id": "o5_reflection",
+      "operator": "op.reflection",
+      "inputs": {
+        "input": "o4_normal_from_gradient"
+      }
+    },
+    {
+      "id": "o6_layer_mix",
+      "operator": "op.layer_mix",
+      "inputs": {
+        "input": "o5_reflection"
+      }
+    },
+    {
+      "id": "o7_tone_map",
+      "operator": "op.tone_map",
+      "inputs": {
+        "input": "o6_layer_mix"
+      }
+    }
+  ],
+  "graph": [
+    {
+      "from": "f1_world_position",
+      "to": "o1_fbm",
+      "semantic": "seed"
+    },
+    {
+      "from": "o1_fbm",
+      "to": "o2_advection",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o2_advection",
+      "to": "o3_gradient",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o3_gradient",
+      "to": "o4_normal_from_gradient",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o4_normal_from_gradient",
+      "to": "o5_reflection",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o5_reflection",
+      "to": "o6_layer_mix",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o6_layer_mix",
+      "to": "o7_tone_map",
+      "semantic": "pipeline"
+    }
+  ],
+  "outputs": {
+    "baseColor": "o7_tone_map",
+    "roughness": "parameter:surface.roughness"
+  },
+  "qualityTiers": {
+    "preview": {
+      "maxCost": "medium",
+      "notes": "Reduce procedural octaves or spectral samples."
+    },
+    "production": {
+      "maxCost": "very_high",
+      "notes": "Use full spectral or volume integration where available."
+    }
+  },
+  "limitations": [
+    "Reference graph specifies semantics, not renderer-specific scheduling."
+  ]
+}

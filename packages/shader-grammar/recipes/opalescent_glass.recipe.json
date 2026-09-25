@@ -1,0 +1,182 @@
+{
+  "ontologyVersion": "0.1",
+  "id": "recipe.opalescent_glass",
+  "label": "Opalescent Glass",
+  "description": "Opalescent Glass expressed only with shared Shader Grammar v0.1 primitives.",
+  "materialFamilies": [
+    "refractive_volume",
+    "layered_dielectric"
+  ],
+  "parameterValues": [
+    {
+      "parameter": "optical.ior",
+      "value": 1.48
+    },
+    {
+      "parameter": "surface.transmission",
+      "value": 0.82
+    },
+    {
+      "parameter": "optical.absorption",
+      "value": 0.34,
+      "modulatedBy": "f7_optical_depth"
+    },
+    {
+      "parameter": "optical.scattering",
+      "value": 1.6,
+      "modulatedBy": "f6_density"
+    },
+    {
+      "parameter": "thin_film.thickness_nm",
+      "value": 540,
+      "modulatedBy": "f5_thickness"
+    }
+  ],
+  "fieldInstances": [
+    {
+      "id": "f1_world_position",
+      "field": "field.world_position"
+    },
+    {
+      "id": "f2_normal",
+      "field": "field.normal"
+    },
+    {
+      "id": "f3_view_direction",
+      "field": "field.view_direction"
+    },
+    {
+      "id": "f4_light_direction",
+      "field": "field.light_direction"
+    },
+    {
+      "id": "f5_thickness",
+      "field": "field.thickness"
+    },
+    {
+      "id": "f6_density",
+      "field": "field.density"
+    },
+    {
+      "id": "f7_optical_depth",
+      "field": "field.optical_depth"
+    }
+  ],
+  "operatorInstances": [
+    {
+      "id": "o1_fbm",
+      "operator": "op.fbm",
+      "inputs": {
+        "input": "f1_world_position"
+      }
+    },
+    {
+      "id": "o2_thin_film_interference",
+      "operator": "op.thin_film_interference",
+      "inputs": {
+        "input": "o1_fbm"
+      }
+    },
+    {
+      "id": "o3_refraction",
+      "operator": "op.refraction",
+      "inputs": {
+        "input": "o2_thin_film_interference"
+      }
+    },
+    {
+      "id": "o4_caustic_convergence",
+      "operator": "op.caustic_convergence",
+      "inputs": {
+        "input": "o3_refraction"
+      }
+    },
+    {
+      "id": "o5_beer_lambert",
+      "operator": "op.beer_lambert",
+      "inputs": {
+        "input": "o4_caustic_convergence"
+      }
+    },
+    {
+      "id": "o6_spectral_to_rgb",
+      "operator": "op.spectral_to_rgb",
+      "inputs": {
+        "input": "o5_beer_lambert"
+      }
+    },
+    {
+      "id": "o7_layer_mix",
+      "operator": "op.layer_mix",
+      "inputs": {
+        "input": "o6_spectral_to_rgb"
+      }
+    },
+    {
+      "id": "o8_tone_map",
+      "operator": "op.tone_map",
+      "inputs": {
+        "input": "o7_layer_mix"
+      }
+    }
+  ],
+  "graph": [
+    {
+      "from": "f1_world_position",
+      "to": "o1_fbm",
+      "semantic": "seed"
+    },
+    {
+      "from": "o1_fbm",
+      "to": "o2_thin_film_interference",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o2_thin_film_interference",
+      "to": "o3_refraction",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o3_refraction",
+      "to": "o4_caustic_convergence",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o4_caustic_convergence",
+      "to": "o5_beer_lambert",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o5_beer_lambert",
+      "to": "o6_spectral_to_rgb",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o6_spectral_to_rgb",
+      "to": "o7_layer_mix",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o7_layer_mix",
+      "to": "o8_tone_map",
+      "semantic": "pipeline"
+    }
+  ],
+  "outputs": {
+    "baseColor": "o8_tone_map",
+    "roughness": "parameter:surface.roughness"
+  },
+  "qualityTiers": {
+    "preview": {
+      "maxCost": "medium",
+      "notes": "Reduce procedural octaves or spectral samples."
+    },
+    "production": {
+      "maxCost": "very_high",
+      "notes": "Use full spectral or volume integration where available."
+    }
+  },
+  "limitations": [
+    "Reference graph specifies semantics, not renderer-specific scheduling."
+  ]
+}

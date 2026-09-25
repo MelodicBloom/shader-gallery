@@ -1,0 +1,192 @@
+{
+  "ontologyVersion": "0.1",
+  "id": "recipe.nebula",
+  "label": "Nebula",
+  "description": "Nebula expressed only with shared Shader Grammar v0.1 primitives.",
+  "materialFamilies": [
+    "participating_medium"
+  ],
+  "parameterValues": [
+    {
+      "parameter": "volume.density",
+      "value": 0.72,
+      "modulatedBy": "f5_density"
+    },
+    {
+      "parameter": "volume.threshold",
+      "value": 0.28
+    },
+    {
+      "parameter": "optical.scattering",
+      "value": 0.7
+    },
+    {
+      "parameter": "optical.phase_g",
+      "value": 0.12
+    },
+    {
+      "parameter": "emission.intensity",
+      "value": 6.5,
+      "modulatedBy": "f7_spectral_response"
+    }
+  ],
+  "fieldInstances": [
+    {
+      "id": "f1_world_position",
+      "field": "field.world_position"
+    },
+    {
+      "id": "f2_view_direction",
+      "field": "field.view_direction"
+    },
+    {
+      "id": "f3_light_direction",
+      "field": "field.light_direction"
+    },
+    {
+      "id": "f4_time",
+      "field": "field.time"
+    },
+    {
+      "id": "f5_density",
+      "field": "field.density"
+    },
+    {
+      "id": "f6_flow",
+      "field": "field.flow"
+    },
+    {
+      "id": "f7_spectral_response",
+      "field": "field.spectral_response"
+    }
+  ],
+  "operatorInstances": [
+    {
+      "id": "o1_fbm",
+      "operator": "op.fbm",
+      "inputs": {
+        "input": "f1_world_position"
+      }
+    },
+    {
+      "id": "o2_domain_warp",
+      "operator": "op.domain_warp",
+      "inputs": {
+        "input": "o1_fbm"
+      }
+    },
+    {
+      "id": "o3_advection",
+      "operator": "op.advection",
+      "inputs": {
+        "input": "o2_domain_warp"
+      }
+    },
+    {
+      "id": "o4_beer_lambert",
+      "operator": "op.beer_lambert",
+      "inputs": {
+        "input": "o3_advection"
+      }
+    },
+    {
+      "id": "o5_henyey_greenstein",
+      "operator": "op.henyey_greenstein",
+      "inputs": {
+        "input": "o4_beer_lambert"
+      }
+    },
+    {
+      "id": "o6_raymarch_volume",
+      "operator": "op.raymarch_volume",
+      "inputs": {
+        "input": "o5_henyey_greenstein"
+      }
+    },
+    {
+      "id": "o7_spectral_to_rgb",
+      "operator": "op.spectral_to_rgb",
+      "inputs": {
+        "input": "o6_raymarch_volume"
+      }
+    },
+    {
+      "id": "o8_layer_mix",
+      "operator": "op.layer_mix",
+      "inputs": {
+        "input": "o7_spectral_to_rgb"
+      }
+    },
+    {
+      "id": "o9_tone_map",
+      "operator": "op.tone_map",
+      "inputs": {
+        "input": "o8_layer_mix"
+      }
+    }
+  ],
+  "graph": [
+    {
+      "from": "f1_world_position",
+      "to": "o1_fbm",
+      "semantic": "seed"
+    },
+    {
+      "from": "o1_fbm",
+      "to": "o2_domain_warp",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o2_domain_warp",
+      "to": "o3_advection",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o3_advection",
+      "to": "o4_beer_lambert",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o4_beer_lambert",
+      "to": "o5_henyey_greenstein",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o5_henyey_greenstein",
+      "to": "o6_raymarch_volume",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o6_raymarch_volume",
+      "to": "o7_spectral_to_rgb",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o7_spectral_to_rgb",
+      "to": "o8_layer_mix",
+      "semantic": "pipeline"
+    },
+    {
+      "from": "o8_layer_mix",
+      "to": "o9_tone_map",
+      "semantic": "pipeline"
+    }
+  ],
+  "outputs": {
+    "baseColor": "o9_tone_map",
+    "roughness": "parameter:surface.roughness"
+  },
+  "qualityTiers": {
+    "preview": {
+      "maxCost": "medium",
+      "notes": "Reduce procedural octaves or spectral samples."
+    },
+    "production": {
+      "maxCost": "very_high",
+      "notes": "Use full spectral or volume integration where available."
+    }
+  },
+  "limitations": [
+    "Reference graph specifies semantics, not renderer-specific scheduling."
+  ]
+}

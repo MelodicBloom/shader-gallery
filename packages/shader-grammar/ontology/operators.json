@@ -1,0 +1,669 @@
+{
+  "ontologyVersion": "0.1",
+  "operators": [
+    {
+      "id": "op.fbm",
+      "label": "Fractal Brownian motion",
+      "category": "procedural",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "sum_i amplitude_i * noise(frequency_i * x)",
+      "representations": {
+        "glsl": "float op_fbm(float x)",
+        "wgsl": "fn op_fbm(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "high",
+        "textureReads": 0,
+        "estimatedAlu": 80,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "surface",
+        "world",
+        "volume"
+      ]
+    },
+    {
+      "id": "op.voronoi",
+      "label": "Voronoi cells",
+      "category": "procedural",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "min_i ||x - site_i||",
+      "representations": {
+        "glsl": "float op_voronoi(float x)",
+        "wgsl": "fn op_voronoi(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "medium",
+        "textureReads": 0,
+        "estimatedAlu": 45,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "surface",
+        "world",
+        "volume"
+      ]
+    },
+    {
+      "id": "op.domain_warp",
+      "label": "Domain warp",
+      "category": "coordinate",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "f(x) -> f(x + a g(x))",
+      "representations": {
+        "glsl": "float op_domain_warp(float x)",
+        "wgsl": "fn op_domain_warp(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "high",
+        "textureReads": 0,
+        "estimatedAlu": 70,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "surface",
+        "world",
+        "volume"
+      ]
+    },
+    {
+      "id": "op.gradient",
+      "label": "Gradient",
+      "category": "differential",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "grad f = (df/dx, df/dy, df/dz)",
+      "representations": {
+        "glsl": "float op_gradient(float x)",
+        "wgsl": "fn op_gradient(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "medium",
+        "textureReads": 0,
+        "estimatedAlu": 18,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "surface",
+        "world",
+        "volume"
+      ]
+    },
+    {
+      "id": "op.normal_from_gradient",
+      "label": "Normal from gradient",
+      "category": "differential",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "normalize((-df/dx,-df/dy,1))",
+      "representations": {
+        "glsl": "float op_normal_from_gradient(float x)",
+        "wgsl": "fn op_normal_from_gradient(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "low",
+        "textureReads": 0,
+        "estimatedAlu": 12,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "surface"
+      ]
+    },
+    {
+      "id": "op.advection",
+      "label": "Semi-Lagrangian advection",
+      "category": "flow",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "f(x,t+dt)=f(x-v(x,t)dt,t)",
+      "representations": {
+        "glsl": "float op_advection(float x)",
+        "wgsl": "fn op_advection(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "high",
+        "textureReads": 0,
+        "estimatedAlu": 60,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "surface",
+        "volume"
+      ]
+    },
+    {
+      "id": "op.thin_film_interference",
+      "label": "Thin-film interference",
+      "category": "optical",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "R(lambda)=|r01+r12 exp(i 4 pi n d cos(theta)/lambda)|^2",
+      "representations": {
+        "glsl": "float op_thin_film_interference(float x)",
+        "wgsl": "fn op_thin_film_interference(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "high",
+        "textureReads": 0,
+        "estimatedAlu": 95,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "surface"
+      ]
+    },
+    {
+      "id": "op.fresnel_dielectric",
+      "label": "Dielectric Fresnel",
+      "category": "optical",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "F=Rs+Rp over 2 using Snell geometry",
+      "representations": {
+        "glsl": "float op_fresnel_dielectric(float x)",
+        "wgsl": "fn op_fresnel_dielectric(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "medium",
+        "textureReads": 0,
+        "estimatedAlu": 32,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "surface"
+      ]
+    },
+    {
+      "id": "op.diffraction_grating",
+      "label": "Diffraction grating",
+      "category": "optical",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "m lambda = d(sin(theta_i)+sin(theta_o))",
+      "representations": {
+        "glsl": "float op_diffraction_grating(float x)",
+        "wgsl": "fn op_diffraction_grating(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "high",
+        "textureReads": 0,
+        "estimatedAlu": 82,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "surface"
+      ]
+    },
+    {
+      "id": "op.spectral_to_rgb",
+      "label": "Spectral integration",
+      "category": "optical",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "XYZ=integral S(lambda) CIE(lambda) d lambda",
+      "representations": {
+        "glsl": "float op_spectral_to_rgb(float x)",
+        "wgsl": "fn op_spectral_to_rgb(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "high",
+        "textureReads": 0,
+        "estimatedAlu": 72,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "surface",
+        "volume"
+      ]
+    },
+    {
+      "id": "op.beer_lambert",
+      "label": "Beer-Lambert attenuation",
+      "category": "optical",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "T=exp(-sigma_a L)",
+      "representations": {
+        "glsl": "float op_beer_lambert(float x)",
+        "wgsl": "fn op_beer_lambert(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "low",
+        "textureReads": 0,
+        "estimatedAlu": 10,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "surface",
+        "volume"
+      ]
+    },
+    {
+      "id": "op.henyey_greenstein",
+      "label": "Henyey-Greenstein phase",
+      "category": "volumetric",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "p(theta)=(1-g^2)/(4pi(1+g^2-2g cos(theta))^(3/2))",
+      "representations": {
+        "glsl": "float op_henyey_greenstein(float x)",
+        "wgsl": "fn op_henyey_greenstein(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "medium",
+        "textureReads": 0,
+        "estimatedAlu": 28,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "volume"
+      ]
+    },
+    {
+      "id": "op.raymarch_volume",
+      "label": "Volume raymarch",
+      "category": "volumetric",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "L=sum_i T_i(sigma_s L_i + L_e) delta_s",
+      "representations": {
+        "glsl": "float op_raymarch_volume(float x)",
+        "wgsl": "fn op_raymarch_volume(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "very_high",
+        "textureReads": 0,
+        "estimatedAlu": 256,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "volume"
+      ]
+    },
+    {
+      "id": "op.reflection",
+      "label": "Environment reflection",
+      "category": "optical",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "r=i-2 dot(n,i)n",
+      "representations": {
+        "glsl": "float op_reflection(float x)",
+        "wgsl": "fn op_reflection(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "medium",
+        "textureReads": 0,
+        "estimatedAlu": 18,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "surface"
+      ]
+    },
+    {
+      "id": "op.refraction",
+      "label": "Dielectric refraction",
+      "category": "optical",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "Snell: eta_i sin(theta_i)=eta_t sin(theta_t)",
+      "representations": {
+        "glsl": "float op_refraction(float x)",
+        "wgsl": "fn op_refraction(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "medium",
+        "textureReads": 0,
+        "estimatedAlu": 24,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "surface"
+      ]
+    },
+    {
+      "id": "op.caustic_convergence",
+      "label": "Caustic convergence",
+      "category": "optical",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "C proportional to inverse area of refracted ray differential",
+      "representations": {
+        "glsl": "float op_caustic_convergence(float x)",
+        "wgsl": "fn op_caustic_convergence(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "high",
+        "textureReads": 0,
+        "estimatedAlu": 90,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "surface",
+        "volume"
+      ]
+    },
+    {
+      "id": "op.layer_mix",
+      "label": "Energy-aware layer mix",
+      "category": "composition",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "L=sum_i w_i L_i with normalized or Fresnel weights",
+      "representations": {
+        "glsl": "float op_layer_mix(float x)",
+        "wgsl": "fn op_layer_mix(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "low",
+        "textureReads": 0,
+        "estimatedAlu": 12,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "surface",
+        "world",
+        "volume"
+      ]
+    },
+    {
+      "id": "op.tone_map",
+      "label": "Tone map",
+      "category": "postprocess",
+      "signature": {
+        "inputs": [
+          {
+            "name": "input",
+            "type": "field_float"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "output",
+            "type": "field_float"
+          }
+        ]
+      },
+      "mathematicalDefinition": "c_out=c/(1+c) with exposure transform",
+      "representations": {
+        "glsl": "float op_tone_map(float x)",
+        "wgsl": "fn op_tone_map(x: f32) -> f32"
+      },
+      "cost": {
+        "tier": "low",
+        "textureReads": 0,
+        "estimatedAlu": 9,
+        "notes": "Analytic reference implementation; actual cost is target-dependent."
+      },
+      "constraints": [
+        "Inputs must share a coordinate convention."
+      ],
+      "compatibleDomains": [
+        "surface",
+        "world",
+        "volume"
+      ]
+    }
+  ]
+}
