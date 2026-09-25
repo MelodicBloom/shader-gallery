@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://melodicbloom.dev/schemas/neo4j-ingestion.config.schema.json",
+  "title": "Neo4j Ingestion Writer Configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "$id", "configVersion", "purpose", "target", "source", "run", "validation", "writePolicy", "cypherTemplates", "mcp"],
+  "properties": {
+    "$schema": {"type": "string", "format": "uri"},
+    "$id": {"type": "string", "format": "uri"},
+    "configVersion": {"type": "string", "const": "Neo4jIngestionConfig/0.1.0"},
+    "purpose": {"type": "string", "minLength": 1},
+    "target": {
+      "type": "object", "additionalProperties": false,
+      "required": ["uriEnv", "usernameEnv", "passwordEnv", "databaseEnv", "defaultDatabase", "requireTlsForRemote"],
+      "properties": {
+        "uriEnv": {"type": "string", "const": "NEO4J_URI"},
+        "usernameEnv": {"type": "string", "const": "NEO4J_USERNAME"},
+        "passwordEnv": {"type": "string", "const": "NEO4J_PASSWORD"},
+        "databaseEnv": {"type": "string", "const": "NEO4J_DATABASE"},
+        "defaultDatabase": {"type": "string", "minLength": 1},
+        "requireTlsForRemote": {"const": true}
+      }
+    },
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["root", "manifest", "include", "exclude", "followSymlinks", "executeUploadedCode"],
+      "properties": {
+        "root": {"type": "string", "minLength": 1},
+        "manifest": {"type": "string", "minLength": 1},
+        "include": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "exclude": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "followSymlinks": {"const": false},
+        "executeUploadedCode": {"const": false}
+      }
+    },
+    "run": {
+      "type": "object", "additionalProperties": false,
+      "required": ["defaultMode", "allowedModes", "requireWriteFlag", "operatorEnv", "sourceRefEnv", "idempotency", "batchSize", "maxErrors", "onError", "receiptPath"],
+      "properties": {
+        "defaultMode": {"const": "dry-run"},
+        "allowedModes": {"type": "array", "const": ["dry-run", "write"]},
+        "requireWriteFlag": {"type": "string", "const": "INGESTION_ALLOW_WRITE=true"},
+        "operatorEnv": {"type": "string", "minLength": 1},
+        "sourceRefEnv": {"type": "string", "minLength": 1},
+        "idempotency": {"type": "object", "required": ["algorithm", "runKeyFields", "recordKeyFields", "relationKeyFields", "replayPolicy"], "properties": {"algorithm": {"const": "sha256"}, "runKeyFields": {"type": "array", "minItems": 1}, "recordKeyFields": {"type": "array", "minItems": 1}, "relationKeyFields": {"type": "array", "minItems": 1}, "replayPolicy": {"type": "string", "minLength": 1}}},
+        "batchSize": {"type": "integer", "minimum": 1, "maximum": 1000},
+        "maxErrors": {"const": 0},
+        "onError": {"const": "quarantine-and-stop"},
+        "receiptPath": {"type": "string", "pattern": "\\{runId\\}"}
+      }
+    },
+    "validation": {"type": "object", "required": ["schema", "requireAuthority", "requireContentHash", "rejectCredentialFindings", "rejectUnsafeArchives", "rejectUnknownRelationTypes", "allowInferredRelations", "promoteToCanonical", "crossRecordRules"], "properties": {"schema": {"type": "string"}, "requireAuthority": {"const": true}, "requireContentHash": {"const": true}, "rejectCredentialFindings": {"const": true}, "rejectUnsafeArchives": {"const": true}, "rejectUnknownRelationTypes": {"const": true}, "allowInferredRelations": {"type": "boolean"}, "promoteToCanonical": {"const": false}, "crossRecordRules": {"type": "array", "minItems": 1}}},
+    "writePolicy": {"type": "object", "required": ["neverExecuteArbitraryCypher", "bootstrapConstraintsFirst", "writeRunBeforeRecords", "writeRecordsBeforeRelations", "relationsOnlyWhenEndpointsExist", "preserveObservedAt", "preserveSourceRef", "allowUpdates", "allowDeletes", "allowSchemaDrops"], "properties": {"neverExecuteArbitraryCypher": {"const": true}, "bootstrapConstraintsFirst": {"const": true}, "writeRunBeforeRecords": {"const": true}, "writeRecordsBeforeRelations": {"const": true}, "relationsOnlyWhenEndpointsExist": {"const": true}, "preserveObservedAt": {"const": true}, "preserveSourceRef": {"const": true}, "allowUpdates": {"const": false}, "allowDeletes": {"const": false}, "allowSchemaDrops": {"const": false}}},
+    "cypherTemplates": {"type": "object", "required": ["run", "runFinalize", "project", "repository", "evidence", "relation"], "properties": {"run": {"type": "string", "pattern": "RETURN"}, "runFinalize": {"type": "string", "pattern": "RETURN"}, "project": {"type": "string", "pattern": "RETURN"}, "repository": {"type": "string", "pattern": "RETURN"}, "evidence": {"type": "string", "pattern": "RETURN"}, "relation": {"type": "string", "pattern": "RETURN"}}},
+    "mcp": {"type": "object", "required": ["enabled", "server", "transport", "requiredTools", "writeToolAllowedOnlyFor", "agentFacingWriteAccess"], "properties": {"enabled": {"const": true}, "server": {"const": "official-neo4j-mcp"}, "transport": {"enum": ["stdio", "http", "stdio-or-http"]}, "requiredTools": {"type": "array", "minItems": 1}, "writeToolAllowedOnlyFor": {"type": "array", "minItems": 1}, "agentFacingWriteAccess": {"const": false}, "notes": {"type": "string"}}}
+  }
+}

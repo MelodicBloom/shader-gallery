@@ -11,7 +11,7 @@
       "enabled": true,
       "type": "cypherTemplate",
       "config": {
-        "template": "MATCH (p:Project|Platform) WHERE ($projectId = '' OR p.id = $projectId) AND ($owner = '' OR p.owner = $owner) RETURN p.id AS id, p.name AS name, p.purpose AS purpose, p.intent AS intent, p.owner AS owner, p.repository AS repository, p.ref AS ref, p.status AS status, p.platforms AS platforms LIMIT 50",
+        "template": "MATCH (p) WHERE (p:Project OR p:Platform) AND ($projectId = '' OR p.id = $projectId) AND ($owner = '' OR p.owner = $owner) RETURN p.id AS id, p.name AS name, p.purpose AS purpose, p.intent AS intent, p.owner AS owner, p.repository AS repository, p.ref AS ref, p.status AS status, p.platforms AS platforms LIMIT 50",
         "parameters": [
           {"name": "projectId", "data_type": "string", "description": "Exact project id or empty string."},
           {"name": "owner", "data_type": "string", "description": "Exact owner identifier or empty string."}
@@ -24,7 +24,7 @@
       "enabled": true,
       "type": "cypherTemplate",
       "config": {
-        "template": "MATCH (p:Project|Platform {id: $projectId})-[rel]-(other) RETURN p.id AS sourceId, type(rel) AS relationType, other.id AS targetId, labels(other)[0] AS targetType, other.status AS targetStatus, rel.evidenceState AS evidenceState, rel.confidence AS confidence LIMIT 100",
+        "template": "MATCH (p)-[rel]-(other) WHERE (p:Project OR p:Platform) AND p.id = $projectId RETURN p.id AS sourceId, coalesce(rel.type, type(rel)) AS relationType, other.id AS targetId, labels(other)[0] AS targetType, other.status AS targetStatus, rel.evidenceState AS evidenceState, rel.confidence AS confidence LIMIT 100",
         "parameters": [
           {"name": "projectId", "data_type": "string", "description": "Exact project or platform id."}
         ]
@@ -36,9 +36,9 @@
       "enabled": true,
       "type": "cypherTemplate",
       "config": {
-        "template": "MATCH (n) WHERE (n.owner IS NULL OR n.owner = '' OR n.repository IS NULL OR n.repository = '') AND ($kind = '' OR n.kind = $kind) RETURN n.id AS id, labels(n)[0] AS type, n.name AS name, n.status AS status, n.sourceFiles AS sourceFiles, n.unknowns AS unknowns LIMIT 100",
+        "template": "MATCH (n) WHERE ($projectId = '' OR n.projectId = $projectId) AND (n.owner IS NULL OR n.owner = '' OR n.repository IS NULL OR n.repository = '') RETURN n.id AS id, labels(n)[0] AS type, n.name AS name, n.status AS status, n.sourceFiles AS sourceFiles, n.unknowns AS unknowns LIMIT 100",
         "parameters": [
-          {"name": "kind", "data_type": "string", "description": "Record kind filter or empty string."}
+          {"name": "projectId", "data_type": "string", "description": "Project id filter or empty string."}
         ]
       }
     }

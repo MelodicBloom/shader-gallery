@@ -8,6 +8,18 @@ These files use the documented Aura Agent import shape: `name`, `description`, `
 2. `ecosystem-boundary-planner.json` — project boundaries, ownership, and integration paths.
 3. `ingestion-provenance-reviewer.json` — run metrics, quarantine, duplicates, and provenance.
 
+## Bounded compatibility patch
+
+The agents remain private, read-only, and below the 2,000-character prompt limit. The compatibility patch aligns their queries with the federated writer contract:
+
+- accepts both legacy `Artifact` and new `Evidence` labels;
+- reads relationship semantics from `rel.type` with a fallback to Neo4j's physical relationship type;
+- uses `ingestionRunId` for quarantine review;
+- exposes run mode, source ref, config version, and finalization metrics;
+- avoids arbitrary Cypher and does not add mutation tools.
+
+The ingestion configuration is validated separately by [`schemas/neo4j-ingestion.config.schema.json`](../../schemas/neo4j-ingestion.config.schema.json). The record envelope is defined by [`schemas/project-boundary-evidence.schema.json`](../../schemas/project-boundary-evidence.schema.json).
+
 ## Vector similarity recommendation
 
 **Enable vector capability on the instance if the planned graph will contain searchable document or evidence text, but do not make vector search the foundation of the model.** Use a hybrid retrieval pattern:
@@ -56,3 +68,5 @@ Cross-project edges should be explicit and evidence-bearing: `CONSUMES`, `PRODUC
 7. Add vector embeddings after chunking, redaction, and model selection are fixed.
 
 These agents are intentionally read-only. The eventual ingestion writer should remain a separate service with dry-run, idempotency key, quarantine, audit receipt, and explicit promotion gates.
+
+The official Neo4j MCP server is enabled for the writer configuration, while Aura Agent MCP exposure remains disabled until the graph has passed validation and replay tests.

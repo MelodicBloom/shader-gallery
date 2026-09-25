@@ -66,7 +66,7 @@
     {
       "id": "repo:qt314wink/mcp-git-ingest",
       "projectId": "project:mcp-git-ingest",
-      "sourceClass": "owned-fork-of-upstream",
+      "sourceClass": "owned-fork",
       "status": "active",
       "authority": {"repository": "qt314wink/mcp-git-ingest", "ref": "master", "sha": "cd392d5bee561b3978cc2acf6b1305c6d377812f"},
       "observedFiles": ["README.md", "pyproject.toml", "src/mcp_git_ingest/main.py", "Dockerfile", "smithery.yaml"],

@@ -45,7 +45,18 @@
     "rejectUnsafeArchives": true,
     "rejectUnknownRelationTypes": true,
     "allowInferredRelations": true,
-    "promoteToCanonical": false
+    "promoteToCanonical": false,
+    "crossRecordRules": [
+      "project.id MUST be unique within the envelope",
+      "repository.id MUST be unique within the envelope",
+      "evidence.id MUST be unique within the envelope",
+      "relation.id MUST be unique within the envelope",
+      "relation.sourceId and relation.targetId MUST resolve to an envelope node or an existing database node",
+      "relation.projectId MUST equal the source projectId or target projectId unless evidenceState is proposed",
+      "authority.sha MUST be a verified commit SHA; placeholders are quarantined",
+      "records with rightsStatus=rejected MUST NOT be written",
+      "records with credential findings MUST be quarantined"
+    ]
   },
   "writePolicy": {
     "neverExecuteArbitraryCypher": true,
@@ -60,7 +71,8 @@
     "allowSchemaDrops": false
   },
   "cypherTemplates": {
-    "run": "MERGE (r:Run {idempotencyKey: $idempotencyKey}) ON CREATE SET r.id=$runId, r.startedAt=$startedAt, r.mode=$mode, r.sourceRef=$sourceRef, r.configVersion=$configVersion, r.operator=$operator ON MATCH SET r.lastSeenAt=$observedAt RETURN r.id AS id, r.idempotencyKey AS idempotencyKey",
+    "run": "MERGE (r:Run {idempotencyKey: $idempotencyKey}) ON CREATE SET r.id=$runId, r.startedAt=$startedAt, r.mode=$mode, r.status='started', r.sourceRef=$sourceRef, r.configVersion=$configVersion, r.operator=$operator ON MATCH SET r.lastSeenAt=$observedAt RETURN r.id AS id, r.idempotencyKey AS idempotencyKey",
+    "runFinalize": "MATCH (r:Run {idempotencyKey: $idempotencyKey}) SET r.status=$status, r.finishedAt=$finishedAt, r.acceptedCount=$acceptedCount, r.rejectedCount=$rejectedCount, r.schemaInvalidCount=$schemaInvalidCount, r.credentialCount=$credentialCount, r.unsafeArchiveCount=$unsafeArchiveCount, r.neo4jMutationCount=$neo4jMutationCount, r.summary=$summary RETURN r.id AS id, r.status AS status",
     "project": "MERGE (p:Project {id: $id}) ON CREATE SET p.createdAt=$observedAt SET p.name=$name, p.description=$description, p.purpose=$purpose, p.owner=$owner, p.status=$status, p.visibility=$visibility, p.rightsStatus=$rightsStatus, p.projectId=$projectId, p.platformRole=$platformRole, p.sourceRef=$sourceRef, p.ingestionRunId=$runId RETURN p.id AS id",
     "repository": "MERGE (r:Repository {id: $id}) ON CREATE SET r.createdAt=$observedAt SET r.name=$name, r.projectId=$projectId, r.repository=$repository, r.ref=$ref, r.sha=$sha, r.sourceClass=$sourceClass, r.fileCount=$fileCount, r.observedFiles=$observedFiles, r.sourceRef=$sourceRef, r.ingestionRunId=$runId RETURN r.id AS id",
     "evidence": "MERGE (e:Evidence {id: $id}) ON CREATE SET e.createdAt=$observedAt SET e.name=$name, e.projectId=$projectId, e.status=$status, e.evidenceClass=$evidenceClass, e.contentHash=$contentHash, e.sourceFiles=$sourceFiles, e.observedAt=$observedAt, e.actor=$actor, e.summary=$summary, e.rightsStatus=$rightsStatus, e.sourceRef=$sourceRef, e.ingestionRunId=$runId RETURN e.id AS id",

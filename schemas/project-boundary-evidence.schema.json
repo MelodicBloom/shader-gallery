@@ -49,7 +49,7 @@
         "projectId": {"type": "string", "minLength": 1},
         "parentProjectId": {"type": "string"},
         "authority": {"$ref": "#/$defs/authority"},
-        "sourceClass": {"type": "string", "enum": ["owned", "upstream", "dependency", "reference", "external", "unknown"]}
+        "sourceClass": {"type": "string", "enum": ["owned", "owned-fork", "upstream", "dependency", "reference", "reference-fork", "external", "unknown"]}
       }
     },
     "project": {
@@ -84,7 +84,7 @@
         "status": {"type": "string", "enum": ["proposed", "observed", "active", "deprecated", "quarantined"]},
         "projectId": {"type": "string", "minLength": 1},
         "authority": {"$ref": "#/$defs/authority"},
-        "sourceClass": {"type": "string", "enum": ["owned", "upstream", "dependency", "reference", "external", "unknown"]},
+        "sourceClass": {"type": "string", "enum": ["owned", "owned-fork", "upstream", "dependency", "reference", "reference-fork", "external", "unknown"]},
         "isPrivate": {"type": "boolean"},
         "fileCount": {"type": "integer", "minimum": 0},
         "observedFiles": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
@@ -139,7 +139,16 @@
         "startedAt": {"type": "string", "format": "date-time"},
         "sourceRef": {"type": "string", "minLength": 1},
         "configVersion": {"type": "string", "minLength": 1},
-        "operator": {"type": "string"}
+        "operator": {"type": "string"},
+        "status": {"type": "string", "enum": ["started", "dry-run-complete", "written", "failed", "quarantined"]},
+        "finishedAt": {"type": "string", "format": "date-time"},
+        "acceptedCount": {"type": "integer", "minimum": 0},
+        "rejectedCount": {"type": "integer", "minimum": 0},
+        "schemaInvalidCount": {"type": "integer", "minimum": 0},
+        "credentialCount": {"type": "integer", "minimum": 0},
+        "unsafeArchiveCount": {"type": "integer", "minimum": 0},
+        "neo4jMutationCount": {"type": "integer", "minimum": 0},
+        "summary": {"type": "string"}
       }
     }
   }
