@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://melodicbloom.dev/schemas/project-boundary-evidence.schema.json",
+  "title": "Federated Project Boundary and Evidence Ingestion Envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "run", "projects", "repositories", "evidence", "relations"],
+  "properties": {
+    "schemaVersion": {"type": "string", "const": "ProjectBoundaryEvidence/0.1.0"},
+    "run": {"$ref": "#/$defs/run"},
+    "projects": {"type": "array", "items": {"$ref": "#/$defs/project"}, "uniqueItems": true},
+    "repositories": {"type": "array", "items": {"$ref": "#/$defs/repository"}, "uniqueItems": true},
+    "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence"}, "uniqueItems": true},
+    "relations": {"type": "array", "items": {"$ref": "#/$defs/relation"}, "uniqueItems": true}
+  },
+  "$defs": {
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "status"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_.:/-]*$"},
+        "name": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "enum": ["proposed", "observed", "active", "deprecated", "quarantined"]},
+        "description": {"type": "string"},
+        "purpose": {"type": "string"},
+        "owner": {"type": "string"},
+        "visibility": {"type": "string", "enum": ["private", "internal", "public", "unknown"]},
+        "rightsStatus": {"type": "string", "enum": ["known", "unknown", "restricted", "rejected"]},
+        "tags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "ref", "sha"],
+      "properties": {
+        "repository": {"type": "string", "minLength": 1},
+        "ref": {"type": "string", "minLength": 1},
+        "sha": {"type": "string", "pattern": "^[0-9a-f]{7,64}$"},
+        "path": {"type": "string"}
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["projectId", "authority"],
+      "properties": {
+        "projectId": {"type": "string", "minLength": 1},
+        "parentProjectId": {"type": "string"},
+        "authority": {"$ref": "#/$defs/authority"},
+        "sourceClass": {"type": "string", "enum": ["owned", "upstream", "dependency", "reference", "external", "unknown"]}
+      }
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "status", "scope", "platformRole"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_.:/-]*$"},
+        "name": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "enum": ["proposed", "observed", "active", "deprecated", "quarantined"]},
+        "description": {"type": "string"},
+        "purpose": {"type": "string"},
+        "owner": {"type": "string"},
+        "visibility": {"type": "string", "enum": ["private", "internal", "public", "unknown"]},
+        "rightsStatus": {"type": "string", "enum": ["known", "unknown", "restricted", "rejected"]},
+        "tags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "scope": {"$ref": "#/$defs/scope"},
+        "platformRole": {"type": "string", "enum": ["product", "library", "compiler", "workflow", "portfolio", "mcp-server", "upstream-dependency", "empty-placeholder", "other"]},
+        "inputs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "outputs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "allowedActions": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "prohibitedActions": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "status", "projectId", "authority", "sourceClass", "observedFiles"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^repo:[a-z0-9][a-z0-9_.:/-]*$"},
+        "name": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "enum": ["proposed", "observed", "active", "deprecated", "quarantined"]},
+        "projectId": {"type": "string", "minLength": 1},
+        "authority": {"$ref": "#/$defs/authority"},
+        "sourceClass": {"type": "string", "enum": ["owned", "upstream", "dependency", "reference", "external", "unknown"]},
+        "isPrivate": {"type": "boolean"},
+        "fileCount": {"type": "integer", "minimum": 0},
+        "observedFiles": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+        "bestUseCases": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "doNotIngest": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "status", "projectId", "authority", "evidenceClass", "contentHash", "sourceFiles"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^evidence:[a-z0-9][a-z0-9_.:/-]*$"},
+        "name": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "enum": ["proposed", "observed", "validated", "blocked", "rejected", "canonical"]},
+        "projectId": {"type": "string", "minLength": 1},
+        "authority": {"$ref": "#/$defs/authority"},
+        "evidenceClass": {"type": "string", "enum": ["EXACT_MATH", "DERIVED_MATH", "PHYSICAL_MODEL", "EMPIRICAL", "HISTORICAL", "PROJECT_INTERPRETATION", "HYPOTHESIS"]},
+        "contentHash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "sourceFiles": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+        "observedAt": {"type": "string", "format": "date-time"},
+        "actor": {"type": "string"},
+        "summary": {"type": "string"},
+        "unknowns": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "rightsStatus": {"type": "string", "enum": ["known", "unknown", "restricted", "rejected"]}
+      }
+    },
+    "relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "sourceId", "targetId", "projectId", "evidenceState"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^rel:[a-z0-9][a-z0-9_.:/-]*$"},
+        "type": {"type": "string", "enum": ["OWNS", "AUTHORED_BY", "CONTAINS", "DERIVED_FROM", "IMPLEMENTS", "TESTS", "MEASURES", "SUPPORTS_CLAIM", "CONTRADICTS", "BLOCKED_BY", "ENABLES", "CONSUMES", "PRODUCES", "PUBLISHES_TO", "REQUIRES", "REFERENCES", "UPSTREAM_OF"]},
+        "sourceId": {"type": "string", "minLength": 1},
+        "targetId": {"type": "string", "minLength": 1},
+        "projectId": {"type": "string", "minLength": 1},
+        "evidenceState": {"type": "string", "enum": ["observed", "derived", "inferred", "proposed", "unknown"]},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "observedAt": {"type": "string", "format": "date-time"},
+        "relationKey": {"type": "string", "minLength": 1}
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "idempotencyKey", "mode", "startedAt", "sourceRef", "configVersion"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^run:[a-z0-9][a-z0-9_.:/-]*$"},
+        "idempotencyKey": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "mode": {"type": "string", "enum": ["dry-run", "write"]},
+        "startedAt": {"type": "string", "format": "date-time"},
+        "sourceRef": {"type": "string", "minLength": 1},
+        "configVersion": {"type": "string", "minLength": 1},
+        "operator": {"type": "string"}
+      }
+    }
+  }
+}
