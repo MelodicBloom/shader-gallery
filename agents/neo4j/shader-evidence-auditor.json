@@ -1,0 +1,48 @@
+{
+  "name": "Shader Evidence Auditor",
+  "description": "Audits shader artifacts, validation receipts, provenance, and evidence chains. Use it for shader-gallery, shadergrammar, projection, temporal, material, and renderer evidence questions. It does not write data, promote claims, or decide scientific truth.",
+  "system_prompt": "You are a read-only shader evidence auditor. Answer only from returned graph records. Separate observed evidence, derived results, hypotheses, and unknowns. Preserve repository authority, commit/ref, source file, run, receipt, status, and confidence. Never infer that a shader is physically correct from visual similarity alone. When evidence is missing, say exactly what is missing. Prefer specialized tools over broad queries. Summarize findings with: scope, evidence found, conflicts, unknowns, and next bounded verification step. Do not write Cypher, mutate the database, approve releases, or expose embeddings.",
+  "is_private": true,
+  "is_mcp_enabled": false,
+  "tools": [
+    {
+      "name": "Find Shader Artifacts",
+      "description": "Finds shader-related artifacts by repository, status, evidence class, or tag and returns compact metadata only.",
+      "enabled": true,
+      "type": "cypherTemplate",
+      "config": {
+        "template": "MATCH (a) WHERE (a:Artifact OR a:Evidence) AND ($repository = '' OR a.repository = $repository) AND ($status = '' OR a.status = $status) AND ($evidenceClass = '' OR a.evidenceClass = $evidenceClass) AND ($tag = '' OR $tag IN coalesce(a.tags, [])) RETURN a.id AS id, a.name AS name, labels(a)[0] AS kind, a.status AS status, a.evidenceClass AS evidenceClass, a.repository AS repository, a.ref AS ref, a.observedAt AS observedAt, a.sourceFiles AS sourceFiles LIMIT 50",
+        "parameters": [
+          {"name": "repository", "data_type": "string", "description": "Exact repository or empty string for any repository."},
+          {"name": "status", "data_type": "string", "description": "Status filter or empty string."},
+          {"name": "evidenceClass", "data_type": "string", "description": "Evidence class filter or empty string."},
+          {"name": "tag", "data_type": "string", "description": "Exact tag or empty string."}
+        ]
+      }
+    },
+    {
+      "name": "Trace Evidence Lineage",
+      "description": "Traces bounded upstream and downstream evidence relationships for one artifact or receipt.",
+      "enabled": true,
+      "type": "cypherTemplate",
+      "config": {
+        "template": "MATCH (start {id: $recordId})-[r*1..3]-(related) RETURN start.id AS startId, related.id AS relatedId, labels(related)[0] AS relatedType, related.status AS relatedStatus, related.evidenceClass AS relatedEvidenceClass, [edge IN r | coalesce(edge.type, type(edge))] AS relationTypes, length(r) AS hops LIMIT 100",
+        "parameters": [
+          {"name": "recordId", "data_type": "string", "description": "Exact graph record id."}
+        ]
+      }
+    },
+    {
+      "name": "Compare Validation Receipts",
+      "description": "Lists validation receipts for a shader artifact, ordered by observation time, without returning binary data or embeddings.",
+      "enabled": true,
+      "type": "cypherTemplate",
+      "config": {
+        "template": "MATCH (a {id: $artifactId})-[rel*1..2]-(r) WHERE (a:Artifact OR a:Evidence) AND (r:Receipt OR r:Evidence) AND ALL(edge IN rel WHERE coalesce(edge.type, type(edge)) IN ['TESTS','MEASURES','SUPPORTS_CLAIM','CONTAINS']) RETURN r.id AS receiptId, r.receiptType AS receiptType, r.status AS status, r.observedAt AS observedAt, r.toolVersion AS toolVersion, r.summary AS summary, r.confidence AS confidence ORDER BY r.observedAt DESC LIMIT 50",
+        "parameters": [
+          {"name": "artifactId", "data_type": "string", "description": "Exact artifact id."}
+        ]
+      }
+    }
+  ]
+}
