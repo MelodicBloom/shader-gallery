@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from tools.neo4j_ingest import IngestionError, build_run_key, ingest_manifest, validate_envelope
+from tools.neo4j_ingest import IngestionError, build_run_key, ingest_manifest, node_parameters, validate_envelope
 
 
 class Neo4jIngestionTests(unittest.TestCase):
@@ -89,6 +89,17 @@ class Neo4jIngestionTests(unittest.TestCase):
         }]
         errors = validate_envelope(envelope, vector_dimensions=3)
         self.assertTrue(any("dimensions" in error for error in errors))
+
+    def test_node_parameters_flatten_nested_authority_and_scope(self):
+        record = self.envelope()["projects"][0]
+        props = node_parameters(record, self.envelope()["run"])
+        self.assertNotIn("authority", props)
+        self.assertNotIn("scope", props)
+        self.assertEqual(props["authorityRepository"], "example/test")
+        self.assertEqual(props["authoritySha"], "b" * 40)
+        self.assertEqual(props["scopeProjectId"], "project:test")
+        self.assertEqual(props["scopeAuthoritySha"], "b" * 40)
+        self.assertTrue(all(not isinstance(value, dict) for value in props.values()))
 
 
 if __name__ == "__main__":

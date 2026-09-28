@@ -122,9 +122,19 @@ def cypher_statements(vector_dimensions: int = DEFAULT_VECTOR_DIMENSIONS) -> lis
 
 
 def node_parameters(record: dict[str, Any], run: dict[str, Any]) -> dict[str, Any]:
-    authority = record.get("authority", {})
+    scope = record.get("scope", {})
+    authority = record.get("authority", {}) or scope.get("authority", {})
+    props = {key: value for key, value in record.items() if key not in {"authority", "scope", "vector"}}
+    props.update({
+        "scopeProjectId": scope.get("projectId"),
+        "scopeParentProjectId": scope.get("parentProjectId"),
+        "scopeSourceClass": scope.get("sourceClass"),
+        "scopeAuthorityRepository": scope.get("authority", {}).get("repository"),
+        "scopeAuthorityRef": scope.get("authority", {}).get("ref"),
+        "scopeAuthoritySha": scope.get("authority", {}).get("sha"),
+    })
     return {
-        **record,
+        **props,
         "authorityRepository": authority.get("repository"),
         "authorityRef": authority.get("ref"),
         "authoritySha": authority.get("sha"),
