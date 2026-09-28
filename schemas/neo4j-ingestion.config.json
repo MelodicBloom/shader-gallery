@@ -58,6 +58,17 @@
       "records with credential findings MUST be quarantined"
     ]
   },
+  "vector": {
+    "enabled": true,
+    "label": "EvidenceText",
+    "property": "embedding",
+    "dimensions": 1536,
+    "similarityFunction": "cosine",
+    "allowedModels": ["text-embedding-3-small", "text-embedding-3-large", "gemini-embedding-001", "test"],
+    "requiredMetadata": ["sourceEvidenceId", "sourceTextHash", "embeddingModel", "embeddingDimensions", "redactionVersion"],
+    "neverEmbed": ["credentials", "tokens", "private prompts", "PII", "private source", "cryptographic secrets", "unlicensed binary content"],
+    "writerAcceptsPrecomputedEmbeddingsOnly": true
+  },
   "writePolicy": {
     "neverExecuteArbitraryCypher": true,
     "bootstrapConstraintsFirst": true,

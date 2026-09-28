@@ -103,6 +103,26 @@
       "bestUseCases": ["future placeholder only"],
       "doNotIngest": ["create project meaning from an empty repository"]
     }
+    ,{
+      "id": "pkg:MelodicBloom/shader-gallery/packages/shader-grammar",
+      "projectId": "project:shader-gallery",
+      "sourceClass": "owned-package",
+      "status": "prototype",
+      "authority": {"repository": "MelodicBloom/shader-gallery", "ref": "shader-grammar-v0.1.0-prototype", "sha": "fbec8af6e261ad7e12c58fefe177e559cbfbdf38"},
+      "observedFiles": ["packages/shader-grammar/README.md", "packages/shader-grammar/HANDOFF.md", "packages/shader-grammar/ontology/fields.json", "packages/shader-grammar/ontology/operators.json", "packages/shader-grammar/ontology/parameters.json", "packages/shader-grammar/schemas/recipe.schema.json", "packages/shader-grammar/scripts/validate.mjs", "packages/shader-grammar/reports/validation-matrix.md"],
+      "bestUseCases": ["shader recipe ontology", "cross-material parameter reuse", "renderer adapter metadata", "grammar validation evidence"],
+      "doNotIngest": ["treat qualitative cost tiers as measured performance", "treat recipe names as production material proof", "mirror the package as a separate repository"]
+    },
+    {
+      "id": "archive:Interactiveshader.zip",
+      "projectId": "project:shader-gallery",
+      "sourceClass": "prototype-consumer-candidate",
+      "status": "assessment-pending",
+      "authority": {"repository": "external-upload", "ref": "archive", "sha": "6fa8f6909ad19ff0e173f04ef424e0cf416788f23684a2274b7d0e637350694f"},
+      "observedFiles": ["package.json", "pnpm-lock.yaml", "src/App.tsx", "src/index.css", "vite.config.ts"],
+      "bestUseCases": ["interaction prototype reference", "Three.js/R3F consumer adapter test", "visual control and shader UX study"],
+      "doNotIngest": ["execute package scripts during ingestion", "promote inline GLSL to canonical library source", "treat prototype motion or performance as validated evidence"]
+    }
   ],
   "notAccessibleOrNotConfirmed": [
     {"name": "shadergrammar", "reason": "repository not accessible under qt314wink/shadergrammar during inspection"},

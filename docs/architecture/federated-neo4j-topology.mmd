@@ -1,0 +1,72 @@
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: '#172033'
+    primaryTextColor: '#eef4ff'
+    primaryBorderColor: '#69d2ff'
+    lineColor: '#8b9ab5'
+    secondaryColor: '#24324d'
+    tertiaryColor: '#101522'
+  flowchart:
+    curve: basis
+---
+flowchart LR
+  subgraph INGEST["Controlled ingestion boundary"]
+    SRC["Source repos / selected files\ncommit + ref + SHA"]
+    MAN["ProjectBoundaryEvidence\nmanifest"]
+    VAL["Schema + cross-record\nvalidation"]
+    QUAR["Quarantine\ncredentials / unsafe / unresolved"]
+    RUN["Run\nidempotency + receipt"]
+    SRC --> MAN --> VAL
+    VAL -->|invalid| QUAR
+    VAL -->|valid| RUN
+  end
+
+  subgraph GRAPH["One Neo4j database · federated logical graph"]
+    P["Project\nowner · purpose · scope"]
+    R["Repository\nauthority · ref · SHA"]
+    PKG["Package / Prototype\nshader-grammar · interactive shader"]
+    E["Evidence / Artifact\nstatus · class · rights"]
+    X["Experiment / Assessment\nNacre X02-N1 · boundary review"]
+    T["EvidenceText\nredacted text + embedding"]
+    REL["RELATED\ncontrolled type + confidence"]
+    P ---|OWNS| R
+    P ---|CONTAINS| PKG
+    R ---|AUTHORED_BY / REFERENCES| E
+    E ---|SUPPORTS_CLAIM / TESTS / MEASURES| X
+    E ---|HAS_TEXT| T
+    P --- REL
+    R --- REL
+    E --- REL
+    X --- REL
+  end
+
+  subgraph OWNED["Owned platform scopes"]
+    SG["shader-gallery\nWebGL2 runtime · metadata · QA · releases"]
+    SGRAM["shader-grammar\nontology · recipes · parameter semantics"]
+    SL["seed-loom\nshared entity / observation / run vocabulary"]
+    MF["melodyfire\nportfolio/product consumer"]
+    N["Nacre\ninternal gated experiment, not a repo"]
+  end
+
+  subgraph DISTINCT["Renderer-distinct / unresolved"]
+    SVG["SVG Filter Lab\ncomposition-boundary candidate\nrepo identity unresolved"]
+    MCP["Agent layer\nprivate read-only agents\nno arbitrary Cypher"]
+  end
+
+  RUN --> GRAPH
+  SG -.->|owns| P
+  SGRAM -.->|package under| SG
+  SL -.->|vocabulary consumed by| SG
+  MF -.->|consumes released artifacts| SG
+  N -.->|experiment under| SG
+  SVG -.->|composition boundary only| SG
+  MCP -.->|reads validated graph| GRAPH
+
+  classDef owner fill:#173a33,stroke:#57e3ad,color:#edfff8
+  classDef boundary fill:#3b2638,stroke:#ff9bd1,color:#fff0f8
+  classDef graphNode fill:#1c2945,stroke:#69d2ff,color:#eef4ff
+  class SG,SGRAM,SL,MF,N owner
+  class SVG,MCP boundary
+  class P,R,PKG,E,X,T,REL graphNode

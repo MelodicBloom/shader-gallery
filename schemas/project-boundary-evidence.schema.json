@@ -109,7 +109,20 @@
         "actor": {"type": "string"},
         "summary": {"type": "string"},
         "unknowns": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
-        "rightsStatus": {"type": "string", "enum": ["known", "unknown", "restricted", "rejected"]}
+        "rightsStatus": {"type": "string", "enum": ["known", "unknown", "restricted", "rejected"]},
+        "vector": {"$ref": "#/$defs/vector"}
+      }
+    },
+    "vector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["embedding", "embeddingModel", "embeddingDimensions", "sourceTextHash", "redactionVersion"],
+      "properties": {
+        "embedding": {"type": "array", "items": {"type": "number"}, "minItems": 1},
+        "embeddingModel": {"type": "string", "minLength": 1},
+        "embeddingDimensions": {"type": "integer", "minimum": 1},
+        "sourceTextHash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "redactionVersion": {"type": "string", "minLength": 1}
       }
     },
     "relation": {

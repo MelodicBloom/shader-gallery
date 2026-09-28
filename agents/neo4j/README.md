@@ -20,6 +20,13 @@ The agents remain private, read-only, and below the 2,000-character prompt limit
 
 The ingestion configuration is validated separately by [`schemas/neo4j-ingestion.config.schema.json`](../../schemas/neo4j-ingestion.config.schema.json). The record envelope is defined by [`schemas/project-boundary-evidence.schema.json`](../../schemas/project-boundary-evidence.schema.json).
 
+## Operator references
+
+- [Federated Neo4j topology](../../docs/architecture/federated-neo4j-topology.mmd)
+- [Neo4j agent and ingestion operator guide](../../docs/architecture/neo4j-agent-and-ingestion-operator-guide.md)
+
+The operator guide distinguishes Aura Agent JSON import, Cypher schema bootstrap, repository-derived manifest ingestion, and optional official Neo4j MCP server setup. It also lists every agent tool and parameter.
+
 ## Vector similarity recommendation
 
 **Enable vector capability on the instance if the planned graph will contain searchable document or evidence text, but do not make vector search the foundation of the model.** Use a hybrid retrieval pattern:
