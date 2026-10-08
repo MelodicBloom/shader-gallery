@@ -12,7 +12,7 @@ class Neo4jIngestionTests(unittest.TestCase):
             "schemaVersion": "ProjectBoundaryEvidence/0.1.0",
             "run": {
                 "id": "run:test:001",
-                "idempotencyKey": "sha256:" + "a" * 64,
+                "idempotencyKey": "sha256:54fe53fc65f445e77db31758f952cdab16847a9426ba507f385b295d95c2aab2",
                 "mode": "dry-run",
                 "startedAt": "2026-09-28T20:00:00Z",
                 "sourceRef": "main@" + "b" * 20 + "c" * 20,
@@ -38,12 +38,6 @@ class Neo4jIngestionTests(unittest.TestCase):
             "evidence": [],
             "relations": [],
         }
-        envelope["run"]["idempotencyKey"] = build_run_key(
-            envelope["run"]["configVersion"],
-            "neo4j",
-            envelope["run"]["sourceRef"],
-            manifest_digest(envelope),
-        )
         return envelope
 
     def test_rejects_unsupported_relation_endpoint_prefix(self):
