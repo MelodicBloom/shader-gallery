@@ -415,7 +415,7 @@ def ingest_manifest(
         else None
     )
     if expected_key and supplied_key != expected_key:
-        errors.append("idempotencyKey does not match the deterministic manifest-derived run key")
+        errors.append(f"idempotencyKey does not match deterministic manifest-derived run key: supplied={supplied_key} expected={expected_key}")
 
     if errors:
         return {
