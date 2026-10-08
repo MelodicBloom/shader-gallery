@@ -46,18 +46,18 @@ class Neo4jIngestionTests(unittest.TestCase):
         )
         return envelope
 
-    def test_validates_cross_record_identity_and_rejects_unknown_endpoint(self):
+    def test_rejects_unsupported_relation_endpoint_prefix(self):
         envelope = self.envelope()
         envelope["relations"] = [{
             "id": "rel:test",
             "type": "CONTAINS",
-            "sourceId": "project:test",
-            "targetId": "evidence:missing",
+            "sourceId": "bogus:missing",
+            "targetId": "project:test",
             "projectId": "project:test",
             "evidenceState": "observed",
         }]
         errors = validate_envelope(envelope)
-        self.assertTrue(any("endpoint" in error for error in errors))
+        self.assertTrue(any("relation endpoint unresolved" in error for error in errors))
 
     def test_dry_run_never_constructs_a_driver_or_mutates(self):
         envelope = self.envelope()
