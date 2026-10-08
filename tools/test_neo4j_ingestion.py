@@ -3,7 +3,7 @@ import os
 import unittest
 from unittest.mock import patch
 
-from tools.neo4j_ingest import IngestionError, build_run_key, ingest_manifest, node_parameters, validate_envelope
+from tools.neo4j_ingest import IngestionError, build_run_key, ingest_manifest, manifest_digest, node_parameters, validate_envelope
 
 
 class Neo4jIngestionTests(unittest.TestCase):
@@ -15,7 +15,7 @@ class Neo4jIngestionTests(unittest.TestCase):
                 "idempotencyKey": "sha256:" + "a" * 64,
                 "mode": "dry-run",
                 "startedAt": "2026-09-28T20:00:00Z",
-                "sourceRef": "main@" + "b" * 40,
+                "sourceRef": "main@" + "b" * 20 + "c" * 20,
                 "configVersion": "Neo4jIngestionConfig/0.1.0",
             },
             "projects": [{
@@ -23,7 +23,7 @@ class Neo4jIngestionTests(unittest.TestCase):
                 "name": "Test",
                 "status": "observed",
                 "scope": {"projectId": "project:test", "authority": {
-                    "repository": "example/test", "ref": "main", "sha": "b" * 40}},
+                    "repository": "example/test", "ref": "main", "sha": "b" * 20 + "c" * 20}},
                 "platformRole": "library",
             }],
             "repositories": [{
@@ -31,13 +31,20 @@ class Neo4jIngestionTests(unittest.TestCase):
                 "name": "example/test",
                 "status": "observed",
                 "projectId": "project:test",
-                "authority": {"repository": "example/test", "ref": "main", "sha": "b" * 40},
+                "authority": {"repository": "example/test", "ref": "main", "sha": "b" * 20 + "c" * 20},
                 "sourceClass": "owned",
                 "observedFiles": ["README.md"],
             }],
             "evidence": [],
             "relations": [],
         }
+        envelope["run"]["idempotencyKey"] = build_run_key(
+            envelope["run"]["configVersion"],
+            "neo4j",
+            envelope["run"]["sourceRef"],
+            manifest_digest(envelope),
+        )
+        return envelope
 
     def test_validates_cross_record_identity_and_rejects_unknown_endpoint(self):
         envelope = self.envelope()
@@ -76,7 +83,7 @@ class Neo4jIngestionTests(unittest.TestCase):
             "name": "Text",
             "status": "observed",
             "projectId": "project:test",
-            "authority": {"repository": "example/test", "ref": "main", "sha": "b" * 40, "path": "README.md"},
+            "authority": {"repository": "example/test", "ref": "main", "sha": "b" * 20 + "c" * 20, "path": "README.md"},
             "evidenceClass": "EMPIRICAL",
             "contentHash": "sha256:" + "c" * 64,
             "sourceFiles": ["README.md"],
@@ -94,9 +101,9 @@ class Neo4jIngestionTests(unittest.TestCase):
         self.assertNotIn("authority", props)
         self.assertNotIn("scope", props)
         self.assertEqual(props["authorityRepository"], "example/test")
-        self.assertEqual(props["authoritySha"], "b" * 40)
+        self.assertEqual(props["authoritySha"], "b" * 20 + "c" * 20)
         self.assertEqual(props["scopeProjectId"], "project:test")
-        self.assertEqual(props["scopeAuthoritySha"], "b" * 40)
+        self.assertEqual(props["scopeAuthoritySha"], "b" * 20 + "c" * 20)
         self.assertTrue(all(not isinstance(value, dict) for value in props.values()))
 
     def test_canonical_evidence_is_rejected_without_promotion(self):
@@ -106,7 +113,7 @@ class Neo4jIngestionTests(unittest.TestCase):
             "name": "Canonical claim",
             "status": "canonical",
             "projectId": "project:test",
-            "authority": {"repository": "example/test", "ref": "main", "sha": "b" * 40},
+            "authority": {"repository": "example/test", "ref": "main", "sha": "b" * 20 + "c" * 20},
             "evidenceClass": "PROJECT_INTERPRETATION",
             "contentHash": "sha256:" + "c" * 64,
             "sourceFiles": ["README.md"],
@@ -122,7 +129,7 @@ class Neo4jIngestionTests(unittest.TestCase):
             "name": "Rights rejected",
             "status": "observed",
             "projectId": "project:test",
-            "authority": {"repository": "example/test", "ref": "main", "sha": "b" * 40},
+            "authority": {"repository": "example/test", "ref": "main", "sha": "b" * 20 + "c" * 20},
             "evidenceClass": "EMPIRICAL",
             "contentHash": "sha256:" + "c" * 64,
             "sourceFiles": ["README.md"],
