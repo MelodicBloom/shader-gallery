@@ -59,6 +59,39 @@ class Neo4jIngestionTests(unittest.TestCase):
         errors = validate_envelope(envelope)
         self.assertTrue(any("relation endpoint unresolved" in error for error in errors))
 
+    def test_malformed_collection_shapes_quarantine_without_traversal_crash(self):
+        envelope = self.envelope()
+        envelope["projects"] = None
+        errors = validate_envelope(envelope)
+        self.assertTrue(any("projects must be an array" in error for error in errors))
+
+        envelope = self.envelope()
+        envelope["repositories"] = ["not-an-object"]
+        errors = validate_envelope(envelope)
+        self.assertTrue(any("repositories[0] must be an object" in error for error in errors))
+
+    def test_receipt_metadata_is_schema_valid(self):
+        envelope = self.envelope()
+        envelope["evidence"] = [{
+            "id": "evidence:receipt",
+            "name": "Shader render receipt",
+            "status": "validated",
+            "projectId": "project:test",
+            "authority": {"repository": "example/test", "ref": "main", "sha": "b" * 40},
+            "evidenceClass": "EMPIRICAL",
+            "contentHash": "sha256:" + "c" * 64,
+            "sourceFiles": ["README.md"],
+            "receiptType": "shader-render",
+            "toolVersion": "webgl-gate/1.0.0",
+            "confidence": 1.0,
+        }]
+        errors = validate_envelope(envelope)
+        self.assertFalse(errors, errors)
+
+    def test_vector_dimension_boundary_rejects_nonpositive_values(self):
+        with self.assertRaises(IngestionError):
+            ingest_manifest(self.envelope(), mode="dry-run", vector_dimensions=0)
+
     def test_dry_run_never_constructs_a_driver_or_mutates(self):
         envelope = self.envelope()
         with patch.dict(os.environ, {"INGESTION_ALLOW_WRITE": "false"}, clear=False):
@@ -253,6 +286,7 @@ def _exercise_transaction(testcase, fail_on_node):
             testcase.assertEqual(result["status"], "written")
             testcase.assertTrue(tx.committed)
             testcase.assertFalse(tx.rolled_back)
+            testcase.assertTrue(any("CREATE CONSTRAINT project_id" in q for q in tx.queries))
             testcase.assertTrue(any("ON CREATE SET n += $props" in q for q in tx.queries))
 
 
