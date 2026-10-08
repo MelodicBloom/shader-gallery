@@ -64,7 +64,12 @@ def _records(envelope: dict[str, Any], collection: str) -> list[dict[str, Any]]:
 
 def _authority(record: dict[str, Any]) -> dict[str, Any]:
     value = record.get("authority")
-    return value if isinstance(value, dict) else {}
+    if isinstance(value, dict):
+        return value
+    scope = record.get("scope")
+    if isinstance(scope, dict) and isinstance(scope.get("authority"), dict):
+        return scope["authority"]
+    return {}
 
 
 def _is_placeholder_sha(value: Any) -> bool:
