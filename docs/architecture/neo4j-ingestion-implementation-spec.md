@@ -21,7 +21,7 @@ Build order: envelope-validation → graph-bootstrap → ingestion-writer → ve
 ```bash
 python3 -m unittest tools.test_neo4j_ingestion
 python3 tools/neo4j_ingest.py --manifest artifacts/ingestion/project-boundary-evidence.json --dry-run --receipt artifacts/ingestion/runs/dry-run.json
-INGESTION_ALLOW_WRITE=true NEO4J_URI=... NEO4J_USERNAME=... NEO4J_PASSWORD=... python3 tools/neo4j_ingest.py --manifest ... --write
+INGESTION_ALLOW_WRITE=true NEO4J_URI=... NEO4J_USERNAME=... NEO4J_PASSWORD=... python3 tools/neo4j_ingest.py --manifest artifacts/ingestion/project-boundary-evidence.json --write --receipt artifacts/ingestion/runs/write.json
 ```
 
 ## Boundaries
