@@ -35,8 +35,10 @@
       "enabled": true,
       "type": "cypherTemplate",
       "config": {
-        "template": "MATCH (a) WHERE (a:Artifact OR a:Evidence) AND a.contentHash IS NOT NULL WITH a.contentHash AS contentHash, collect({id:a.id, sourceFiles:a.sourceFiles, repository:a.repository}) AS records WHERE size(records) > 1 RETURN contentHash, size(records) AS recordCount, records[0..20] AS records LIMIT 100",
-        "parameters": []
+        "template": "MATCH (a) WHERE (a:Artifact OR a:Evidence) AND a.contentHash IS NOT NULL AND ($projectId = '' OR a.projectId = $projectId) WITH a ORDER BY a.contentHash, a.id LIMIT 5000 WITH a.contentHash AS contentHash, collect({id:a.id, sourceFiles:a.sourceFiles, repository:coalesce(a.authorityRepository, a.repository)}) AS records WHERE size(records) > 1 RETURN contentHash, size(records) AS recordCount, records[0..20] AS records LIMIT 100",
+        "parameters": [
+          {"name": "projectId", "data_type": "string", "description": "Project id filter or empty string."}
+        ]
       }
     }
   ]
