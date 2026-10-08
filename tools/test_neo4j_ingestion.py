@@ -171,5 +171,102 @@ class Neo4jIngestionTests(unittest.TestCase):
         self.assertTrue(any("rel:target" in error for error in errors))
 
 
+class FakeResult:
+    def __init__(self, row=None):
+        self.row = row
+
+    def single(self):
+        return self.row
+
+    def consume(self):
+        return None
+
+
+class FakeTx:
+    def __init__(self, fail_on_node=False):
+        self.fail_on_node = fail_on_node
+        self.committed = False
+        self.rolled_back = False
+        self.queries = []
+
+    def run(self, query, **params):
+        self.queries.append(query)
+        if self.fail_on_node and query.startswith("MERGE (n:"):
+            raise RuntimeError("simulated node write failure")
+        return FakeResult(None)
+
+    def commit(self):
+        self.committed = True
+
+    def rollback(self):
+        self.rolled_back = True
+
+
+class FakeSession:
+    def __init__(self, tx):
+        self.tx = tx
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        return False
+
+    def run(self, query, **params):
+        return FakeResult(None)
+
+    def begin_transaction(self):
+        return self.tx
+
+
+class FakeDriver:
+    def __init__(self, tx):
+        self.tx = tx
+        self.closed = False
+
+    def session(self, database=None):
+        return FakeSession(self.tx)
+
+    def close(self):
+        self.closed = True
+
+
+def _exercise_transaction(testcase, fail_on_node):
+    envelope = testcase.envelope()
+    envelope["run"]["mode"] = "write"
+    envelope["run"]["idempotencyKey"] = build_run_key(
+        envelope["run"]["configVersion"],
+        "neo4j",
+        envelope["run"]["sourceRef"],
+        manifest_digest(envelope),
+    )
+    tx = FakeTx(fail_on_node=fail_on_node)
+    driver = FakeDriver(tx)
+    with patch.dict(os.environ, {"INGESTION_ALLOW_WRITE": "true"}, clear=False):
+        if fail_on_node:
+            with testcase.assertRaises(RuntimeError):
+                ingest_manifest(envelope, mode="write", driver=driver)
+            testcase.assertFalse(tx.committed)
+            testcase.assertTrue(tx.rolled_back)
+        else:
+            result = ingest_manifest(envelope, mode="write", driver=driver)
+            testcase.assertEqual(result["status"], "written")
+            testcase.assertTrue(tx.committed)
+            testcase.assertFalse(tx.rolled_back)
+            testcase.assertTrue(any("ON CREATE SET n += $props" in q for q in tx.queries))
+
+
+def test_transaction_commits_after_full_write(self):
+    _exercise_transaction(self, False)
+
+
+def test_transaction_rolls_back_on_node_failure(self):
+    _exercise_transaction(self, True)
+
+
+Neo4jIngestionTests.test_transaction_commits_after_full_write = test_transaction_commits_after_full_write
+Neo4jIngestionTests.test_transaction_rolls_back_on_node_failure = test_transaction_rolls_back_on_node_failure
+
+
 if __name__ == "__main__":
     unittest.main()
