@@ -11,7 +11,7 @@
       "enabled": true,
       "type": "cypherTemplate",
       "config": {
-        "template": "MATCH (a) WHERE (a:Artifact OR a:Evidence) AND ($repository = '' OR a.repository = $repository) AND ($status = '' OR a.status = $status) AND ($evidenceClass = '' OR a.evidenceClass = $evidenceClass) AND ($tag = '' OR $tag IN coalesce(a.tags, [])) RETURN a.id AS id, a.name AS name, labels(a)[0] AS kind, a.status AS status, a.evidenceClass AS evidenceClass, a.repository AS repository, a.ref AS ref, a.observedAt AS observedAt, a.sourceFiles AS sourceFiles LIMIT 50",
+        "template": "MATCH (a) WHERE (a:Artifact OR a:Evidence) AND ($repository = '' OR coalesce(a.authorityRepository, a.repository) = $repository) AND ($status = '' OR a.status = $status) AND ($evidenceClass = '' OR a.evidenceClass = $evidenceClass) AND ($tag = '' OR $tag IN coalesce(a.tags, [])) RETURN a.id AS id, a.name AS name, labels(a)[0] AS kind, a.status AS status, a.evidenceClass AS evidenceClass, coalesce(a.authorityRepository, a.repository) AS repository, coalesce(a.authorityRef, a.ref) AS ref, a.observedAt AS observedAt, a.sourceFiles AS sourceFiles LIMIT 50",
         "parameters": [
           {"name": "repository", "data_type": "string", "description": "Exact repository or empty string for any repository."},
           {"name": "status", "data_type": "string", "description": "Status filter or empty string."},
