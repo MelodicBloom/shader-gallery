@@ -1,8 +1,6 @@
 import json
 import os
-import tempfile
 import unittest
-from pathlib import Path
 from unittest.mock import patch
 
 from tools.neo4j_ingest import IngestionError, build_run_key, ingest_manifest, node_parameters, validate_envelope
@@ -100,6 +98,70 @@ class Neo4jIngestionTests(unittest.TestCase):
         self.assertEqual(props["scopeProjectId"], "project:test")
         self.assertEqual(props["scopeAuthoritySha"], "b" * 40)
         self.assertTrue(all(not isinstance(value, dict) for value in props.values()))
+
+    def test_canonical_evidence_is_rejected_without_promotion(self):
+        envelope = self.envelope()
+        envelope["evidence"] = [{
+            "id": "evidence:canonical",
+            "name": "Canonical claim",
+            "status": "canonical",
+            "projectId": "project:test",
+            "authority": {"repository": "example/test", "ref": "main", "sha": "b" * 40},
+            "evidenceClass": "PROJECT_INTERPRETATION",
+            "contentHash": "sha256:" + "c" * 64,
+            "sourceFiles": ["README.md"],
+            "rightsStatus": "known",
+        }]
+        errors = validate_envelope(envelope)
+        self.assertTrue(any("canonical" in error.lower() for error in errors))
+
+    def test_rejected_rights_are_not_ingestable(self):
+        envelope = self.envelope()
+        envelope["evidence"] = [{
+            "id": "evidence:rights",
+            "name": "Rights rejected",
+            "status": "observed",
+            "projectId": "project:test",
+            "authority": {"repository": "example/test", "ref": "main", "sha": "b" * 40},
+            "evidenceClass": "EMPIRICAL",
+            "contentHash": "sha256:" + "c" * 64,
+            "sourceFiles": ["README.md"],
+            "rightsStatus": "rejected",
+        }]
+        errors = validate_envelope(envelope)
+        self.assertTrue(any("rights" in error.lower() and "rejected" in error.lower() for error in errors))
+
+    def test_invalid_datetime_format_is_rejected(self):
+        envelope = self.envelope()
+        envelope["run"]["startedAt"] = "not-a-date"
+        errors = validate_envelope(envelope)
+        self.assertTrue(any("date" in error.lower() or "format" in error.lower() for error in errors))
+
+    def test_placeholder_authority_sha_is_rejected(self):
+        envelope = self.envelope()
+        envelope["projects"][0]["scope"]["authority"]["sha"] = "a" * 40
+        errors = validate_envelope(envelope)
+        self.assertTrue(any("placeholder" in error.lower() or "authority" in error.lower() for error in errors))
+
+    def test_relation_ids_are_not_relation_endpoints(self):
+        envelope = self.envelope()
+        envelope["relations"] = [{
+            "id": "rel:source",
+            "type": "CONTAINS",
+            "sourceId": "rel:target",
+            "targetId": "project:test",
+            "projectId": "project:test",
+            "evidenceState": "observed",
+        }, {
+            "id": "rel:target",
+            "type": "CONTAINS",
+            "sourceId": "project:test",
+            "targetId": "repo:example/test",
+            "projectId": "project:test",
+            "evidenceState": "observed",
+        }]
+        errors = validate_envelope(envelope)
+        self.assertTrue(any("rel:target" in error for error in errors))
 
 
 if __name__ == "__main__":
