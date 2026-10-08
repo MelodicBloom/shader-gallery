@@ -97,7 +97,7 @@ class Neo4jIngestionTests(unittest.TestCase):
         with patch.dict(os.environ, {"INGESTION_ALLOW_WRITE": "false"}, clear=False):
             result = ingest_manifest(envelope, mode="dry-run")
         self.assertEqual(result["metrics"]["neo4jMutationCount"], 0)
-        self.assertEqual(result["status"], "dry-run-complete")
+        self.assertEqual(result["status"], "dry-run-complete", result.get("errors"))
 
     def test_write_requires_explicit_environment_gate(self):
         with self.assertRaises(IngestionError):
