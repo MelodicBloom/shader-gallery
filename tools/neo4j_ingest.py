@@ -54,6 +54,25 @@ def load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _records(envelope: dict[str, Any], collection: str) -> list[dict[str, Any]]:
+    """Return only structurally traversable records; schema validation remains authoritative."""
+    value = envelope.get(collection) if isinstance(envelope, dict) else None
+    if not isinstance(value, list):
+        return []
+    return [record for record in value if isinstance(record, dict)]
+
+
+def _authority(record: dict[str, Any]) -> dict[str, Any]:
+    value = record.get("authority")
+    return value if isinstance(value, dict) else {}
+
+
+def _is_placeholder_sha(value: Any) -> bool:
+    if not isinstance(value, str):
+        return False
+    return value in {"0" * len(value), "a" * len(value)}
+
+
 def validate_envelope(
     envelope: dict[str, Any],
     schema_path: Path = DEFAULT_SCHEMA,
@@ -70,6 +89,15 @@ def validate_envelope(
     schema = load_json(schema_path)
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
     errors.extend(error.message for error in validator.iter_errors(envelope))
+
+    for collection in ("projects", "repositories", "evidence", "relations"):
+        value = envelope.get(collection)
+        if not isinstance(value, list):
+            errors.append(f"{collection} must be an array")
+            continue
+        for index, record in enumerate(value):
+            if not isinstance(record, dict):
+                errors.append(f"{collection}[{index}] must be an object")
 
     all_ids: dict[str, str] = {}
     node_ids: set[str] = set()
@@ -433,11 +461,6 @@ def ingest_manifest(
     mutations = 0
     try:
         with driver.session(database=database) as session:
-            for statement in cypher_statements(vector_dimensions):
-                result = session.run(statement)
-                result.consume() if hasattr(result, "consume") else None
-                mutations += 1
-
             existing_run = _result_single(
                 session.run(
                     "MATCH (r:Run {idempotencyKey:$idempotencyKey}) RETURN r.id AS id, r.status AS status LIMIT 1",
@@ -467,6 +490,11 @@ def ingest_manifest(
 
             tx = session.begin_transaction()
             try:
+                for statement in cypher_statements(vector_dimensions):
+                    result = tx.run(statement)
+                    result.consume() if hasattr(result, "consume") else None
+                    mutations += 1
+
                 _preflight_relation_endpoints(tx, envelope)
                 _preflight_immutable_records(tx, envelope)
 
