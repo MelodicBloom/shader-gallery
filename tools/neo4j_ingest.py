@@ -95,21 +95,22 @@ def validate_envelope(
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
     errors.extend(error.message for error in validator.iter_errors(envelope))
 
-    format_checker = FormatChecker()
+    def valid_datetime(value: str) -> bool:
+        try:
+            parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+            return parsed.tzinfo is not None
+        except ValueError:
+            return False
+
     run = envelope.get("run", {})
     if isinstance(run, dict):
         for field in ("startedAt", "finishedAt"):
             value = run.get(field)
-            if isinstance(value, str):
-                try:
-                    format_checker.check(value, "date-time")
-                except Exception:
-                    errors.append(f"run.{field} is not a valid date-time")
+            if isinstance(value, str) and not valid_datetime(value):
+                errors.append(f"run.{field} is not a valid date-time")
     for index, evidence in enumerate(envelope.get("evidence", [])):
         if isinstance(evidence, dict) and isinstance(evidence.get("observedAt"), str):
-            try:
-                format_checker.check(evidence["observedAt"], "date-time")
-            except Exception:
+            if not valid_datetime(evidence["observedAt"]):
                 errors.append(f"evidence[{index}].observedAt is not a valid date-time")
 
     for collection in ("projects", "repositories", "evidence", "relations"):
