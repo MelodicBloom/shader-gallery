@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Abalone · Material Study 01</title><meta name="description" content="An orbital WebGL2 material study with layered interference and an inspectable uniform contract."></head>
+<body>
+<header><a href="https://github.com/MelodicBloom/shader-gallery/tree/main/library-v1">GALLERY SOURCE</a><span>MATERIAL STUDY / 01</span><button id="inspector-toggle" aria-controls="inspector" aria-expanded="true">Hide inspector</button></header>
+<main>
+<section class="stage" aria-labelledby="material-title">
+<img id="fallback" alt="Static Abalone interference preview. Live rendering is preparing.">
+<canvas id="surface" tabindex="0" aria-label="Abalone material. Drag to orbit, use arrow keys to rotate, plus and minus to zoom." aria-describedby="orbit-help"></canvas>
+<div class="title"><p class="eyebrow">LAYERED ORGANIC INTERFERENCE</p><h1 id="material-title">Abalone</h1><p>Dark nacre. Light held between layers.</p></div>
+<div class="stage-footer"><p id="orbit-help">Drag to orbit · Arrow keys rotate · + / − zoom</p><p id="render-status" role="status">Preparing WebGL2…</p></div>
+</section>
+<aside id="inspector" aria-label="Material inspector">
+<div class="inspector-heading"><p class="eyebrow">LIVE MATERIAL</p><h2>Inspect the surface</h2><p>One analytic shell. Bounded controls. Reproducible state.</p></div>
+<div id="uniform-controls"></div>
+<div class="motion"><button id="playback">Pause motion</button><label><input id="reduced" type="checkbox"> Reduce motion</label></div>
+<div class="actions"><button id="reset">Reset study</button><button id="export">Export preset</button></div>
+<label class="preset-label" for="preset">Scene preset / JSON</label><textarea id="preset" rows="3" spellcheck="false" aria-describedby="preset-status"></textarea><button id="restore">Restore preset</button><p id="preset-status" role="status">Named preset: Midnight nacre</p>
+<details><summary>How it works</summary><p>A camera ray intersects an asymmetric ellipsoid. Object-space bands modulate a cosine interference palette; Fresnel response and a localized grazing highlight reveal depth. This is a procedural optical study, not a measured physical material.</p><p>GLSL ES 3.00 → typed uniforms → Zustand vanilla store → raw WebGL2. The renderer owns frame time; semantic changes enter the store only on interaction.</p></details>
+<details id="error-details" hidden><summary>Rendering diagnostic</summary><pre id="render-error"></pre></details>
+<div class="telemetry"><p id="performance">Frame cadence: sampling…</p><p id="dimensions">Render size: preparing…</p><p>QA: local candidate / device coverage pending</p></div>
+</aside>
+</main><script type="module" src="/src/main.ts"></script>
+</body></html>
