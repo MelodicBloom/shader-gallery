@@ -12,8 +12,9 @@
     header p { color: #8090b0; margin-top: 0.5rem; font-size: 1.05rem; }
     .hero-canvas { width: 100%; height: 60vh; display: block; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 3rem auto; padding: 0 1.5rem; }
-    .card { background: #0d1525; border-radius: 16px; overflow: hidden; border: 1px solid #1a2540; transition: transform 0.2s, border-color 0.2s; cursor: pointer; }
+    .card { display: block; color: inherit; text-decoration: none; background: #0d1525; border-radius: 16px; overflow: hidden; border: 1px solid #1a2540; transition: transform 0.2s, border-color 0.2s; cursor: pointer; }
     .card:hover { transform: translateY(-4px); border-color: #4af; }
+    .card:focus-visible { outline: 2px solid #7af; outline-offset: 4px; }
     .card-canvas { width: 100%; height: 160px; display: block; background: #060a14; }
     .card-body { padding: 1.25rem; }
     .card-body h2 { font-size: 1rem; color: #7af; margin-bottom: 0.4rem; }
@@ -33,6 +34,7 @@
 <canvas class="hero-canvas" id="hero"></canvas>
 
 <div class="grid">
+  <a class="card" href="../benthic-os/index.html"><canvas class="card-canvas" id="c6"></canvas><div class="card-body"><h2>BENTHIC_OS</h2><p>Interactive WebGL2 coral volume with raymarched noise displacement, adaptive render quality, and live morphology controls.</p><span class="badge">WebGL2</span><span class="badge">raymarching</span><span class="badge">adaptive quality</span></div></a>
   <div class="card" onclick="location.href='../aurora/index.html'"><canvas class="card-canvas" id="c1"></canvas><div class="card-body"><h2>Aurora</h2><p>Soft ribbons of northern light rendered with domain warping and fractional Brownian motion.</p><span class="badge">fbm</span><span class="badge">domain warp</span></div></div>
   <div class="card"><canvas class="card-canvas" id="c2"></canvas><div class="card-body"><h2>Mandala</h2><p>Sacred geometry through polar coordinate mirroring and radial symmetry.</p><span class="badge">polar</span><span class="badge">symmetry</span></div></div>
   <div class="card"><canvas class="card-canvas" id="c3"></canvas><div class="card-body"><h2>Fluid Psychedelic</h2><p>Lava-lamp blobs and cycling palette — smooth SDF organic forms.</p><span class="badge">SDF</span><span class="badge">palette</span></div></div>
@@ -110,6 +112,21 @@ void main(){
   float edge=smoothstep(.05,.08,minD);vec3 col=.5+.5*cos(vec3(0,2,4)+minC.x*.8+minC.y*.5+u_time*.2);
   col*=edge;col+=vec3(1.,.9,.7)*(1.-edge)*smoothstep(.02,.0,minD);gl_FragColor=vec4(col,1.);}`;
 
+const benthicFrag = `precision mediump float;
+uniform float u_time; uniform vec2 u_res;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*noise(p);p=p*2.04+1.7;a*=.5;}return v;}
+void main(){
+  vec2 uv=(gl_FragCoord.xy/u_res-.5)*2.;uv.x*=u_res.x/u_res.y;
+  float t=u_time*.12,n=fbm(uv*3.2+vec2(t,-t*.7));
+  float body=smoothstep(.78,.18,length(uv)+n*.32);
+  float folds=pow(abs(sin((n+length(uv)*.62)*30.)),7.);
+  vec3 base=vec3(.008,.012,.02),coral=mix(vec3(.12,.008,.04),vec3(1.,.05,.32),folds*.85+.15);
+  float rim=smoothstep(.8,.28,length(uv)+n*.2)-smoothstep(.68,.22,length(uv)+n*.2);
+  vec3 col=mix(base,coral,body)+vec3(1.,.08,.35)*rim*.7;
+  gl_FragColor=vec4(col,1.);}`;
+
 // 🐚 Abalone — thin-film iridescence
 const abaloneFrag = `precision mediump float;
 uniform float u_time; uniform vec2 u_res;
@@ -131,7 +148,7 @@ void main(){
   float vig=1.-dot(uv*.5,uv*.5);col*=smoothstep(0.,.6,vig);
   gl_FragColor=vec4(col,1.);}`;
 
-[['hero',abaloneFrag],['c1',auroraFrag],['c2',mandalaFrag],['c3',fluidFrag],['c4',stainedFrag],['c5',abaloneFrag]].forEach(([id,src])=>{
+[['hero',abaloneFrag],['c1',auroraFrag],['c2',mandalaFrag],['c3',fluidFrag],['c4',stainedFrag],['c5',abaloneFrag],['c6',benthicFrag]].forEach(([id,src])=>{
   const c=document.getElementById(id);
   if(c) initShader(c,src);
 });

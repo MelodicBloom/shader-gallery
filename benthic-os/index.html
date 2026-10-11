@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#000508">
+  <meta name="description" content="BENTHIC_OS is an interactive WebGL2 raymarched coral study with adaptive render quality, responsive controls, and accessible motion behavior.">
+  <title>BENTHIC_OS | Deep Sea Morphogenesis</title>
+  <style>
+    :root{color-scheme:dark;--bg:#000508;--panel:rgba(2,12,20,.72);--ink:#e8f7f8;--muted:#79a7ac;--glow:#00f0ff;--glow-rgb:0,240,255;--ok:#79ff9b;--line:rgba(0,240,255,.22);--pad:clamp(14px,2.2vw,30px);font-family:ui-monospace,"Cascadia Code","SFMono-Regular",Consolas,monospace}
+    *{box-sizing:border-box}[hidden]{display:none!important}html,body{width:100%;height:100%;margin:0;background:var(--bg);color:var(--ink);overflow:hidden}button,input{font:inherit}button{color:inherit}canvas{display:block;width:100%;height:100%;touch-action:none}
+    .stage{position:fixed;inset:0;isolation:isolate;background:radial-gradient(circle at 50% 45%,#06202b 0,#000508 62%)}
+    .stage:after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(rgba(0,240,255,.018) 50%,transparent 50%);background-size:100% 4px;mix-blend-mode:screen;opacity:.35}
+    .fallback{position:absolute;inset:0;display:grid;place-items:center;padding:24px;background:radial-gradient(circle,#0b3340,#000508 62%);text-align:center;color:var(--muted)}
+    .ui{position:absolute;inset:0;z-index:3;padding:var(--pad);display:grid;grid-template-rows:auto 1fr auto;gap:16px;pointer-events:none}
+    .top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.brand,.telemetry,.panel,.sheet{pointer-events:auto;border:1px solid var(--line);background:var(--panel);box-shadow:inset 0 0 24px rgba(var(--glow-rgb),.035),0 12px 48px rgba(0,0,0,.24);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+    .brand{padding:14px 16px}.brand h1{font-family:Impact,"Arial Narrow",sans-serif;font-stretch:condensed;font-size:clamp(20px,2.2vw,30px);letter-spacing:.18em;line-height:1;margin:0;color:var(--glow);text-shadow:0 0 18px rgba(var(--glow-rgb),.6)}.brand p,.eyebrow{margin:8px 0 0;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+    .telemetry{display:grid;grid-template-columns:auto auto;gap:6px 18px;padding:12px 14px;text-align:right;font-size:10px}.telemetry dt{color:var(--muted);text-transform:uppercase}.telemetry dd{margin:0;color:var(--ok)}
+    .center{display:flex;align-items:center}.equation{width:min(285px,25vw);padding:14px 16px;font-size:10px;line-height:1.7;color:rgba(var(--glow-rgb),.72)}.equation strong{display:block;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.1);color:var(--muted);font-weight:400;text-transform:uppercase;letter-spacing:.12em}
+    .controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.panel{padding:14px 16px;min-width:0}.panel h2{font-size:10px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;padding-bottom:9px;border-bottom:1px solid rgba(255,255,255,.1)}
+    .swatches{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.swatch,.action,.quality button{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.025);min-height:32px;padding:7px 9px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background .18s,border-color .18s,color .18s}.swatch:hover,.swatch:focus-visible,.action:hover,.action:focus-visible,.quality button:hover,.quality button:focus-visible{border-color:var(--glow);outline:none}.swatch[aria-pressed="true"],.quality button[aria-pressed="true"]{border-color:var(--glow);background:rgba(var(--glow-rgb),.12);color:var(--glow);box-shadow:0 0 14px rgba(var(--glow-rgb),.12)}
+    .range{display:grid;grid-template-columns:1fr auto;gap:5px 12px;margin-top:11px}.range label,.range output{font-size:9px;text-transform:uppercase;letter-spacing:.08em}.range label{color:var(--muted)}.range output{color:var(--glow)}.range input{grid-column:1/-1;width:100%;height:18px;margin:0;accent-color:var(--glow);cursor:pointer}
+    .analysis{display:flex;flex-direction:column;justify-content:space-between}.analysis p{margin:0;color:#b2c9cc;font:11px/1.55 system-ui,sans-serif}.action{width:100%;margin-top:12px;color:var(--glow);border-color:rgba(var(--glow-rgb),.45)}.quality{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+    .sheet{position:absolute;z-index:6;inset:var(--pad);display:none;flex-direction:column;padding:18px;overflow:auto}.sheet[data-open="true"]{display:flex}.sheet header{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:13px}.sheet h2{margin:0;color:var(--glow);font-size:12px;letter-spacing:.12em}.sheet pre{white-space:pre-wrap;color:var(--ok);font-size:clamp(9px,1.1vw,12px);line-height:1.55}.sheet .action{width:auto;margin:0}.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:800px){.ui{grid-template-rows:auto 1fr auto}.telemetry{grid-template-columns:auto auto}.telemetry div:nth-child(n+3){display:none}.equation{display:none}.controls{grid-template-columns:1fr 1fr}.analysis{grid-column:1/-1;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}.analysis .action{width:auto}.quality{grid-column:1/-1}.panel{padding:12px}.brand p{display:none}}
+    @media(max-width:520px){:root{--pad:10px}.brand{padding:11px 12px}.brand h1{font-size:18px}.telemetry{padding:9px 10px;gap:4px 10px}.controls{gap:8px}.panel{padding:10px}.panel h2{margin-bottom:8px}.range{margin-top:7px}.analysis p{display:none}.analysis{display:block}.quality{display:grid}.stage:after{opacity:.18}}
+    @media(prefers-reduced-motion:reduce){.stage:after{display:none}.swatch,.action,.quality button{transition:none}}
+  </style>
+</head>
+<body>
+<main class="stage" aria-label="Interactive raymarched coral study">
+  <canvas id="gl" aria-label="Animated bioluminescent coral rendered with WebGL"></canvas>
+  <div id="fallback" class="fallback" hidden><p><strong>WebGL2 is unavailable.</strong><br>This study needs a current browser with hardware acceleration.</p></div>
+  <div class="ui">
+    <header class="top">
+      <section class="brand" aria-labelledby="title"><h1 id="title">BENTHIC_OS</h1><p>SDF raymarching // bio-morphogenesis</p></section>
+      <dl class="telemetry" aria-label="Live renderer telemetry">
+        <div><dt>Render</dt><dd id="fps">starting</dd></div><div><dt>Quality</dt><dd id="qualityReadout">balanced</dd></div>
+        <div><dt>Steps</dt><dd id="stepsReadout">64</dd></div><div><dt>Scale</dt><dd id="scaleReadout">1.00×</dd></div>
+      </dl>
+    </header>
+    <div class="center"><aside class="panel equation" aria-label="Distance-field equation"><strong>Distance field</strong>f(p) = sphere(p) + ridge-noise(p)<br>n = ∇f / ‖∇f‖<br><span style="color:var(--ok)">drag to orbit // tap to pulse</span></aside></div>
+    <section class="controls" aria-label="Morphogenesis controls">
+      <article class="panel"><h2>[SYS.01] Cellular chemistry</h2><div class="swatches" role="group" aria-label="Color profile"><button class="swatch" data-palette="cyan" aria-pressed="true">Cyan</button><button class="swatch" data-palette="toxic" aria-pressed="false">Toxic</button><button class="swatch" data-palette="coral" aria-pressed="false">Coral</button></div><div class="range"><label for="fresnel">Bioluminescent rim</label><output id="fresnelOut">2.80</output><input id="fresnel" type="range" min="0.8" max="5" value="2.8" step="0.1"></div></article>
+      <article class="panel"><h2>[SYS.02] Morphology</h2><div class="range"><label for="density">Tissue density</label><output id="densityOut">3.20</output><input id="density" type="range" min="1" max="7" value="3.2" step="0.1"></div><div class="range"><label for="turbulence">Calcification</label><output id="turbulenceOut">1.35</output><input id="turbulence" type="range" min="0" max="2.4" value="1.35" step="0.05"></div><div class="range"><label for="speed">Metabolic rate</label><output id="speedOut">0.28</output><input id="speed" type="range" min="0" max="1.2" value="0.28" step="0.02"></div></article>
+      <article class="panel analysis"><div><h2>[SYS.03] Render control</h2><p>A bounded sphere trace with adaptive resolution. Telemetry is measured from this device; quality can step down when sustained frame time rises.</p></div><button id="codeButton" class="action" aria-expanded="false">View GLSL buffer</button><div class="quality" role="group" aria-label="Render quality"><button data-quality="eco" aria-pressed="false">Eco</button><button data-quality="balanced" aria-pressed="true">Balanced</button><button data-quality="high" aria-pressed="false">High</button></div></article>
+    </section>
+  </div>
+  <section id="codeSheet" class="sheet" data-open="false" aria-hidden="true" aria-labelledby="codeTitle"><header><h2 id="codeTitle">FRAGMENT_KERNEL.GLSL</h2><button id="closeCode" class="action">Close</button></header><pre id="codePreview"></pre></section>
+  <p id="live" class="sr" aria-live="polite"></p>
+</main>
+<script>
+(() => {
+  'use strict';
+  const canvas=document.querySelector('#gl'), fallback=document.querySelector('#fallback');
+  const gl=canvas.getContext('webgl2',{alpha:false,antialias:false,depth:false,stencil:false,powerPreference:'high-performance',desynchronized:true});
+  if(!gl){canvas.hidden=true;fallback.hidden=false;return}
+  const vertex=`#version 300 es
+  precision highp float;
+  const vec2 P[3]=vec2[3](vec2(-1.,-1.),vec2(3.,-1.),vec2(-1.,3.));
+  void main(){gl_Position=vec4(P[gl_VertexID],0.,1.);}`;
+  const fragment=`#version 300 es
+  precision highp float;
+  out vec4 fragColor;
+  uniform vec2 uResolution,uOrbit;
+  uniform float uTime,uDensity,uTurbulence,uFresnel,uPulse,uSteps;
+  uniform vec3 uBase,uGlow;
+  #define MAX_STEPS 84
+  mat2 rot(float a){float s=sin(a),c=cos(a);return mat2(c,-s,s,c);}
+  float hash31(vec3 p){p=fract(p*.1031);p+=dot(p,p.yzx+33.33);return fract((p.x+p.y)*p.z);}
+  float noise3(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.-2.*f);return mix(mix(mix(hash31(i),hash31(i+vec3(1,0,0)),f.x),mix(hash31(i+vec3(0,1,0)),hash31(i+vec3(1,1,0)),f.x),f.y),mix(mix(hash31(i+vec3(0,0,1)),hash31(i+vec3(1,0,1)),f.x),mix(hash31(i+vec3(0,1,1)),hash31(i+vec3(1)),f.x),f.y),f.z);}
+  float map(vec3 p){vec3 q=p*uDensity+vec3(0,uTime*.11,uTime*.07);float r=abs(noise3(q)-.5)*2.;r+=abs(noise3(q*2.07+2.4)-.5)*.54;return (length(p)-1.05-r*uTurbulence*.22)*.48;}
+  vec3 normalAt(vec3 p){vec2 e=vec2(.004,0);return normalize(vec3(map(p+e.xyy)-map(p-e.xyy),map(p+e.yxy)-map(p-e.yxy),map(p+e.yyx)-map(p-e.yyx)));}
+  float sphereHit(vec3 ro,vec3 rd){float b=dot(ro,rd),c=dot(ro,ro)-2.45;float h=b*b-c;return h<0.?-1.:-b-sqrt(h);}
+  void main(){vec2 uv=(gl_FragCoord.xy-.5*uResolution)/min(uResolution.x,uResolution.y);vec3 ro=vec3(0,0,3.15),rd=normalize(vec3(uv,-1.7));ro.xz*=rot(uOrbit.x);rd.xz*=rot(uOrbit.x);ro.yz*=rot(uOrbit.y);rd.yz*=rot(uOrbit.y);float t=max(0.,sphereHit(ro,rd)),hit=0.;vec3 p=ro;for(int i=0;i<MAX_STEPS;i++){if(float(i)>=uSteps)break;p=ro+rd*t;float d=map(p);if(abs(d)<.0018){hit=1.;break;}t+=max(d*.82,.001);if(t>6.)break;}vec3 abyss=vec3(.003,.018,.028),col=abyss;if(hit>.5){vec3 n=normalAt(p),l=normalize(vec3(.8,1.3,1.8));float dif=max(dot(n,l),0.),rim=pow(1.-max(dot(n,-rd),0.),uFresnel),spec=pow(max(dot(reflect(-l,n),-rd),0.),48.);float detail=noise3(p*uDensity*2.2);vec3 tissue=mix(uBase,uGlow,smoothstep(.25,.9,detail));float pulse=.78+.22*sin(uTime*1.7+detail*5.+uPulse*6.);col=tissue*(.14+dif*.88)*pulse+uGlow*rim*(1.1+uPulse*.7)+vec3(.9,1.,1.)*spec*.55;col*=1.-.18*smoothstep(0.,1.,map(p+n*.09)*8.);}float fog=1.-exp(-.045*t*t);col=mix(col,abyss,fog);col*=smoothstep(1.45,.25,length(uv));col=pow(col,vec3(.88));fragColor=vec4(col,1);}`;
+  const compile=(type,source)=>{const shader=gl.createShader(type);gl.shaderSource(shader,source);gl.compileShader(shader);if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(shader)||'Shader compilation failed');return shader};
+  let program;
+  try{program=gl.createProgram();gl.attachShader(program,compile(gl.VERTEX_SHADER,vertex));gl.attachShader(program,compile(gl.FRAGMENT_SHADER,fragment));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program)||'Shader link failed')}catch(error){canvas.hidden=true;fallback.hidden=false;fallback.innerHTML='<p><strong>Shader initialization failed.</strong><br>'+String(error.message).replace(/[<&]/g,'')+'</p>';return}
+  gl.useProgram(program);gl.bindVertexArray(gl.createVertexArray());
+  const loc={};['Resolution','Orbit','Time','Density','Turbulence','Fresnel','Pulse','Steps','Base','Glow'].forEach(n=>loc[n]=gl.getUniformLocation(program,'u'+n));
+  const palettes={cyan:{base:[0,.055,.12],glow:[0,.94,1],rgb:'0,240,255'},toxic:{base:[.025,.11,.018],glow:[.22,1,.08],rgb:'57,255,20'},coral:{base:[.12,.012,.045],glow:[1,.2,.4],rgb:'255,51,102'}};
+  const modes={eco:{dpr:.72,steps:46},balanced:{dpr:1,steps:64},high:{dpr:1.35,steps:84}};
+  let mode='balanced',running=true,start=performance.now(),last=start,frames=[],orbit=[0,.42],drag=null,pulse=0,raf=0,manualMode=false;
+  const values={density:3.2,turbulence:1.35,fresnel:2.8,speed:.28};
+  function resize(){const m=modes[mode],dpr=Math.min(devicePixelRatio||1,m.dpr),w=Math.max(1,Math.floor(innerWidth*dpr)),h=Math.max(1,Math.floor(innerHeight*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h)}document.querySelector('#scaleReadout').textContent=dpr.toFixed(2)+'×'}
+  function setMode(next,manual=true){mode=next;manualMode=manualMode||manual;document.querySelectorAll('[data-quality]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.quality===mode)));document.querySelector('#qualityReadout').textContent=mode;document.querySelector('#stepsReadout').textContent=modes[mode].steps;resize()}
+  function draw(now){if(!running)return;resize();const dt=Math.min(100,now-last);last=now;frames.push(dt);if(frames.length>90)frames.shift();pulse*=.94;gl.uniform2f(loc.Resolution,canvas.width,canvas.height);gl.uniform2f(loc.Orbit,orbit[0]+(now-start)*.000025,orbit[1]);gl.uniform1f(loc.Time,(now-start)*.001*values.speed);gl.uniform1f(loc.Density,values.density);gl.uniform1f(loc.Turbulence,values.turbulence);gl.uniform1f(loc.Fresnel,values.fresnel);gl.uniform1f(loc.Pulse,pulse);gl.uniform1f(loc.Steps,modes[mode].steps);gl.drawArrays(gl.TRIANGLES,0,3);if(frames.length&&Math.floor(now/700)!==Math.floor((now-dt)/700)){const avg=frames.reduce((a,b)=>a+b,0)/frames.length,fps=Math.min(999,1000/avg);document.querySelector('#fps').textContent=Math.round(fps)+' fps';if(!manualMode&&frames.length===90&&avg>25&&mode!=='eco')setMode(mode==='high'?'balanced':'eco',false)}raf=requestAnimationFrame(draw)}
+  Object.entries(values).forEach(()=>{});
+  ['density','turbulence','fresnel','speed'].forEach(id=>{const input=document.querySelector('#'+id),out=document.querySelector('#'+id+'Out');input.addEventListener('input',()=>{values[id]=Number(input.value);out.value=values[id].toFixed(2);out.textContent=out.value})});
+  document.querySelectorAll('[data-palette]').forEach(button=>button.addEventListener('click',()=>{const p=palettes[button.dataset.palette];document.querySelectorAll('[data-palette]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));document.documentElement.style.setProperty('--glow-rgb',p.rgb);document.documentElement.style.setProperty('--glow',`rgb(${p.rgb})`);gl.uniform3fv(loc.Base,p.base);gl.uniform3fv(loc.Glow,p.glow)}));
+  document.querySelectorAll('[data-quality]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.quality)));
+  const down=e=>{drag=[e.clientX,e.clientY];canvas.setPointerCapture?.(e.pointerId)},move=e=>{if(!drag)return;orbit[0]+=(e.clientX-drag[0])*.005;orbit[1]=Math.max(-1.1,Math.min(1.1,orbit[1]+(e.clientY-drag[1])*.004));drag=[e.clientX,e.clientY]},up=()=>{if(drag)pulse=1;drag=null};canvas.addEventListener('pointerdown',down);canvas.addEventListener('pointermove',move);canvas.addEventListener('pointerup',up);canvas.addEventListener('pointercancel',up);
+  const sheet=document.querySelector('#codeSheet'),codeButton=document.querySelector('#codeButton');document.querySelector('#codePreview').textContent=fragment;function toggleSheet(open){sheet.dataset.open=String(open);sheet.setAttribute('aria-hidden',String(!open));codeButton.setAttribute('aria-expanded',String(open));(open?document.querySelector('#closeCode'):codeButton).focus()}codeButton.addEventListener('click',()=>toggleSheet(true));document.querySelector('#closeCode').addEventListener('click',()=>toggleSheet(false));document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sheet.dataset.open==='true')toggleSheet(false)});
+  document.addEventListener('visibilitychange',()=>{running=!document.hidden;if(running){last=performance.now();raf=requestAnimationFrame(draw)}else cancelAnimationFrame(raf)});addEventListener('resize',resize,{passive:true});canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();running=false;document.querySelector('#fps').textContent='context lost'});canvas.addEventListener('webglcontextrestored',()=>location.reload());
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;if(reduced){values.speed=0;document.querySelector('#speed').value=0;document.querySelector('#speedOut').textContent='0.00';setMode('eco',false)}
+  const p=palettes.cyan;gl.uniform3fv(loc.Base,p.base);gl.uniform3fv(loc.Glow,p.glow);setMode(reduced?'eco':'balanced',false);resize();raf=requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>

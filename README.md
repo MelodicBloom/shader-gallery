@@ -25,6 +25,14 @@ Each shader in this gallery is a standalone visual piece with its own name, aest
 | `textile-weave` | Fabric grain · woven structure | Periodic functions + anisotropy |
 | `crystal-growth` | Frost · mineral formation | Reaction-diffusion |
 
+## Featured proof study
+
+### [BENTHIC_OS — Deep Sea Morphogenesis](benthic-os/)
+
+An interactive WebGL2 raymarching study that turns a noise-displaced implicit volume into responsive, bioluminescent coral. It includes live morphology controls, touch/pointer orbiting, adaptive render profiles, measured frame telemetry, reduced-motion behavior, context-loss handling, and an inspectable GLSL buffer.
+
+The accompanying [technical and hiring-manager brief](benthic-os/README.md) explains the render pipeline, the performance changes from the earlier framework/CDN implementation, the completed QA gates, and the claims this artifact does—and does not—support.
+
 ---
 
 ## 🚀 Running Locally
@@ -59,6 +67,9 @@ The graph catalogs and connects receipts; it does not replace the shader validat
 
 ```
 shader-gallery/
+├── benthic-os/
+│   ├── index.html
+│   └── README.md
 ├── aurora/
 │   ├── index.html
 │   └── shader.glsl
