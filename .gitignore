@@ -1,4 +1,5 @@
 node_modules/
+benthic-r3f/dist/
 __pycache__/
 *.pyc
 .env

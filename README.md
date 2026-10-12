@@ -10,7 +10,7 @@
 
 ## ✨ Concept
 
-Each shader in this gallery is a standalone visual piece with its own name, aesthetic, and emotional register. They run entirely in the browser via WebGL — no dependencies, no frameworks, just pure GPU math made visible.
+Each shader in this gallery is a visual piece with its own name, aesthetic, and emotional register. Most studies are dependency-free WebGL; framework-specific companion proofs are identified explicitly and keep their own reproducible package manifests.
 
 ---
 
@@ -33,6 +33,12 @@ An interactive WebGL2 raymarching study that turns a noise-displaced implicit vo
 
 The accompanying [technical and hiring-manager brief](benthic-os/README.md) explains the render pipeline, the performance changes from the earlier framework/CDN implementation, the completed QA gates, and the claims this artifact does—and does not—support.
 
+### [BENTHIC_R3F — React Three Fiber companion](benthic-r3f/)
+
+The same art direction is rebuilt as a typed React application using a real `@react-three/fiber` scene graph, Three.js `IcosahedronGeometry`, a custom GLSL `ShaderMaterial`, Drei orbit/performance helpers, pointer interaction, semantic artist controls, adaptive pixel-density profiles, and reduced-motion demand rendering.
+
+The [R3F technical brief](benthic-r3f/README.md) records the exact stack, compatibility pin, commands, and evidence boundary. It proves browser-side R3F/Three.js implementation; it does not claim HLSL, Unity, Unreal, physical-device performance, or cross-engine parity.
+
 ---
 
 ## 🚀 Running Locally
@@ -45,7 +51,13 @@ cd shader-gallery
 npx serve .
 ```
 
-Each shader lives in its own folder with a self-contained `index.html` and `shader.glsl`.
+Dependency-free studies can be opened directly. The R3F companion is run separately:
+
+```bash
+cd benthic-r3f
+npm ci
+npm run dev
+```
 
 ---
 
@@ -69,6 +81,10 @@ The graph catalogs and connects receipts; it does not replace the shader validat
 shader-gallery/
 ├── benthic-os/
 │   ├── index.html
+│   └── README.md
+├── benthic-r3f/
+│   ├── src/
+│   ├── package.json
 │   └── README.md
 ├── aurora/
 │   ├── index.html

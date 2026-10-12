@@ -1,0 +1,34 @@
+name: BENTHIC_R3F QA
+
+on:
+  pull_request:
+    paths:
+      - "benthic-r3f/**"
+      - ".github/workflows/benthic-r3f-qa.yml"
+  push:
+    branches: [main]
+    paths:
+      - "benthic-r3f/**"
+      - ".github/workflows/benthic-r3f-qa.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: benthic-r3f
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: benthic-r3f/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run check
+      - run: npm run build
