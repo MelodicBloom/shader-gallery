@@ -18,6 +18,10 @@ let player: ShaderPlayer | null = null, raf = 0, lost = false, generation = 0;
 let elapsed = 0, previous = performance.now(), sample: number[] = [], lastReport = 0;
 let motionState = sceneStore.getState(), dirty = true;
 const inputs = new Map<UniformKey, HTMLInputElement>();
+const vectorUniformContract = {
+  cameraOrbit: 'vec3',
+  lightDirection: 'vec3',
+} as const satisfies Record<string, 'vec3'>;
 
 for (const [key, contract] of Object.entries(uniformContract)) {
   const label = document.createElement('label'); label.className = 'uniform';
@@ -93,7 +97,9 @@ async function initialize() {
     for (const contract of Object.values(uniformContract)) {
       if (next.uniforms.get(contract.uniform)?.type !== 'float') throw new Error(`Uniform contract mismatch: ${contract.uniform} must be an active float.`);
     }
-    if (next.uniforms.get('cameraOrbit')?.type !== 'vec3') throw new Error('Uniform contract mismatch: cameraOrbit must be an active vec3.');
+    for (const [uniform, type] of Object.entries(vectorUniformContract)) {
+      if (next.uniforms.get(uniform)?.type !== type) throw new Error(`Uniform contract mismatch: ${uniform} must be an active ${type}.`);
+    }
     player = next; canvas.hidden = false; resize(); fallback.hidden = true;
     status.textContent = 'WebGL2 / GLSL ES 3.00 · compiled + linked';
     element('#performance').textContent = motionState.reducedMotion || motionState.playback === 'paused'
@@ -116,6 +122,7 @@ function frame(now: number) {
   if (!document.hidden && (animated || dirty)) {
     for (const [key, contract] of Object.entries(uniformContract)) player.setUniform(contract.uniform, s.uniforms[key as UniformKey]);
     player.setUniform('cameraOrbit', [s.camera.yaw, s.camera.pitch, s.camera.distance]);
+    player.setUniform('lightDirection', [0, 0, 0]);
     player.renderOnce({ time: elapsed }); dirty = false;
     if (animated && dt > 0) {
       sample.push(dt); if (sample.length > 180) sample.shift();
