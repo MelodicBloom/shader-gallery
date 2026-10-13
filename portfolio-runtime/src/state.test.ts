@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { sceneStore, resetScene, setUniform, orbit, serializePreset, restorePreset, parsePreset, createEvidenceMatrix } from './state';
+import { sceneStore, resetScene, setUniform, setLightHeading, orbit, serializePreset, restorePreset, parsePreset, createEvidenceMatrix } from './state';
 test('preset round trip restores semantic state and displayed time', () => {
   resetScene(false); setUniform('spectral', 0.8); orbit(1, 0.3, 4);
   sceneStore.setState({ playback: 'paused', reducedMotion: true, inspectorVisible: false });
@@ -25,6 +25,7 @@ test('orbit wraps yaw and clamps pitch/distance; uniform writes reject nonfinite
   const camera = sceneStore.getState().camera;
   assert.ok(camera.yaw >= -Math.PI && camera.yaw <= Math.PI); assert.equal(camera.pitch, 1.2); assert.equal(camera.distance, 2.4);
   assert.throws(() => setUniform('grain', NaN)); assert.throws(() => orbit(Infinity, 0));
+  assert.throws(() => setLightHeading(Infinity));
 });
 test('evidence matrix contains nine deterministic, paused camera and light inputs', () => {
   const matrix = createEvidenceMatrix();
