@@ -1,7 +1,7 @@
 import { ShaderPlayer } from '../../library-v1/runtime/ShaderPlayer.js';
 import fragment from './abalone.glsl?raw';
 import fallbackUrl from '../../library-v1/shaders/aurora/abalone/preview.png';
-import { sceneStore, uniformContract, setUniform, orbit, resetScene, serializePreset, restorePreset, type UniformKey } from './state';
+import { sceneStore, uniformContract, setUniform, setLightHeading, orbit, resetScene, serializePreset, restorePreset, createEvidenceMatrix, type UniformKey } from './state';
 import './styles.css';
 
 const element = <T extends HTMLElement>(selector: string) => document.querySelector<T>(selector)!;
@@ -12,6 +12,11 @@ const reduced = element<HTMLInputElement>('#reduced');
 const playback = element<HTMLButtonElement>('#playback');
 const preset = element<HTMLTextAreaElement>('#preset');
 const presetStatus = element('#preset-status');
+const lightHeading = element<HTMLInputElement>('#light-heading');
+const lightHeadingValue = element<HTMLOutputElement>('#light-heading-value');
+const evidenceView = element<HTMLSelectElement>('#evidence-view');
+const evidence = element<HTMLTextAreaElement>('#evidence-matrix');
+const evidenceStatus = element('#evidence-status');
 const media = matchMedia('(prefers-reduced-motion: reduce)');
 sceneStore.setState({ reducedMotion: media.matches });
 let player: ShaderPlayer | null = null, raf = 0, lost = false, generation = 0;
@@ -22,6 +27,7 @@ const vectorUniformContract = {
   cameraOrbit: 'vec3',
   lightDirection: 'vec3',
 } as const satisfies Record<string, 'vec3'>;
+const evidenceMatrix = createEvidenceMatrix();
 
 for (const [key, contract] of Object.entries(uniformContract)) {
   const label = document.createElement('label'); label.className = 'uniform';
@@ -33,10 +39,15 @@ for (const [key, contract] of Object.entries(uniformContract)) {
   input.addEventListener('input', () => setUniform(key as UniformKey, input.valueAsNumber));
   inputs.set(key as UniformKey, input); element('#uniform-controls').append(label);
 }
+for (const capture of evidenceMatrix) {
+  const option = document.createElement('option'); option.value = capture.id; option.textContent = capture.label;
+  evidenceView.append(option);
+}
 
 function synchronize() {
   const s = sceneStore.getState();
   for (const [key, input] of inputs) { input.value = String(s.uniforms[key]); element(`#value-${key}`).textContent = s.uniforms[key].toFixed(2); }
+  lightHeading.value = String(s.lightHeading); lightHeadingValue.textContent = s.lightHeading.toFixed(2);
   reduced.checked = s.reducedMotion;
   playback.textContent = s.playback === 'playing' ? 'Pause motion' : 'Resume motion';
   element('#inspector').hidden = !s.inspectorVisible;
@@ -48,6 +59,7 @@ function synchronize() {
   if (s.reducedMotion || s.playback === 'paused') element('#performance').textContent = 'Frame cadence: motion stopped; render on change';
 }
 sceneStore.subscribe(synchronize); synchronize();
+lightHeading.addEventListener('input', () => setLightHeading(lightHeading.valueAsNumber));
 media.addEventListener('change', event => sceneStore.setState({ reducedMotion: event.matches }));
 reduced.addEventListener('change', () => sceneStore.setState({ reducedMotion: reduced.checked }));
 playback.addEventListener('click', () => sceneStore.setState(s => ({ playback: s.playback === 'playing' ? 'paused' : 'playing' })));
@@ -57,6 +69,23 @@ element('#export').addEventListener('click', () => { preset.value = serializePre
 element('#restore').addEventListener('click', () => {
   try { restorePreset(preset.value); elapsed = sceneStore.getState().time; dirty = true; presetStatus.textContent = 'Preset restored.'; }
   catch (error) { presetStatus.textContent = `Preset rejected: ${(error as Error).message}`; }
+});
+element('#apply-evidence').addEventListener('click', () => {
+  const capture = evidenceMatrix.find(item => item.id === evidenceView.value)!;
+  const current = sceneStore.getState();
+  elapsed = capture.preset.time;
+  sceneStore.setState({ ...current, uniforms: capture.preset.uniforms, camera: capture.preset.camera, lightHeading: capture.preset.lightHeading, playback: 'paused', time: capture.preset.time }, true);
+  dirty = true;
+  evidenceStatus.textContent = `${capture.label} applied: paused at a reproducible light and camera state.`;
+});
+element('#export-evidence').addEventListener('click', () => {
+  evidence.value = JSON.stringify({
+    schema: 'abalone-evidence-matrix/v1',
+    purpose: 'directional interference and glint localization',
+    limitation: 'Input receipt only. Attach browser, device, frame, and timing evidence before drawing conclusions.',
+    captures: evidenceMatrix,
+  }, null, 2);
+  evidenceStatus.textContent = 'Nine reproducible capture inputs exported. Visual evidence is still required.';
 });
 
 let pointer: { id: number; x: number; y: number } | null = null;
@@ -122,7 +151,8 @@ function frame(now: number) {
   if (!document.hidden && (animated || dirty)) {
     for (const [key, contract] of Object.entries(uniformContract)) player.setUniform(contract.uniform, s.uniforms[key as UniformKey]);
     player.setUniform('cameraOrbit', [s.camera.yaw, s.camera.pitch, s.camera.distance]);
-    player.setUniform('lightDirection', [0, 0, 0]);
+    const heading = s.lightHeading + elapsed * 0.22;
+    player.setUniform('lightDirection', [Math.cos(heading) * 0.9, 0.72 + 0.14 * Math.sin(elapsed * 0.17), 1.05 + Math.sin(heading) * 0.72]);
     player.renderOnce({ time: elapsed }); dirty = false;
     if (animated && dt > 0) {
       sample.push(dt); if (sample.length > 180) sample.shift();
