@@ -13,6 +13,7 @@
 <aside id="inspector" aria-label="Material inspector">
 <div class="inspector-heading"><p class="eyebrow">LIVE MATERIAL</p><h2>Inspect the surface</h2><p>One analytic shell. Bounded controls. Reproducible state.</p></div>
 <div id="uniform-controls"></div>
+<label class="uniform" for="light-heading"><span>Light heading <output id="light-heading-value"></output></span><input id="light-heading" type="range" min="-3.14" max="3.14" step="0.01"></label>
 <div class="motion"><button id="playback">Pause motion</button><label><input id="reduced" type="checkbox"> Reduce motion</label></div>
 <div class="actions"><button id="reset">Reset study</button><button id="export">Export preset</button></div>
 <label class="preset-label" for="preset">Scene preset / JSON</label><textarea id="preset" rows="3" spellcheck="false" aria-describedby="preset-status"></textarea><button id="restore">Restore preset</button><p id="preset-status" role="status">Named preset: Midnight nacre</p>
