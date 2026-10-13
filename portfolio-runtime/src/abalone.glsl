@@ -6,7 +6,7 @@ uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
 uniform vec3 cameraOrbit;
-// Zero keeps the runtime-controlled playback light sweep active.
+// Runtime-controlled directional-light vector.
 uniform vec3 lightDirection;
 uniform float grain;
 uniform float layerSpacing;
