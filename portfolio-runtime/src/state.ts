@@ -2,9 +2,12 @@ import { createStore } from 'zustand/vanilla';
 
 export const uniformContract = {
   grain: { label: 'Layer detail', min: 0, max: 1, step: 0.01, default: 0.48, uniform: 'grain' },
+  layerSpacing: { label: 'Layer spacing', min: 0.35, max: 1.6, step: 0.01, default: 0.94, uniform: 'layerSpacing' },
   paletteShift: { label: 'Spectral phase', min: 0, max: 1, step: 0.01, default: 0.32, uniform: 'paletteShift' },
   spectral: { label: 'Spectral intensity', min: 0, max: 1, step: 0.01, default: 0.62, uniform: 'spectral' },
+  fireStrength: { label: 'Inner fire', min: 0, max: 1.5, step: 0.01, default: 0.78, uniform: 'fireStrength' },
   roughness: { label: 'Surface roughness', min: 0.08, max: 0.8, step: 0.01, default: 0.26, uniform: 'roughness' },
+  lightHeading: { label: 'Light heading', min: -3.14, max: 3.14, step: 0.01, default: -1.1, uniform: 'lightHeading' },
 } as const;
 export type UniformKey = keyof typeof uniformContract;
 export type UniformState = Record<UniformKey, number>;
@@ -53,3 +56,40 @@ export function serializePreset(time = sceneStore.getState().time) {
   return JSON.stringify(parsePreset(JSON.stringify({ ...s, time: finite(time, 0, 86400) })), null, 2);
 }
 export function restorePreset(text: string) { const p = parsePreset(text); sceneStore.setState(p, true); }
+
+export type EvidenceCapture = {
+  id: string;
+  label: string;
+  purpose: 'directional interference and glint localization';
+  preset: ScenePreset;
+};
+
+/**
+ * Static input receipt for visual review. This does not claim a performance
+ * measurement or physical-material validation.
+ */
+export function createEvidenceMatrix(): EvidenceCapture[] {
+  const base = defaults();
+  const cameras = [
+    { id: 'C1', label: 'Camera 1', yaw: -0.72, pitch: -0.22, distance: 3.4 },
+    { id: 'C2', label: 'Camera 2', yaw: 0.35, pitch: 0.18, distance: 3.4 },
+    { id: 'C3', label: 'Camera 3', yaw: 1.1, pitch: 0.52, distance: 3.8 },
+  ];
+  const lights = [
+    { id: 'L1', label: 'Light A', heading: -1.2 },
+    { id: 'L2', label: 'Light B', heading: 0.15 },
+    { id: 'L3', label: 'Light C', heading: 1.4 },
+  ];
+  return cameras.flatMap(camera => lights.map(light => ({
+    id: `${camera.id}-${light.id}`,
+    label: `${camera.label} / ${light.label}`,
+    purpose: 'directional interference and glint localization' as const,
+    preset: {
+      ...base,
+      camera: { yaw: camera.yaw, pitch: camera.pitch, distance: camera.distance },
+      uniforms: { ...base.uniforms, lightHeading: light.heading },
+      playback: 'paused' as const,
+      time: 0,
+    },
+  })));
+}
