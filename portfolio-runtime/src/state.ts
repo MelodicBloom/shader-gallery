@@ -11,11 +11,11 @@ export const uniformContract = {
 export type UniformKey = keyof typeof uniformContract;
 export type UniformState = Record<UniformKey, number>;
 export type ScenePreset = {
-  version: 1; material: 'abalone'; uniforms: UniformState;
+  version: 2; material: 'abalone'; uniforms: UniformState;
   camera: { yaw: number; pitch: number; distance: number };
   playback: 'playing' | 'paused'; time: number; lightHeading: number; reducedMotion: boolean; inspectorVisible: boolean;
 };
-const defaults = (): ScenePreset => ({ version: 1, material: 'abalone',
+const defaults = (): ScenePreset => ({ version: 2, material: 'abalone',
   uniforms: Object.fromEntries(Object.entries(uniformContract).map(([k, v]) => [k, v.default])) as UniformState,
   camera: { yaw: 0.35, pitch: 0.18, distance: 3.4 }, playback: 'playing', time: 0, lightHeading: -1.1,
   reducedMotion: false, inspectorVisible: true });
@@ -29,13 +29,14 @@ const object = (value: unknown): Record<string, unknown> => {
 };
 export function parsePreset(text: string): ScenePreset {
   const p = object(JSON.parse(text)), uniforms = object(p.uniforms), camera = object(p.camera);
-  if (p.version !== 1 || p.material !== 'abalone') throw new Error('Unsupported preset version or material.');
+  if ((p.version !== 1 && p.version !== 2) || p.material !== 'abalone') throw new Error('Unsupported preset version or material.');
   if (p.playback !== 'playing' && p.playback !== 'paused') throw new Error('Invalid playback mode.');
   for (const key of ['reducedMotion', 'inspectorVisible']) if (typeof p[key] !== 'boolean') throw new Error(`Invalid ${key}.`);
-  return { version: 1, material: 'abalone',
-    uniforms: Object.fromEntries(Object.entries(uniformContract).map(([k, v]) => [k, finite(uniforms[k], v.min, v.max)])) as UniformState,
+  const legacy = p.version === 1, fallback = defaults();
+  return { version: 2, material: 'abalone',
+    uniforms: Object.fromEntries(Object.entries(uniformContract).map(([k, v]) => [k, finite(legacy && uniforms[k] === undefined ? fallback.uniforms[k as UniformKey] : uniforms[k], v.min, v.max)])) as UniformState,
     camera: { yaw: finite(camera.yaw, -Math.PI, Math.PI), pitch: finite(camera.pitch, -1.2, 1.2), distance: finite(camera.distance, 2.4, 5) },
-    time: finite(p.time, 0, 86400), lightHeading: finite(p.lightHeading, -3.14, 3.14), playback: p.playback,
+    time: finite(p.time, 0, 86400), lightHeading: legacy ? fallback.lightHeading : finite(p.lightHeading, -3.14, 3.14), playback: p.playback,
     reducedMotion: p.reducedMotion as boolean, inspectorVisible: p.inspectorVisible as boolean };
 }
 export const sceneStore = createStore<ScenePreset>(() => defaults());
