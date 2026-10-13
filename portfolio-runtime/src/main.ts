@@ -72,7 +72,10 @@ element('#restore').addEventListener('click', () => {
 });
 element('#apply-evidence').addEventListener('click', () => {
   const capture = evidenceMatrix.find(item => item.id === evidenceView.value)!;
-  elapsed = capture.preset.time; sceneStore.setState(capture.preset, true); dirty = true;
+  const current = sceneStore.getState();
+  elapsed = capture.preset.time;
+  sceneStore.setState({ ...current, uniforms: capture.preset.uniforms, camera: capture.preset.camera, lightHeading: capture.preset.lightHeading, playback: 'paused', time: capture.preset.time }, true);
+  dirty = true;
   evidenceStatus.textContent = `${capture.label} applied: paused at a reproducible light and camera state.`;
 });
 element('#export-evidence').addEventListener('click', () => {
