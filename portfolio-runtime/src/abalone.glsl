@@ -9,8 +9,10 @@ uniform vec3 cameraOrbit;
 // Zero keeps the runtime-controlled playback light sweep active.
 uniform vec3 lightDirection;
 uniform float grain;
+uniform float layerSpacing;
 uniform float paletteShift;
 uniform float spectral;
+uniform float fireStrength;
 uniform float roughness;
 const float TAU = 6.28318530718;
 vec3 palette(float phase) {
@@ -50,9 +52,8 @@ void main() {
     vec3 v = -ray;
     float facing = max(dot(normal,v),0.);
     float fresnel = pow(1.-facing,3.);
-    // Playback now sweeps illumination instead of changing the palette directly.
-    vec3 light = length(lightDirection)>0.01 ? normalize(lightDirection)
-      : normalize(vec3(-0.55+0.48*sin(u_time*0.22),0.8+0.16*sin(u_time*0.17),1.2));
+    // The application supplies a deterministic directional-light orbit.
+    vec3 light = normalize(lightDirection);
     vec3 fill = normalize(vec3(0.8,0.12,0.95));
     float diffuse = max(dot(normal,light),0.);
     vec3 halfVector = normalize(light+v);
@@ -60,13 +61,15 @@ void main() {
     float highlight = pow(max(dot(normal,halfVector),0.),mix(120.,12.,roughness));
     float event = exp(-pow((p.x+0.28)*2.8,2.)-pow((p.y-0.12)*2.5,2.));
     float opticalAngle = dot(v,halfVector);
-    vec3 interference = palette(phase + opticalAngle*0.92);
-    float band = pow(0.5+0.5*sin(phase*TAU),3.);
+    float interferencePhase = phase*layerSpacing + opticalAngle*(0.46+layerSpacing*0.49);
+    vec3 interference = palette(interferencePhase);
+    float band = pow(0.5+0.5*sin(interferencePhase*TAU),3.);
     color = vec3(0.012,0.023,0.028)*(0.35+diffuse*0.8);
     color += interference*spectral*(0.12+0.7*event)*band*(0.2+0.8*diffuse);
-    float lamella = pow(0.5+0.5*sin(phase*TAU*7.),16.);
-    color += palette(phase+0.12)*lamella*grain*spectral*event*0.12;
-    color += palette(phase*0.3+0.4)*fresnel*spectral*0.22;
+    float lamellaFrequency = mix(3.,11.,clamp(layerSpacing*0.625,0.,1.));
+    float lamella = pow(0.5+0.5*sin(interferencePhase*TAU*lamellaFrequency),16.);
+    color += palette(interferencePhase+0.12)*lamella*grain*spectral*event*0.12;
+    color += palette(interferencePhase*0.3+0.4)*fresnel*spectral*0.22;
     color *= 0.8+0.2*(0.5+0.5*micro*grain);
 
     vec3 tangent = normalize(cross(abs(geometric.y)<0.9 ? vec3(0,1,0) : vec3(1,0,0),geometric));
@@ -95,7 +98,7 @@ void main() {
     vec3 cascadeLayers = vec3(cascadeSin,
       cascadeSin*-0.886258344+cascadeCos*0.463191265,
       cascadeSin*0.570907704-cascadeCos*0.821014247);
-    vec3 firePalette = palette(phase+dot(v,halfVector)*1.12);
+    vec3 firePalette = palette(interferencePhase+dot(v,halfVector)*1.12);
     // Three fixed layer orientations catch and release the light in succession.
     for (int j=0; j<3; ++j) {
       float depth = float(j);
@@ -111,7 +114,7 @@ void main() {
       float glint = glintResponse*glintResponse;
       float secondary = secondaryResponse*secondaryResponse*0.30;
       float buriedGlow = fireLobe(platelet,halfVector,light,edge*5.76)*0.12;
-      color += fireColor * spectral * (glint+secondary+buriedGlow) * cascade * (7.5/(1.0+depth*0.48));
+      color += fireColor * spectral * fireStrength * (glint+secondary+buriedGlow) * cascade * (10.0/(1.0+depth*0.48));
     }
     // A neutral top reflection gives the colored layers a polished cover.
     color += vec3(0.91,0.96,1.0)*highlight*(0.18+event*0.55);
