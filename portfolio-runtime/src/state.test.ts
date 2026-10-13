@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { sceneStore, resetScene, setUniform, setLightHeading, orbit, serializePreset, restorePreset, parsePreset, createEvidenceMatrix } from './state';
+import { sceneStore, uniformContract, resetScene, setUniform, setLightHeading, orbit, serializePreset, restorePreset, parsePreset, createEvidenceMatrix } from './state';
 test('preset round trip restores semantic state and displayed time', () => {
   resetScene(false); setUniform('spectral', 0.8); orbit(1, 0.3, 4);
   sceneStore.setState({ playback: 'paused', reducedMotion: true, inspectorVisible: false });
@@ -36,4 +36,13 @@ test('evidence matrix contains nine deterministic, paused camera and light input
     assert.equal(capture.preset.time, 0);
     assert.doesNotThrow(() => parsePreset(JSON.stringify(capture.preset)));
   }
+});
+test('legacy version-1 presets migrate missing nacre controls without losing valid values', () => {
+  resetScene(false); setUniform('spectral', 0.8);
+  const legacy = JSON.parse(serializePreset()) as Record<string, any>;
+  legacy.version = 1; delete legacy.lightHeading; delete legacy.uniforms.layerSpacing; delete legacy.uniforms.fireStrength;
+  const migrated = parsePreset(JSON.stringify(legacy));
+  assert.equal(migrated.version, 2); assert.equal(migrated.uniforms.spectral, 0.8);
+  assert.equal(migrated.uniforms.layerSpacing, uniformContract.layerSpacing.default);
+  assert.equal(migrated.uniforms.fireStrength, uniformContract.fireStrength.default);
 });
