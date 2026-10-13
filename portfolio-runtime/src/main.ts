@@ -1,7 +1,7 @@
 import { ShaderPlayer } from '../../library-v1/runtime/ShaderPlayer.js';
 import fragment from './abalone.glsl?raw';
 import fallbackUrl from '../../library-v1/shaders/aurora/abalone/preview.png';
-import { sceneStore, uniformContract, setUniform, orbit, resetScene, serializePreset, restorePreset, createEvidenceMatrix, type UniformKey } from './state';
+import { sceneStore, uniformContract, setUniform, setLightHeading, orbit, resetScene, serializePreset, restorePreset, createEvidenceMatrix, type UniformKey } from './state';
 import './styles.css';
 
 const element = <T extends HTMLElement>(selector: string) => document.querySelector<T>(selector)!;
@@ -12,6 +12,8 @@ const reduced = element<HTMLInputElement>('#reduced');
 const playback = element<HTMLButtonElement>('#playback');
 const preset = element<HTMLTextAreaElement>('#preset');
 const presetStatus = element('#preset-status');
+const lightHeading = element<HTMLInputElement>('#light-heading');
+const lightHeadingValue = element<HTMLOutputElement>('#light-heading-value');
 const evidenceView = element<HTMLSelectElement>('#evidence-view');
 const evidence = element<HTMLTextAreaElement>('#evidence-matrix');
 const evidenceStatus = element('#evidence-status');
@@ -45,6 +47,7 @@ for (const capture of evidenceMatrix) {
 function synchronize() {
   const s = sceneStore.getState();
   for (const [key, input] of inputs) { input.value = String(s.uniforms[key]); element(`#value-${key}`).textContent = s.uniforms[key].toFixed(2); }
+  lightHeading.value = String(s.lightHeading); lightHeadingValue.textContent = s.lightHeading.toFixed(2);
   reduced.checked = s.reducedMotion;
   playback.textContent = s.playback === 'playing' ? 'Pause motion' : 'Resume motion';
   element('#inspector').hidden = !s.inspectorVisible;
@@ -56,6 +59,7 @@ function synchronize() {
   if (s.reducedMotion || s.playback === 'paused') element('#performance').textContent = 'Frame cadence: motion stopped; render on change';
 }
 sceneStore.subscribe(synchronize); synchronize();
+lightHeading.addEventListener('input', () => setLightHeading(lightHeading.valueAsNumber));
 media.addEventListener('change', event => sceneStore.setState({ reducedMotion: event.matches }));
 reduced.addEventListener('change', () => sceneStore.setState({ reducedMotion: reduced.checked }));
 playback.addEventListener('click', () => sceneStore.setState(s => ({ playback: s.playback === 'playing' ? 'paused' : 'playing' })));
@@ -144,7 +148,7 @@ function frame(now: number) {
   if (!document.hidden && (animated || dirty)) {
     for (const [key, contract] of Object.entries(uniformContract)) player.setUniform(contract.uniform, s.uniforms[key as UniformKey]);
     player.setUniform('cameraOrbit', [s.camera.yaw, s.camera.pitch, s.camera.distance]);
-    const heading = s.uniforms.lightHeading + elapsed * 0.22;
+    const heading = s.lightHeading + elapsed * 0.22;
     player.setUniform('lightDirection', [Math.cos(heading) * 0.9, 0.72 + 0.14 * Math.sin(elapsed * 0.17), 1.05 + Math.sin(heading) * 0.72]);
     player.renderOnce({ time: elapsed }); dirty = false;
     if (animated && dt > 0) {
