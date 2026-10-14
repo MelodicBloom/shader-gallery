@@ -75,6 +75,7 @@ try {
 
     const results = await page.evaluate(() => ({
       cards: document.querySelectorAll("[data-shader-card]").length,
+      entries: window.__shaderLibraryQA?.entries,
       webgl2: Boolean(document.createElement("canvas").getContext("webgl2")),
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       firstCanvas: (() => {
@@ -83,7 +84,12 @@ try {
       })()
     }));
 
-    if (results.cards !== 15) throw new Error(`${viewport.name}: expected 15 cards, found ${results.cards}`);
+    if (!Number.isInteger(results.entries) || results.entries < 1) {
+      throw new Error(`${viewport.name}: manifest entry count is unavailable`);
+    }
+    if (results.cards !== results.entries) {
+      throw new Error(`${viewport.name}: expected ${results.entries} cards, found ${results.cards}`);
+    }
     if (!results.webgl2) throw new Error(`${viewport.name}: WebGL2 is unavailable in browser QA`);
     if (results.overflow > 1) throw new Error(`${viewport.name}: horizontal overflow ${results.overflow}px`);
     if (!results.firstCanvas || results.firstCanvas.width < 2 || results.firstCanvas.height < 2) {

@@ -50,7 +50,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gcc libegl1-mesa-dev libgles2-mesa-dev
 
-      - name: Validate metadata and all 15 shaders
+      - name: Validate metadata and all manifest shaders
         working-directory: packages/shader-library-v1/source
         env:
           EGL_PLATFORM: surfaceless
@@ -79,11 +79,14 @@ jobs:
             ':(exclude)library-v1/shaders/**/preview.png'
 
           python - <<'PY'
+          import json
           from pathlib import Path
 
+          manifest = json.loads(Path("packages/shader-library-v1/source/manifest.json").read_text())
+          expected = len(manifest.get("shaders", []))
           previews = sorted(Path("library-v1/shaders").rglob("preview.png"))
-          if len(previews) != 15:
-              raise SystemExit(f"Expected 15 preview PNGs; found {len(previews)}")
+          if len(previews) != expected:
+              raise SystemExit(f"Expected {expected} preview PNGs; found {len(previews)}")
 
           signature = b"\x89PNG\r\n\x1a\n"
           for preview in previews:
@@ -91,7 +94,7 @@ jobs:
               if len(data) <= len(signature) or not data.startswith(signature):
                   raise SystemExit(f"Invalid or empty PNG fallback: {preview}")
 
-          print("Validated 15 non-empty PNG fallback frames.")
+          print(f"Validated {expected} non-empty PNG fallback frames.")
           PY
 
       - name: Install browser QA runtime

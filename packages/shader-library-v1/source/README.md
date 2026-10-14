@@ -1,10 +1,10 @@
 # MelodicBloom Shader Library v1
 
-A compile-validated WebGL2 shader library containing 15 semantic shader families, deterministic previews, metadata-driven controls, and a framework-agnostic runtime.
+A compile-validated WebGL2 shader library with a manifest-driven collection of semantic shader families, deterministic previews, metadata-driven controls, and a framework-agnostic runtime.
 
 ## Included
 
-- 15 repaired WebGL2 fragment shaders
+- manifest-driven WebGL2 fragment shaders, each with validated metadata
 - normalized `u_time`, `u_resolution`, and `u_mouse` uniforms
 - `ShaderPlayer` with resize, pointer, uniform, replacement, capture, and deterministic-render APIs
 - per-shader `meta.json`
