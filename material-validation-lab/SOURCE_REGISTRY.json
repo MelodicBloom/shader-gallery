@@ -87,6 +87,66 @@
       "usable": ["idea of explicit source resolution"],
       "notTransferred": ["Webpack asset/source configuration", "preset #define map", "assumption of a Next.js build"],
       "assumptionsAndLimits": ["conflicts with current plain JS / Node / WebGL2 Shader Library structure and lacks compile evidence"]
+    },
+    {
+      "id": "SRC-PHYSICS-CHANNELS",
+      "title": "Physics and Channels",
+      "url": "library:libfile_d02f9a27fda0819180dec1b35c1d2c5c",
+      "kind": "internal-technical-contract",
+      "license": "internal",
+      "freshness": "created 2026-10-09; reviewed 2026-10-17",
+      "status": "approved-for-bounded-study",
+      "usable": ["PBR map/channel semantics", "unit separation: film nanometres vs volume/mesh thickness", "fixture ideas", "model limits for opal/labradorite/gold"],
+      "notTransferred": ["unmeasured numeric calibration", "implicit renderer-version compatibility"],
+      "assumptionsAndLimits": ["describes first-principles equations and channel contracts, not calibration data"]
+    },
+    {
+      "id": "SRC-ARCHITECTURE-CONTRACT",
+      "title": "Architecture, Engine Choice and Boundary Contract",
+      "url": "library:libfile_12f5e28615688191829815c5356e17b8",
+      "kind": "internal-architecture-proposal",
+      "license": "internal",
+      "freshness": "created 2026-10-09; reviewed 2026-10-17",
+      "status": "approved-for-bounded-study",
+      "usable": ["hybrid renderer decision", "domain vocabulary", "ablation method", "fixture definitions", "provenance convention"],
+      "notTransferred": ["ratified cross-repository architecture", "named device performance outcomes"],
+      "assumptionsAndLimits": ["explicitly labels itself a proposal, not cross-repository ratification"]
+    },
+    {
+      "id": "SRC-CODEX-WORK-ORDER-001",
+      "title": "Codex Work Order 001 — Graduate Synthetic PBR Laboratory",
+      "url": "library:libfile_8859be50c8b4819185458b3ec1975c38",
+      "kind": "internal-execution-handoff",
+      "license": "internal",
+      "freshness": "created 2026-10-09; reviewed 2026-10-17",
+      "status": "approved-for-bounded-study",
+      "usable": ["Gold → Abalone → Bubble order", "proof requirements", "R3F-after-proof gate", "licensed-reference separation"],
+      "notTransferred": ["asserted glTF values until re-read from pinned asset", "unexecuted DoD statements"],
+      "assumptionsAndLimits": ["prepared work order, not an execution receipt"]
+    },
+    {
+      "id": "SRC-ABYSSAL-MATERIAL-CONTRACT",
+      "title": "ABYSSAL_OS v0.2 — Optical and Morphological Contracts",
+      "url": "library:libfile_61ad727cf8988191bd14f8f232112b0e",
+      "kind": "internal-implementation-contract",
+      "license": "internal",
+      "freshness": "created 2026-10-15; reviewed 2026-10-17",
+      "status": "reference-only",
+      "usable": ["control applicability convention", "explicit proxy language", "performance-boundary language", "context-loss and low-resolution handling"],
+      "notTransferred": ["ray-marching mechanism", "organism-specific UI control list"],
+      "assumptionsAndLimits": ["different project and rendering model; it is an architectural analogue, not reusable material code"]
+    },
+    {
+      "id": "SRC-ABYSSAL-DECISIONS",
+      "title": "ABYSSAL_OS v0.2 Decision Log",
+      "url": "library:libfile_ad3ed6fb49a08191b1e56f1669666ee2",
+      "kind": "internal-decision-log",
+      "license": "internal",
+      "freshness": "created 2026-10-15; reviewed 2026-10-17",
+      "status": "reference-only",
+      "usable": ["active-control rule", "defer-HDR-bloom-until-budget rule", "explicit falsifier style"],
+      "notTransferred": ["specific morphology decisions", "claim of shared proxy validity outside that project"],
+      "assumptionsAndLimits": ["proves a decision process, not compatibility with the Shader Gallery runtime"]
     }
   ]
 }
