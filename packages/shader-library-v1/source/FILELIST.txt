@@ -1,10 +1,10 @@
 Shader Library v1 source extraction
 
-56 package files extracted beneath packages/shader-library-v1/source/:
+70 package files extracted beneath packages/shader-library-v1/source/:
 - package metadata, license, README, integration notes, and deployment configuration
 - canonical and docs manifests
 - metadata schema
-- 15 shader.glsl files and 15 matching meta.json files
+- manifest-driven shader.glsl files and matching meta.json files
 - ShaderPlayer runtime and fullscreen vertex shader
 - native EGL/GLES3 compile-link-render validator
 - metadata, preview, PNG, docs, and browser-harness tooling

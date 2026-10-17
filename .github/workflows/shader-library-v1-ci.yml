@@ -4,11 +4,13 @@ on:
   pull_request:
     paths:
       - "packages/shader-library-v1/**"
+      - "docs/optical-studies-02.html"
       - ".github/workflows/shader-library-v1-ci.yml"
   push:
     branches: [main]
     paths:
       - "packages/shader-library-v1/**"
+      - "docs/optical-studies-02.html"
       - ".github/workflows/shader-library-v1-ci.yml"
   workflow_dispatch:
 
@@ -35,7 +37,10 @@ jobs:
       - name: Install EGL and GLES validator dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc libegl1-mesa-dev libgles2-mesa-dev
+          sudo apt-get install -y gcc libegl1-mesa-dev libgles2-mesa-dev unzip
+
+      - name: Verify distributable archive matches source
+        run: node tools/verify-source-archive.mjs
 
       - name: Validate metadata and compile, link, and render all shaders
         env:

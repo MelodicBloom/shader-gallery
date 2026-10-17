@@ -135,6 +135,33 @@
       "shader": "shaders/materials/ethereal-sheen/shader.glsl",
       "meta": "shaders/materials/ethereal-sheen/meta.json",
       "preview": "shaders/materials/ethereal-sheen/preview.png"
+    },
+    {
+      "slug": "materials/opal-fire",
+      "name": "Opal Fire",
+      "category": "Materials",
+      "family": "Buried structural-color domains",
+      "shader": "shaders/materials/opal-fire/shader.glsl",
+      "meta": "shaders/materials/opal-fire/meta.json",
+      "preview": "shaders/materials/opal-fire/preview.png"
+    },
+    {
+      "slug": "materials/labradorite-schiller",
+      "name": "Labradorite Schiller",
+      "category": "Materials",
+      "family": "Oriented internal plates",
+      "shader": "shaders/materials/labradorite-schiller/shader.glsl",
+      "meta": "shaders/materials/labradorite-schiller/meta.json",
+      "preview": "shaders/materials/labradorite-schiller/preview.png"
+    },
+    {
+      "slug": "optical/spectral-prism",
+      "name": "Spectral Prism",
+      "category": "Optical",
+      "family": "Convex dielectric transport",
+      "shader": "shaders/optical/spectral-prism/shader.glsl",
+      "meta": "shaders/optical/spectral-prism/meta.json",
+      "preview": "shaders/optical/spectral-prism/preview.png"
     }
   ]
 }
