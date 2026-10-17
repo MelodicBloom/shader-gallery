@@ -1,6 +1,6 @@
 Shader Library v1 source extraction
 
-56 package files extracted beneath packages/shader-library-v1/source/:
+70 package files extracted beneath packages/shader-library-v1/source/:
 - package metadata, license, README, integration notes, and deployment configuration
 - canonical and docs manifests
 - metadata schema
