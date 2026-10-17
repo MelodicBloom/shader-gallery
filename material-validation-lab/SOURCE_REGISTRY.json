@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "0.1.0",
+  "observedAt": "2026-10-17",
+  "statusVocabulary": ["approved-for-bounded-study", "reference-only", "pending-revision-pin", "excluded"],
+  "sources": [
+    {
+      "id": "SRC-KHR-ABALONE",
+      "title": "Khronos glTF Sample Assets — IridescenceAbalone",
+      "url": "https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/IridescenceAbalone",
+      "kind": "asset-and-documentation",
+      "license": "CC-BY-4.0",
+      "freshness": "observed 2026-10-17; exact commit SHA TO_PIN",
+      "status": "approved-for-bounded-study",
+      "usable": ["reference GLB", "baseColor, normal and ORM map semantics", "packed R iridescence / G thickness convention", "controlled comparison fixture"],
+      "notTransferred": ["authorship", "appearance claim for original nacre", "partial-metalness shortcut as a physical statement"],
+      "assumptionsAndLimits": ["roughness and thickness were quick edits of base color", "partial metalness is acknowledged as an artistic approximation"],
+      "attribution": "© 2015 Abby Crawford; © 2023 Eric Chadwick; CC BY 4.0"
+    },
+    {
+      "id": "SRC-KHR-IRIDESCENCE",
+      "title": "KHR_materials_iridescence",
+      "url": "https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_iridescence",
+      "kind": "interoperability-specification",
+      "license": "specification; implementation not imported",
+      "freshness": "observed 2026-10-17; revision TO_PIN",
+      "status": "reference-only",
+      "usable": ["map-channel interpretation", "portable asset semantics", "conformance target"],
+      "notTransferred": ["renderer implementation code", "claim that any WebGL2 proxy is extension-conformant"],
+      "assumptionsAndLimits": ["WebGL Shader Library v1 has a fullscreen shader contract, not a glTF material pipeline"]
+    },
+    {
+      "id": "SRC-THREE-PHYSICAL",
+      "title": "Three.js MeshPhysicalMaterial documentation",
+      "url": "https://threejs.org/docs/pages/MeshPhysicalMaterial.html",
+      "kind": "runtime-documentation",
+      "license": "MIT project; documentation observed only",
+      "freshness": "observed 2026-10-17; package version TO_PIN",
+      "status": "approved-for-bounded-study",
+      "usable": ["PBR reference lane", "documented map channel conventions", "iridescence, anisotropy, transmission and dispersion controls"],
+      "notTransferred": ["unversioned API behavior", "performance claims"],
+      "assumptionsAndLimits": ["higher per-pixel cost when advanced effects are enabled; environment map is required for meaningful evaluation"]
+    },
+    {
+      "id": "SRC-OVIEDO-BUBBLE",
+      "title": "Soap Bubble Iridescence Simulator",
+      "url": "https://github.com/SantiagoGR11/pompa-iridiscencia",
+      "kind": "shader-reference",
+      "license": "MIT",
+      "freshness": "observed 2026-10-17; exact commit SHA TO_PIN",
+      "status": "approved-for-bounded-study",
+      "usable": ["two-interface Fresnel model", "phase-delay structure", "spectral integration / XYZ-to-sRGB approach", "test vocabulary"],
+      "notTransferred": ["repository UI", "claims beyond two-beam model", "unverified source files before compile review"],
+      "assumptionsAndLimits": ["the repository itself proposes drainage, additional reflections and background illumination as extensions"]
+    },
+    {
+      "id": "SRC-OPENPBR-VIEWER",
+      "title": "OpenPBR Viewer",
+      "url": "https://github.com/portsmouth/OpenPBR-viewer",
+      "kind": "comparison-renderer",
+      "license": "MIT",
+      "freshness": "observed 2026-10-17; exact commit SHA TO_PIN",
+      "status": "reference-only",
+      "usable": ["comparison vocabulary", "high-fidelity reference experiments", "OpenPBR feature mapping"],
+      "notTransferred": ["path tracer architecture", "rasterizer code", "realtime-gallery performance assumptions"],
+      "assumptionsAndLimits": ["repository describes a WebGL path tracer/rasterizer and full OpenPBR 1.2 support; neither is independently compiled or benchmarked here"]
+    },
+    {
+      "id": "SRC-SHADER-GALLERY-OPTICAL-02",
+      "title": "Shader Gallery PR #15 — Optical Studies 02",
+      "url": "https://github.com/MelodicBloom/shader-gallery/pull/15",
+      "kind": "internal-implementation",
+      "license": "repository authority",
+      "freshness": "head aec2e3cfaf4e53d639ec611655d927e1b5942f6e observed 2026-10-17",
+      "status": "approved-for-bounded-study",
+      "usable": ["WebGL2 fullscreen contract", "metadata model boundaries", "fixture convention", "static fallback behavior", "existing Opal/Labradorite/Prism studies"],
+      "notTransferred": ["claim of merged status", "named-device performance claims", "physical calibration claims"],
+      "assumptionsAndLimits": ["two unresolved P2 review findings: distributable archive stale and bfcache render restart missing"]
+    },
+    {
+      "id": "SRC-RAW-GLSL-SOURCE-MAP",
+      "title": "Shader Source Map — Raw GLSL imports + Variant Builder",
+      "url": "library:libfile_e05fba25f7e48191be2dc17c604fcbae",
+      "kind": "internal-proposal",
+      "license": "internal",
+      "freshness": "created 2026-10-13; no verified repository target",
+      "status": "excluded",
+      "usable": ["idea of explicit source resolution"],
+      "notTransferred": ["Webpack asset/source configuration", "preset #define map", "assumption of a Next.js build"],
+      "assumptionsAndLimits": ["conflicts with current plain JS / Node / WebGL2 Shader Library structure and lacks compile evidence"]
+    }
+  ]
+}

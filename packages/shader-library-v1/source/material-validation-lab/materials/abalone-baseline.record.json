@@ -1,0 +1,28 @@
+{
+  "id": "MVT-ABALONE-001",
+  "name": "Khronos Abalone Baseline",
+  "status": "planned",
+  "materialClass": "iridescent-reference-asset",
+  "sourceRefs": ["SRC-KHR-ABALONE", "SRC-KHR-IRIDESCENCE", "SRC-THREE-PHYSICAL"],
+  "requiredPins": ["source commit SHA", "downloaded GLB SHA-256", "Three.js version", "renderer/browser version"],
+  "controls": {
+    "physics": [
+      {"key":"iridescence","unit":"ratio","min":0,"max":1,"default":1},
+      {"key":"iridescenceThicknessRangeNm","unit":"nm","min":0,"max":2000,"default":[100,400]}
+    ],
+    "art": [
+      {"key":"exposure","unit":"EV","min":-4,"max":4,"default":0}
+    ]
+  },
+  "maps": [
+    {"semantic":"iridescenceIntensity","channel":"R","colorSpace":"NoColorSpace"},
+    {"semantic":"iridescenceThickness","channel":"G","colorSpace":"NoColorSpace"},
+    {"semantic":"occlusion","channel":"R","colorSpace":"NoColorSpace"},
+    {"semantic":"roughness","channel":"G","colorSpace":"NoColorSpace"},
+    {"semantic":"metalness","channel":"B","colorSpace":"NoColorSpace"}
+  ],
+  "fixtures": ["neutral", "grazing", "light-sweep"],
+  "fallback": {"type":"static-capture","required":true,"label":"Static reference capture; live material unavailable."},
+  "modelBoundary": {"calibrated":false,"claims":["documented-reference-asset"],"nonClaims":["measured-abalone", "original-material", "mobile-optimized"]},
+  "trial": "MVT-ABALONE-001"
+}

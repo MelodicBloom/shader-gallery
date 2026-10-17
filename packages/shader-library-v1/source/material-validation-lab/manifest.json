@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "0.1.0",
+  "lab": "Material Validation Lab",
+  "status": "planned",
+  "owner": "Jennipher Troup",
+  "rendererBaseline": "webgl2-fullscreen-shader-library-v1",
+  "records": [
+    "materials/abalone-baseline.record.json",
+    "materials/soap-bubble-spectral.record.json",
+    "materials/gold-foil-field.record.json"
+  ],
+  "sharedInvariants": [
+    "source-revision-pinned-before-run",
+    "three-controlled-captures",
+    "fallback-labeled",
+    "model-boundary-visible",
+    "mutant-validator-case"
+  ]
+}
