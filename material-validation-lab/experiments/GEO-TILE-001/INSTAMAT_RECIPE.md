@@ -1,0 +1,19 @@
+# Manual InstaMAT lane — reproducible *procedure*, not imported native graph
+
+**Primary video:** debe3D, [Can I Recreate this Trending Substance Designer Material in InstaMAT?](https://www.youtube.com/watch?v=CJjm8A7xbdo). Creator cites a tile reference by artist Julian Delanoi/Delano (spelling not independently checked); verify original author, license and URL before using reference imagery. Node names and parameters may vary with InstaMAT releases: check against the [official Canvas guide](https://docs.instamat.io/Products/InstaMAT_Studio/Canvas) and [Tile Scatter](https://node.docs.instamat.io/latest/Library/Effects/Scatter/Tile%20Scatter.html) / [Non Uniform Blur](https://node.docs.instamat.io/latest/Library/Effects/Blur/Non%20Uniform%20Blur.html) node references.
+
+## Graph recipe
+
+1. Open InstaMAT Studio → create a **procedural material Canvas graph** → document application version and graph identifier. Work at 512×512 or 1024×1024. Use 6×6 repeats; start with fixed seed and ZERO offset, size and rotation variance. Set Tile Scatter advanced **Filtering = Nearest** before diagnosing blur artifacts.
+2. Build a single grayscale tile primitive from circular ring/arc Shape Generator components. Set circle/ring count 1, use ring width near 0.3–0.5 (starting range from video); translate variants; Subtract to cut an arc, then Maximum to compose. Keep a separate output for shape mask. Expose ringWidth once and reuse across generators.
+3. Tile Scatter the primitive 6×6; duplicate scatter and rotate the second source by **180°**. Use a 3×3 checkerboard as a blend mask to alternate orientations. Confirm a visual parity change (a centrosymmetric primitive would defeat this). No random rotation in the first fixture.
+4. Make a distinct 6×6 filled-tile mask. Non Uniform Blur + restrained Slope Blur; combine tile geometry with arc field (Multiply). Tune nonuniform blur **SampleCount** and **DirectionCount** in the documented 1–16 range; begin at 16 for artifact diagnosis then reduce for performance testing. Adjust intensity only after filtering is corrected.
+5. Edge wear: Slope Blur height using coarse/fine **Fractal Sum** noises, composited through thresholded **Clouds** masks. Keep wear sparse. Independent tile wear: Flat Fill → Random Direction feeding Vector Warp prevents identical cracks crossing tile boundaries. Add separate anisotropic/noise-warped diagonal scratches at very low blend opacity (~2% is an initial *maximum*, not a target).
+6. Branch **height**, **base color**, **roughness**, **normal** and **AO** outputs explicitly. Derive an initial roughness from height/curvature only as an artistic baseline; add wear/dust roughness separately. Use curvature and AO masks to localize color variations, with dark/light greens and restrained warm edge accents. Set metallic = **0**. Generate normal from height with recorded intensity. Do not bake lighting into base color.
+7. Export maps to a clean folder, document resolution, bit depth, color space and engine normal-Y convention. Treat unverified node-graph parameters in this text as suggested initial values, NOT a native InstaMAT file or guaranteed UI path.
+
+## Capture form
+
+For each variant record: app_version, graph_sha256, seed, resolution, ring_width, tile_count, scatter_filtering, blur_samples, blur_directions, orientation_mask, wear_blend, export_format, output_hashes, license/source, screenshots of node stages, and renderer/camera/light/environment/exposure. For neutral, grazing, and light-sweep, pin camera and vary only the declared independent variable. A screenshot without metadata is an observation, not acceptance evidence.
+
+**Falsifiers:** arcs remain unalternated; visible resampling seams appear; wear leaks across tile boundaries; height/normal disagree on relief direction; color/roughness maps are treated as the same color space; result matches only a single lighting/view hero image.
