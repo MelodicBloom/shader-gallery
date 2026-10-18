@@ -28,7 +28,7 @@
 - [x] **Step 3:** Implement deterministic control, WAV generator and event envelope.
 - [x] **Step 4:** Run `npm test` and observe 8 passing tests.
 - [x] **Step 5:** Run `npm run fixture`, then `npm test` again to verify regenerated sample count.
-- [ ] **Step 6:** Commit scoped, passing deliverables in repository branch; obtain resulting SHA.
+- [x] **Step 6:** Commit scoped deliverables on `experiment/kaleidoscopic-field-001`; see initial commit `c2773ffeb1fa79a3cf608856c3b95418c14ff45d`.
 
 ### Task 2: GPU visual comparator
 
@@ -62,8 +62,8 @@
 - [x] **Step 1:** Include gates for explicit source/license attribution, deterministic evidence, and bounded claims.
 - [x] **Step 2:** Check that skill does not require nonexistent tooling or unverified commands.
 - [x] **Step 3:** Author the skill and portable evidence/contract references.
-- [ ] **Step 4:** Package `.skill` archive and verify it opens and contains all required skill files.
-- [ ] **Step 5:** Open a draft PR with known QA blockers and link concrete implementation files.
+- [x] **Step 4:** Package `.skill` archive and verify its ZIP entries (verified locally).
+- [x] **Step 5:** Open [draft PR #24](https://github.com/MelodicBloom/shader-gallery/pull/24) with G1/G2 blockers.
 - [ ] **Step 6:** After G1/G2 verified, propose minimal schema/field operators to `shader-grammar` as a separate change.
 
 ## Decisions still open

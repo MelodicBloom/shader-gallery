@@ -1,6 +1,6 @@
 # KF-001 first validation receipt — 2026-10-18
 
-- Target branch: `experiments/kaleidoscopic-field-001` under `MelodicBloom/shader-gallery` (commit association to be populated by GitHub commit tooling, if successful).
+- Target branch: `experiment/kaleidoscopic-field-001` under `MelodicBloom/shader-gallery`; initial commit `c2773ffeb1fa79a3cf608856c3b95418c14ff45d`; draft PR #24.
 - Hypothesis: independently sampled, symmetrical field has distinct spatial legibility when mapped to GPU point-grid Z versus flat color.
 - Fixtures: authored 12s synthetic WAV + derived RMS + authored kick/snare onset envelope at 60 Hz. `tools/build-fixture.mjs` is the generator of record.
 - Environment: container Node.js v22.16.0; Chromium binary available but software GL backend fails initialization in headless Linux environment.

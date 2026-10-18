@@ -27,6 +27,10 @@ The current studies explore thin-film color, opal-like internal domains, labrado
 
 The Material Validation Lab is the next bounded layer: it will test a Khronos abalone baseline, a thin-film bubble treatment against an RGB-proxy control, and an original procedural gold-foil field before choosing a broader runtime adapter.
 
+## Kaleidoscopic Field / 001 — motion experiment
+
+A [self-contained field and 3D point-displacement comparator](experiments/kaleidoscopic-field-001/README.md) explores temporal feedback, radial symmetry and audio-driven geometry with reproducible 12-second fixtures, a [TouchDesigner reconstruction protocol](experiments/kaleidoscopic-field-001/docs/TOUCHDESIGNER.md) and a [reusable agent skill](experiments/kaleidoscopic-field-001/.agents/skills/kaleidoscopic-field-lab/SKILL.md). This is an **unverified visual experiment** until browser/TouchDesigner receipts establish parity and device performance.
+
 ## Research and attribution
 
 The project studies and may validate mechanisms from the following sources; source availability does **not** imply copied code or assets.
