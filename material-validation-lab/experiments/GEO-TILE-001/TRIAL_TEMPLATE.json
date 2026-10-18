@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "0.1.0",
+  "specimen": "GEO-TILE-001",
+  "trialStatus": "planned",
+  "source": {
+    "tutorialUrl": "https://www.youtube.com/watch?v=CJjm8A7xbdo",
+    "creator": "debe3D",
+    "originalReferenceAuthorAndLicense": "TO_VERIFY_BEFORE_IMPORT",
+    "thirdPartyAssetImported": false
+  },
+  "git": {"baseBranch": "feat/material-validation-lab-v0", "experimentCommit": "TO_FILL"},
+  "versions": {"python": "TO_FILL", "instamat": "NOT_RUN", "renderer": "NOT_RUN", "gpu": "NOT_RUN"},
+  "generatorReceipt": "out/geotile-seed42/receipt.json",
+  "fixedControls": {"tiles": 6, "seed": 42, "size": 512, "wearGain": 0.4},
+  "fixtures": {
+    "neutral": {"state": "not-run", "camera": null, "light": null, "capture": null},
+    "grazing": {"state": "not-run", "camera": null, "light": null, "capture": null},
+    "light-sweep": {"state": "not-run", "camera": null, "light": null, "capture": null}
+  },
+  "ablations": {"seedSensitivity": "not-reviewed", "wearZero": "not-reviewed", "tileParity": "not-reviewed", "filtering": "not-reviewed"},
+  "humanVisualReview": "pending",
+  "acceptanceDecision": "inconclusive",
+  "limitations": ["CPU diagnostic preview only", "texture import and lighting not verified"],
+  "promotion": "blocked-pending-controlled-render"
+}
