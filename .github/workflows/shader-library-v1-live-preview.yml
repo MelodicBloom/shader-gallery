@@ -11,6 +11,7 @@ on:
       - "packages/shader-library-v1/source/src/core/ShaderPlayer.js"
       - "packages/shader-library-v1/source/manifest.json"
       - "packages/shader-library-v1/source/shaders/**"
+      - "docs/optical-studies-02.html"
       - "library-v1/**"
       - ".github/workflows/shader-library-v1-live-preview.yml"
   push:
@@ -24,6 +25,7 @@ on:
       - "packages/shader-library-v1/source/src/core/ShaderPlayer.js"
       - "packages/shader-library-v1/source/manifest.json"
       - "packages/shader-library-v1/source/shaders/**"
+      - "docs/optical-studies-02.html"
       - "library-v1/**"
       - ".github/workflows/shader-library-v1-live-preview.yml"
   workflow_dispatch:
