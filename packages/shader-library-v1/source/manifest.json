@@ -56,6 +56,15 @@
       "preview": "shaders/flow/chromatic-flow/preview.png"
     },
     {
+      "slug": "flow/radial-field-bloom",
+      "name": "Radial Field Bloom",
+      "category": "Flow",
+      "family": "Stateless Radial Flow Recurrence",
+      "shader": "shaders/flow/radial-field-bloom/shader.glsl",
+      "meta": "shaders/flow/radial-field-bloom/meta.json",
+      "preview": "shaders/flow/radial-field-bloom/preview.png"
+    },
+    {
       "slug": "materials/opal-core",
       "name": "Opal Core",
       "category": "Materials",
