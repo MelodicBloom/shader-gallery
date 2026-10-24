@@ -1,0 +1,23 @@
+{
+  "id": "MVT-GOLD-001",
+  "name": "Gold Foil Field Study",
+  "status": "planned",
+  "materialClass": "original-procedural-pbr",
+  "sourceRefs": ["SRC-THREE-PHYSICAL"],
+  "requiredPins": ["field algorithm hash", "seed", "renderer/browser version"],
+  "controls": {
+    "physics": [
+      {"key":"roughness","unit":"ratio","min":0.02,"max":0.8,"default":0.24},
+      {"key":"metalness","unit":"ratio","min":0,"max":1,"default":1}
+    ],
+    "art": [
+      {"key":"foldAmplitude","unit":"ratio","min":0,"max":1,"default":0.45},
+      {"key":"foldDensity","unit":"ratio","min":0,"max":1,"default":0.6},
+      {"key":"seed","unit":"integer","min":0,"max":2147483647,"default":42}
+    ]
+  },
+  "fixtures": ["neutral", "grazing", "light-sweep"],
+  "fallback": {"type":"static-capture","required":true,"label":"Static original-field capture; live material unavailable."},
+  "modelBoundary": {"calibrated":false,"claims":["original-deterministic-field-if-trial-passes"],"nonClaims":["measured-gold-foil", "scanned-texture", "universal-pbr-portability"]},
+  "trial": "MVT-GOLD-001"
+}
