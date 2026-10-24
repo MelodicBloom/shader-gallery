@@ -4,7 +4,7 @@ This directory adds the compile-validated MelodicBloom shader-library overlay wi
 
 ## Contents
 
-- `melodicbloom-shader-library-v1-source.zip` — source-only package containing 18 WebGL2 fragment shaders, semantic metadata, `ShaderPlayer`, validation tools, docs source, CI, and Netlify configuration.
+- `melodicbloom-shader-library-v1-source.zip` — source-only package containing 19 WebGL2 fragment shaders, semantic metadata, `ShaderPlayer`, validation tools, docs source, CI, and Netlify configuration.
 - Generated PNG previews are intentionally excluded from this source archive; regenerate them after extraction with `npm run generate:previews`.
 
 ## Install beside the existing gallery
