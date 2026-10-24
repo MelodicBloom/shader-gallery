@@ -52,9 +52,12 @@ void main() {
     vec3 v = -ray;
     float facing = max(dot(normal,v),0.);
     float fresnel = pow(1.-facing,3.);
-    // The application supplies a deterministic directional-light orbit.
-    vec3 light = normalize(lightDirection);
-    vec3 fill = normalize(vec3(0.8,0.12,0.95));
+    // The drag interaction presents camera orbit as object rotation. Interpret
+    // lights in camera space so the revealed reverse hemisphere receives the
+    // same angle-dependent material response as the initial front hemisphere.
+    vec3 light = normalize(right*lightDirection.x + up*lightDirection.y - forward*lightDirection.z);
+    vec3 fillDirection = normalize(vec3(0.8,0.12,0.95));
+    vec3 fill = normalize(right*fillDirection.x + up*fillDirection.y - forward*fillDirection.z);
     float diffuse = max(dot(normal,light),0.);
     vec3 halfVector = normalize(light+v);
     vec3 fillHalf = normalize(fill+v);
