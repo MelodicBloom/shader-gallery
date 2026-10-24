@@ -11,11 +11,13 @@
   },
   "scripts": {
     "validate:meta": "node tools/validate-meta.mjs",
+    "validate:material-lab": "node tools/validate-material-lab.mjs",
     "validate:shaders": "node tools/validate-shaders.mjs",
     "test:live-preview-build": "node tools/test-build-live-preview.mjs",
     "test:native-validator": "node tools/test-native-runner.mjs",
+    "test:material-lab": "node tools/test-validate-material-lab.mjs",
     "generate:previews": "node tools/generate-previews.mjs",
-    "test": "npm run validate:meta && npm run test:native-validator && npm run validate:shaders && npm run test:live-preview-build",
+    "test": "npm run validate:meta && npm run validate:material-lab && npm run test:material-lab && npm run test:native-validator && npm run validate:shaders && npm run test:live-preview-build",
     "build:docs": "node tools/build-docs.mjs"
   },
   "engines": {

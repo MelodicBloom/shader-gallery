@@ -4,12 +4,14 @@ on:
   pull_request:
     paths:
       - "packages/shader-library-v1/**"
+      - "material-validation-lab/**"
       - "docs/optical-studies-02.html"
       - ".github/workflows/shader-library-v1-ci.yml"
   push:
     branches: [main]
     paths:
       - "packages/shader-library-v1/**"
+      - "material-validation-lab/**"
       - "docs/optical-studies-02.html"
       - ".github/workflows/shader-library-v1-ci.yml"
   workflow_dispatch:
