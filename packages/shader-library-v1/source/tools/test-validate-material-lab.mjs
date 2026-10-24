@@ -53,6 +53,12 @@ mutate("range bound", (copy) => {
   record.controls.physics[1].default = [-1, 400];
   fs.writeFileSync(target, JSON.stringify(record, null, 2));
 }, /default outside declared bounds/);
+mutate("range shape", (copy) => {
+  const target = path.join(copy, "material-validation-lab", "materials", "abalone-baseline.record.json");
+  const record = JSON.parse(fs.readFileSync(target, "utf8"));
+  record.controls.physics[1].default = [100, 400, 600];
+  fs.writeFileSync(target, JSON.stringify(record, null, 2));
+}, /range default must have exactly two values/);
 mutate("registry provenance", (copy) => {
   const target = path.join(copy, "material-validation-lab", "SOURCE_REGISTRY.json");
   const registry = JSON.parse(fs.readFileSync(target, "utf8"));
@@ -78,5 +84,37 @@ mutate("duplicate resolved pin", (copy) => {
   };
   fs.writeFileSync(target, JSON.stringify(record, null, 2));
 }, /pass requires each declared pin exactly once/);
+mutate("placeholder resolved pin", (copy) => {
+  const target = path.join(copy, "material-validation-lab", "materials", "soap-bubble-spectral.record.json");
+  const record = JSON.parse(fs.readFileSync(target, "utf8"));
+  record.status = "pass";
+  record.resolvedPins = record.requiredPins.map((requirement) => ({ requirement, value: "TO_PIN" }));
+  fs.writeFileSync(target, JSON.stringify(record, null, 2));
+}, /pass cannot retain placeholder pin values/);
+mutate("unstructured capture receipt", (copy) => {
+  const target = path.join(copy, "material-validation-lab", "materials", "soap-bubble-spectral.record.json");
+  const record = JSON.parse(fs.readFileSync(target, "utf8"));
+  record.status = "pass";
+  record.resolvedPins = record.requiredPins.map((requirement, index) => ({ requirement, value: `pin-${index}` }));
+  record.receipt = {
+    command: "node tools/validate-material-lab.mjs",
+    environment: { browser: "Chromium 155", renderer: "WebGL2", gpu: "SwiftShader" },
+    review: { decision: "pass", reviewer: "human", rationale: "reviewed" },
+    captures: ["neutral", "grazing", "light-sweep"]
+  };
+  fs.writeFileSync(target, JSON.stringify(record, null, 2));
+}, /capture fixture invalid or duplicated/);
+mutate("excluded source", (copy) => {
+  const target = path.join(copy, "material-validation-lab", "materials", "gold-foil-field.record.json");
+  const record = JSON.parse(fs.readFileSync(target, "utf8"));
+  record.sourceRefs = ["SRC-RAW-GLSL-SOURCE-MAP"];
+  fs.writeFileSync(target, JSON.stringify(record, null, 2));
+}, /excluded source/);
+mutate("duplicate pilot", (copy) => {
+  const target = path.join(copy, "material-validation-lab", "manifest.json");
+  const manifest = JSON.parse(fs.readFileSync(target, "utf8"));
+  manifest.records = [manifest.records[0], manifest.records[0], manifest.records[0]];
+  fs.writeFileSync(target, JSON.stringify(manifest, null, 2));
+}, /pilot record paths must be distinct/);
 
-console.log("✓ material lab validator accepts the extracted package and rejects fixture, bound, provenance, and invalid-pass mutants");
+console.log("✓ material lab validator accepts the extracted package and rejects boundary, provenance, source, pilot, and invalid-pass mutants");
