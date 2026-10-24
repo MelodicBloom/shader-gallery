@@ -70,11 +70,11 @@
       "url": "https://github.com/MelodicBloom/shader-gallery/pull/15",
       "kind": "internal-implementation",
       "license": "repository authority",
-      "freshness": "merged to main as eaf122770e5d5132015163dd9aab5dd5b36ec9ab; reconciliation verified 2026-10-17",
+      "freshness": "historically merged to main as eaf122770e5d5132015163dd9aab5dd5b36ec9ab; current main containing the study was f9bebc950864d83e6748f97cd4b2319f0a965c98 when G0 reconciliation verified it on 2026-10-24",
       "status": "approved-for-bounded-study",
       "usable": ["WebGL2 fullscreen contract", "metadata model boundaries", "fixture convention", "static fallback behavior", "existing Opal/Labradorite/Prism studies"],
       "notTransferred": ["named-device performance claims", "physical calibration claims", "unrelated deployment claims"],
-      "assumptionsAndLimits": ["the distributable archive is source-parity-verified for 18 studies", "the standalone Optical Studies surface resumes its frame loop after persisted pageshow", "neither fact establishes material fidelity or device performance"]
+      "assumptionsAndLimits": ["the distributable archive is source-parity-verified; G0 observed 80 source files and 19 manifest shaders at main f9bebc950864d83e6748f97cd4b2319f0a965c98", "the standalone Optical Studies surface resumes its frame loop after persisted pageshow", "neither fact establishes material fidelity or device performance"]
     },
     {
       "id": "SRC-RAW-GLSL-SOURCE-MAP",
