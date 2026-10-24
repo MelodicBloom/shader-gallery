@@ -1,0 +1,290 @@
+{
+  "schemaVersion": "ProjectBoundaryEvidence/0.1.0",
+  "run": {
+    "id": "run:example:verified-repositories",
+    "idempotencyKey": "sha256:1abe630541a0e01132d6c3f74c83bf97361888d0bedb83bf363523664837a3ac",
+    "mode": "dry-run",
+    "startedAt": "2026-09-28T21:00:00Z",
+    "sourceRef": "workspace-audit@2026-09-28",
+    "configVersion": "Neo4jIngestionConfig/0.1.0",
+    "operator": "human-approved-design"
+  },
+  "projects": [
+    {
+      "id": "project:shader-gallery",
+      "name": "Shader Gallery",
+      "status": "active",
+      "description": "Compile-validated WebGL2 shader library, deterministic preview runtime, and evidence graph boundary.",
+      "purpose": "Own shader runtime, metadata, validation, previews, and versioned release evidence.",
+      "owner": "MelodicBloom",
+      "visibility": "public",
+      "rightsStatus": "known",
+      "tags": [
+        "shader",
+        "webgl2",
+        "evidence",
+        "library"
+      ],
+      "scope": {
+        "projectId": "project:shader-gallery",
+        "authority": {
+          "repository": "MelodicBloom/shader-gallery",
+          "ref": "main",
+          "sha": "7718a006e6757eefe37d184262c0b9d4fb2b1d05"
+        },
+        "sourceClass": "owned"
+      },
+      "platformRole": "library",
+      "inputs": [
+        "shader source",
+        "metadata",
+        "research receipts"
+      ],
+      "outputs": [
+        "shader package",
+        "preview",
+        "QA receipt",
+        "manifest"
+      ],
+      "allowedActions": [
+        "validate",
+        "render",
+        "package",
+        "publish evidence"
+      ],
+      "prohibitedActions": [
+        "promote unverified material claims",
+        "ingest credentials"
+      ]
+    },
+    {
+      "id": "project:seed-loom",
+      "name": "Seed-Loom",
+      "status": "active",
+      "purpose": "Provide shared entity, relationship, observation, run, and traceability vocabulary.",
+      "owner": "qt314wink",
+      "visibility": "public",
+      "rightsStatus": "known",
+      "tags": [
+        "ontology",
+        "observation",
+        "traceability"
+      ],
+      "scope": {
+        "projectId": "project:seed-loom",
+        "authority": {
+          "repository": "qt314wink/seed-loom",
+          "ref": "main",
+          "sha": "fad01eeb0bf0f83beffb2c5b090af7a43eca54ac"
+        },
+        "sourceClass": "owned"
+      },
+      "platformRole": "workflow",
+      "inputs": [
+        "observations",
+        "runs",
+        "relations"
+      ],
+      "outputs": [
+        "shared ontology",
+        "traceability records"
+      ],
+      "allowedActions": [
+        "define",
+        "validate",
+        "trace"
+      ],
+      "prohibitedActions": [
+        "duplicate incompatible entities"
+      ]
+    },
+    {
+      "id": "project:melodyfire",
+      "name": "Melodyfire",
+      "status": "active",
+      "purpose": "Portfolio and creative product surface that consumes versioned visual artifacts.",
+      "owner": "MelodicBloom",
+      "visibility": "public",
+      "rightsStatus": "known",
+      "tags": [
+        "portfolio",
+        "creative-product",
+        "consumer"
+      ],
+      "scope": {
+        "projectId": "project:melodyfire",
+        "authority": {
+          "repository": "MelodicBloom/melodyfire",
+          "ref": "main",
+          "sha": "2b3dba8fecb425fb83637518bb304ab7b208c16a"
+        },
+        "sourceClass": "owned"
+      },
+      "platformRole": "portfolio",
+      "inputs": [
+        "released visual artifacts",
+        "research decisions"
+      ],
+      "outputs": [
+        "portfolio experiences",
+        "creative service surfaces"
+      ],
+      "allowedActions": [
+        "consume releases",
+        "present provenance"
+      ],
+      "prohibitedActions": [
+        "read private session rows as public evidence"
+      ]
+    }
+  ],
+  "repositories": [
+    {
+      "id": "repo:melodicbloom/shader-gallery",
+      "name": "MelodicBloom/shader-gallery",
+      "status": "active",
+      "projectId": "project:shader-gallery",
+      "authority": {
+        "repository": "MelodicBloom/shader-gallery",
+        "ref": "main",
+        "sha": "7718a006e6757eefe37d184262c0b9d4fb2b1d05"
+      },
+      "sourceClass": "owned",
+      "isPrivate": false,
+      "observedFiles": [
+        "README.md",
+        "packages/shader-library-v1/source/package.json",
+        "schemas/ecosystem-graph-record.schema.json"
+      ],
+      "bestUseCases": [
+        "shader package identity",
+        "compile/render receipts",
+        "release evidence"
+      ],
+      "doNotIngest": [
+        "credentials",
+        "generated previews as primary evidence"
+      ]
+    },
+    {
+      "id": "repo:qt314wink/seed-loom",
+      "name": "qt314wink/seed-loom",
+      "status": "active",
+      "projectId": "project:seed-loom",
+      "authority": {
+        "repository": "qt314wink/seed-loom",
+        "ref": "main",
+        "sha": "fad01eeb0bf0f83beffb2c5b090af7a43eca54ac"
+      },
+      "sourceClass": "owned",
+      "isPrivate": false,
+      "observedFiles": [
+        "README.md",
+        "schemas/universal-entity.schema.json",
+        "knowledge/schema/run.schema.json"
+      ],
+      "bestUseCases": [
+        "shared ontology",
+        "observation and run traceability"
+      ],
+      "doNotIngest": [
+        "unvalidated generated outputs"
+      ]
+    },
+    {
+      "id": "repo:melodicbloom/melodyfire",
+      "name": "MelodicBloom/melodyfire",
+      "status": "active",
+      "projectId": "project:melodyfire",
+      "authority": {
+        "repository": "MelodicBloom/melodyfire",
+        "ref": "main",
+        "sha": "2b3dba8fecb425fb83637518bb304ab7b208c16a"
+      },
+      "sourceClass": "owned",
+      "isPrivate": false,
+      "observedFiles": [
+        "README.md",
+        "client/src/components/MandalaCanvas.tsx",
+        "client/src/components/reed-smith/EvidenceChain.tsx"
+      ],
+      "bestUseCases": [
+        "portfolio registry",
+        "creative artifact lineage"
+      ],
+      "doNotIngest": [
+        "private user/session rows",
+        "credentials"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "evidence:shader-gallery:architecture",
+      "name": "Shader Gallery federated architecture",
+      "status": "observed",
+      "projectId": "project:shader-gallery",
+      "authority": {
+        "repository": "MelodicBloom/shader-gallery",
+        "ref": "main",
+        "sha": "7718a006e6757eefe37d184262c0b9d4fb2b1d05",
+        "path": "docs/architecture/federated-shader-neo4j-plan.md"
+      },
+      "evidenceClass": "PROJECT_INTERPRETATION",
+      "contentHash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sourceFiles": [
+        "docs/architecture/federated-shader-neo4j-plan.md"
+      ],
+      "observedAt": "2026-09-28T21:00:00Z",
+      "actor": "workspace-audit",
+      "summary": "Shader Gallery owns shader runtime and evidence boundaries; downstream consumers use versioned releases.",
+      "unknowns": [
+        "Neo4j deployment target"
+      ],
+      "rightsStatus": "known"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel:shader-gallery:owns-repository",
+      "type": "OWNS",
+      "sourceId": "project:shader-gallery",
+      "targetId": "repo:melodicbloom/shader-gallery",
+      "projectId": "project:shader-gallery",
+      "evidenceState": "observed",
+      "confidence": 1,
+      "observedAt": "2026-09-28T21:00:00Z",
+      "relationKey": "shader-gallery-owns-repository"
+    },
+    {
+      "id": "rel:seed-loom:defines-vocabulary",
+      "type": "PRODUCES",
+      "sourceId": "repo:qt314wink/seed-loom",
+      "targetId": "project:shader-gallery",
+      "projectId": "project:seed-loom",
+      "evidenceState": "derived",
+      "confidence": 0.85,
+      "relationKey": "seed-loom-defines-vocabulary"
+    },
+    {
+      "id": "rel:melodyfire:consumes-releases",
+      "type": "CONSUMES",
+      "sourceId": "project:melodyfire",
+      "targetId": "project:shader-gallery",
+      "projectId": "project:melodyfire",
+      "evidenceState": "proposed",
+      "confidence": 0.7,
+      "relationKey": "melodyfire-consumes-releases"
+    },
+    {
+      "id": "rel:shader-gallery:architecture-evidence",
+      "type": "SUPPORTS_CLAIM",
+      "sourceId": "evidence:shader-gallery:architecture",
+      "targetId": "project:shader-gallery",
+      "projectId": "project:shader-gallery",
+      "evidenceState": "observed",
+      "confidence": 1,
+      "relationKey": "shader-gallery-architecture-evidence"
+    }
+  ]
+}
