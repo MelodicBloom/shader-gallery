@@ -1,0 +1,142 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "Ripple Pool",
+  "slug": "optical-studio/ripple-pool",
+  "category": "Optical",
+  "description": "Ray/heightfield water intersection with xz gradients, three refracted color paths to a submerged floor, Beer-Lambert attenuation and finite-difference light focusing.",
+  "status": "experimental",
+  "renderer": {
+    "api": "webgl2",
+    "glslVersion": "300 es",
+    "vertexContract": "fullscreen-quad-v_uv"
+  },
+  "uniforms": {
+    "u_time": {
+      "type": "float",
+      "default": 0,
+      "ui": "hidden",
+      "semanticRole": "light-sweep-time"
+    },
+    "u_resolution": {
+      "type": "vec2",
+      "default": [
+        512,
+        512
+      ],
+      "ui": "hidden",
+      "semanticRole": "viewport-size"
+    },
+    "cameraOrbit": {
+      "type": "vec3",
+      "default": [
+        0.35,
+        0.18,
+        3.4
+      ],
+      "ui": "hidden",
+      "semanticRole": "camera-yaw-pitch-distance"
+    },
+    "lightDirection": {
+      "type": "vec3",
+      "default": [
+        0,
+        0,
+        0
+      ],
+      "ui": "hidden",
+      "semanticRole": "optional-world-space-key-light"
+    },
+    "grain": {
+      "type": "float",
+      "default": 0.55,
+      "ui": "slider",
+      "semanticRole": "Surface relief",
+      "min": 0,
+      "max": 1,
+      "step": 0.01
+    },
+    "paletteShift": {
+      "type": "float",
+      "default": 0.5,
+      "ui": "slider",
+      "semanticRole": "Chromatic IOR offset",
+      "min": 0,
+      "max": 1,
+      "step": 0.01
+    },
+    "spectral": {
+      "type": "float",
+      "default": 0.62,
+      "ui": "slider",
+      "semanticRole": "Water tint",
+      "min": 0,
+      "max": 1,
+      "step": 0.01
+    },
+    "roughness": {
+      "type": "float",
+      "default": 0.18,
+      "ui": "slider",
+      "semanticRole": "Specular roughness",
+      "min": 0.05,
+      "max": 0.8,
+      "step": 0.01
+    },
+    "rippleAmp": {
+      "type": "float",
+      "default": 0.35,
+      "ui": "slider",
+      "semanticRole": "Ripple amplitude",
+      "min": 0,
+      "max": 0.6,
+      "step": 0.01
+    },
+    "rippleWavelength": {
+      "type": "float",
+      "default": 1,
+      "ui": "slider",
+      "semanticRole": "Ripple wavelength",
+      "min": 0,
+      "max": 4,
+      "step": 0.01
+    },
+    "zoomBlur": {
+      "type": "float",
+      "default": 0.4,
+      "ui": "slider",
+      "semanticRole": "Transmission blur",
+      "min": 0,
+      "max": 1,
+      "step": 0.01
+    },
+    "causticBoost": {
+      "type": "float",
+      "default": 1,
+      "ui": "slider",
+      "semanticRole": "Floor caustic",
+      "min": 0,
+      "max": 3,
+      "step": 0.01
+    }
+  },
+  "controlLabels": {
+    "grain": "Surface relief",
+    "paletteShift": "Chromatic IOR",
+    "spectral": "Water tint",
+    "roughness": "Roughness",
+    "rippleAmp": "Ripple amplitude",
+    "rippleWavelength": "Ripple wavelength",
+    "zoomBlur": "Transmission blur",
+    "causticBoost": "Floor caustic"
+  },
+  "shaderSourceHash": "sha256:635f35a4a4799e8e7dec39fe199aff217f0c1cd6647662a02a31bec2365ceba2",
+  "modelBoundary": {
+    "evidenceClass": "HYPOTHESIS",
+    "calibrated": false,
+    "note": "Appearance model; optical constants, spectral calibration, spatial bloom, and hardware profiling remain unverified."
+  },
+  "provenance": {
+    "source": "Optical Studio v1.2 standalone embedded study",
+    "metadata": "Reconstructed from viewer uniform contracts; see local v1.2 source-and-QA bundle for full original per-specimen metadata"
+  }
+}
