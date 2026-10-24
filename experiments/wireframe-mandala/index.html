@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Living Wireframe Mandala — Bounded Experiment 001</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,sans-serif;color:#f1eafa;background:#090917}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 65% 20%,#201433 0%,#0b0a1c 45%,#070812 90%)}
+header{padding:1.7rem clamp(1rem,3vw,3rem);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;border-bottom:1px solid #463a5e}
+h1{margin:.35rem 0;font-weight:660;font-size:clamp(1.35rem,2.7vw,2.1rem);letter-spacing:-.025em}.eyebrow{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:#a5f1f0}
+header p{max-width:47rem;margin:.2rem 0;color:#c4bacf;font-size:.86rem;line-height:1.5}a{color:#90eaf1}main{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:1.1rem;padding:1.1rem;max-width:1580px;margin:auto}
+.stage{min-width:0;position:relative;border:1px solid #584267;border-radius:1rem;overflow:hidden;background:#090912}
+canvas{display:block;width:100%;height:min(76vh,850px);min-height:380px}
+.overlay{position:absolute;bottom:1rem;left:1rem;max-width:calc(100% - 2rem);padding:.5rem .7rem;border:1px solid #443a63;border-radius:.5rem;background:#090b1be6;font:11px/1.5 ui-monospace,SFMono-Regular,monospace;color:#d0cedb;overflow-wrap:anywhere}
+aside{display:flex;flex-direction:column;gap:.85rem}section{border:1px solid #4b3b62;background:#161327;border-radius:.8rem;padding:1rem}h2{font-size:1rem;margin:0 0 .8rem}.field{margin:.65rem 0}label{display:flex;justify-content:space-between;gap:.5rem;font-size:.81rem;color:#ddd2ed;margin-bottom:.36rem}.value{font-variant-numeric:tabular-nums;color:#90edf0}input[type=range]{width:100%;accent-color:#e768d6}select,input[type=number],button{background:#241f3a;border:1px solid #655376;border-radius:.45rem;color:white;padding:.52rem;font:inherit}select,input[type=number]{width:100%}button{cursor:pointer;font-size:.8rem;min-height:38px}button:hover{border-color:#8beaf2}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #9debed;outline-offset:2px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}#error{font-size:.75rem;min-height:1.8em;color:#f9a7bc}.hint{color:#c0b5d0;font-size:.75rem;line-height:1.5}.switch{display:flex;align-items:center;justify-content:space-between;margin:.65rem 0}footer{padding:0 1.5rem 1.5rem;color:#bbb0cb;font-size:.78rem}@media(max-width:800px){main{grid-template-columns:1fr}canvas{height:min(62vh,640px);min-height:310px}aside{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header><div><div class="eyebrow">Motion Atlas / Experiment 001</div><h1>Living Wireframe Mandala</h1><p>A deterministic, geometry-first study after MechBullRodeo’s <a href="https://www.youtube.com/watch?v=sFY78EmBZvY">TouchDesigner tutorial</a>. Independent Canvas2D interpretation, not an exported .toe network or a WebGL material.</p></div></header>
+<main>
+<div class="stage"><canvas id="art" role="img" aria-label="Animated neon procedural wireframe mandala with radial geometry"></canvas><div class="overlay" id="readout" aria-live="off">Initializing geometry…</div></div>
+<aside>
+<section><h2>Geometry & motion</h2>
+<div class="field"><label for="mode">Construction mode</label><select id="mode"><option value="nested">Curve-on-curve + radial</option><option value="radial">Radial baseline</option></select></div>
+<div class="field"><label for="points">Points <output class="value" id="v-points"></output></label><input id="points" type="range" min="12" max="128" step="1"></div>
+<div class="field"><label for="copies">Radial copies <output class="value" id="v-copies"></output></label><input id="copies" type="range" min="3" max="24" step="1"></div>
+<div class="field"><label for="templates">Template samples <output class="value" id="v-templates"></output></label><input id="templates" type="range" min="1" max="16" step="1"></div>
+<div class="field"><label for="amplitude">Noise amplitude <output class="value" id="v-amplitude"></output></label><input id="amplitude" type="range" min="0" max="0.9" step="0.01"></div>
+<div class="field"><label for="frequency">Noise frequency <output class="value" id="v-frequency"></output></label><input id="frequency" type="range" min="0.2" max="12" step="0.1"></div>
+<div class="field"><label for="speed">Motion speed <output class="value" id="v-speed"></output></label><input id="speed" type="range" min="0" max="3" step="0.05"></div>
+<div class="field"><label for="seed">Noise seed</label><input type="number" id="seed" min="0" max="2147483647" step="1"></div>
+<div class="switch"><label for="glow">Additive glow (artistic)</label><input type="checkbox" id="glow" checked></div>
+<div id="error" role="status" aria-live="polite"></div></section>
+<section><h2>Reproducibility</h2><div class="actions"><button id="pause">Pause</button><button id="reset">Reset</button><button id="capture">Save PNG</button><button id="receipt">Export receipt</button></div><p class="hint">Animated timestamps are quantized to 1/30 s for replay. Receipt stores normalized controls, frame time, source identity, and a non-cryptographic geometry fingerprint. Canvas output may vary by browser.</p></section>
+</aside>
+</main><footer>No microphone data, uploads, external scripts, or third-party network calls. A local static server is required for ES modules. Scene complexity is capped at 30,000 line segments per frame.</footer>
+<script type="module">
+import { DEFAULT, LIMIT, SOURCE_ID, normalize, estimateSegments, generate, fingerprint } from './core.mjs';
+const $ = id => document.getElementById(id), canvas=$('art'), ctx=canvas.getContext('2d',{alpha:false});
+let params=normalize(DEFAULT), running=!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let frameTime=0, last=0, frame=null, signature='', lastPaint=0;
+const controlKeys=['points','copies','templates','amplitude','frequency','speed','seed'];
+function writeUI(){ for(const key of controlKeys){$(key).value=String(params[key]); const v=$('v-'+key); if(v)v.textContent=String(params[key]);} $('mode').value=params.mode; $('glow').checked=params.glow;$('pause').textContent=running?'Pause':'Resume'; }
+function accept(){try{const candidate={...params,mode:$('mode').value,glow:$('glow').checked};for(const key of controlKeys)candidate[key]=Number($(key).value);params=normalize(candidate);$('error').textContent='';writeUI();paint();}catch(err){$('error').textContent=`Change rejected: ${err.message}`;writeUI();}}
+for(const key of [...controlKeys,'mode','glow'])$(key).addEventListener('input',accept);
+$('reset').addEventListener('click',()=>{params=normalize(DEFAULT);frameTime=0;writeUI();paint();});
+$('pause').addEventListener('click',()=>{running=!running;last=0;writeUI();paint();});
+function download(name,blob){const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+$('capture').addEventListener('click',()=>{paint();canvas.toBlob(blob=>{if(blob)download(`mandala-${signature}.png`,blob);},'image/png');});
+$('receipt').addEventListener('click',()=>{paint();const data={schema:'wireframe-mandala-receipt/v1',sourceVideo:`https://youtube.com/watch?v=${SOURCE_ID}`,renderer:'canvas2d-approximation',params,frameTimeSeconds:frameTime,segmentCount:frame?.segments.length,geometryFingerprint:signature,viewport:{width:canvas.width,height:canvas.height,dpr:Math.min(devicePixelRatio||1,2)},performanceClaim:'none',capturedAt:new Date().toISOString()};download(`mandala-${signature}.json`,new Blob([JSON.stringify(data,null,2)+'\n'],{type:'application/json'}));});
+function fit(){const box=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);const w=Math.max(1,Math.round(box.width*dpr)),h=Math.max(1,Math.round(box.height*dpr));if(w!==canvas.width||h!==canvas.height){canvas.width=w;canvas.height=h;}return {w,h};}
+function paint(){const {w,h}=fit();frame=generate(params,frameTime);signature=fingerprint(frame.segments);
+const bg=ctx.createRadialGradient(w*.5,h*.5,0,w*.5,h*.5,Math.max(w,h)*.6);bg.addColorStop(0,'#1a1030');bg.addColorStop(.55,'#0d0c20');bg.addColorStop(1,'#050710');ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+const centerX=w*.5, centerY=h*.5, scale=Math.min(w,h)*.47;
+ctx.lineCap='round';ctx.lineJoin='round';
+// Build a single path per arm/layer for efficient strokes.
+const paths=new Map();for(const [x1,y1,x2,y2,arm,layer] of frame.segments){const key=`${arm}:${layer}`;let path=paths.get(key);if(!path){path=new Path2D();paths.set(key,path);}path.moveTo(centerX+x1*scale,centerY+y1*scale);path.lineTo(centerX+x2*scale,centerY+y2*scale);}
+if(params.glow){ctx.globalCompositeOperation='screen'; for(const [key,path] of paths){const [arm,layer]=key.split(':').map(Number);ctx.strokeStyle=layer?'#8d3eb8':'#3bbde5';ctx.globalAlpha=layer?.11:.18;ctx.lineWidth=layer?4.5:6;ctx.shadowBlur=layer?13:20;ctx.shadowColor=layer?'#be5fff':'#34dafa';ctx.stroke(path);}}
+ctx.shadowBlur=0;ctx.globalCompositeOperation='lighter';for(const [key,path] of paths){const [arm,layer]=key.split(':').map(Number);const t=arm/params.copies;ctx.strokeStyle=layer?(t<.5?'#ef70d8':'#9cb0ff'):(t<.5?'#85edfa':'#fd89c9');ctx.globalAlpha=layer?.44:.75;ctx.lineWidth=layer?.65:1.25;ctx.stroke(path);}
+ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';$('readout').textContent=`${params.mode} | ${frame.segments.length.toLocaleString()}/${LIMIT.toLocaleString()} segments | t=${frameTime.toFixed(3)}s | hash=${signature} | ${running?'playing':'paused'}`;
+}
+function tick(now){if(running){const delta=last?Math.min((now-last)/1000,.08):0;frameTime=Math.round((frameTime+delta)*30)/30; if(now-lastPaint>32){paint();lastPaint=now;}}last=now;requestAnimationFrame(tick);}
+window.addEventListener('resize',paint);
+document.addEventListener('visibilitychange',()=>{last=0;});
+writeUI();paint();requestAnimationFrame(tick);
+</script>
+</body></html>
