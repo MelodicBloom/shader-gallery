@@ -37,9 +37,14 @@ function validateRegistry(registry) {
 function validatePassedRecordEvidence(record) {
   if (record.status !== "pass") return;
   assert(Array.isArray(record.resolvedPins) && record.resolvedPins.length === record.requiredPins.length, `${record.id}: pass requires one resolved pin per requirement`);
+  const declaredRequirements = new Set(record.requiredPins);
+  const resolvedRequirements = new Set();
   for (const pin of record.resolvedPins) {
     assert(typeof pin.requirement === "string" && typeof pin.value === "string" && pin.value.trim().length > 0, `${record.id}: pass requires resolved pin values`);
+    assert(declaredRequirements.has(pin.requirement) && !resolvedRequirements.has(pin.requirement), `${record.id}: pass requires each declared pin exactly once`);
+    resolvedRequirements.add(pin.requirement);
   }
+  assert(resolvedRequirements.size === declaredRequirements.size, `${record.id}: pass requires each declared pin exactly once`);
   const receipt = record.receipt;
   assert(receipt && typeof receipt.command === "string" && receipt.command.length > 0, `${record.id}: pass requires receipt command`);
   assert(receipt.environment && typeof receipt.environment === "object" && Object.keys(receipt.environment).length > 0, `${record.id}: pass requires receipt environment`);

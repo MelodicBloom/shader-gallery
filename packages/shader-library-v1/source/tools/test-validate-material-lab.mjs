@@ -65,5 +65,18 @@ mutate("unreceipted pass", (copy) => {
   record.status = "pass";
   fs.writeFileSync(target, JSON.stringify(record, null, 2));
 }, /pass requires one resolved pin per requirement/);
+mutate("duplicate resolved pin", (copy) => {
+  const target = path.join(copy, "material-validation-lab", "materials", "soap-bubble-spectral.record.json");
+  const record = JSON.parse(fs.readFileSync(target, "utf8"));
+  record.status = "pass";
+  record.resolvedPins = record.requiredPins.map(() => ({ requirement: "browser version", value: "Chromium 155" }));
+  record.receipt = {
+    command: "node tools/validate-material-lab.mjs",
+    environment: { browser: "Chromium 155" },
+    captures: ["neutral", "grazing", "light-sweep"],
+    artifactSha256: "0".repeat(64)
+  };
+  fs.writeFileSync(target, JSON.stringify(record, null, 2));
+}, /pass requires each declared pin exactly once/);
 
-console.log("✓ material lab validator accepts the extracted package and rejects fixture, bound, provenance, and unreceipted-pass mutants");
+console.log("✓ material lab validator accepts the extracted package and rejects fixture, bound, provenance, and invalid-pass mutants");
