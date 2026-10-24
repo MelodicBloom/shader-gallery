@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+ <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+ <meta name="theme-color" content="#090c1b"><title>FIELD / 001 — Kaleidoscopic Motion Laboratory</title>
+ <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+ <main class="shell">
+  <header class="mast"><div class="brand"><span class="sigil" aria-hidden="true">✺</span><div><div class="eyebrow">MELODICBLOOM / MOTION RESEARCH</div><h1>Kaleidoscopic <em>Field</em> <span>001</span></h1></div></div><div class="status"><span class="pulse"></span><span id="engine-status">INITIALIZING WEBGL2</span></div></header>
+  <section class="intro"><div><p class="eyebrow">A CONTROLLED VISUAL EXPERIMENT</p><p>One evolving field. Two interpretations. Inspect the difference between symmetrical color and actual displaced geometry—under an identical audio envelope and parameter schedule.</p></div><div class="numbering">RESEARCH SPECIMEN<br><strong>KF—001</strong><br>OCT / 2026</div></section>
+  <section class="stage" aria-label="Synchronized visualization comparison">
+    <canvas id="view" aria-label="Left: flat kaleidoscopic surface. Right: three-dimensional displaced point field." role="img"></canvas>
+    <div class="stage-label left"><span class="number">01</span><span>FLAT / COLOR FIELD</span><small>REFLECTED TEXTURE</small></div>
+    <div class="stage-label right"><span class="number">02</span><span>SPATIAL / POINT FIELD</span><small>DEPTH DISPLACEMENT</small></div>
+    <div class="center-line"></div>
+    <div class="stage-footer"><span>SHARED SIMULATION • SHARED AUDIO</span><span id="hud">FRAME 0000 · 0.0 FPS</span></div>
+    <div class="error" id="error" hidden role="alert"></div>
+  </section>
+  <section class="workbench">
+   <div class="transport card"><div class="eyebrow">01 / EXPERIMENT TRANSPORT</div><div class="transport-main"><button id="play" class="primary">Ⅱ &nbsp; PAUSE</button><button id="reset">↺ &nbsp; RESET</button><button id="capture">↧ &nbsp; CAPTURE PNG</button><button id="receipt">↧ &nbsp; EXPORT RECEIPT</button></div>
+    <div class="timeline"><input id="time" aria-label="Seek experimental timeline" type="range" min="0" max="720" value="0" step="1"><div class="timeline-labels"><span>00:00 <small>PHASE A</small></span><span>00:04 <small>PHASE B</small></span><span>00:08 <small>PHASE C</small></span><span>00:12</span></div></div>
+    <p class="smallnote">Seeking reconstructs the feedback field from frame zero. Fixed 60 Hz simulation steps; real-time rendering performance is measured separately.</p>
+   </div>
+   <div class="audio card"><div class="eyebrow">02 / AUDIO DRIVER</div><div class="audio-row"><div class="metric"><label>RMS ENERGY</label><strong id="rms">0.00</strong><div class="bar"><i id="rms-fill"></i></div></div><div class="metric"><label>BEAT / EVENT</label><strong id="hit">0.00</strong><div class="bar"><i id="hit-fill"></i></div></div></div>
+    <div class="file-row"><button id="fixture">USE REFERENCE AUDIO</button><label class="file-label" for="upload">LOAD OWN AUDIO</label><input type="file" id="upload" accept="audio/*"><span id="audio-name">REFERENCE SYNTH / GENERATED</span></div><audio id="player" controls preload="auto"></audio><p class="smallnote" id="audio-note">Audio analysis is precomputed for deterministic playback; beat annotations in the included fixture are authored, not inferred.</p>
+   </div>
+   <div class="controls card"><div class="eyebrow">03 / FIELD PARAMETERS</div><div class="control-grid">
+    <label>SYMMETRY SECTORS <output for="segments" id="segments-out"></output><input id="segments" type="range" min="3" max="20" step="1"></label>
+    <label>DEPTH AMPLITUDE <output for="displacement" id="displacement-out"></output><input id="displacement" type="range" min="0" max="3" step="0.05"></label>
+    <label>FEEDBACK MEMORY <output for="persistence" id="persistence-out"></output><input id="persistence" type="range" min="0" max="0.985" step="0.005"></label>
+    <label>FIELD EVOLUTION <output for="speed" id="speed-out"></output><input id="speed" type="range" min="0" max="2" step="0.05"></label>
+    <label>AUDIO INFLUENCE <output for="audioGain" id="audioGain-out"></output><input id="audioGain" type="range" min="0" max="3" step="0.05"></label>
+    <label>CAMERA TILT <output for="tilt" id="tilt-out"></output><input id="tilt" type="range" min="0.15" max="1.3" step="0.05"></label>
+    <label>POINT SIZE <output for="pointSize" id="pointSize-out"></output><input id="pointSize" type="range" min="1" max="5" step="0.1"></label>
+    <label>GRID WIDTH <output for="grid" id="grid-out"></output><input id="grid" type="range" min="72" max="280" step="8"></label>
+   </div><div class="presets"><button data-preset="proof" aria-pressed="true">PROOF</button><button data-preset="restrained" aria-pressed="false">RESTRAINED</button><button data-preset="energetic" aria-pressed="false">ENERGETIC</button><label class="reduced"><input type="checkbox" id="reduced"> HOLD MOTION</label></div></div>
+  </section>
+  <footer><span>METHOD: FIELD → FEEDBACK → FOLD → POINT DISPLACEMENT</span><span>UNMEASURED GPU PERF · WEBGL2 REFERENCE</span><a href="./docs/ARCHITECTURE.md">ARCHITECTURE ↗</a></footer>
+ </main><script type="module" src="./src/app.js"></script>
+</body></html>

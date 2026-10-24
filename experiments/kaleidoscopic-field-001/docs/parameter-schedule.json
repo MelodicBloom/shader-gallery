@@ -1,0 +1,13 @@
+{
+  "schema": "kf-parameter-schedule/v1",
+  "fps": 60,
+  "durationSeconds": 12,
+  "timeDomain": "seconds; ranges are half-open except final stop",
+  "controlled": ["segments", "displacementMultiplier"],
+  "constantParameters": {"displacement":1.45,"persistence":0.945,"speed":0.7,"audioGain":1.15,"tilt":0.72,"pointSize":2.8,"grid":216},
+  "phases": [
+    {"id":"A","startFrame":0,"endFrameExclusive":240,"segments":9,"displacementMultiplier":1.0},
+    {"id":"B","startFrame":240,"endFrameExclusive":480,"segments":12,"displacementMultiplier":1.2},
+    {"id":"C","startFrame":480,"endFrameExclusive":720,"segments":7,"displacementMultiplier":0.8}
+  ]
+}
