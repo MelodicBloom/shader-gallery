@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-08",
+  "driver": "Chromium ANGLE EGL/GLES3 via Xvfb (local native harness)",
+  "commands": "gcc /tmp/test_opal_gl.c ...; xvfb-run -a env LD_LIBRARY_PATH=/usr/lib/chromium /tmp/test_opal_gl shader topology output lightAzimuth",
+  "resolution": [
+    512,
+    512
+  ],
+  "compileLinkRender": "pass all 6",
+  "states": [
+    {
+      "shape": "sphere",
+      "meanAbsRGBDelta_azimuthChange": 5.316,
+      "imageNotIdentical": true,
+      "meanRGB": 82.299
+    },
+    {
+      "shape": "cabochon",
+      "meanAbsRGBDelta_azimuthChange": 4.128,
+      "imageNotIdentical": true,
+      "meanRGB": 74.022
+    },
+    {
+      "shape": "crystal",
+      "meanAbsRGBDelta_azimuthChange": 5.072,
+      "imageNotIdentical": true,
+      "meanRGB": 125.079
+    }
+  ],
+  "shaderSHA256": "ff0936d055360dc7cfa637b4c572f34964a83c50d32a0c578bffaaf40bb0b3fa",
+  "limits": [
+    "Native harness verified, not production ShaderPlayer browser route",
+    "Reference-image similarity not objectively validated",
+    "Light positions were varied while other parameters held to canonical defaults"
+  ]
+}
