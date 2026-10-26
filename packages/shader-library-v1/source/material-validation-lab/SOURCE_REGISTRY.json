@@ -1,20 +1,39 @@
 {
   "schemaVersion": "0.1.0",
   "observedAt": "2026-10-17",
-  "statusVocabulary": ["approved-for-bounded-study", "reference-only", "pending-revision-pin", "excluded"],
+  "statusVocabulary": [
+    "approved-for-bounded-study",
+    "reference-only",
+    "pending-revision-pin",
+    "excluded"
+  ],
   "sources": [
     {
       "id": "SRC-KHR-ABALONE",
-      "title": "Khronos glTF Sample Assets — IridescenceAbalone",
+      "title": "Khronos glTF Sample Assets \u2014 IridescenceAbalone",
       "url": "https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/IridescenceAbalone",
       "kind": "asset-and-documentation",
       "license": "CC-BY-4.0",
-      "freshness": "observed 2026-10-17; exact commit SHA TO_PIN",
+      "freshness": "observed 2026-10-17; pinned 2026-10-26 to commit 4995a638c96dbc94376d3d6164e70fee3ac7f7a2; GLB SHA-256 d15ab000d3b04f177e101b2a36aacbf1c99490fc9bfe3868d481d75736946bab; LICENSE.md and metadata.json re-read at that commit: CC-BY-4.0, Abby Crawford 2015 (everything), Eric Chadwick 2023 (materials)",
       "status": "approved-for-bounded-study",
-      "usable": ["reference GLB", "baseColor, normal and ORM map semantics", "packed R iridescence / G thickness convention", "controlled comparison fixture"],
-      "notTransferred": ["authorship", "appearance claim for original nacre", "partial-metalness shortcut as a physical statement"],
-      "assumptionsAndLimits": ["roughness and thickness were quick edits of base color", "partial metalness is acknowledged as an artistic approximation"],
-      "attribution": "© 2015 Abby Crawford; © 2023 Eric Chadwick; CC BY 4.0"
+      "usable": [
+        "reference GLB",
+        "baseColor, normal and ORM map semantics",
+        "packed R iridescence / G thickness convention",
+        "controlled comparison fixture"
+      ],
+      "notTransferred": [
+        "authorship",
+        "appearance claim for original nacre",
+        "partial-metalness shortcut as a physical statement"
+      ],
+      "assumptionsAndLimits": [
+        "roughness and thickness were quick edits of base color",
+        "partial metalness is acknowledged as an artistic approximation"
+      ],
+      "attribution": "\u00a9 2015 Abby Crawford; \u00a9 2023 Eric Chadwick; CC BY 4.0",
+      "revision": "4995a638c96dbc94376d3d6164e70fee3ac7f7a2",
+      "assetHash": "sha256:d15ab000d3b04f177e101b2a36aacbf1c99490fc9bfe3868d481d75736946bab"
     },
     {
       "id": "SRC-KHR-IRIDESCENCE",
@@ -22,11 +41,21 @@
       "url": "https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_iridescence",
       "kind": "interoperability-specification",
       "license": "specification; implementation not imported",
-      "freshness": "observed 2026-10-17; revision TO_PIN",
+      "freshness": "observed 2026-10-17; pinned 2026-10-26 to KhronosGroup/glTF commit acfcbe65e40c53d6d3aa55a7299982bf2c01c75d (latest touching the extension folder)",
       "status": "reference-only",
-      "usable": ["map-channel interpretation", "portable asset semantics", "conformance target"],
-      "notTransferred": ["renderer implementation code", "claim that any WebGL2 proxy is extension-conformant"],
-      "assumptionsAndLimits": ["WebGL Shader Library v1 has a fullscreen shader contract, not a glTF material pipeline"]
+      "usable": [
+        "map-channel interpretation",
+        "portable asset semantics",
+        "conformance target"
+      ],
+      "notTransferred": [
+        "renderer implementation code",
+        "claim that any WebGL2 proxy is extension-conformant"
+      ],
+      "assumptionsAndLimits": [
+        "WebGL Shader Library v1 has a fullscreen shader contract, not a glTF material pipeline"
+      ],
+      "revision": "acfcbe65e40c53d6d3aa55a7299982bf2c01c75d"
     },
     {
       "id": "SRC-THREE-PHYSICAL",
@@ -34,11 +63,21 @@
       "url": "https://threejs.org/docs/pages/MeshPhysicalMaterial.html",
       "kind": "runtime-documentation",
       "license": "MIT project; documentation observed only",
-      "freshness": "observed 2026-10-17; package version TO_PIN",
+      "freshness": "observed 2026-10-17; pinned 2026-10-26 to npm three@0.186.1 (r186) in material-validation-lab/reference/abalone/package-lock.json only",
       "status": "approved-for-bounded-study",
-      "usable": ["PBR reference lane", "documented map channel conventions", "iridescence, anisotropy, transmission and dispersion controls"],
-      "notTransferred": ["unversioned API behavior", "performance claims"],
-      "assumptionsAndLimits": ["higher per-pixel cost when advanced effects are enabled; environment map is required for meaningful evaluation"]
+      "usable": [
+        "PBR reference lane",
+        "documented map channel conventions",
+        "iridescence, anisotropy, transmission and dispersion controls"
+      ],
+      "notTransferred": [
+        "unversioned API behavior",
+        "performance claims"
+      ],
+      "assumptionsAndLimits": [
+        "higher per-pixel cost when advanced effects are enabled; environment map is required for meaningful evaluation"
+      ],
+      "revision": "three@0.186.1"
     },
     {
       "id": "SRC-OVIEDO-BUBBLE",
@@ -48,9 +87,20 @@
       "license": "MIT",
       "freshness": "observed 2026-10-17; exact commit SHA TO_PIN",
       "status": "approved-for-bounded-study",
-      "usable": ["two-interface Fresnel model", "phase-delay structure", "spectral integration / XYZ-to-sRGB approach", "test vocabulary"],
-      "notTransferred": ["repository UI", "claims beyond two-beam model", "unverified source files before compile review"],
-      "assumptionsAndLimits": ["the repository itself proposes drainage, additional reflections and background illumination as extensions"]
+      "usable": [
+        "two-interface Fresnel model",
+        "phase-delay structure",
+        "spectral integration / XYZ-to-sRGB approach",
+        "test vocabulary"
+      ],
+      "notTransferred": [
+        "repository UI",
+        "claims beyond two-beam model",
+        "unverified source files before compile review"
+      ],
+      "assumptionsAndLimits": [
+        "the repository itself proposes drainage, additional reflections and background illumination as extensions"
+      ]
     },
     {
       "id": "SRC-OPENPBR-VIEWER",
@@ -60,33 +110,65 @@
       "license": "MIT",
       "freshness": "observed 2026-10-17; exact commit SHA TO_PIN",
       "status": "reference-only",
-      "usable": ["comparison vocabulary", "high-fidelity reference experiments", "OpenPBR feature mapping"],
-      "notTransferred": ["path tracer architecture", "rasterizer code", "realtime-gallery performance assumptions"],
-      "assumptionsAndLimits": ["repository describes a WebGL path tracer/rasterizer and full OpenPBR 1.2 support; neither is independently compiled or benchmarked here"]
+      "usable": [
+        "comparison vocabulary",
+        "high-fidelity reference experiments",
+        "OpenPBR feature mapping"
+      ],
+      "notTransferred": [
+        "path tracer architecture",
+        "rasterizer code",
+        "realtime-gallery performance assumptions"
+      ],
+      "assumptionsAndLimits": [
+        "repository describes a WebGL path tracer/rasterizer and full OpenPBR 1.2 support; neither is independently compiled or benchmarked here"
+      ]
     },
     {
       "id": "SRC-SHADER-GALLERY-OPTICAL-02",
-      "title": "Shader Gallery PR #15 — Optical Studies 02",
+      "title": "Shader Gallery PR #15 \u2014 Optical Studies 02",
       "url": "https://github.com/MelodicBloom/shader-gallery/pull/15",
       "kind": "internal-implementation",
       "license": "repository authority",
       "freshness": "merged to main as eaf122770e5d5132015163dd9aab5dd5b36ec9ab; reconciliation verified 2026-10-17",
       "status": "approved-for-bounded-study",
-      "usable": ["WebGL2 fullscreen contract", "metadata model boundaries", "fixture convention", "static fallback behavior", "existing Opal/Labradorite/Prism studies"],
-      "notTransferred": ["named-device performance claims", "physical calibration claims", "unrelated deployment claims"],
-      "assumptionsAndLimits": ["the distributable archive is source-parity-verified for 18 studies", "the standalone Optical Studies surface resumes its frame loop after persisted pageshow", "neither fact establishes material fidelity or device performance"]
+      "usable": [
+        "WebGL2 fullscreen contract",
+        "metadata model boundaries",
+        "fixture convention",
+        "static fallback behavior",
+        "existing Opal/Labradorite/Prism studies"
+      ],
+      "notTransferred": [
+        "named-device performance claims",
+        "physical calibration claims",
+        "unrelated deployment claims"
+      ],
+      "assumptionsAndLimits": [
+        "the distributable archive is source-parity-verified for 18 studies",
+        "the standalone Optical Studies surface resumes its frame loop after persisted pageshow",
+        "neither fact establishes material fidelity or device performance"
+      ]
     },
     {
       "id": "SRC-RAW-GLSL-SOURCE-MAP",
-      "title": "Shader Source Map — Raw GLSL imports + Variant Builder",
+      "title": "Shader Source Map \u2014 Raw GLSL imports + Variant Builder",
       "url": "library:libfile_e05fba25f7e48191be2dc17c604fcbae",
       "kind": "internal-proposal",
       "license": "internal",
       "freshness": "created 2026-10-13; no verified repository target",
       "status": "excluded",
-      "usable": ["idea of explicit source resolution"],
-      "notTransferred": ["Webpack asset/source configuration", "preset #define map", "assumption of a Next.js build"],
-      "assumptionsAndLimits": ["conflicts with current plain JS / Node / WebGL2 Shader Library structure and lacks compile evidence"]
+      "usable": [
+        "idea of explicit source resolution"
+      ],
+      "notTransferred": [
+        "Webpack asset/source configuration",
+        "preset #define map",
+        "assumption of a Next.js build"
+      ],
+      "assumptionsAndLimits": [
+        "conflicts with current plain JS / Node / WebGL2 Shader Library structure and lacks compile evidence"
+      ]
     },
     {
       "id": "SRC-PHYSICS-CHANNELS",
@@ -96,9 +178,19 @@
       "license": "internal",
       "freshness": "created 2026-10-09; reviewed 2026-10-17",
       "status": "approved-for-bounded-study",
-      "usable": ["PBR map/channel semantics", "unit separation: film nanometres vs volume/mesh thickness", "fixture ideas", "model limits for opal/labradorite/gold"],
-      "notTransferred": ["unmeasured numeric calibration", "implicit renderer-version compatibility"],
-      "assumptionsAndLimits": ["describes first-principles equations and channel contracts, not calibration data"]
+      "usable": [
+        "PBR map/channel semantics",
+        "unit separation: film nanometres vs volume/mesh thickness",
+        "fixture ideas",
+        "model limits for opal/labradorite/gold"
+      ],
+      "notTransferred": [
+        "unmeasured numeric calibration",
+        "implicit renderer-version compatibility"
+      ],
+      "assumptionsAndLimits": [
+        "describes first-principles equations and channel contracts, not calibration data"
+      ]
     },
     {
       "id": "SRC-ARCHITECTURE-CONTRACT",
@@ -108,33 +200,64 @@
       "license": "internal",
       "freshness": "created 2026-10-09; reviewed 2026-10-17",
       "status": "approved-for-bounded-study",
-      "usable": ["hybrid renderer decision", "domain vocabulary", "ablation method", "fixture definitions", "provenance convention"],
-      "notTransferred": ["ratified cross-repository architecture", "named device performance outcomes"],
-      "assumptionsAndLimits": ["explicitly labels itself a proposal, not cross-repository ratification"]
+      "usable": [
+        "hybrid renderer decision",
+        "domain vocabulary",
+        "ablation method",
+        "fixture definitions",
+        "provenance convention"
+      ],
+      "notTransferred": [
+        "ratified cross-repository architecture",
+        "named device performance outcomes"
+      ],
+      "assumptionsAndLimits": [
+        "explicitly labels itself a proposal, not cross-repository ratification"
+      ]
     },
     {
       "id": "SRC-CODEX-WORK-ORDER-001",
-      "title": "Codex Work Order 001 — Graduate Synthetic PBR Laboratory",
+      "title": "Codex Work Order 001 \u2014 Graduate Synthetic PBR Laboratory",
       "url": "library:libfile_8859be50c8b4819185458b3ec1975c38",
       "kind": "internal-execution-handoff",
       "license": "internal",
       "freshness": "created 2026-10-09; reviewed 2026-10-17",
       "status": "approved-for-bounded-study",
-      "usable": ["Gold → Abalone → Bubble order", "proof requirements", "R3F-after-proof gate", "licensed-reference separation"],
-      "notTransferred": ["asserted glTF values until re-read from pinned asset", "unexecuted DoD statements"],
-      "assumptionsAndLimits": ["prepared work order, not an execution receipt"]
+      "usable": [
+        "Gold \u2192 Abalone \u2192 Bubble order",
+        "proof requirements",
+        "R3F-after-proof gate",
+        "licensed-reference separation"
+      ],
+      "notTransferred": [
+        "asserted glTF values until re-read from pinned asset",
+        "unexecuted DoD statements"
+      ],
+      "assumptionsAndLimits": [
+        "prepared work order, not an execution receipt"
+      ]
     },
     {
       "id": "SRC-ABYSSAL-MATERIAL-CONTRACT",
-      "title": "ABYSSAL_OS v0.2 — Optical and Morphological Contracts",
+      "title": "ABYSSAL_OS v0.2 \u2014 Optical and Morphological Contracts",
       "url": "library:libfile_61ad727cf8988191bd14f8f232112b0e",
       "kind": "internal-implementation-contract",
       "license": "internal",
       "freshness": "created 2026-10-15; reviewed 2026-10-17",
       "status": "reference-only",
-      "usable": ["control applicability convention", "explicit proxy language", "performance-boundary language", "context-loss and low-resolution handling"],
-      "notTransferred": ["ray-marching mechanism", "organism-specific UI control list"],
-      "assumptionsAndLimits": ["different project and rendering model; it is an architectural analogue, not reusable material code"]
+      "usable": [
+        "control applicability convention",
+        "explicit proxy language",
+        "performance-boundary language",
+        "context-loss and low-resolution handling"
+      ],
+      "notTransferred": [
+        "ray-marching mechanism",
+        "organism-specific UI control list"
+      ],
+      "assumptionsAndLimits": [
+        "different project and rendering model; it is an architectural analogue, not reusable material code"
+      ]
     },
     {
       "id": "SRC-ABYSSAL-DECISIONS",
@@ -144,9 +267,18 @@
       "license": "internal",
       "freshness": "created 2026-10-15; reviewed 2026-10-17",
       "status": "reference-only",
-      "usable": ["active-control rule", "defer-HDR-bloom-until-budget rule", "explicit falsifier style"],
-      "notTransferred": ["specific morphology decisions", "claim of shared proxy validity outside that project"],
-      "assumptionsAndLimits": ["proves a decision process, not compatibility with the Shader Gallery runtime"]
+      "usable": [
+        "active-control rule",
+        "defer-HDR-bloom-until-budget rule",
+        "explicit falsifier style"
+      ],
+      "notTransferred": [
+        "specific morphology decisions",
+        "claim of shared proxy validity outside that project"
+      ],
+      "assumptionsAndLimits": [
+        "proves a decision process, not compatibility with the Shader Gallery runtime"
+      ]
     }
   ]
 }

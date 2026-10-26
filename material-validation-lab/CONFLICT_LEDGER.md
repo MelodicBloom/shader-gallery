@@ -21,3 +21,10 @@ This ledger preserves disagreement instead of converting it into a neat but fals
 - The gold pilot has no external shader dependency, so it checks whether this governance is useful even when the source library is irrelevant.
 
 **Known non-resolution:** no named-device FPS target is selected. The Lab records a measurement protocol first; choosing a threshold before the scene and device list exist would be performance theatre wearing a lab coat.
+
+## Added by MVT-ABALONE-001 (2026-10-26)
+
+| ID | Showdown | Evidence | Decision | What it enables | Cost / retained risk | Reversal trigger |
+|---|---|---|---|---|---|---|
+| C-07 | Record default thickness `[100,400]` nm vs asset-authored `iridescenceThicknessMinimum/Maximum` `600/800` nm | Pinned GLB JSON at 4995a63 declares 600/800; record predates the pin | Trial runs the asset-authored 600–800 nm; record default left unchanged and unresolved | Tests the asset as documented rather than an unsourced default | Record default may be stale or meant for a different fixture; slider still exposes 0–2000 | Owner states the intended source of `[100,400]`, or a synthetic-map fixture needs it |
+| C-08 | R-channel independence: whole-frame metric (run 1) vs shell-masked metric (run 2) | Run 1 failed R contribution at all fixtures (background dilution); run 2 still below the 1%-of-pixels criterion at neutral/grazing, passes at light-sweep | Keep both runs in the receipt; label `inconclusive`, not `pass` or `fail`; criterion revision is explicitly post-hoc | Prevents a metric tweak from being read as a success | The asset's R map may be near-saturated where iridescence is visible, so the asset alone may not isolate R | Synthetic isolated R/G test maps (contract independent variable) run with a pre-declared criterion |
