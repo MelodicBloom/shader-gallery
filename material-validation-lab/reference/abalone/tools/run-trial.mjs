@@ -25,6 +25,7 @@ const browserVersion = browser.version();
 const FIX = ["neutral", "grazing", "light-sweep"];
 const captures = [], outcomes = {}, synth = { "synth-r": {}, "synth-g": {} }, synthCaptures = [];
 const sens = { "synth-r": {}, "synth-g": {}, "synth-g-r1": {} }, sensCaptures = [];
+const shellSens = { "synth-r": {}, "synth-g": {}, "synth-g-r1": {} }, shellSensCaptures = [];
 if (boot.ready) {
   for (const src of Object.keys(synth)) for (const fixture of FIX) {
     synth[src][fixture] = await page.evaluate(([f, s]) => window.__mvt.measure(f, s), [fixture, src]);
@@ -40,6 +41,14 @@ if (boot.ready) {
     const png = await page.locator("#view").screenshot(); const rel = `captures/sens-${src}-${fixture}-treatment.png`;
     fs.writeFileSync(path.join(root, "receipts", rel), png);
     sensCaptures.push({ geometry: "plane", mapSource: src, fixture, materialState: await page.evaluate(() => window.__mvt.materialState()), artifactPath: `reference/abalone/receipts/${rel}`, sha256: sha(png) });
+  }
+  // Run 5 (shell-sens, pre-registered in BUILD_HANDOFF-MVT-ABALONE-001-SHELLSENS.md): shell mesh + plane-style overrides.
+  for (const src of Object.keys(shellSens)) for (const fixture of FIX) {
+    shellSens[src][fixture] = await page.evaluate(([f, s]) => window.__mvt.measure(f, s, "shell-sens"), [fixture, src]);
+    await page.evaluate(([f, s]) => { window.__mvt.set({ geometry: "shell-sens", mapSource: s, mode: "treatment" }); window.__mvt.fixture(f); }, [fixture, src]);
+    const png = await page.locator("#view").screenshot(); const rel = `captures/shellsens-${src}-${fixture}-treatment.png`;
+    fs.writeFileSync(path.join(root, "receipts", rel), png);
+    shellSensCaptures.push({ geometry: "shell-sens", mapSource: src, fixture, materialState: await page.evaluate(() => window.__mvt.materialState()), artifactPath: `reference/abalone/receipts/${rel}`, sha256: sha(png) });
   }
   await page.evaluate(() => window.__mvt.set({ geometry: "shell", mapSource: "asset", mode: "treatment" }));
   for (const fixture of FIX) {
@@ -90,6 +99,16 @@ const sensChecks = Object.fromEntries(FIX.map((f) => { const r = sens["synth-r"]
 const sensPerCheck = Object.fromEntries(Object.keys(sensChecks.neutral).map((k) => [k, FIX.every((f) => Object.values(sensChecks[f][k]).every((v) => v.meetsCriterion)) ? "pass" : "fail"]));
 const sensPerVariant = Object.fromEntries(Object.keys(sens).map((v) => [v, FIX.every((f) => Object.values(sensChecks[f]).every((c) => !c[v] || c[v].meetsCriterion)) ? "pass" : "fail"]));
 const sensOk = Object.values(sensPerCheck).every((v) => v === "pass");
+// Run-5 criterion: identical metric/threshold, PRE-REGISTERED in BUILD_HANDOFF-MVT-ABALONE-001-SHELLSENS.md before this code was written. Not revised.
+const shellSensChecks = Object.fromEntries(FIX.map((f) => { const r = shellSens["synth-r"][f], g = shellSens["synth-g"][f], g1 = shellSens["synth-g-r1"][f]; return [f, {
+  iridescenceVisibleVsNeutralControl: { "synth-r": ge(r.treatmentVsControl), "synth-g": ge(g.treatmentVsControl), "synth-g-r1": ge(g1.treatmentVsControl) },
+  rChannelContributes: { "synth-r": ge(r.treatmentVsGOnly) },
+  gChannelContributes: { "synth-g": ge(g.treatmentVsROnly), "synth-g-r1": ge(g1.treatmentVsROnly) },
+  channelsDistinct: { "synth-r": ge(r.rOnlyVsGOnly), "synth-g": ge(g.rOnlyVsGOnly), "synth-g-r1": ge(g1.rOnlyVsGOnly) },
+}]; }));
+const shellSensPerCheck = Object.fromEntries(Object.keys(shellSensChecks.neutral).map((k) => [k, FIX.every((f) => Object.values(shellSensChecks[f][k]).every((v) => v.meetsCriterion)) ? "pass" : "fail"]));
+const shellSensPerVariant = Object.fromEntries(Object.keys(shellSens).map((v) => [v, FIX.every((f) => Object.values(shellSensChecks[f]).every((c) => !c[v] || c[v].meetsCriterion)) ? "pass" : "fail"]));
+const shellSensOk = Object.values(shellSensPerCheck).every((v) => v === "pass");
 const sm = boot.synthMapReceipt || {};
 const synthNoCS = Object.values(sm).length === 3 && Object.values(sm).every((m) => m.colorSpace === mr.noColorSpaceConstant);
 const swiftshader = /swiftshader|llvmpipe|software/i.test(boot.environment?.renderer || "");
@@ -98,13 +117,14 @@ const swiftshader = /swiftshader|llvmpipe|software/i.test(boot.environment?.rend
 const automatedChannelCheck = allEffects ? "pass" : "fail";
 const automatedSyntheticChannelCheck = synthOk ? "pass" : "fail";
 const clean = consoleErrors.length === 0;
-// Run-4 labelling (pre-registered): sensitivity clears -> inconclusive (awaiting human review; run-3 fail preserved in history); fails -> fail.
-const label = !boot.ready ? "blocked" : !mapOk || !synthNoCS ? "fail" : !sensOk ? "fail" : clean ? "inconclusive" : "fail";
+// Run-5 labelling (pre-registered in SHELLSENS handoff): shell-sens (and run-4 plane) clear -> inconclusive (awaiting human review;
+// authored shell fail preserved); shell-sens fails -> fail. Never pass without named human review.
+const label = !boot.ready ? "blocked" : !mapOk || !synthNoCS ? "fail" : !sensOk || !shellSensOk ? "fail" : clean ? "inconclusive" : "fail";
 const receipt = {
   schemaVersion: "0.1.0", trial: "MVT-ABALONE-001", generatedAt: new Date().toISOString(),
   command: "cd material-validation-lab/reference/abalone && npm ci && npm run trial",
   label,
-  labelReason: label === "inconclusive" ? `Run-4 C-09 sensitivity fixture met the pre-registered criterion (automated.sensitivity.automatedChannelCheck=pass); run-3 shell-fixture synthetic=${automatedSyntheticChannelCheck} preserved as history; asset=${automatedChannelCheck} (post-hoc metric). Awaiting named human review (required for pass).` : label === "blocked" ? `Page did not boot: ${boot.error}` : !sensOk ? `Run 3 (shell fixture, synthetic=${automatedSyntheticChannelCheck}) and run 4 (C-09 flat-plane sensitivity fixture, automatedChannelCheck=fail; failing checks: ${Object.entries(sensPerCheck).filter(([, v]) => v === "fail").map(([k]) => k).join(", ")}) did not meet the pre-registered criterion; channel-independence hypothesis fails under this metric on SwiftShader.` : "Map colour-space or console-error check failed; see automated.",
+  labelReason: label === "inconclusive" ? `Run-5 shell-sens fixture (shell mesh + metalness 1/roughness 0/maps removed) met the pre-registered criterion (automated.shellSens.automatedChannelCheck=pass); run-4 plane sensitivity=pass; authored-shell synthetic=${automatedSyntheticChannelCheck} preserved (run-3 fail in history); asset=${automatedChannelCheck} (post-hoc metric). Awaiting named human review (required for pass).` : label === "blocked" ? `Page did not boot: ${boot.error}` : (!sensOk || !shellSensOk) ? `Authored shell synthetic=${automatedSyntheticChannelCheck}; run-4 plane sensitivity=${sensOk ? "pass" : "fail"}; run-5 shell-sens=${shellSensOk ? "pass" : "fail"} (failing checks: ${Object.entries(shellSensPerCheck).filter(([, v]) => v === "fail").map(([k]) => k).join(", ") || "none"}) under the pre-registered criterion on SwiftShader.` : "Map colour-space or console-error check failed; see automated.",
   pins: {
     asset: { ...ASSET, measuredSha256InBrowser: boot.assetSha256, label: boot.assetSha256 === ASSET.sha256 ? "measured" : "blocked" },
     specification: { ...SPEC, label: "measured (commit observed via GitHub API); conformance not tested" },
@@ -114,7 +134,15 @@ const receipt = {
   automated: {
     effectCriterion: { metric: "shell-masked fractionOver8 (fraction of shell pixels with mean RGB abs-diff > 8/255)", threshold: ">= 0.01", fixtures: FIX, scope: "ALL fixtures x EACH check", preRegistered: true, lockedIn: "material-validation-lab/receipts/BUILD_HANDOFF-MVT-ABALONE-001-SYNTH.md", lockedBeforeRun: 3, revisedAfterResults: false },
     effectCriterionRun4: { metric: "masked fractionOver8 (fraction of masked pixels with mean RGB abs-diff > 8/255)", threshold: ">= 0.01", fixtures: FIX, scope: "ALL fixtures x EACH check x EACH synth variant on the sensitivity fixture", preRegistered: true, lockedIn: "material-validation-lab/receipts/BUILD_HANDOFF-MVT-ABALONE-001-C09.md", lockedBeforeRun: 4, revisedAfterResults: false },
+    effectCriterionRun5: { metric: "shell-masked fractionOver8", threshold: ">= 0.01", fixtures: FIX, scope: "ALL fixtures x EACH check x EACH synth variant on the shell-sens fixture", preRegistered: true, lockedIn: "material-validation-lab/receipts/BUILD_HANDOFF-MVT-ABALONE-001-SHELLSENS.md", lockedBeforeRun: 5, revisedAfterResults: false },
     effectThresholdFraction: T,
+    shellSens: {
+      label: "measured", run: 5, criterionStatus: "pre-registered", hypothesis: "H2 (shell material compresses channel response)",
+      fixture: { geometry: "abalone shell mesh (authored trial geometry)", metalness: 1.0, roughness: 0.0, removedMaps: ["metalnessMap", "roughnessMap", "normalMap"], side: "DoubleSide", iridescence: "asset-authored (1.0)", thicknessRangeNm: "asset-authored 600-800", environment: "RoomEnvironment + ACESFilmic (unchanged)", mask: "shell pixels in shell-sens control frame", variants: "bundled only (no one-factor splits in this slice)" },
+      automatedChannelCheck: shellSensOk ? "pass" : "fail", perCheck: shellSensPerCheck, perVariant: shellSensPerVariant, checks: shellSensChecks,
+      pixelDifference: shellSens, captures: shellSensCaptures,
+      diagnosticsNote: "mean values are measured diagnostics only; they do not affect the label",
+    },
     sensitivity: {
       label: "measured", run: 4, criterionStatus: "pre-registered", ledger: "C-09",
       fixture: { geometry: "flat PlaneGeometry (UV 0..1), size 1.2x asset bounding radius, at asset centre, DoubleSide", metalness: 1.0, roughness: 0.0, removedMaps: ["metalnessMap", "roughnessMap", "normalMap"], iridescence: "asset-authored (1.0)", thicknessRangeNm: "asset-authored 600-800", environment: "RoomEnvironment + ACESFilmic (unchanged from run 3; uncontrolled for device fidelity)", mask: "plane pixels in control frame" },
@@ -143,7 +171,8 @@ const receipt = {
   history: [{ run: 1, metric: "whole-frame mean abs 8-bit diff > 0.5", result: "fail", detail: "rChannelContributes=false at all fixtures (treatment vs G-only 0.20-0.22); background pixels diluted the mean. Metric revised to shell-masked fraction before run 2. The revision was made after seeing run-1 data, so run-2 effect checks are post-hoc, not pre-registered.", label: "historical" },
     { run: 2, metric: "shell-masked fractionOver8 >= 0.01 (asset map only)", result: "inconclusive", detail: "Asset map: rChannelContributes treatment vs G-only fractionOver8 0.0075 (neutral), 0.0077 (grazing), 0.0103 (light-sweep); all other checks met. Criterion post-hoc.", label: "historical/post-hoc" },
     { run: 3, metric: "shell-masked fractionOver8 >= 0.01, pre-registered in BUILD_HANDOFF-MVT-ABALONE-001-SYNTH.md", result: "fail", detail: "Original run-3 measurement (commit 584f5a9): shell fixture synthetic rChannelContributes fractionOver8 0.0055/0.0049/0.0073, gChannelContributes 0.0047/0.0028/0.0044 (neutral/grazing/light-sweep) under >= 0.01; label fail. Shell synthetic is re-measured in run 4 under automated.synthetic.", label: "historical (pre-registered synthetic; result fail)" },
-    { run: 4, metric: "masked fractionOver8 >= 0.01, pre-registered in BUILD_HANDOFF-MVT-ABALONE-001-C09.md", result: `sensitivity=${sensOk ? "pass" : "fail"}; shellSynthetic=${automatedSyntheticChannelCheck}; asset=${automatedChannelCheck}`, detail: "C-09 flat-plane sensitivity fixture (metalness 1, roughness 0) with synth-r, synth-g (R=0.5), synth-g-r1 (R=1.0); shell synthetic + asset re-measured in the same run.", label: "pre-registered sensitivity (this run)" }],
+    { run: 4, metric: "masked fractionOver8 >= 0.01, pre-registered in BUILD_HANDOFF-MVT-ABALONE-001-C09.md", result: `sensitivity=${sensOk ? "pass" : "fail"}; shellSynthetic=${automatedSyntheticChannelCheck}; asset=${automatedChannelCheck}`, detail: "C-09 flat-plane sensitivity fixture (metalness 1, roughness 0) with synth-r, synth-g (R=0.5), synth-g-r1 (R=1.0); shell synthetic + asset re-measured in the same run.", label: "historical (pre-registered sensitivity; re-measured each run)" },
+    { run: 5, metric: "shell-masked fractionOver8 >= 0.01, pre-registered in BUILD_HANDOFF-MVT-ABALONE-001-SHELLSENS.md", result: `shellSens=${shellSensOk ? "pass" : "fail"}; planeSens=${sensOk ? "pass" : "fail"}; shellSynthetic=${automatedSyntheticChannelCheck}; asset=${automatedChannelCheck}`, detail: "Bundled shell-sens fixture: shell mesh + plane override bundle (metalness 1, roughness 0, metalness/roughness/normal maps removed) with synth-r, synth-g, synth-g-r1.", label: "pre-registered shell-sens (this run)" }],
   review: { decision: "pending", reviewer: null, rationale: null, protocol: "Rate each fixture: does iridescence (a) appear only in treatment, (b) shift with view angle between neutral and grazing, (c) shift with key-light azimuth in the sweep, (d) respond separately to R-only vs G-only?" },
   performance: { frameTime: { label: "blocked", reason: swiftshader ? "software rasterizer; timing would not represent any target device and no device target is declared (CONFLICT_LEDGER known non-resolution)" : "no device target declared" } },
   attribution: "IridescenceAbalone — model © 2015 Abby Crawford; material © 2023 Eric Chadwick; CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). KhronosGroup/glTF-Sample-Assets @ " + ASSET.commit,
@@ -157,5 +186,5 @@ const receipt = {
   nonClaims: ["measured-abalone", "original-material", "mobile-optimized", "physical calibration", "mineral simulation", "frame rate / performance", "KHR_materials_iridescence conformance of any WebGL2 proxy"],
 };
 fs.writeFileSync(path.join(root, "receipts", "receipt.json"), JSON.stringify(receipt, null, 2) + "\n");
-console.log(`MVT-ABALONE-001 label=${label} mapNoColorSpace=${mapOk} synthNoCS=${synthNoCS} synthetic=${JSON.stringify(synthPerCheck)} sensitivity=${JSON.stringify(sensPerCheck)} sensVariants=${JSON.stringify(sensPerVariant)} assetEffects=${JSON.stringify(effects)} renderer=${boot.environment?.renderer}`);
+console.log(`MVT-ABALONE-001 label=${label} mapNoColorSpace=${mapOk} synthNoCS=${synthNoCS} synthetic=${JSON.stringify(synthPerCheck)} sensitivity=${JSON.stringify(sensPerCheck)} sensVariants=${JSON.stringify(sensPerVariant)} shellSens=${JSON.stringify(shellSensPerCheck)} shellSensVariants=${JSON.stringify(shellSensPerVariant)} assetEffects=${JSON.stringify(effects)} renderer=${boot.environment?.renderer}`);
 process.exit(label === "blocked" ? 2 : label === "fail" ? 1 : 0);

@@ -34,3 +34,9 @@ No autoplay. The light sweep animates only on click and is hidden under `prefers
 
 ## Attribution
 IridescenceAbalone — model © 2015 Abby Crawford, material © 2023 Eric Chadwick, licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Source: KhronosGroup/glTF-Sample-Assets @ `4995a638c96dbc94376d3d6164e70fee3ac7f7a2`. Captures in `receipts/captures/` are renders of that asset and carry the same attribution.
+
+## Run 5 — shell-sens (pre-registered)
+`geometry: "shell-sens"` renders the abalone shell mesh with the C-09 plane override bundle (metalness 1, roughness 0,
+metalness/roughness/normal maps removed). Authored shell and plane paths are unchanged. Locked in
+`receipts/BUILD_HANDOFF-MVT-ABALONE-001-SHELLSENS.md`; results in `receipts/receipt.json` under `automated.shellSens`
+(measured: pass on SwiftShader). Label stays `inconclusive` pending named human review.
