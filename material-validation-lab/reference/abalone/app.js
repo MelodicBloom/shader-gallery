@@ -103,7 +103,10 @@ async function main() {
   const rough0 = (m) => { const c = m.clone(); c.roughness = 0.0; c.roughnessMap = null; return c; };
   const metal1 = (m) => { const c = m.clone(); c.metalness = 1.0; c.metalnessMap = null; return c; };
   const mk = (f) => { const o = { treatment: f(treatment), control: f(control), "r-only": f(rOnly), "g-only": f(gOnly) }; o.control.iridescence = 0; o.control.iridescenceMap = null; o.control.iridescenceThicknessMap = null; return o; };
-  const factorMaterials = { "shell-rough0": mk(rough0), "shell-metal1": mk(metal1) };
+  // Run 7 (pre-registered in receipts/BUILD_HANDOFF-MVT-ABALONE-001-METALMAP.md): separate metalness scalar from metalnessMap.
+  const metal1MapKept = (m) => { const c = m.clone(); c.metalness = 1.0; return c; }; // metalnessMap kept (three.js: metalness * texel.b)
+  const metal05MapNull = (m) => { const c = m.clone(); c.metalnessMap = null; return c; }; // metalness authored 0.5
+  const factorMaterials = { "shell-rough0": mk(rough0), "shell-metal1": mk(metal1), "shell-metal1-mapkept": mk(metal1MapKept), "shell-metal05-mapnull": mk(metal05MapNull) };
   const fm = Object.values(factorMaterials);
   let appliedSource = "asset";
   function applyMapSource() {

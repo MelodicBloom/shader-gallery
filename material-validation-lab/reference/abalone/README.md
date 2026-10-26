@@ -46,3 +46,11 @@ metalness/roughness/normal maps removed). Authored shell and plane paths are unc
 removed); all other maps and side authored. Locked in `receipts/BUILD_HANDOFF-MVT-ABALONE-001-FACTORS.md`; results under
 `automated.shellRough0` (measured: fail) and `automated.shellMetal1` (measured: pass) on SwiftShader. Proposed reading:
 metalness path dominates. Label stays `inconclusive` pending named human review.
+
+## Run 7 — metalness scalar vs metalnessMap (pre-registered)
+`geometry: "shell-metal1-mapkept"` (metalness 1, authored metalnessMap kept) and `geometry: "shell-metal05-mapnull"`
+(metalness authored 0.5, metalnessMap removed); roughness/normal maps and FrontSide authored. Locked in
+`receipts/BUILD_HANDOFF-MVT-ABALONE-001-METALMAP.md`; results under `automated.shellMetal1MapKept` and
+`automated.shellMetal05MapNull` (measured: both pass; anchor shell-metal1 pass; authored shell synthetic fail), 2×2 in
+`automated.metalMapOutcome`. Proposed reading: either raising the scalar or removing the map is sufficient alone.
+Label stays `inconclusive` pending named human review.
