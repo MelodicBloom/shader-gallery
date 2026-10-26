@@ -1,5 +1,7 @@
 # 🌌 Shader Gallery
 
+**▶ Live demo:** [https://melodicbloom.github.io/shader-gallery](https://melodicbloom.github.io/shader-gallery)
+
 > Evidence-led WebGL2 shader and material research: experimental optical studies, reproducible previews, and licensed-source attribution.
 
 ![GLSL](https://img.shields.io/badge/GLSL-WebGL-orange?style=flat-square)
