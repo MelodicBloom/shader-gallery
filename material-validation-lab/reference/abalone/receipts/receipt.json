@@ -1,10 +1,10 @@
 {
   "schemaVersion": "0.1.0",
   "trial": "MVT-ABALONE-001",
-  "generatedAt": "2026-10-26T14:10:50.382Z",
+  "generatedAt": "2026-10-26T14:46:45.554Z",
   "command": "cd material-validation-lab/reference/abalone && npm ci && npm run trial",
-  "label": "inconclusive",
-  "labelReason": "R (intensity) channel effect below criterion at neutral and grazing with the asset's own map; synthetic isolated R/G test maps not yet run; no human review.",
+  "label": "fail",
+  "labelReason": "Synthetic isolated R/G maps did not meet the pre-registered criterion; channel-independence hypothesis fails (see automated.synthetic).",
   "pins": {
     "asset": {
       "repo": "KhronosGroup/glTF-Sample-Assets",
@@ -40,161 +40,554 @@
     "gpuNote": "software rasterizer (SwiftShader); no hardware GPU on box"
   },
   "automated": {
-    "automatedChannelCheck": "fail",
-    "mapReceipt": {
-      "iridescenceMap": {
-        "present": true,
-        "colorSpace": "",
-        "channel": "R"
-      },
-      "iridescenceThicknessMap": {
-        "present": true,
-        "colorSpace": "",
-        "channel": "G"
-      },
-      "sameTexture": true,
-      "authoredIridescence": 1,
-      "authoredThicknessRangeNm": [
-        600,
-        800
+    "effectCriterion": {
+      "metric": "shell-masked fractionOver8 (fraction of shell pixels with mean RGB abs-diff > 8/255)",
+      "threshold": ">= 0.01",
+      "fixtures": [
+        "neutral",
+        "grazing",
+        "light-sweep"
       ],
-      "noColorSpaceConstant": ""
+      "scope": "ALL fixtures x EACH check",
+      "preRegistered": true,
+      "lockedIn": "material-validation-lab/receipts/BUILD_HANDOFF-MVT-ABALONE-001-SYNTH.md",
+      "lockedBeforeRun": 3,
+      "revisedAfterResults": false
     },
-    "mapColorSpaceIsNoColorSpace": true,
-    "effectCriterion": "fractionOver8 >= 0.01 of shell-masked pixels",
     "effectThresholdFraction": 0.01,
-    "pixelDifference": {
-      "neutral": {
-        "treatmentVsControl": {
-          "mean": 2.994,
-          "fractionOver8": 0.0446,
-          "pixels": 101918
-        },
-        "treatmentVsROnly": {
-          "mean": 2.931,
-          "fractionOver8": 0.0648,
-          "pixels": 101918
-        },
-        "treatmentVsGOnly": {
-          "mean": 0.75,
-          "fractionOver8": 0.0075,
-          "pixels": 101918
-        },
-        "rOnlyVsGOnly": {
-          "mean": 3.426,
-          "fractionOver8": 0.0777,
-          "pixels": 101918
-        },
-        "controlCapture": {
-          "artifactPath": "reference/abalone/receipts/captures/neutral-control.png",
-          "sha256": "f668b7876287a62bd8e5230faef1b8a5d9b1e9e612a2bf937c7c6e5e24ba1f85"
-        }
+    "synthetic": {
+      "label": "measured",
+      "criterionStatus": "pre-registered",
+      "automatedSyntheticChannelCheck": "fail",
+      "perCheck": {
+        "iridescenceVisibleVsNeutralControl": "fail",
+        "rChannelContributes": "fail",
+        "gChannelContributes": "fail",
+        "channelsDistinct": "pass"
       },
-      "grazing": {
-        "treatmentVsControl": {
-          "mean": 3.204,
-          "fractionOver8": 0.0466,
-          "pixels": 97370
-        },
-        "treatmentVsROnly": {
-          "mean": 3.329,
-          "fractionOver8": 0.0648,
-          "pixels": 97370
-        },
-        "treatmentVsGOnly": {
-          "mean": 0.816,
-          "fractionOver8": 0.0077,
-          "pixels": 97370
-        },
-        "rOnlyVsGOnly": {
-          "mean": 4.029,
-          "fractionOver8": 0.0889,
-          "pixels": 97370
-        },
-        "controlCapture": {
-          "artifactPath": "reference/abalone/receipts/captures/grazing-control.png",
-          "sha256": "cc7c0e213619bf22e9a4f966c00d5efff3f65cc6e43215dab1545cfc73008d08"
-        }
-      },
-      "light-sweep": {
-        "treatmentVsControl": {
-          "mean": 3.398,
-          "fractionOver8": 0.0756,
-          "pixels": 101918
-        },
-        "treatmentVsROnly": {
-          "mean": 3.339,
-          "fractionOver8": 0.0905,
-          "pixels": 101918
-        },
-        "treatmentVsGOnly": {
-          "mean": 0.851,
-          "fractionOver8": 0.0103,
-          "pixels": 101918
-        },
-        "rOnlyVsGOnly": {
-          "mean": 3.904,
-          "fractionOver8": 0.1101,
-          "pixels": 101918
-        },
-        "sweep": [
-          {
-            "azimuth": 0,
-            "treatmentVsControl": {
-              "mean": 3.343,
-              "fractionOver8": 0.0631,
-              "pixels": 101918
+      "checks": {
+        "neutral": {
+          "iridescenceVisibleVsNeutralControl": {
+            "synth-r": {
+              "fractionOver8": 0.0113,
+              "meetsCriterion": true
+            },
+            "synth-g": {
+              "fractionOver8": 0.0049,
+              "meetsCriterion": false
             }
           },
-          {
-            "azimuth": 90,
-            "treatmentVsControl": {
-              "mean": 2.658,
-              "fractionOver8": 0.0341,
-              "pixels": 101918
+          "rChannelContributes": {
+            "synth-r": {
+              "fractionOver8": 0.0055,
+              "meetsCriterion": false
             }
           },
-          {
-            "azimuth": 180,
-            "treatmentVsControl": {
-              "mean": 3.398,
-              "fractionOver8": 0.0756,
-              "pixels": 101918
+          "gChannelContributes": {
+            "synth-g": {
+              "fractionOver8": 0.0047,
+              "meetsCriterion": false
             }
           },
-          {
-            "azimuth": 270,
-            "treatmentVsControl": {
-              "mean": 3.649,
-              "fractionOver8": 0.0904,
-              "pixels": 101918
+          "channelsDistinct": {
+            "synth-r": {
+              "fractionOver8": 0.0517,
+              "meetsCriterion": true
+            },
+            "synth-g": {
+              "fractionOver8": 0.0173,
+              "meetsCriterion": true
             }
           }
-        ],
-        "controlCapture": {
-          "artifactPath": "reference/abalone/receipts/captures/light-sweep-control.png",
-          "sha256": "d84197341e38b989ccefce88b6b651c66d42c82ae80b3ddd224bd05a1b511cc5"
+        },
+        "grazing": {
+          "iridescenceVisibleVsNeutralControl": {
+            "synth-r": {
+              "fractionOver8": 0.0147,
+              "meetsCriterion": true
+            },
+            "synth-g": {
+              "fractionOver8": 0.006,
+              "meetsCriterion": false
+            }
+          },
+          "rChannelContributes": {
+            "synth-r": {
+              "fractionOver8": 0.0049,
+              "meetsCriterion": false
+            }
+          },
+          "gChannelContributes": {
+            "synth-g": {
+              "fractionOver8": 0.0028,
+              "meetsCriterion": false
+            }
+          },
+          "channelsDistinct": {
+            "synth-r": {
+              "fractionOver8": 0.0595,
+              "meetsCriterion": true
+            },
+            "synth-g": {
+              "fractionOver8": 0.0155,
+              "meetsCriterion": true
+            }
+          }
+        },
+        "light-sweep": {
+          "iridescenceVisibleVsNeutralControl": {
+            "synth-r": {
+              "fractionOver8": 0.0196,
+              "meetsCriterion": true
+            },
+            "synth-g": {
+              "fractionOver8": 0.0048,
+              "meetsCriterion": false
+            }
+          },
+          "rChannelContributes": {
+            "synth-r": {
+              "fractionOver8": 0.0073,
+              "meetsCriterion": false
+            }
+          },
+          "gChannelContributes": {
+            "synth-g": {
+              "fractionOver8": 0.0044,
+              "meetsCriterion": false
+            }
+          },
+          "channelsDistinct": {
+            "synth-r": {
+              "fractionOver8": 0.0799,
+              "meetsCriterion": true
+            },
+            "synth-g": {
+              "fractionOver8": 0.019,
+              "meetsCriterion": true
+            }
+          }
         }
-      }
+      },
+      "maps": {
+        "synth-r": {
+          "file": "reference/abalone/assets/synthetic/r-gradient-const-g.png",
+          "sha256": "c4ddc237cdff25b1c8e8d5bdaf93c5e666998a837a21748df996a1c8dda7e9bc",
+          "content": "R horizontal 0..255 gradient, G=128, B=0, A=255; 256x256",
+          "colorSpace": "",
+          "flipY": false
+        },
+        "synth-g": {
+          "file": "reference/abalone/assets/synthetic/g-gradient-const-r.png",
+          "sha256": "e9c3516314dc59e4adac8d0e6a07723c0138eeb2820129d4c4029f696613788f",
+          "content": "G horizontal 0..255 gradient, R=128, B=0, A=255; 256x256",
+          "colorSpace": "",
+          "flipY": false
+        }
+      },
+      "mapColorSpaceIsNoColorSpace": true,
+      "pixelDifference": {
+        "synth-r": {
+          "neutral": {
+            "treatmentVsControl": {
+              "mean": 2.464,
+              "fractionOver8": 0.0113,
+              "pixels": 101918
+            },
+            "treatmentVsROnly": {
+              "mean": 2.604,
+              "fractionOver8": 0.0273,
+              "pixels": 101918
+            },
+            "treatmentVsGOnly": {
+              "mean": 0.94,
+              "fractionOver8": 0.0055,
+              "pixels": 101918
+            },
+            "rOnlyVsGOnly": {
+              "mean": 3.056,
+              "fractionOver8": 0.0517,
+              "pixels": 101918
+            }
+          },
+          "grazing": {
+            "treatmentVsControl": {
+              "mean": 2.683,
+              "fractionOver8": 0.0147,
+              "pixels": 97370
+            },
+            "treatmentVsROnly": {
+              "mean": 2.776,
+              "fractionOver8": 0.0325,
+              "pixels": 97370
+            },
+            "treatmentVsGOnly": {
+              "mean": 0.991,
+              "fractionOver8": 0.0049,
+              "pixels": 97370
+            },
+            "rOnlyVsGOnly": {
+              "mean": 3.389,
+              "fractionOver8": 0.0595,
+              "pixels": 97370
+            }
+          },
+          "light-sweep": {
+            "treatmentVsControl": {
+              "mean": 2.739,
+              "fractionOver8": 0.0196,
+              "pixels": 101918
+            },
+            "treatmentVsROnly": {
+              "mean": 2.906,
+              "fractionOver8": 0.0417,
+              "pixels": 101918
+            },
+            "treatmentVsGOnly": {
+              "mean": 1.099,
+              "fractionOver8": 0.0073,
+              "pixels": 101918
+            },
+            "rOnlyVsGOnly": {
+              "mean": 3.482,
+              "fractionOver8": 0.0799,
+              "pixels": 101918
+            },
+            "sweep": [
+              {
+                "azimuth": 0,
+                "treatmentVsControl": {
+                  "mean": 2.747,
+                  "fractionOver8": 0.0155,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 90,
+                "treatmentVsControl": {
+                  "mean": 2.24,
+                  "fractionOver8": 0.0092,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 180,
+                "treatmentVsControl": {
+                  "mean": 2.739,
+                  "fractionOver8": 0.0196,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 270,
+                "treatmentVsControl": {
+                  "mean": 2.949,
+                  "fractionOver8": 0.0239,
+                  "pixels": 101918
+                }
+              }
+            ]
+          }
+        },
+        "synth-g": {
+          "neutral": {
+            "treatmentVsControl": {
+              "mean": 1.777,
+              "fractionOver8": 0.0049,
+              "pixels": 101918
+            },
+            "treatmentVsROnly": {
+              "mean": 1.215,
+              "fractionOver8": 0.0047,
+              "pixels": 101918
+            },
+            "treatmentVsGOnly": {
+              "mean": 1.862,
+              "fractionOver8": 0.0057,
+              "pixels": 101918
+            },
+            "rOnlyVsGOnly": {
+              "mean": 2.287,
+              "fractionOver8": 0.0173,
+              "pixels": 101918
+            }
+          },
+          "grazing": {
+            "treatmentVsControl": {
+              "mean": 1.682,
+              "fractionOver8": 0.006,
+              "pixels": 97370
+            },
+            "treatmentVsROnly": {
+              "mean": 1.1,
+              "fractionOver8": 0.0028,
+              "pixels": 97370
+            },
+            "treatmentVsGOnly": {
+              "mean": 1.728,
+              "fractionOver8": 0.0063,
+              "pixels": 97370
+            },
+            "rOnlyVsGOnly": {
+              "mean": 2.207,
+              "fractionOver8": 0.0155,
+              "pixels": 97370
+            }
+          },
+          "light-sweep": {
+            "treatmentVsControl": {
+              "mean": 1.943,
+              "fractionOver8": 0.0048,
+              "pixels": 101918
+            },
+            "treatmentVsROnly": {
+              "mean": 1.317,
+              "fractionOver8": 0.0044,
+              "pixels": 101918
+            },
+            "treatmentVsGOnly": {
+              "mean": 2.069,
+              "fractionOver8": 0.0059,
+              "pixels": 101918
+            },
+            "rOnlyVsGOnly": {
+              "mean": 2.506,
+              "fractionOver8": 0.019,
+              "pixels": 101918
+            },
+            "sweep": [
+              {
+                "azimuth": 0,
+                "treatmentVsControl": {
+                  "mean": 1.957,
+                  "fractionOver8": 0.0046,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 90,
+                "treatmentVsControl": {
+                  "mean": 1.675,
+                  "fractionOver8": 0.0071,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 180,
+                "treatmentVsControl": {
+                  "mean": 1.943,
+                  "fractionOver8": 0.0048,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 270,
+                "treatmentVsControl": {
+                  "mean": 2.103,
+                  "fractionOver8": 0.0075,
+                  "pixels": 101918
+                }
+              }
+            ]
+          }
+        }
+      },
+      "captures": [
+        {
+          "mapSource": "synth-r",
+          "fixture": "neutral",
+          "artifactPath": "reference/abalone/receipts/captures/synth-r-neutral-treatment.png",
+          "sha256": "8024530d4031dbe1cf57cf4744ec1e548ebc2d79b0c3f1f2c10c819a7ce2a318"
+        },
+        {
+          "mapSource": "synth-r",
+          "fixture": "grazing",
+          "artifactPath": "reference/abalone/receipts/captures/synth-r-grazing-treatment.png",
+          "sha256": "8aff3fe4d4dc2d84df7ef7dd569c852d5fffb52531751c61b85ac26919b6fb36"
+        },
+        {
+          "mapSource": "synth-r",
+          "fixture": "light-sweep",
+          "artifactPath": "reference/abalone/receipts/captures/synth-r-light-sweep-treatment.png",
+          "sha256": "c338c34cd9009b7343f8c6f7394939eccb4a423cba011a9a3f0b4a2754178cbc"
+        },
+        {
+          "mapSource": "synth-g",
+          "fixture": "neutral",
+          "artifactPath": "reference/abalone/receipts/captures/synth-g-neutral-treatment.png",
+          "sha256": "b57e6003343046084666987387e064e4fad4cf08f12bb18febc0b124184825a8"
+        },
+        {
+          "mapSource": "synth-g",
+          "fixture": "grazing",
+          "artifactPath": "reference/abalone/receipts/captures/synth-g-grazing-treatment.png",
+          "sha256": "e5179bfa0102dbd866fea8b1ac85739905fa47bc1f8ca6c574a8f618be155fea"
+        },
+        {
+          "mapSource": "synth-g",
+          "fixture": "light-sweep",
+          "artifactPath": "reference/abalone/receipts/captures/synth-g-light-sweep-treatment.png",
+          "sha256": "b9cc52bc0f7747ea9375b15445393b45fcc6cc8a5148a03c698c47f6e66fd96e"
+        }
+      ]
     },
-    "effects": {
-      "neutral": {
-        "iridescenceVisibleVsNeutralControl": true,
-        "rChannelContributes": false,
-        "gChannelContributes": true,
-        "channelsDistinct": true
+    "asset": {
+      "label": "measured",
+      "criterionStatus": "post-hoc (metric revised after run 1; same threshold re-applied in run 3)",
+      "automatedChannelCheck": "fail",
+      "mapReceipt": {
+        "iridescenceMap": {
+          "present": true,
+          "colorSpace": "",
+          "channel": "R"
+        },
+        "iridescenceThicknessMap": {
+          "present": true,
+          "colorSpace": "",
+          "channel": "G"
+        },
+        "sameTexture": true,
+        "authoredIridescence": 1,
+        "authoredThicknessRangeNm": [
+          600,
+          800
+        ],
+        "noColorSpaceConstant": ""
       },
-      "grazing": {
-        "iridescenceVisibleVsNeutralControl": true,
-        "rChannelContributes": false,
-        "gChannelContributes": true,
-        "channelsDistinct": true
+      "mapColorSpaceIsNoColorSpace": true,
+      "pixelDifference": {
+        "neutral": {
+          "treatmentVsControl": {
+            "mean": 2.994,
+            "fractionOver8": 0.0446,
+            "pixels": 101918
+          },
+          "treatmentVsROnly": {
+            "mean": 2.931,
+            "fractionOver8": 0.0648,
+            "pixels": 101918
+          },
+          "treatmentVsGOnly": {
+            "mean": 0.75,
+            "fractionOver8": 0.0075,
+            "pixels": 101918
+          },
+          "rOnlyVsGOnly": {
+            "mean": 3.426,
+            "fractionOver8": 0.0777,
+            "pixels": 101918
+          },
+          "controlCapture": {
+            "artifactPath": "reference/abalone/receipts/captures/neutral-control.png",
+            "sha256": "f668b7876287a62bd8e5230faef1b8a5d9b1e9e612a2bf937c7c6e5e24ba1f85"
+          }
+        },
+        "grazing": {
+          "treatmentVsControl": {
+            "mean": 3.204,
+            "fractionOver8": 0.0466,
+            "pixels": 97370
+          },
+          "treatmentVsROnly": {
+            "mean": 3.329,
+            "fractionOver8": 0.0648,
+            "pixels": 97370
+          },
+          "treatmentVsGOnly": {
+            "mean": 0.816,
+            "fractionOver8": 0.0077,
+            "pixels": 97370
+          },
+          "rOnlyVsGOnly": {
+            "mean": 4.029,
+            "fractionOver8": 0.0889,
+            "pixels": 97370
+          },
+          "controlCapture": {
+            "artifactPath": "reference/abalone/receipts/captures/grazing-control.png",
+            "sha256": "cc7c0e213619bf22e9a4f966c00d5efff3f65cc6e43215dab1545cfc73008d08"
+          }
+        },
+        "light-sweep": {
+          "treatmentVsControl": {
+            "mean": 3.398,
+            "fractionOver8": 0.0756,
+            "pixels": 101918
+          },
+          "treatmentVsROnly": {
+            "mean": 3.339,
+            "fractionOver8": 0.0905,
+            "pixels": 101918
+          },
+          "treatmentVsGOnly": {
+            "mean": 0.851,
+            "fractionOver8": 0.0103,
+            "pixels": 101918
+          },
+          "rOnlyVsGOnly": {
+            "mean": 3.904,
+            "fractionOver8": 0.1101,
+            "pixels": 101918
+          },
+          "sweep": [
+            {
+              "azimuth": 0,
+              "treatmentVsControl": {
+                "mean": 3.343,
+                "fractionOver8": 0.0631,
+                "pixels": 101918
+              }
+            },
+            {
+              "azimuth": 90,
+              "treatmentVsControl": {
+                "mean": 2.658,
+                "fractionOver8": 0.0341,
+                "pixels": 101918
+              }
+            },
+            {
+              "azimuth": 180,
+              "treatmentVsControl": {
+                "mean": 3.398,
+                "fractionOver8": 0.0756,
+                "pixels": 101918
+              }
+            },
+            {
+              "azimuth": 270,
+              "treatmentVsControl": {
+                "mean": 3.649,
+                "fractionOver8": 0.0904,
+                "pixels": 101918
+              }
+            }
+          ],
+          "controlCapture": {
+            "artifactPath": "reference/abalone/receipts/captures/light-sweep-control.png",
+            "sha256": "d84197341e38b989ccefce88b6b651c66d42c82ae80b3ddd224bd05a1b511cc5"
+          }
+        }
       },
-      "light-sweep": {
-        "iridescenceVisibleVsNeutralControl": true,
-        "rChannelContributes": true,
-        "gChannelContributes": true,
-        "channelsDistinct": true
+      "effects": {
+        "neutral": {
+          "iridescenceVisibleVsNeutralControl": true,
+          "rChannelContributes": false,
+          "gChannelContributes": true,
+          "channelsDistinct": true
+        },
+        "grazing": {
+          "iridescenceVisibleVsNeutralControl": true,
+          "rChannelContributes": false,
+          "gChannelContributes": true,
+          "channelsDistinct": true
+        },
+        "light-sweep": {
+          "iridescenceVisibleVsNeutralControl": true,
+          "rChannelContributes": true,
+          "gChannelContributes": true,
+          "channelsDistinct": true
+        }
       }
     },
     "consoleErrors": []
@@ -219,6 +612,7 @@
           600,
           800
         ],
+        "mapSource": "asset",
         "iridescenceMap": true,
         "iridescenceThicknessMap": true,
         "metalness": 0.5,
@@ -247,6 +641,7 @@
           600,
           800
         ],
+        "mapSource": "asset",
         "iridescenceMap": true,
         "iridescenceThicknessMap": true,
         "metalness": 0.5,
@@ -275,6 +670,7 @@
           600,
           800
         ],
+        "mapSource": "asset",
         "iridescenceMap": true,
         "iridescenceThicknessMap": true,
         "metalness": 0.5,
@@ -292,6 +688,20 @@
       "result": "fail",
       "detail": "rChannelContributes=false at all fixtures (treatment vs G-only 0.20-0.22); background pixels diluted the mean. Metric revised to shell-masked fraction before run 2. The revision was made after seeing run-1 data, so run-2 effect checks are post-hoc, not pre-registered.",
       "label": "historical"
+    },
+    {
+      "run": 2,
+      "metric": "shell-masked fractionOver8 >= 0.01 (asset map only)",
+      "result": "inconclusive",
+      "detail": "Asset map: rChannelContributes treatment vs G-only fractionOver8 0.0075 (neutral), 0.0077 (grazing), 0.0103 (light-sweep); all other checks met. Criterion post-hoc.",
+      "label": "historical/post-hoc"
+    },
+    {
+      "run": 3,
+      "metric": "shell-masked fractionOver8 >= 0.01, pre-registered in BUILD_HANDOFF-MVT-ABALONE-001-SYNTH.md",
+      "result": "synthetic=fail; asset=fail",
+      "detail": "Synthetic isolated R/G maps + asset map re-measured in the same run.",
+      "label": "pre-registered synthetic (this run)"
     }
   ],
   "review": {

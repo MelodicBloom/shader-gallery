@@ -1,7 +1,7 @@
 {
   "id": "MVT-ABALONE-001",
   "name": "Khronos Abalone Baseline",
-  "status": "inconclusive",
+  "status": "fail",
   "materialClass": "iridescent-reference-asset",
   "sourceRefs": [
     "SRC-KHR-ABALONE",

@@ -11,7 +11,7 @@ export const FIXTURES = {
 };
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const $ = (id) => document.getElementById(id);
-const state = { mode: "treatment", polar: 20, azimuth: 45, iridescence: 1, tmin: 600, tmax: 800, exposure: 0 };
+const state = { mode: "treatment", mapSource: "asset", polar: 20, azimuth: 45, iridescence: 1, tmin: 600, tmax: 800, exposure: 0 };
 const api = { ready: false, error: null, state };
 window.__mvt = api;
 
@@ -80,6 +80,27 @@ async function main() {
   const gOnly = treatment.clone(); gOnly.iridescenceMap = null;
   const materials = { treatment, control, "r-only": rOnly, "g-only": gOnly };
 
+  // Synthetic isolated R/G test maps (authored in-repo by tools/make-synthetic-maps.mjs), packed like the asset map.
+  const loadTex = async (file) => { const t = await new THREE.TextureLoader().loadAsync(`./assets/synthetic/${file}`);
+    t.colorSpace = THREE.NoColorSpace; t.flipY = false; t.needsUpdate = true; return t; };
+  const mapSources = {
+    asset: authored.iridescenceMap,
+    "synth-r": await loadTex("r-gradient-const-g.png"),
+    "synth-g": await loadTex("g-gradient-const-r.png"),
+  };
+  let appliedSource = "asset";
+  function applyMapSource() {
+    if (state.mapSource === appliedSource) return;
+    const iMap = mapSources[state.mapSource];
+    const gMap = state.mapSource === "asset" ? authored.thicknessMap : iMap;
+    treatment.iridescenceMap = iMap; treatment.iridescenceThicknessMap = gMap;
+    rOnly.iridescenceMap = iMap; gOnly.iridescenceThicknessMap = gMap;
+    for (const m of [treatment, rOnly, gOnly]) m.needsUpdate = true;
+    appliedSource = state.mapSource;
+    drawChannels(iMap?.image);
+  }
+  api.synthMapReceipt = Object.fromEntries(["synth-r", "synth-g"].map((k) => [k, { colorSpace: mapSources[k].colorSpace, flipY: mapSources[k].flipY }]));
+
   api.mapReceipt = {
     iridescenceMap: { present: !!authored.iridescenceMap, colorSpace: authored.iridescenceMap?.colorSpace, channel: "R" },
     iridescenceThicknessMap: { present: !!authored.thicknessMap, colorSpace: authored.thicknessMap?.colorSpace, channel: "G" },
@@ -90,6 +111,7 @@ async function main() {
   drawChannels(authored.iridescenceMap?.image);
 
   function apply() {
+    applyMapSource();
     const m = materials[state.mode];
     mesh.material = m;
     for (const mat of [treatment, rOnly, gOnly]) {
@@ -120,7 +142,8 @@ async function main() {
   api.set = (patch) => { Object.assign(state, patch); apply(); return { ...state }; };
   api.fixture = (name) => { const f = FIXTURES[name]; api.set({ polar: f.polar, azimuth: f.azimuth, exposure: f.exposure }); };
   // Pixel-difference outcomes per fixture (machine metric, not perceptual review).
-  api.measure = (name) => {
+  api.measure = (name, mapSource = "asset") => {
+    api.set({ mapSource });
     api.fixture(name);
     const shots = {};
     for (const mode of Object.keys(materials)) { api.set({ mode }); shots[mode] = read(); }
@@ -145,16 +168,17 @@ async function main() {
   api.materialState = () => {
     const m = mesh.material;
     return { mode: state.mode, iridescence: m.iridescence, iridescenceThicknessRangeNm: [...m.iridescenceThicknessRange],
-      iridescenceMap: !!m.iridescenceMap, iridescenceThicknessMap: !!m.iridescenceThicknessMap, metalness: m.metalness, roughness: m.roughness };
+      mapSource: state.mapSource, iridescenceMap: !!m.iridescenceMap, iridescenceThicknessMap: !!m.iridescenceThicknessMap, metalness: m.metalness, roughness: m.roughness };
   };
   api.cameraPosition = () => camera.position.toArray();
   api.lightPosition = () => key.position.toArray();
 
   // UI wiring
   const ids = ["polar", "azimuth", "iridescence", "tmin", "tmax", "exposure"];
-  function syncUI() { for (const k of ids) { $(k).value = state[k]; $("o-" + k).textContent = state[k]; } }
+  function syncUI() { document.querySelectorAll("input[name=mapSource]").forEach((r) => { r.checked = r.value === state.mapSource; }); for (const k of ids) { $(k).value = state[k]; $("o-" + k).textContent = state[k]; } }
   for (const k of ids) $(k).addEventListener("input", (e) => api.set({ [k]: Number(e.target.value) }));
   document.querySelectorAll("input[name=mode]").forEach((r) => r.addEventListener("change", (e) => api.set({ mode: e.target.value })));
+  document.querySelectorAll("input[name=mapSource]").forEach((r) => r.addEventListener("change", (e) => api.set({ mapSource: e.target.value })));
   document.querySelectorAll("[data-fixture]").forEach((b) => b.addEventListener("click", () => api.fixture(b.dataset.fixture)));
   let raf = 0;
   $("sweep").addEventListener("click", () => {
