@@ -176,6 +176,25 @@ async function main() {
     }
     return out;
   };
+  // Label-inert UV/mask diagnostic (pre-registered in receipts/BUILD_HANDOFF-MVT-ABALONE-001-UVDIAG.md). Never touches metrics or labels.
+  const uvMat = new THREE.RawShaderMaterial({ glslVersion: THREE.GLSL3, uniforms: { synth: { value: null } },
+    vertexShader: `in vec3 position; in vec2 uv; uniform mat4 modelViewMatrix; uniform mat4 projectionMatrix; out vec2 vUv;
+      void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+    fragmentShader: `precision highp float; uniform sampler2D synth; in vec2 vUv; out vec4 o;
+      void main() { o = vec4(clamp(vUv, 0.0, 1.0), texture(synth, vUv).r, 1.0); }`, toneMapped: false });
+  api.uvDiag = (name) => {
+    api.set({ mapSource: "synth-r", geometry: "shell" }); api.fixture(name);
+    api.set({ mode: "control" }); buildMask(read());
+    const tex = mapSources["synth-r"]; uvMat.uniforms.synth.value = tex;
+    const prevBg = scene.background, prevMat = mesh.material, prevTM = renderer.toneMapping;
+    scene.background = new THREE.Color(0, 0, 0); mesh.material = uvMat; renderer.toneMapping = THREE.NoToneMapping;
+    renderer.render(scene, camera); const px = read();
+    scene.background = prevBg; mesh.material = prevMat; renderer.toneMapping = prevTM; api.set({ mode: "treatment" });
+    const u = [], v = [], r = []; let n = 0, covered = 0;
+    for (let i = 0, j = 0; i < px.length; i += 4, j++) { if (!mask[j]) continue; n++; if (px[i + 3] !== 255) continue; covered++; u.push(px[i] / 255); v.push(px[i + 1] / 255); r.push(px[i + 2] / 255); }
+    return { maskPixelCount: n, frameW: gl.drawingBufferWidth, frameH: gl.drawingBufferHeight, coveredMaskPixels: covered,
+      uvAttribute: !!mesh.geometry.attributes.uv, iridescenceMapChannel: tex.channel, textureWrap: [tex.wrapS, tex.wrapT], u, v, r };
+  };
   api.materialState = () => {
     const m = state.geometry === "plane" ? plane.material : mesh.material;
     return { geometry: state.geometry, mode: state.mode, iridescence: m.iridescence, iridescenceThicknessRangeNm: [...m.iridescenceThicknessRange],

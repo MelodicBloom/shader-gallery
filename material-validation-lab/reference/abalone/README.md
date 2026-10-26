@@ -26,6 +26,9 @@ The GLB (9.3 MB) is not committed. `fetch-asset` downloads it from the pinned co
 
 Tensions kept open, not resolved: C-07 (record default thickness 100–400 nm vs asset 600–800 nm) and C-08 (metric revised after run 1; R independence unproven with the asset's own map).
 
+## UV/mask diagnostic (label-inert)
+`npm run uvdiag` renders the shell's UVs and the synth-r value under the trial mask and writes `receipt.json → diagnostics.uvCoverage` (pre-registered in `receipts/BUILD_HANDOFF-MVT-ABALONE-001-UVDIAG.md`). It never changes `label`, `review`, `automated`, or `history`; the runner aborts if it would. Measured: shell uP5–uP95 0.54–0.94 (spread 0.40) → H1 inconclusive.
+
 ## Accessibility / fallback
 No autoplay. The light sweep animates only on click and is hidden under `prefers-reduced-motion`. If WebGL2, the asset, or its hash fails, the page shows the recorded static capture with the record's fallback label.
 

@@ -7,9 +7,14 @@
   "scripts": {
     "fetch-asset": "node tools/fetch-asset.mjs",
     "serve": "node tools/serve.mjs",
-    "trial": "node tools/fetch-asset.mjs && node tools/run-trial.mjs"
+    "trial": "node tools/fetch-asset.mjs && node tools/run-trial.mjs",
+    "uvdiag": "node tools/fetch-asset.mjs && node tools/run-uvdiag.mjs"
   },
-  "dependencies": { "three": "0.186.1" },
-  "devDependencies": { "playwright-core": "1.64.1" },
+  "dependencies": {
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "playwright-core": "1.64.1"
+  },
   "license": "MIT"
 }

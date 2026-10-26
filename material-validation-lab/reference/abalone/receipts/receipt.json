@@ -1435,5 +1435,125 @@
     "mineral simulation",
     "frame rate / performance",
     "KHR_materials_iridescence conformance of any WebGL2 proxy"
-  ]
+  ],
+  "diagnostics": {
+    "uvCoverage": {
+      "label": "measured",
+      "labelInert": true,
+      "run": "uvdiag",
+      "generatedAt": "2026-10-26T15:24:24.654Z",
+      "command": "cd material-validation-lab/reference/abalone && npm run uvdiag",
+      "preRegisteredIn": "material-validation-lab/receipts/BUILD_HANDOFF-MVT-ABALONE-001-UVDIAG.md",
+      "method": "Shell mesh, mapSource synth-r. Mask = app.js buildMask on control render (summed |RGB-bg(12,15,20)|>6). Debug RawShaderMaterial writes (u,v,texture(synth-r,uv).r) to RGBA8, no tone mapping / colour-space conversion; UVs clamped to [0,1]; 8-bit quantisation +-1/255.",
+      "uvAttributePresent": true,
+      "iridescenceMapUvChannel": 0,
+      "synthTextureWrap": [
+        1001,
+        1001
+      ],
+      "vNote": "synth-r gradient varies along U only; V is descriptive.",
+      "perFixture": {
+        "neutral": {
+          "maskPixelCount": 101918,
+          "maskFractionOfFrame": 0.2621,
+          "frame": [
+            720,
+            540
+          ],
+          "uMin": 0.0157,
+          "uMax": 0.9765,
+          "uP5": 0.5333,
+          "uP95": 0.9373,
+          "uMean": 0.7578,
+          "vMin": 0.0157,
+          "vMax": 0.9882,
+          "vP5": 0.098,
+          "vP95": 0.8706,
+          "rMin": 0.0157,
+          "rMax": 0.9804,
+          "rP5": 0.5333,
+          "rP95": 0.9373,
+          "uSpread": 0.4039,
+          "h1VerdictThisFixture": "inconclusive"
+        },
+        "grazing": {
+          "maskPixelCount": 97370,
+          "maskFractionOfFrame": 0.2504,
+          "frame": [
+            720,
+            540
+          ],
+          "uMin": 0.0353,
+          "uMax": 0.9804,
+          "uP5": 0.5529,
+          "uP95": 0.9333,
+          "uMean": 0.7458,
+          "vMin": 0.0157,
+          "vMax": 0.9882,
+          "vP5": 0.0824,
+          "vP95": 0.902,
+          "rMin": 0.0314,
+          "rMax": 0.9843,
+          "rP5": 0.5529,
+          "rP95": 0.9333,
+          "uSpread": 0.3804,
+          "h1VerdictThisFixture": "inconclusive"
+        },
+        "light-sweep": {
+          "maskPixelCount": 101918,
+          "maskFractionOfFrame": 0.2621,
+          "frame": [
+            720,
+            540
+          ],
+          "uMin": 0.0157,
+          "uMax": 0.9765,
+          "uP5": 0.5333,
+          "uP95": 0.9373,
+          "uMean": 0.7578,
+          "vMin": 0.0157,
+          "vMax": 0.9882,
+          "vP5": 0.098,
+          "vP95": 0.8706,
+          "rMin": 0.0157,
+          "rMax": 0.9804,
+          "rP5": 0.5333,
+          "rP95": 0.9373,
+          "uSpread": 0.4039,
+          "h1VerdictThisFixture": "inconclusive"
+        }
+      },
+      "pooled": {
+        "maskPixelCount": 301206,
+        "uMin": 0.0157,
+        "uMax": 0.9804,
+        "uP5": 0.5373,
+        "uP95": 0.9373,
+        "uMean": 0.7539,
+        "vMin": 0.0157,
+        "vMax": 0.9882,
+        "vP5": 0.0902,
+        "vP95": 0.8824,
+        "rMin": 0.0157,
+        "rMax": 0.9843,
+        "rP5": 0.5373,
+        "rP95": 0.9373,
+        "uSpread": 0.4
+      },
+      "h1": {
+        "hypothesis": "H1 UV dilution: shell samples a narrow U band of synth-r",
+        "statistic": "pooled uP95 - uP5",
+        "value": 0.4,
+        "cutoffs": {
+          "support": "< 0.20",
+          "ruleOut": "> 0.60",
+          "else": "inconclusive"
+        },
+        "cutoffsLockedBeforeRun": true,
+        "verdict": "inconclusive",
+        "perFixtureDisagreement": []
+      },
+      "consoleErrors": []
+    }
+  }
 }
