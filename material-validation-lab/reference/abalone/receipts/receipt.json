@@ -1,10 +1,10 @@
 {
   "schemaVersion": "0.1.0",
   "trial": "MVT-ABALONE-001",
-  "generatedAt": "2026-10-26T15:37:21.791Z",
+  "generatedAt": "2026-10-26T15:49:28.060Z",
   "command": "cd material-validation-lab/reference/abalone && npm ci && npm run trial",
   "label": "inconclusive",
-  "labelReason": "Run-5 shell-sens fixture (shell mesh + metalness 1/roughness 0/maps removed) met the pre-registered criterion (automated.shellSens.automatedChannelCheck=pass); run-4 plane sensitivity=pass; authored-shell synthetic=fail preserved (run-3 fail in history); asset=fail (post-hoc metric). Awaiting named human review (required for pass).",
+  "labelReason": "Run-6 one-factor splits (pre-registered, FACTORS handoff): shell-rough0=fail, shell-metal1=pass -> metal1 clears, rough0 fails: metalness path dominates (proposed). Run-5 shell-sens fixture (shell mesh + metalness 1/roughness 0/maps removed) met the pre-registered criterion (automated.shellSens.automatedChannelCheck=pass); run-4 plane sensitivity=pass; authored-shell synthetic=fail preserved (run-3 fail in history); asset=fail (post-hoc metric). Awaiting named human review (required for pass).",
   "pins": {
     "asset": {
       "repo": "KhronosGroup/glTF-Sample-Assets",
@@ -82,7 +82,1455 @@
       "lockedBeforeRun": 5,
       "revisedAfterResults": false
     },
+    "effectCriterionRun6": {
+      "metric": "shell-masked fractionOver8",
+      "threshold": ">= 0.01",
+      "fixtures": [
+        "neutral",
+        "grazing",
+        "light-sweep"
+      ],
+      "scope": "ALL fixtures x EACH check x EACH synth variant, evaluated per one-factor variant (shell-rough0, shell-metal1)",
+      "preRegistered": true,
+      "lockedIn": "material-validation-lab/receipts/BUILD_HANDOFF-MVT-ABALONE-001-FACTORS.md",
+      "lockedBeforeRun": 6,
+      "revisedAfterResults": false
+    },
     "effectThresholdFraction": 0.01,
+    "shellRough0": {
+      "label": "measured",
+      "run": "6a",
+      "criterionStatus": "pre-registered",
+      "hypothesis": "H2 one-factor split",
+      "fixture": {
+        "geometry": "abalone shell mesh",
+        "roughness": 0,
+        "metalness": "authored 0.5",
+        "removedMaps": [
+          "roughnessMap"
+        ],
+        "keptMaps": [
+          "metalnessMap",
+          "normalMap",
+          "aoMap",
+          "map"
+        ],
+        "side": "authored (FrontSide)",
+        "iridescence": "asset-authored (1.0)",
+        "thicknessRangeNm": "asset-authored 600-800",
+        "environment": "RoomEnvironment + ACESFilmic (unchanged)",
+        "mask": "shell pixels in shell-rough0 control frame"
+      },
+      "automatedChannelCheck": "fail",
+      "perCheck": {
+        "iridescenceVisibleVsNeutralControl": "fail",
+        "rChannelContributes": "fail",
+        "gChannelContributes": "fail",
+        "channelsDistinct": "fail"
+      },
+      "perVariant": {
+        "synth-r": "fail",
+        "synth-g": "fail",
+        "synth-g-r1": "fail"
+      },
+      "checks": {
+        "neutral": {
+          "iridescenceVisibleVsNeutralControl": {
+            "synth-r": {
+              "fractionOver8": 0.005,
+              "meetsCriterion": false
+            },
+            "synth-g": {
+              "fractionOver8": 0.0018,
+              "meetsCriterion": false
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.0146,
+              "meetsCriterion": true
+            }
+          },
+          "rChannelContributes": {
+            "synth-r": {
+              "fractionOver8": 0.0018,
+              "meetsCriterion": false
+            }
+          },
+          "gChannelContributes": {
+            "synth-g": {
+              "fractionOver8": 0.0012,
+              "meetsCriterion": false
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.0091,
+              "meetsCriterion": false
+            }
+          },
+          "channelsDistinct": {
+            "synth-r": {
+              "fractionOver8": 0.0225,
+              "meetsCriterion": true
+            },
+            "synth-g": {
+              "fractionOver8": 0.006,
+              "meetsCriterion": false
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.0091,
+              "meetsCriterion": false
+            }
+          }
+        },
+        "grazing": {
+          "iridescenceVisibleVsNeutralControl": {
+            "synth-r": {
+              "fractionOver8": 0.0074,
+              "meetsCriterion": false
+            },
+            "synth-g": {
+              "fractionOver8": 0.0033,
+              "meetsCriterion": false
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.0172,
+              "meetsCriterion": true
+            }
+          },
+          "rChannelContributes": {
+            "synth-r": {
+              "fractionOver8": 0.0024,
+              "meetsCriterion": false
+            }
+          },
+          "gChannelContributes": {
+            "synth-g": {
+              "fractionOver8": 0.0007,
+              "meetsCriterion": false
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.0103,
+              "meetsCriterion": true
+            }
+          },
+          "channelsDistinct": {
+            "synth-r": {
+              "fractionOver8": 0.0277,
+              "meetsCriterion": true
+            },
+            "synth-g": {
+              "fractionOver8": 0.0067,
+              "meetsCriterion": false
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.0103,
+              "meetsCriterion": true
+            }
+          }
+        },
+        "light-sweep": {
+          "iridescenceVisibleVsNeutralControl": {
+            "synth-r": {
+              "fractionOver8": 0.0072,
+              "meetsCriterion": false
+            },
+            "synth-g": {
+              "fractionOver8": 0.0018,
+              "meetsCriterion": false
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.0197,
+              "meetsCriterion": true
+            }
+          },
+          "rChannelContributes": {
+            "synth-r": {
+              "fractionOver8": 0.0019,
+              "meetsCriterion": false
+            }
+          },
+          "gChannelContributes": {
+            "synth-g": {
+              "fractionOver8": 0.0011,
+              "meetsCriterion": false
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.011,
+              "meetsCriterion": true
+            }
+          },
+          "channelsDistinct": {
+            "synth-r": {
+              "fractionOver8": 0.0334,
+              "meetsCriterion": true
+            },
+            "synth-g": {
+              "fractionOver8": 0.0074,
+              "meetsCriterion": false
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.011,
+              "meetsCriterion": true
+            }
+          }
+        }
+      },
+      "pixelDifference": {
+        "synth-r": {
+          "neutral": {
+            "treatmentVsControl": {
+              "mean": 1.567,
+              "fractionOver8": 0.005,
+              "pixels": 101918
+            },
+            "treatmentVsROnly": {
+              "mean": 1.629,
+              "fractionOver8": 0.0115,
+              "pixels": 101918
+            },
+            "treatmentVsGOnly": {
+              "mean": 0.589,
+              "fractionOver8": 0.0018,
+              "pixels": 101918
+            },
+            "rOnlyVsGOnly": {
+              "mean": 1.92,
+              "fractionOver8": 0.0225,
+              "pixels": 101918
+            }
+          },
+          "grazing": {
+            "treatmentVsControl": {
+              "mean": 1.668,
+              "fractionOver8": 0.0074,
+              "pixels": 97370
+            },
+            "treatmentVsROnly": {
+              "mean": 1.785,
+              "fractionOver8": 0.0177,
+              "pixels": 97370
+            },
+            "treatmentVsGOnly": {
+              "mean": 0.582,
+              "fractionOver8": 0.0024,
+              "pixels": 97370
+            },
+            "rOnlyVsGOnly": {
+              "mean": 2.126,
+              "fractionOver8": 0.0277,
+              "pixels": 97370
+            }
+          },
+          "light-sweep": {
+            "treatmentVsControl": {
+              "mean": 1.769,
+              "fractionOver8": 0.0072,
+              "pixels": 101918
+            },
+            "treatmentVsROnly": {
+              "mean": 1.846,
+              "fractionOver8": 0.0164,
+              "pixels": 101918
+            },
+            "treatmentVsGOnly": {
+              "mean": 0.678,
+              "fractionOver8": 0.0019,
+              "pixels": 101918
+            },
+            "rOnlyVsGOnly": {
+              "mean": 2.174,
+              "fractionOver8": 0.0334,
+              "pixels": 101918
+            },
+            "sweep": [
+              {
+                "azimuth": 0,
+                "treatmentVsControl": {
+                  "mean": 1.825,
+                  "fractionOver8": 0.007,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 90,
+                "treatmentVsControl": {
+                  "mean": 1.404,
+                  "fractionOver8": 0.004,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 180,
+                "treatmentVsControl": {
+                  "mean": 1.769,
+                  "fractionOver8": 0.0072,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 270,
+                "treatmentVsControl": {
+                  "mean": 2.057,
+                  "fractionOver8": 0.0102,
+                  "pixels": 101918
+                }
+              }
+            ]
+          }
+        },
+        "synth-g": {
+          "neutral": {
+            "treatmentVsControl": {
+              "mean": 1.075,
+              "fractionOver8": 0.0018,
+              "pixels": 101918
+            },
+            "treatmentVsROnly": {
+              "mean": 0.73,
+              "fractionOver8": 0.0012,
+              "pixels": 101918
+            },
+            "treatmentVsGOnly": {
+              "mean": 1.131,
+              "fractionOver8": 0.0027,
+              "pixels": 101918
+            },
+            "rOnlyVsGOnly": {
+              "mean": 1.366,
+              "fractionOver8": 0.006,
+              "pixels": 101918
+            }
+          },
+          "grazing": {
+            "treatmentVsControl": {
+              "mean": 1.073,
+              "fractionOver8": 0.0033,
+              "pixels": 97370
+            },
+            "treatmentVsROnly": {
+              "mean": 0.697,
+              "fractionOver8": 0.0007,
+              "pixels": 97370
+            },
+            "treatmentVsGOnly": {
+              "mean": 1.124,
+              "fractionOver8": 0.0037,
+              "pixels": 97370
+            },
+            "rOnlyVsGOnly": {
+              "mean": 1.452,
+              "fractionOver8": 0.0067,
+              "pixels": 97370
+            }
+          },
+          "light-sweep": {
+            "treatmentVsControl": {
+              "mean": 1.211,
+              "fractionOver8": 0.0018,
+              "pixels": 101918
+            },
+            "treatmentVsROnly": {
+              "mean": 0.827,
+              "fractionOver8": 0.0011,
+              "pixels": 101918
+            },
+            "treatmentVsGOnly": {
+              "mean": 1.278,
+              "fractionOver8": 0.0029,
+              "pixels": 101918
+            },
+            "rOnlyVsGOnly": {
+              "mean": 1.529,
+              "fractionOver8": 0.0074,
+              "pixels": 101918
+            },
+            "sweep": [
+              {
+                "azimuth": 0,
+                "treatmentVsControl": {
+                  "mean": 1.256,
+                  "fractionOver8": 0.0023,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 90,
+                "treatmentVsControl": {
+                  "mean": 0.965,
+                  "fractionOver8": 0.0018,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 180,
+                "treatmentVsControl": {
+                  "mean": 1.211,
+                  "fractionOver8": 0.0018,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 270,
+                "treatmentVsControl": {
+                  "mean": 1.407,
+                  "fractionOver8": 0.0028,
+                  "pixels": 101918
+                }
+              }
+            ]
+          }
+        },
+        "synth-g-r1": {
+          "neutral": {
+            "treatmentVsControl": {
+              "mean": 2.205,
+              "fractionOver8": 0.0146,
+              "pixels": 101918
+            },
+            "treatmentVsROnly": {
+              "mean": 1.527,
+              "fractionOver8": 0.0091,
+              "pixels": 101918
+            },
+            "treatmentVsGOnly": {
+              "mean": 0,
+              "fractionOver8": 0,
+              "pixels": 101918
+            },
+            "rOnlyVsGOnly": {
+              "mean": 1.527,
+              "fractionOver8": 0.0091,
+              "pixels": 101918
+            }
+          },
+          "grazing": {
+            "treatmentVsControl": {
+              "mean": 2.196,
+              "fractionOver8": 0.0172,
+              "pixels": 97370
+            },
+            "treatmentVsROnly": {
+              "mean": 1.454,
+              "fractionOver8": 0.0103,
+              "pixels": 97370
+            },
+            "treatmentVsGOnly": {
+              "mean": 0,
+              "fractionOver8": 0,
+              "pixels": 97370
+            },
+            "rOnlyVsGOnly": {
+              "mean": 1.454,
+              "fractionOver8": 0.0103,
+              "pixels": 97370
+            }
+          },
+          "light-sweep": {
+            "treatmentVsControl": {
+              "mean": 2.489,
+              "fractionOver8": 0.0197,
+              "pixels": 101918
+            },
+            "treatmentVsROnly": {
+              "mean": 1.734,
+              "fractionOver8": 0.011,
+              "pixels": 101918
+            },
+            "treatmentVsGOnly": {
+              "mean": 0,
+              "fractionOver8": 0,
+              "pixels": 101918
+            },
+            "rOnlyVsGOnly": {
+              "mean": 1.734,
+              "fractionOver8": 0.011,
+              "pixels": 101918
+            },
+            "sweep": [
+              {
+                "azimuth": 0,
+                "treatmentVsControl": {
+                  "mean": 2.58,
+                  "fractionOver8": 0.0214,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 90,
+                "treatmentVsControl": {
+                  "mean": 1.982,
+                  "fractionOver8": 0.0119,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 180,
+                "treatmentVsControl": {
+                  "mean": 2.489,
+                  "fractionOver8": 0.0197,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 270,
+                "treatmentVsControl": {
+                  "mean": 2.892,
+                  "fractionOver8": 0.0296,
+                  "pixels": 101918
+                }
+              }
+            ]
+          }
+        }
+      },
+      "captures": [
+        {
+          "geometry": "shell-rough0",
+          "mapSource": "synth-r",
+          "fixture": "neutral",
+          "materialState": {
+            "geometry": "shell-rough0",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-r",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 0.5,
+            "roughness": 0,
+            "metalnessMap": true,
+            "roughnessMap": false,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/rough0-synth-r-neutral-treatment.png",
+          "sha256": "ade13b5870e42ff53c763f8a102387ff0bb8226cced403314793deff8a775e41"
+        },
+        {
+          "geometry": "shell-rough0",
+          "mapSource": "synth-r",
+          "fixture": "grazing",
+          "materialState": {
+            "geometry": "shell-rough0",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-r",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 0.5,
+            "roughness": 0,
+            "metalnessMap": true,
+            "roughnessMap": false,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/rough0-synth-r-grazing-treatment.png",
+          "sha256": "3cffe8d31f5c441c9c4b946893bcc3a89e4ad881086cd173b48296a8fefb4ddb"
+        },
+        {
+          "geometry": "shell-rough0",
+          "mapSource": "synth-r",
+          "fixture": "light-sweep",
+          "materialState": {
+            "geometry": "shell-rough0",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-r",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 0.5,
+            "roughness": 0,
+            "metalnessMap": true,
+            "roughnessMap": false,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/rough0-synth-r-light-sweep-treatment.png",
+          "sha256": "7126d6f7f74ddc495cfbe49ce3f16baea596116d8ec221cac4d5ea5814f01f0b"
+        },
+        {
+          "geometry": "shell-rough0",
+          "mapSource": "synth-g",
+          "fixture": "neutral",
+          "materialState": {
+            "geometry": "shell-rough0",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-g",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 0.5,
+            "roughness": 0,
+            "metalnessMap": true,
+            "roughnessMap": false,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/rough0-synth-g-neutral-treatment.png",
+          "sha256": "7efc77c2da021caf08b5da7838b5c378494298440f89b3ea17143546e7d4cd0e"
+        },
+        {
+          "geometry": "shell-rough0",
+          "mapSource": "synth-g",
+          "fixture": "grazing",
+          "materialState": {
+            "geometry": "shell-rough0",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-g",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 0.5,
+            "roughness": 0,
+            "metalnessMap": true,
+            "roughnessMap": false,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/rough0-synth-g-grazing-treatment.png",
+          "sha256": "793019be0fd994c65358ae46662ff88f0dd32041d4117ed12645721059265243"
+        },
+        {
+          "geometry": "shell-rough0",
+          "mapSource": "synth-g",
+          "fixture": "light-sweep",
+          "materialState": {
+            "geometry": "shell-rough0",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-g",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 0.5,
+            "roughness": 0,
+            "metalnessMap": true,
+            "roughnessMap": false,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/rough0-synth-g-light-sweep-treatment.png",
+          "sha256": "7c90022f815ed86c2a593a12cd41074f365d4024d61858f43f1e765e377fa344"
+        },
+        {
+          "geometry": "shell-rough0",
+          "mapSource": "synth-g-r1",
+          "fixture": "neutral",
+          "materialState": {
+            "geometry": "shell-rough0",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-g-r1",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 0.5,
+            "roughness": 0,
+            "metalnessMap": true,
+            "roughnessMap": false,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/rough0-synth-g-r1-neutral-treatment.png",
+          "sha256": "2c7237e64386ba02cb24e2af174661255d50f41dc43f8d6653699b7d4749d6a9"
+        },
+        {
+          "geometry": "shell-rough0",
+          "mapSource": "synth-g-r1",
+          "fixture": "grazing",
+          "materialState": {
+            "geometry": "shell-rough0",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-g-r1",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 0.5,
+            "roughness": 0,
+            "metalnessMap": true,
+            "roughnessMap": false,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/rough0-synth-g-r1-grazing-treatment.png",
+          "sha256": "7e22de4c9c79959fe37eb34c76a2f0443ed72ad15d30b608267f22de5476c3b6"
+        },
+        {
+          "geometry": "shell-rough0",
+          "mapSource": "synth-g-r1",
+          "fixture": "light-sweep",
+          "materialState": {
+            "geometry": "shell-rough0",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-g-r1",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 0.5,
+            "roughness": 0,
+            "metalnessMap": true,
+            "roughnessMap": false,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/rough0-synth-g-r1-light-sweep-treatment.png",
+          "sha256": "435e76440763fe0e0f0871a9c6c0682ab1786a19b1964f1bd021d17f32632d1b"
+        }
+      ],
+      "diagnosticsNote": "mean values are measured diagnostics only; they do not affect the label"
+    },
+    "shellMetal1": {
+      "label": "measured",
+      "run": "6b",
+      "criterionStatus": "pre-registered",
+      "hypothesis": "H2 one-factor split",
+      "fixture": {
+        "geometry": "abalone shell mesh",
+        "metalness": 1,
+        "roughness": "authored 1.0",
+        "removedMaps": [
+          "metalnessMap"
+        ],
+        "keptMaps": [
+          "roughnessMap",
+          "normalMap",
+          "aoMap",
+          "map"
+        ],
+        "side": "authored (FrontSide)",
+        "iridescence": "asset-authored (1.0)",
+        "thicknessRangeNm": "asset-authored 600-800",
+        "environment": "RoomEnvironment + ACESFilmic (unchanged)",
+        "mask": "shell pixels in shell-metal1 control frame",
+        "ifThen": "metalnessMap nulled as pre-registered because metalness 1 x texel.b would make the scalar override ineffective"
+      },
+      "automatedChannelCheck": "pass",
+      "perCheck": {
+        "iridescenceVisibleVsNeutralControl": "pass",
+        "rChannelContributes": "pass",
+        "gChannelContributes": "pass",
+        "channelsDistinct": "pass"
+      },
+      "perVariant": {
+        "synth-r": "pass",
+        "synth-g": "pass",
+        "synth-g-r1": "pass"
+      },
+      "checks": {
+        "neutral": {
+          "iridescenceVisibleVsNeutralControl": {
+            "synth-r": {
+              "fractionOver8": 0.5351,
+              "meetsCriterion": true
+            },
+            "synth-g": {
+              "fractionOver8": 0.2516,
+              "meetsCriterion": true
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.8625,
+              "meetsCriterion": true
+            }
+          },
+          "rChannelContributes": {
+            "synth-r": {
+              "fractionOver8": 0.0835,
+              "meetsCriterion": true
+            }
+          },
+          "gChannelContributes": {
+            "synth-g": {
+              "fractionOver8": 0.1512,
+              "meetsCriterion": true
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.5297,
+              "meetsCriterion": true
+            }
+          },
+          "channelsDistinct": {
+            "synth-r": {
+              "fractionOver8": 0.5918,
+              "meetsCriterion": true
+            },
+            "synth-g": {
+              "fractionOver8": 0.5101,
+              "meetsCriterion": true
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.5297,
+              "meetsCriterion": true
+            }
+          }
+        },
+        "grazing": {
+          "iridescenceVisibleVsNeutralControl": {
+            "synth-r": {
+              "fractionOver8": 0.5808,
+              "meetsCriterion": true
+            },
+            "synth-g": {
+              "fractionOver8": 0.2417,
+              "meetsCriterion": true
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.6806,
+              "meetsCriterion": true
+            }
+          },
+          "rChannelContributes": {
+            "synth-r": {
+              "fractionOver8": 0.0733,
+              "meetsCriterion": true
+            }
+          },
+          "gChannelContributes": {
+            "synth-g": {
+              "fractionOver8": 0.1001,
+              "meetsCriterion": true
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.4527,
+              "meetsCriterion": true
+            }
+          },
+          "channelsDistinct": {
+            "synth-r": {
+              "fractionOver8": 0.6923,
+              "meetsCriterion": true
+            },
+            "synth-g": {
+              "fractionOver8": 0.4445,
+              "meetsCriterion": true
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.4527,
+              "meetsCriterion": true
+            }
+          }
+        },
+        "light-sweep": {
+          "iridescenceVisibleVsNeutralControl": {
+            "synth-r": {
+              "fractionOver8": 0.4877,
+              "meetsCriterion": true
+            },
+            "synth-g": {
+              "fractionOver8": 0.2466,
+              "meetsCriterion": true
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.8386,
+              "meetsCriterion": true
+            }
+          },
+          "rChannelContributes": {
+            "synth-r": {
+              "fractionOver8": 0.0848,
+              "meetsCriterion": true
+            }
+          },
+          "gChannelContributes": {
+            "synth-g": {
+              "fractionOver8": 0.1516,
+              "meetsCriterion": true
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.5353,
+              "meetsCriterion": true
+            }
+          },
+          "channelsDistinct": {
+            "synth-r": {
+              "fractionOver8": 0.5661,
+              "meetsCriterion": true
+            },
+            "synth-g": {
+              "fractionOver8": 0.5077,
+              "meetsCriterion": true
+            },
+            "synth-g-r1": {
+              "fractionOver8": 0.5353,
+              "meetsCriterion": true
+            }
+          }
+        }
+      },
+      "pixelDifference": {
+        "synth-r": {
+          "neutral": {
+            "treatmentVsControl": {
+              "mean": 9.403,
+              "fractionOver8": 0.5351,
+              "pixels": 101918
+            },
+            "treatmentVsROnly": {
+              "mean": 11.024,
+              "fractionOver8": 0.5502,
+              "pixels": 101918
+            },
+            "treatmentVsGOnly": {
+              "mean": 4.537,
+              "fractionOver8": 0.0835,
+              "pixels": 101918
+            },
+            "rOnlyVsGOnly": {
+              "mean": 13.654,
+              "fractionOver8": 0.5918,
+              "pixels": 101918
+            }
+          },
+          "grazing": {
+            "treatmentVsControl": {
+              "mean": 11.913,
+              "fractionOver8": 0.5808,
+              "pixels": 97370
+            },
+            "treatmentVsROnly": {
+              "mean": 14.014,
+              "fractionOver8": 0.609,
+              "pixels": 97370
+            },
+            "treatmentVsGOnly": {
+              "mean": 4.392,
+              "fractionOver8": 0.0733,
+              "pixels": 97370
+            },
+            "rOnlyVsGOnly": {
+              "mean": 17.3,
+              "fractionOver8": 0.6923,
+              "pixels": 97370
+            }
+          },
+          "light-sweep": {
+            "treatmentVsControl": {
+              "mean": 8.964,
+              "fractionOver8": 0.4877,
+              "pixels": 101918
+            },
+            "treatmentVsROnly": {
+              "mean": 10.606,
+              "fractionOver8": 0.5212,
+              "pixels": 101918
+            },
+            "treatmentVsGOnly": {
+              "mean": 4.449,
+              "fractionOver8": 0.0848,
+              "pixels": 101918
+            },
+            "rOnlyVsGOnly": {
+              "mean": 13.195,
+              "fractionOver8": 0.5661,
+              "pixels": 101918
+            },
+            "sweep": [
+              {
+                "azimuth": 0,
+                "treatmentVsControl": {
+                  "mean": 9.272,
+                  "fractionOver8": 0.5235,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 90,
+                "treatmentVsControl": {
+                  "mean": 9.423,
+                  "fractionOver8": 0.5243,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 180,
+                "treatmentVsControl": {
+                  "mean": 8.964,
+                  "fractionOver8": 0.4877,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 270,
+                "treatmentVsControl": {
+                  "mean": 9.364,
+                  "fractionOver8": 0.5255,
+                  "pixels": 101918
+                }
+              }
+            ]
+          }
+        },
+        "synth-g": {
+          "neutral": {
+            "treatmentVsControl": {
+              "mean": 7.098,
+              "fractionOver8": 0.2516,
+              "pixels": 101918
+            },
+            "treatmentVsROnly": {
+              "mean": 5.674,
+              "fractionOver8": 0.1512,
+              "pixels": 101918
+            },
+            "treatmentVsGOnly": {
+              "mean": 8.126,
+              "fractionOver8": 0.3664,
+              "pixels": 101918
+            },
+            "rOnlyVsGOnly": {
+              "mean": 10.709,
+              "fractionOver8": 0.5101,
+              "pixels": 101918
+            }
+          },
+          "grazing": {
+            "treatmentVsControl": {
+              "mean": 6.573,
+              "fractionOver8": 0.2417,
+              "pixels": 97370
+            },
+            "treatmentVsROnly": {
+              "mean": 4.751,
+              "fractionOver8": 0.1001,
+              "pixels": 97370
+            },
+            "treatmentVsGOnly": {
+              "mean": 7.621,
+              "fractionOver8": 0.2954,
+              "pixels": 97370
+            },
+            "rOnlyVsGOnly": {
+              "mean": 10.238,
+              "fractionOver8": 0.4445,
+              "pixels": 97370
+            }
+          },
+          "light-sweep": {
+            "treatmentVsControl": {
+              "mean": 6.901,
+              "fractionOver8": 0.2466,
+              "pixels": 101918
+            },
+            "treatmentVsROnly": {
+              "mean": 5.59,
+              "fractionOver8": 0.1516,
+              "pixels": 101918
+            },
+            "treatmentVsGOnly": {
+              "mean": 7.931,
+              "fractionOver8": 0.356,
+              "pixels": 101918
+            },
+            "rOnlyVsGOnly": {
+              "mean": 10.52,
+              "fractionOver8": 0.5077,
+              "pixels": 101918
+            },
+            "sweep": [
+              {
+                "azimuth": 0,
+                "treatmentVsControl": {
+                  "mean": 7.07,
+                  "fractionOver8": 0.2513,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 90,
+                "treatmentVsControl": {
+                  "mean": 7.066,
+                  "fractionOver8": 0.2374,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 180,
+                "treatmentVsControl": {
+                  "mean": 6.901,
+                  "fractionOver8": 0.2466,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 270,
+                "treatmentVsControl": {
+                  "mean": 7.11,
+                  "fractionOver8": 0.248,
+                  "pixels": 101918
+                }
+              }
+            ]
+          }
+        },
+        "synth-g-r1": {
+          "neutral": {
+            "treatmentVsControl": {
+              "mean": 15.222,
+              "fractionOver8": 0.8625,
+              "pixels": 101918
+            },
+            "treatmentVsROnly": {
+              "mean": 12.341,
+              "fractionOver8": 0.5297,
+              "pixels": 101918
+            },
+            "treatmentVsGOnly": {
+              "mean": 0,
+              "fractionOver8": 0,
+              "pixels": 101918
+            },
+            "rOnlyVsGOnly": {
+              "mean": 12.341,
+              "fractionOver8": 0.5297,
+              "pixels": 101918
+            }
+          },
+          "grazing": {
+            "treatmentVsControl": {
+              "mean": 14.16,
+              "fractionOver8": 0.6806,
+              "pixels": 97370
+            },
+            "treatmentVsROnly": {
+              "mean": 10.272,
+              "fractionOver8": 0.4527,
+              "pixels": 97370
+            },
+            "treatmentVsGOnly": {
+              "mean": 0,
+              "fractionOver8": 0,
+              "pixels": 97370
+            },
+            "rOnlyVsGOnly": {
+              "mean": 10.272,
+              "fractionOver8": 0.4527,
+              "pixels": 97370
+            }
+          },
+          "light-sweep": {
+            "treatmentVsControl": {
+              "mean": 14.823,
+              "fractionOver8": 0.8386,
+              "pixels": 101918
+            },
+            "treatmentVsROnly": {
+              "mean": 12.329,
+              "fractionOver8": 0.5353,
+              "pixels": 101918
+            },
+            "treatmentVsGOnly": {
+              "mean": 0,
+              "fractionOver8": 0,
+              "pixels": 101918
+            },
+            "rOnlyVsGOnly": {
+              "mean": 12.329,
+              "fractionOver8": 0.5353,
+              "pixels": 101918
+            },
+            "sweep": [
+              {
+                "azimuth": 0,
+                "treatmentVsControl": {
+                  "mean": 15.095,
+                  "fractionOver8": 0.8578,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 90,
+                "treatmentVsControl": {
+                  "mean": 15.182,
+                  "fractionOver8": 0.8801,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 180,
+                "treatmentVsControl": {
+                  "mean": 14.823,
+                  "fractionOver8": 0.8386,
+                  "pixels": 101918
+                }
+              },
+              {
+                "azimuth": 270,
+                "treatmentVsControl": {
+                  "mean": 15.154,
+                  "fractionOver8": 0.878,
+                  "pixels": 101918
+                }
+              }
+            ]
+          }
+        }
+      },
+      "captures": [
+        {
+          "geometry": "shell-metal1",
+          "mapSource": "synth-r",
+          "fixture": "neutral",
+          "materialState": {
+            "geometry": "shell-metal1",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-r",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 1,
+            "roughness": 1,
+            "metalnessMap": false,
+            "roughnessMap": true,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/metal1-synth-r-neutral-treatment.png",
+          "sha256": "d7bd29f9dcb7b1835c6069f4b319ea94b225a330f4b14c28e5b2fd8ea500a30a"
+        },
+        {
+          "geometry": "shell-metal1",
+          "mapSource": "synth-r",
+          "fixture": "grazing",
+          "materialState": {
+            "geometry": "shell-metal1",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-r",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 1,
+            "roughness": 1,
+            "metalnessMap": false,
+            "roughnessMap": true,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/metal1-synth-r-grazing-treatment.png",
+          "sha256": "67f8c139a55a22ea47c603cf250a2895470d9c6674e756a9c16c05ff19464305"
+        },
+        {
+          "geometry": "shell-metal1",
+          "mapSource": "synth-r",
+          "fixture": "light-sweep",
+          "materialState": {
+            "geometry": "shell-metal1",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-r",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 1,
+            "roughness": 1,
+            "metalnessMap": false,
+            "roughnessMap": true,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/metal1-synth-r-light-sweep-treatment.png",
+          "sha256": "bcb5c68c0a7c2a6d94fdb7a182128777228fa91e1423087ea9f70eadbb62c6a2"
+        },
+        {
+          "geometry": "shell-metal1",
+          "mapSource": "synth-g",
+          "fixture": "neutral",
+          "materialState": {
+            "geometry": "shell-metal1",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-g",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 1,
+            "roughness": 1,
+            "metalnessMap": false,
+            "roughnessMap": true,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/metal1-synth-g-neutral-treatment.png",
+          "sha256": "c78a63d648997c68b8ee36f3f7f8056cf21f525da889ad236bd6a097176b837d"
+        },
+        {
+          "geometry": "shell-metal1",
+          "mapSource": "synth-g",
+          "fixture": "grazing",
+          "materialState": {
+            "geometry": "shell-metal1",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-g",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 1,
+            "roughness": 1,
+            "metalnessMap": false,
+            "roughnessMap": true,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/metal1-synth-g-grazing-treatment.png",
+          "sha256": "378ac283493716ac972121f90b9e120a72a5ef17fb2518cce8fb3460a3df22d3"
+        },
+        {
+          "geometry": "shell-metal1",
+          "mapSource": "synth-g",
+          "fixture": "light-sweep",
+          "materialState": {
+            "geometry": "shell-metal1",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-g",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 1,
+            "roughness": 1,
+            "metalnessMap": false,
+            "roughnessMap": true,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/metal1-synth-g-light-sweep-treatment.png",
+          "sha256": "9bf0f7ef5c16ac293e7cbca7337e0f2a6d204eb98cc0869d7bbd093876b1eb04"
+        },
+        {
+          "geometry": "shell-metal1",
+          "mapSource": "synth-g-r1",
+          "fixture": "neutral",
+          "materialState": {
+            "geometry": "shell-metal1",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-g-r1",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 1,
+            "roughness": 1,
+            "metalnessMap": false,
+            "roughnessMap": true,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/metal1-synth-g-r1-neutral-treatment.png",
+          "sha256": "045e1856642b724b95ddfb417c825a25b206bbded04267c0edd442ad242fdf4b"
+        },
+        {
+          "geometry": "shell-metal1",
+          "mapSource": "synth-g-r1",
+          "fixture": "grazing",
+          "materialState": {
+            "geometry": "shell-metal1",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-g-r1",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 1,
+            "roughness": 1,
+            "metalnessMap": false,
+            "roughnessMap": true,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/metal1-synth-g-r1-grazing-treatment.png",
+          "sha256": "517d49d7f73d90922c85c8f5ccde9571da72a6a91dfeeddbe4dfd480f7e3767b"
+        },
+        {
+          "geometry": "shell-metal1",
+          "mapSource": "synth-g-r1",
+          "fixture": "light-sweep",
+          "materialState": {
+            "geometry": "shell-metal1",
+            "mode": "treatment",
+            "iridescence": 1,
+            "iridescenceThicknessRangeNm": [
+              600,
+              800
+            ],
+            "mapSource": "synth-g-r1",
+            "iridescenceMap": true,
+            "iridescenceThicknessMap": true,
+            "metalness": 1,
+            "roughness": 1,
+            "metalnessMap": false,
+            "roughnessMap": true,
+            "normalMap": true,
+            "doubleSide": false
+          },
+          "artifactPath": "reference/abalone/receipts/captures/metal1-synth-g-r1-light-sweep-treatment.png",
+          "sha256": "1fdb446f2ecd335db966904f32107a269bbee5228b57cf6ffe3b3b07aa9674e8"
+        }
+      ],
+      "diagnosticsNote": "mean values are measured diagnostics only; they do not affect the label"
+    },
+    "h2FactorOutcome": {
+      "label": "proposed",
+      "outcome": "metal1 clears, rough0 fails: metalness path dominates (proposed)",
+      "rough0": "fail",
+      "metal1": "pass",
+      "confound": "one-factor variants keep authored FrontSide; shell-sens used DoubleSide (declared, untested)"
+    },
     "shellSens": {
       "label": "measured",
       "run": 5,
@@ -581,7 +2029,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/shellsens-synth-r-neutral-treatment.png",
           "sha256": "d9f7832f1590f10e5c48e865031c91739f1147acef818015ba95e71163816807"
@@ -602,7 +2054,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/shellsens-synth-r-grazing-treatment.png",
           "sha256": "f0b8f2438593055331b03f8bc667fc54e46d22d9c82a599b9bbf4437d9ef2d53"
@@ -623,7 +2079,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/shellsens-synth-r-light-sweep-treatment.png",
           "sha256": "de518b57027d07b8e766b9a63d6d0a6975a2bca4b8f60d86387bd0ed594121fe"
@@ -644,7 +2104,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/shellsens-synth-g-neutral-treatment.png",
           "sha256": "9b4943fdd76fe273ec33bb2a560cae99c6578542021c93f621fd67f9b3d2fd4d"
@@ -665,7 +2129,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/shellsens-synth-g-grazing-treatment.png",
           "sha256": "d0b6df9961564c6043cd32bb822d711515dc443da8ac250627d160e6f37d61bb"
@@ -686,7 +2154,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/shellsens-synth-g-light-sweep-treatment.png",
           "sha256": "88b0dc990c7668bc265d961f82f1f75344fc71d6cc535037b56dcc71f36ec3a3"
@@ -707,7 +2179,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/shellsens-synth-g-r1-neutral-treatment.png",
           "sha256": "5e287affb0abd5b0072a441954f21204ec31e654790100efec040c2cdcc63fdc"
@@ -728,7 +2204,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/shellsens-synth-g-r1-grazing-treatment.png",
           "sha256": "8dc2d5523f2f078f111ec0b47d398bed00f75dcefdf8d1f4355c6adf8bcdbf0f"
@@ -749,7 +2229,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/shellsens-synth-g-r1-light-sweep-treatment.png",
           "sha256": "56426096add8937a1f6ae53a248ea84ec1c7f8057378443e581d7d5641c69f50"
@@ -1253,7 +2737,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/sens-synth-r-neutral-treatment.png",
           "sha256": "efd310d1120bb861c915730ba131aa268f85dd0b77aa5a8b535efe38e7dbfba2"
@@ -1274,7 +2762,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/sens-synth-r-grazing-treatment.png",
           "sha256": "6b724dec79e11ac8df74ede8c2597cfbccfe312b3f5323dc919192942061bae1"
@@ -1295,7 +2787,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/sens-synth-r-light-sweep-treatment.png",
           "sha256": "c7e36fa4bdd04cd577d6818593cd52d27b2c271a4b4edb98270d3b572c489f3c"
@@ -1316,7 +2812,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/sens-synth-g-neutral-treatment.png",
           "sha256": "1d755988933d14f9718f5f04b713f6714e6036255da6784cdb86f297e2903a21"
@@ -1337,7 +2837,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/sens-synth-g-grazing-treatment.png",
           "sha256": "5af1b56bccfb80e1e1e7276a939048e89ffb2b2f6ef126707ac540532c6c5a54"
@@ -1358,7 +2862,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/sens-synth-g-light-sweep-treatment.png",
           "sha256": "615fcfbcdc704b596c9e6b5c674879e26ff9127095a4c1b5a9f4177ea74a6317"
@@ -1379,7 +2887,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/sens-synth-g-r1-neutral-treatment.png",
           "sha256": "b9b747412eec3cfea0fdb3f59b943119a0b89c577cfa6cb2d091d6a583892aca"
@@ -1400,7 +2912,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/sens-synth-g-r1-grazing-treatment.png",
           "sha256": "1ff38bf980feb165698bec4338fd4ae06d420aea248ce71432df20f86e5eb03c"
@@ -1421,7 +2937,11 @@
             "iridescenceMap": true,
             "iridescenceThicknessMap": true,
             "metalness": 1,
-            "roughness": 0
+            "roughness": 0,
+            "metalnessMap": false,
+            "roughnessMap": false,
+            "normalMap": false,
+            "doubleSide": true
           },
           "artifactPath": "reference/abalone/receipts/captures/sens-synth-g-r1-light-sweep-treatment.png",
           "sha256": "3c68735ca6613918b78d523c8c5906ea50fecae033629da5d7fa3f6542c6b9a0"
@@ -1998,7 +3518,11 @@
         "iridescenceMap": true,
         "iridescenceThicknessMap": true,
         "metalness": 0.5,
-        "roughness": 1
+        "roughness": 1,
+        "metalnessMap": true,
+        "roughnessMap": true,
+        "normalMap": true,
+        "doubleSide": false
       },
       "exposure": 0,
       "artifactPath": "reference/abalone/receipts/captures/neutral-treatment.png",
@@ -2028,7 +3552,11 @@
         "iridescenceMap": true,
         "iridescenceThicknessMap": true,
         "metalness": 0.5,
-        "roughness": 1
+        "roughness": 1,
+        "metalnessMap": true,
+        "roughnessMap": true,
+        "normalMap": true,
+        "doubleSide": false
       },
       "exposure": 0,
       "artifactPath": "reference/abalone/receipts/captures/grazing-treatment.png",
@@ -2058,7 +3586,11 @@
         "iridescenceMap": true,
         "iridescenceThicknessMap": true,
         "metalness": 0.5,
-        "roughness": 1
+        "roughness": 1,
+        "metalnessMap": true,
+        "roughnessMap": true,
+        "normalMap": true,
+        "doubleSide": false
       },
       "exposure": 0,
       "artifactPath": "reference/abalone/receipts/captures/light-sweep-treatment.png",
@@ -2099,7 +3631,14 @@
       "metric": "shell-masked fractionOver8 >= 0.01, pre-registered in BUILD_HANDOFF-MVT-ABALONE-001-SHELLSENS.md",
       "result": "shellSens=pass; planeSens=pass; shellSynthetic=fail; asset=fail",
       "detail": "Bundled shell-sens fixture: shell mesh + plane override bundle (metalness 1, roughness 0, metalness/roughness/normal maps removed) with synth-r, synth-g, synth-g-r1.",
-      "label": "pre-registered shell-sens (this run)"
+      "label": "historical (pre-registered shell-sens; re-measured each run)"
+    },
+    {
+      "run": 6,
+      "metric": "shell-masked fractionOver8 >= 0.01, pre-registered in BUILD_HANDOFF-MVT-ABALONE-001-FACTORS.md",
+      "result": "6a shellRough0=fail; 6b shellMetal1=pass; shellSens=pass; planeSens=pass; shellSynthetic=fail",
+      "detail": "One-factor splits of the run-5 bundle: 6a roughness 0 (roughnessMap null), 6b metalness 1 (metalnessMap null); other maps and side authored.",
+      "label": "pre-registered one-factor splits (this run)"
     }
   ],
   "review": {

@@ -40,3 +40,9 @@ IridescenceAbalone — model © 2015 Abby Crawford, material © 2023 Eric Chadwi
 metalness/roughness/normal maps removed). Authored shell and plane paths are unchanged. Locked in
 `receipts/BUILD_HANDOFF-MVT-ABALONE-001-SHELLSENS.md`; results in `receipts/receipt.json` under `automated.shellSens`
 (measured: pass on SwiftShader). Label stays `inconclusive` pending named human review.
+
+## Run 6 — one-factor splits (pre-registered)
+`geometry: "shell-rough0"` (roughness 0, roughnessMap removed) and `geometry: "shell-metal1"` (metalness 1, metalnessMap
+removed); all other maps and side authored. Locked in `receipts/BUILD_HANDOFF-MVT-ABALONE-001-FACTORS.md`; results under
+`automated.shellRough0` (measured: fail) and `automated.shellMetal1` (measured: pass) on SwiftShader. Proposed reading:
+metalness path dominates. Label stays `inconclusive` pending named human review.

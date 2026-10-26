@@ -99,6 +99,12 @@ async function main() {
   // Run 5 shell-sens fixture (pre-registered in receipts/BUILD_HANDOFF-MVT-ABALONE-001-SHELLSENS.md): shell mesh + same sens() override bundle.
   const shellSensMaterials = { treatment: sens(treatment), control: sens(control), "r-only": sens(rOnly), "g-only": sens(gOnly) };
   shellSensMaterials.control.iridescence = 0; shellSensMaterials.control.iridescenceMap = null; shellSensMaterials.control.iridescenceThicknessMap = null;
+  // Run 6 one-factor fixtures (pre-registered in receipts/BUILD_HANDOFF-MVT-ABALONE-001-FACTORS.md). Side/normal/other maps authored.
+  const rough0 = (m) => { const c = m.clone(); c.roughness = 0.0; c.roughnessMap = null; return c; };
+  const metal1 = (m) => { const c = m.clone(); c.metalness = 1.0; c.metalnessMap = null; return c; };
+  const mk = (f) => { const o = { treatment: f(treatment), control: f(control), "r-only": f(rOnly), "g-only": f(gOnly) }; o.control.iridescence = 0; o.control.iridescenceMap = null; o.control.iridescenceThicknessMap = null; return o; };
+  const factorMaterials = { "shell-rough0": mk(rough0), "shell-metal1": mk(metal1) };
+  const fm = Object.values(factorMaterials);
   let appliedSource = "asset";
   function applyMapSource() {
     if (state.mapSource === appliedSource) return;
@@ -110,7 +116,8 @@ async function main() {
     pm["r-only"].iridescenceMap = iMap; pm["r-only"].iridescenceThicknessMap = null; pm["g-only"].iridescenceMap = null; pm["g-only"].iridescenceThicknessMap = gMap;
     const ss = shellSensMaterials; ss.treatment.iridescenceMap = iMap; ss.treatment.iridescenceThicknessMap = gMap;
     ss["r-only"].iridescenceMap = iMap; ss["r-only"].iridescenceThicknessMap = null; ss["g-only"].iridescenceMap = null; ss["g-only"].iridescenceThicknessMap = gMap;
-    for (const m of [treatment, rOnly, gOnly, pm.treatment, pm["r-only"], pm["g-only"], ss.treatment, ss["r-only"], ss["g-only"]]) m.needsUpdate = true;
+    for (const f of fm) { f.treatment.iridescenceMap = iMap; f.treatment.iridescenceThicknessMap = gMap; f["r-only"].iridescenceMap = iMap; f["r-only"].iridescenceThicknessMap = null; f["g-only"].iridescenceMap = null; f["g-only"].iridescenceThicknessMap = gMap; }
+    for (const m of [treatment, rOnly, gOnly, pm.treatment, pm["r-only"], pm["g-only"], ss.treatment, ss["r-only"], ss["g-only"], ...fm.flatMap((f) => [f.treatment, f["r-only"], f["g-only"]])]) m.needsUpdate = true;
     appliedSource = state.mapSource;
     drawChannels(iMap?.image);
   }
@@ -129,12 +136,12 @@ async function main() {
     applyMapSource();
     const onPlane = state.geometry === "plane";
     gltf.scene.visible = !onPlane; plane.visible = onPlane;
-    mesh.material = (state.geometry === "shell-sens" ? shellSensMaterials : materials)[state.mode]; plane.material = planeMaterials[state.mode];
-    for (const mat of [treatment, rOnly, gOnly, planeMaterials.treatment, planeMaterials["r-only"], planeMaterials["g-only"], shellSensMaterials.treatment, shellSensMaterials["r-only"], shellSensMaterials["g-only"]]) {
+    mesh.material = (state.geometry === "shell-sens" ? shellSensMaterials : factorMaterials[state.geometry] || materials)[state.mode]; plane.material = planeMaterials[state.mode];
+    for (const mat of [treatment, rOnly, gOnly, planeMaterials.treatment, planeMaterials["r-only"], planeMaterials["g-only"], shellSensMaterials.treatment, shellSensMaterials["r-only"], shellSensMaterials["g-only"], ...fm.flatMap((f) => [f.treatment, f["r-only"], f["g-only"]])]) {
       mat.iridescence = state.iridescence;
       mat.iridescenceThicknessRange = [state.tmin, state.tmax];
     }
-    control.iridescence = 0; planeMaterials.control.iridescence = 0; shellSensMaterials.control.iridescence = 0;
+    control.iridescence = 0; planeMaterials.control.iridescence = 0; shellSensMaterials.control.iridescence = 0; for (const f of fm) f.control.iridescence = 0;
     renderer.toneMappingExposure = Math.pow(2, state.exposure);
     const p = THREE.MathUtils.degToRad(state.polar);
     camera.position.set(center.x, center.y + Math.sin(p) * radius * 3, center.z + Math.cos(p) * radius * 3);
@@ -203,7 +210,7 @@ async function main() {
   api.materialState = () => {
     const m = state.geometry === "plane" ? plane.material : mesh.material;  // shell-sens uses mesh.material (override bundle)
     return { geometry: state.geometry, mode: state.mode, iridescence: m.iridescence, iridescenceThicknessRangeNm: [...m.iridescenceThicknessRange],
-      mapSource: state.mapSource, iridescenceMap: !!m.iridescenceMap, iridescenceThicknessMap: !!m.iridescenceThicknessMap, metalness: m.metalness, roughness: m.roughness };
+      mapSource: state.mapSource, iridescenceMap: !!m.iridescenceMap, iridescenceThicknessMap: !!m.iridescenceThicknessMap, metalness: m.metalness, roughness: m.roughness, metalnessMap: !!m.metalnessMap, roughnessMap: !!m.roughnessMap, normalMap: !!m.normalMap, doubleSide: m.side === THREE.DoubleSide };
   };
   api.cameraPosition = () => camera.position.toArray();
   api.lightPosition = () => key.position.toArray();
