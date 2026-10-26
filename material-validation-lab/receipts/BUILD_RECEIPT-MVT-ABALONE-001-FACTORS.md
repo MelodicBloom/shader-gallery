@@ -53,3 +53,4 @@ No third variant, no criterion change, no human review, no merge, no Bubble/Gold
 and UV diagnostics preserved in receipt.json. C-07 thickness default untouched.
 
 ## Validators (measured exit codes)
+validate:material-lab 0; test:material-lab 0; validate:meta 0; `node tools/verify-source-archive.mjs` 0; validate:shaders 1 (blocked: missing -lEGL/-lGLESv2, pre-existing).
