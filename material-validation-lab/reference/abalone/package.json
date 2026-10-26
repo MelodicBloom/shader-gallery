@@ -1,0 +1,20 @@
+{
+  "name": "@melodicbloom/mvt-abalone-reference",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Isolated Three.js reference lane for MVT-ABALONE-001. Not a gallery dependency.",
+  "scripts": {
+    "fetch-asset": "node tools/fetch-asset.mjs",
+    "serve": "node tools/serve.mjs",
+    "trial": "node tools/fetch-asset.mjs && node tools/run-trial.mjs",
+    "uvdiag": "node tools/fetch-asset.mjs && node tools/run-uvdiag.mjs"
+  },
+  "dependencies": {
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "playwright-core": "1.64.1"
+  },
+  "license": "MIT"
+}

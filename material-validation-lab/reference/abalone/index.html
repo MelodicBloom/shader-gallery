@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MVT-ABALONE-001 — Khronos Abalone Baseline · Material Validation Lab</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="./styles.css">
+<script type="importmap">
+{ "imports": {
+  "three": "./node_modules/three/build/three.module.js",
+  "three/addons/": "./node_modules/three/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<header>
+  <p class="eyebrow">Material Validation Lab · trial MVT-ABALONE-001</p>
+  <h1>Khronos Abalone Baseline</h1>
+  <p class="lede">Does the documented glTF iridescence map (R = intensity, G = thickness) behave as two independent controls under controlled light and view changes? This page is the experiment, not a finished material.</p>
+  <p id="status-label" class="label" aria-live="polite">Result: loading receipt…</p>
+</header>
+<main>
+  <section class="stage" aria-label="Live WebGL2 view">
+    <canvas id="view" width="720" height="540" aria-label="Rendered abalone shell. Use the controls to change mode, view and light."></canvas>
+    <figure id="fallback" hidden>
+      <img src="./receipts/captures/neutral-treatment.png" alt="Static reference capture of the abalone shell interior under the neutral fixture.">
+      <figcaption>Static reference capture; live material unavailable.</figcaption>
+    </figure>
+    <p id="runtime" class="small"></p>
+  </section>
+  <section class="controls" aria-label="Trial controls">
+    <fieldset><legend>Mode</legend>
+      <label><input type="radio" name="mode" value="treatment" checked> Treatment — asset material as authored</label>
+      <label><input type="radio" name="mode" value="control"> Neutral control — <code>iridescence: 0</code>, no map</label>
+      <label><input type="radio" name="mode" value="r-only"> Channel isolation — R (intensity) map only</label>
+      <label><input type="radio" name="mode" value="g-only"> Channel isolation — G (thickness) map only</label>
+    </fieldset>
+    <fieldset><legend>Map source</legend>
+      <label><input type="radio" name="mapSource" value="asset" checked> Asset packed map (Khronos, as authored)</label>
+      <label><input type="radio" name="mapSource" value="synth-r"> Synthetic — R gradient 0→1, G constant 0.5</label>
+      <label><input type="radio" name="mapSource" value="synth-g"> Synthetic — G gradient 0→1, R constant 0.5</label>
+      <label><input type="radio" name="mapSource" value="synth-g-r1"> Synthetic — G gradient 0→1, R constant 1.0 (C-09 run 4)</label>
+    </fieldset>
+    <fieldset><legend>Geometry</legend>
+      <label><input type="radio" name="geometry" value="shell" checked> Abalone shell (asset material)</label>
+      <label><input type="radio" name="geometry" value="plane"> C-09 sensitivity plane (metalness 1, roughness 0)</label>
+      <label><input type="radio" name="geometry" value="shell-sens"> Run-5 shell-sens (shell mesh, metalness 1, roughness 0, maps removed)</label>
+      <label><input type="radio" name="geometry" value="shell-rough0"> Run-6a shell-rough0 (roughness 0, roughnessMap removed)</label>
+      <label><input type="radio" name="geometry" value="shell-metal1"> Run-6b shell-metal1 (metalness 1, metalnessMap removed)</label>
+      <label><input type="radio" name="geometry" value="shell-metal1-mapkept"> Run-7a shell-metal1-mapkept (metalness 1, authored metalnessMap kept)</label>
+      <label><input type="radio" name="geometry" value="shell-metal05-mapnull"> Run-7b shell-metal05-mapnull (metalness authored 0.5, metalnessMap removed)</label>
+    </fieldset>
+    <fieldset><legend>Fixture</legend>
+      <button type="button" data-fixture="neutral">Neutral</button>
+      <button type="button" data-fixture="grazing">Grazing</button>
+      <button type="button" data-fixture="light-sweep">Light sweep</button>
+      <button type="button" id="sweep">Animate light sweep</button>
+    </fieldset>
+    <label>Camera polar angle <output id="o-polar"></output>°<input id="polar" type="range" min="0" max="85" step="1"></label>
+    <label>Key-light azimuth <output id="o-azimuth"></output>°<input id="azimuth" type="range" min="0" max="360" step="1"></label>
+    <label>Iridescence (physics, ratio 0–1) <output id="o-iridescence"></output><input id="iridescence" type="range" min="0" max="1" step="0.01"></label>
+    <label>Thickness min (physics, nm) <output id="o-tmin"></output><input id="tmin" type="range" min="0" max="2000" step="10"></label>
+    <label>Thickness max (physics, nm) <output id="o-tmax"></output><input id="tmax" type="range" min="0" max="2000" step="10"></label>
+    <label>Exposure (art, EV) <output id="o-exposure"></output><input id="exposure" type="range" min="-4" max="4" step="0.1"></label>
+  </section>
+  <section class="channels" aria-label="2D map channel view">
+    <h2>What the map actually contains</h2>
+    <p>The iridescence texture packs two data channels. Shown here as greyscale, read without colour conversion.</p>
+    <div class="row">
+      <figure><canvas id="ch-r" width="256" height="256" aria-label="R channel: iridescence intensity"></canvas><figcaption>R — intensity</figcaption></figure>
+      <figure><canvas id="ch-g" width="256" height="256" aria-label="G channel: film thickness"></canvas><figcaption>G — thickness (mapped into min–max nm)</figcaption></figure>
+    </div>
+  </section>
+  <section class="evidence">
+    <h2>Evidence chain</h2>
+    <dl>
+      <dt>Problem</dt><dd>Iridescent “nacre” is easy to fake from one hero angle. Before inventing a procedural nacre, the lab needs a documented, licensed reference whose channels and response can be checked.</dd>
+      <dt>Decision</dt><dd>Use the Khronos IridescenceAbalone asset as a <em>comparison fixture</em> in an isolated Three.js lane (conflict ledger C-01, C-03), not as the gallery’s material and not via a dependency migration.</dd>
+      <dt>Implementation</dt><dd>Pinned asset commit + SHA-256 verified before parsing; Three.js <code>0.186.1</code> locked in this folder only; neutral control, R-only and G-only isolation fixtures; three controlled captures and a machine-readable receipt produced by one command.</dd>
+      <dt>Human-control boundary</dt><dd>The script measures load, channel colour-space and pixel differences. Whether the response looks right at neutral, grazing and sweep is a human review; the trial cannot pass without a named reviewer.</dd>
+      <dt>Claimed</dt><dd>Only what <a href="./receipts/receipt.json">receipt.json</a> marks <em>measured</em>.</dd>
+      <dt>Not claimed</dt><dd>Measured abalone optics, physical calibration, mineral simulation, an original material, mobile optimisation, frame rates, or KHR extension conformance of any WebGL2 proxy.</dd>
+    </dl>
+    <h2>Attribution</h2>
+    <p>IridescenceAbalone — model © 2015 Abby Crawford, material © 2023 Eric Chadwick, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Source: <a href="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/4995a638c96dbc94376d3d6164e70fee3ac7f7a2/Models/IridescenceAbalone">KhronosGroup/glTF-Sample-Assets @ 4995a63</a>. Unmodified asset; rendered with altered material parameters for the control and isolation fixtures.</p>
+  </section>
+</main>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
