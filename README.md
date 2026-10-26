@@ -46,6 +46,7 @@ Exact revisions, licenses, permitted transfers, exclusions, and trial outcomes b
 | `feat/optical-studies-02` | PR #15: three experimental studies and an interactive optical-studies surface | Must resolve archive truthfulness and bfcache behavior before merge |
 | `fix/pr15-reconciliation` | PR #17: archive/source parity, bfcache recovery, and stale-document repair | Stacked on PR #15; merge here first, then resolve PR #15 review threads |
 | `feat/material-validation-lab-v0` | Evidence contracts, source registry, bounded material trial records | Remains separate until three pilot receipts inform an integration decision |
+| `feat/mvt-abalone-001` | Pilot #1 MVT-ABALONE-001: isolated Three.js abalone reference lane, trial page, receipt (label `inconclusive`) | Stacked on the lab branch; does not change gallery dependencies; bubble/gold not started |
 
 ---
 

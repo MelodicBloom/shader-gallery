@@ -1,0 +1,326 @@
+{
+  "schemaVersion": "0.1.0",
+  "trial": "MVT-ABALONE-001",
+  "generatedAt": "2026-10-26T14:10:50.382Z",
+  "command": "cd material-validation-lab/reference/abalone && npm ci && npm run trial",
+  "label": "inconclusive",
+  "labelReason": "R (intensity) channel effect below criterion at neutral and grazing with the asset's own map; synthetic isolated R/G test maps not yet run; no human review.",
+  "pins": {
+    "asset": {
+      "repo": "KhronosGroup/glTF-Sample-Assets",
+      "commit": "4995a638c96dbc94376d3d6164e70fee3ac7f7a2",
+      "path": "Models/IridescenceAbalone/glTF-Binary/IridescenceAbalone.glb",
+      "gitBlobSha1": "ba1db49b02edd47b480b10a66fe98e18b09a07ea",
+      "sha256": "d15ab000d3b04f177e101b2a36aacbf1c99490fc9bfe3868d481d75736946bab",
+      "bytes": 9300744,
+      "url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/4995a638c96dbc94376d3d6164e70fee3ac7f7a2/Models/IridescenceAbalone/glTF-Binary/IridescenceAbalone.glb",
+      "measuredSha256InBrowser": "d15ab000d3b04f177e101b2a36aacbf1c99490fc9bfe3868d481d75736946bab",
+      "label": "measured"
+    },
+    "specification": {
+      "repo": "KhronosGroup/glTF",
+      "commit": "acfcbe65e40c53d6d3aa55a7299982bf2c01c75d",
+      "path": "extensions/2.0/Khronos/KHR_materials_iridescence",
+      "label": "measured (commit observed via GitHub API); conformance not tested"
+    },
+    "three": {
+      "version": "0.186.1",
+      "revisionReportedAtRuntime": "186",
+      "lockfile": "reference/abalone/package-lock.json"
+    }
+  },
+  "environment": {
+    "browser": "Chrome 156.0.8078.47 (headless, playwright-core)",
+    "three": "186",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "glVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "glslVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+    "vendor": "Google Inc. (Google)",
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "gpuNote": "software rasterizer (SwiftShader); no hardware GPU on box"
+  },
+  "automated": {
+    "automatedChannelCheck": "fail",
+    "mapReceipt": {
+      "iridescenceMap": {
+        "present": true,
+        "colorSpace": "",
+        "channel": "R"
+      },
+      "iridescenceThicknessMap": {
+        "present": true,
+        "colorSpace": "",
+        "channel": "G"
+      },
+      "sameTexture": true,
+      "authoredIridescence": 1,
+      "authoredThicknessRangeNm": [
+        600,
+        800
+      ],
+      "noColorSpaceConstant": ""
+    },
+    "mapColorSpaceIsNoColorSpace": true,
+    "effectCriterion": "fractionOver8 >= 0.01 of shell-masked pixels",
+    "effectThresholdFraction": 0.01,
+    "pixelDifference": {
+      "neutral": {
+        "treatmentVsControl": {
+          "mean": 2.994,
+          "fractionOver8": 0.0446,
+          "pixels": 101918
+        },
+        "treatmentVsROnly": {
+          "mean": 2.931,
+          "fractionOver8": 0.0648,
+          "pixels": 101918
+        },
+        "treatmentVsGOnly": {
+          "mean": 0.75,
+          "fractionOver8": 0.0075,
+          "pixels": 101918
+        },
+        "rOnlyVsGOnly": {
+          "mean": 3.426,
+          "fractionOver8": 0.0777,
+          "pixels": 101918
+        },
+        "controlCapture": {
+          "artifactPath": "reference/abalone/receipts/captures/neutral-control.png",
+          "sha256": "f668b7876287a62bd8e5230faef1b8a5d9b1e9e612a2bf937c7c6e5e24ba1f85"
+        }
+      },
+      "grazing": {
+        "treatmentVsControl": {
+          "mean": 3.204,
+          "fractionOver8": 0.0466,
+          "pixels": 97370
+        },
+        "treatmentVsROnly": {
+          "mean": 3.329,
+          "fractionOver8": 0.0648,
+          "pixels": 97370
+        },
+        "treatmentVsGOnly": {
+          "mean": 0.816,
+          "fractionOver8": 0.0077,
+          "pixels": 97370
+        },
+        "rOnlyVsGOnly": {
+          "mean": 4.029,
+          "fractionOver8": 0.0889,
+          "pixels": 97370
+        },
+        "controlCapture": {
+          "artifactPath": "reference/abalone/receipts/captures/grazing-control.png",
+          "sha256": "cc7c0e213619bf22e9a4f966c00d5efff3f65cc6e43215dab1545cfc73008d08"
+        }
+      },
+      "light-sweep": {
+        "treatmentVsControl": {
+          "mean": 3.398,
+          "fractionOver8": 0.0756,
+          "pixels": 101918
+        },
+        "treatmentVsROnly": {
+          "mean": 3.339,
+          "fractionOver8": 0.0905,
+          "pixels": 101918
+        },
+        "treatmentVsGOnly": {
+          "mean": 0.851,
+          "fractionOver8": 0.0103,
+          "pixels": 101918
+        },
+        "rOnlyVsGOnly": {
+          "mean": 3.904,
+          "fractionOver8": 0.1101,
+          "pixels": 101918
+        },
+        "sweep": [
+          {
+            "azimuth": 0,
+            "treatmentVsControl": {
+              "mean": 3.343,
+              "fractionOver8": 0.0631,
+              "pixels": 101918
+            }
+          },
+          {
+            "azimuth": 90,
+            "treatmentVsControl": {
+              "mean": 2.658,
+              "fractionOver8": 0.0341,
+              "pixels": 101918
+            }
+          },
+          {
+            "azimuth": 180,
+            "treatmentVsControl": {
+              "mean": 3.398,
+              "fractionOver8": 0.0756,
+              "pixels": 101918
+            }
+          },
+          {
+            "azimuth": 270,
+            "treatmentVsControl": {
+              "mean": 3.649,
+              "fractionOver8": 0.0904,
+              "pixels": 101918
+            }
+          }
+        ],
+        "controlCapture": {
+          "artifactPath": "reference/abalone/receipts/captures/light-sweep-control.png",
+          "sha256": "d84197341e38b989ccefce88b6b651c66d42c82ae80b3ddd224bd05a1b511cc5"
+        }
+      }
+    },
+    "effects": {
+      "neutral": {
+        "iridescenceVisibleVsNeutralControl": true,
+        "rChannelContributes": false,
+        "gChannelContributes": true,
+        "channelsDistinct": true
+      },
+      "grazing": {
+        "iridescenceVisibleVsNeutralControl": true,
+        "rChannelContributes": false,
+        "gChannelContributes": true,
+        "channelsDistinct": true
+      },
+      "light-sweep": {
+        "iridescenceVisibleVsNeutralControl": true,
+        "rChannelContributes": true,
+        "gChannelContributes": true,
+        "channelsDistinct": true
+      }
+    },
+    "consoleErrors": []
+  },
+  "captures": [
+    {
+      "fixture": "neutral",
+      "camera": [
+        1.849999999720131e-8,
+        0.16479838831686802,
+        0.45277986566310935
+      ],
+      "light": [
+        0.4542814799148319,
+        0.3212255019337626,
+        0.4542814764148319
+      ],
+      "materialState": {
+        "mode": "treatment",
+        "iridescence": 1,
+        "iridescenceThicknessRangeNm": [
+          600,
+          800
+        ],
+        "iridescenceMap": true,
+        "iridescenceThicknessMap": true,
+        "metalness": 0.5,
+        "roughness": 1
+      },
+      "exposure": 0,
+      "artifactPath": "reference/abalone/receipts/captures/neutral-treatment.png",
+      "sha256": "0b5e58f597651a83ee9c66aebe1a5ef7e391c48412992c686b6af5500cf3074c"
+    },
+    {
+      "fixture": "grazing",
+      "camera": [
+        1.849999999720131e-8,
+        0.4654200125707355,
+        0.12470893150961154
+      ],
+      "light": [
+        0.4542814799148319,
+        0.3212255019337626,
+        0.4542814764148319
+      ],
+      "materialState": {
+        "mode": "treatment",
+        "iridescence": 1,
+        "iridescenceThicknessRangeNm": [
+          600,
+          800
+        ],
+        "iridescenceMap": true,
+        "iridescenceThicknessMap": true,
+        "metalness": 0.5,
+        "roughness": 1
+      },
+      "exposure": 0,
+      "artifactPath": "reference/abalone/receipts/captures/grazing-treatment.png",
+      "sha256": "555077bd042c09846b43bdfd7e1dc19b232095f3a015bc91e054218ae92d50cb"
+    },
+    {
+      "fixture": "light-sweep",
+      "camera": [
+        1.849999999720131e-8,
+        0.16479838831686802,
+        0.45277986566310935
+      ],
+      "light": [
+        -0.6424509853675252,
+        0.3212255019337626,
+        1.500000007772111e-8
+      ],
+      "materialState": {
+        "mode": "treatment",
+        "iridescence": 1,
+        "iridescenceThicknessRangeNm": [
+          600,
+          800
+        ],
+        "iridescenceMap": true,
+        "iridescenceThicknessMap": true,
+        "metalness": 0.5,
+        "roughness": 1
+      },
+      "exposure": 0,
+      "artifactPath": "reference/abalone/receipts/captures/light-sweep-treatment.png",
+      "sha256": "959886645ad357a9e80ad31965465697292bcb1859394cda089eb3555a5a9474"
+    }
+  ],
+  "history": [
+    {
+      "run": 1,
+      "metric": "whole-frame mean abs 8-bit diff > 0.5",
+      "result": "fail",
+      "detail": "rChannelContributes=false at all fixtures (treatment vs G-only 0.20-0.22); background pixels diluted the mean. Metric revised to shell-masked fraction before run 2. The revision was made after seeing run-1 data, so run-2 effect checks are post-hoc, not pre-registered.",
+      "label": "historical"
+    }
+  ],
+  "review": {
+    "decision": "pending",
+    "reviewer": null,
+    "rationale": null,
+    "protocol": "Rate each fixture: does iridescence (a) appear only in treatment, (b) shift with view angle between neutral and grazing, (c) shift with key-light azimuth in the sweep, (d) respond separately to R-only vs G-only?"
+  },
+  "performance": {
+    "frameTime": {
+      "label": "blocked",
+      "reason": "software rasterizer; timing would not represent any target device and no device target is declared (CONFLICT_LEDGER known non-resolution)"
+    }
+  },
+  "attribution": "IridescenceAbalone — model © 2015 Abby Crawford; material © 2023 Eric Chadwick; CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). KhronosGroup/glTF-Sample-Assets @ 4995a638c96dbc94376d3d6164e70fee3ac7f7a2",
+  "limitations": [
+    "Environment is Three.js RoomEnvironment (procedural, fixed), not a pinned HDRI file; fixture lighting is deterministic but not the HDRI the trial contract names.",
+    "Pixel-difference metric (shell-masked) is mean absolute 8-bit sRGB difference after ACES tone mapping; it shows an effect exists, not that it is correct.",
+    "RGBA8 readback cannot detect NaN directly; visible NaN/flicker review is part of the human protocol.",
+    "Rendered by software rasterizer in headless Chrome; hardware GPUs may differ.",
+    "Thickness range used is the asset-authored 600–800 nm; the lab record default [100,400] is preserved as an unresolved conflict (C-07)."
+  ],
+  "nonClaims": [
+    "measured-abalone",
+    "original-material",
+    "mobile-optimized",
+    "physical calibration",
+    "mineral simulation",
+    "frame rate / performance",
+    "KHR_materials_iridescence conformance of any WebGL2 proxy"
+  ]
+}

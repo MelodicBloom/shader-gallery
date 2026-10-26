@@ -61,3 +61,7 @@ It owns source provenance, compatibility decisions, controlled material records,
 3. Port the Bubble mechanism in isolation; compare it against a non-spectral RGB proxy control.
 4. Build Gold Foil from original fields; evaluate lighting response rather than an image match.
 5. Only then choose whether a Three.js/R3F presentation adapter earns implementation. The current Shader Library has no R3F dependency, so adding one now would be architecture by enthusiasm.
+
+## Pilot #1 status — MVT-ABALONE-001
+
+Executed 2026-10-26 in `reference/abalone/` (isolated Three.js lane). Label **`inconclusive`**: automated checks measured, synthetic R/G test maps and human review outstanding. Receipt: `reference/abalone/receipts/receipt.json`; build docs: `receipts/BUILD_HANDOFF-MVT-ABALONE-001.md`, `receipts/BUILD_RECEIPT-MVT-ABALONE-001.md`.
