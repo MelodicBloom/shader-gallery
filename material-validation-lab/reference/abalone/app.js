@@ -11,7 +11,7 @@ export const FIXTURES = {
 };
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const $ = (id) => document.getElementById(id);
-const state = { mode: "treatment", mapSource: "asset", polar: 20, azimuth: 45, iridescence: 1, tmin: 600, tmax: 800, exposure: 0 };
+const state = { mode: "treatment", mapSource: "asset", geometry: "shell", polar: 20, azimuth: 45, iridescence: 1, tmin: 600, tmax: 800, exposure: 0 };
 const api = { ready: false, error: null, state };
 window.__mvt = api;
 
@@ -87,7 +87,15 @@ async function main() {
     asset: authored.iridescenceMap,
     "synth-r": await loadTex("r-gradient-const-g.png"),
     "synth-g": await loadTex("g-gradient-const-r.png"),
+    "synth-g-r1": await loadTex("g-gradient-const-r1.png"),
   };
+  // C-09 sensitivity fixture (pre-registered in receipts/BUILD_HANDOFF-MVT-ABALONE-001-C09.md): flat plane, UV 0..1,
+  // metalness 1, roughness 0 (metalness/roughness/normal maps removed so the overrides take effect), thickness 600-800 nm.
+  const plane = new THREE.Mesh(new THREE.PlaneGeometry(radius * 1.2, radius * 1.2));
+  plane.position.copy(center); plane.visible = false; scene.add(plane);
+  const sens = (m) => { const c = m.clone(); c.metalness = 1.0; c.roughness = 0.0; c.metalnessMap = null; c.roughnessMap = null; c.normalMap = null; c.side = THREE.DoubleSide; return c; };
+  const planeMaterials = { treatment: sens(treatment), control: sens(control), "r-only": sens(rOnly), "g-only": sens(gOnly) };
+  planeMaterials.control.iridescence = 0; planeMaterials.control.iridescenceMap = null; planeMaterials.control.iridescenceThicknessMap = null;
   let appliedSource = "asset";
   function applyMapSource() {
     if (state.mapSource === appliedSource) return;
@@ -95,11 +103,13 @@ async function main() {
     const gMap = state.mapSource === "asset" ? authored.thicknessMap : iMap;
     treatment.iridescenceMap = iMap; treatment.iridescenceThicknessMap = gMap;
     rOnly.iridescenceMap = iMap; gOnly.iridescenceThicknessMap = gMap;
-    for (const m of [treatment, rOnly, gOnly]) m.needsUpdate = true;
+    const pm = planeMaterials; pm.treatment.iridescenceMap = iMap; pm.treatment.iridescenceThicknessMap = gMap;
+    pm["r-only"].iridescenceMap = iMap; pm["r-only"].iridescenceThicknessMap = null; pm["g-only"].iridescenceMap = null; pm["g-only"].iridescenceThicknessMap = gMap;
+    for (const m of [treatment, rOnly, gOnly, pm.treatment, pm["r-only"], pm["g-only"]]) m.needsUpdate = true;
     appliedSource = state.mapSource;
     drawChannels(iMap?.image);
   }
-  api.synthMapReceipt = Object.fromEntries(["synth-r", "synth-g"].map((k) => [k, { colorSpace: mapSources[k].colorSpace, flipY: mapSources[k].flipY }]));
+  api.synthMapReceipt = Object.fromEntries(["synth-r", "synth-g", "synth-g-r1"].map((k) => [k, { colorSpace: mapSources[k].colorSpace, flipY: mapSources[k].flipY }]));
 
   api.mapReceipt = {
     iridescenceMap: { present: !!authored.iridescenceMap, colorSpace: authored.iridescenceMap?.colorSpace, channel: "R" },
@@ -112,13 +122,14 @@ async function main() {
 
   function apply() {
     applyMapSource();
-    const m = materials[state.mode];
-    mesh.material = m;
-    for (const mat of [treatment, rOnly, gOnly]) {
+    const onPlane = state.geometry === "plane";
+    gltf.scene.visible = !onPlane; plane.visible = onPlane;
+    mesh.material = materials[state.mode]; plane.material = planeMaterials[state.mode];
+    for (const mat of [treatment, rOnly, gOnly, planeMaterials.treatment, planeMaterials["r-only"], planeMaterials["g-only"]]) {
       mat.iridescence = state.iridescence;
       mat.iridescenceThicknessRange = [state.tmin, state.tmax];
     }
-    control.iridescence = 0;
+    control.iridescence = 0; planeMaterials.control.iridescence = 0;
     renderer.toneMappingExposure = Math.pow(2, state.exposure);
     const p = THREE.MathUtils.degToRad(state.polar);
     camera.position.set(center.x, center.y + Math.sin(p) * radius * 3, center.z + Math.cos(p) * radius * 3);
@@ -142,8 +153,8 @@ async function main() {
   api.set = (patch) => { Object.assign(state, patch); apply(); return { ...state }; };
   api.fixture = (name) => { const f = FIXTURES[name]; api.set({ polar: f.polar, azimuth: f.azimuth, exposure: f.exposure }); };
   // Pixel-difference outcomes per fixture (machine metric, not perceptual review).
-  api.measure = (name, mapSource = "asset") => {
-    api.set({ mapSource });
+  api.measure = (name, mapSource = "asset", geometry = "shell") => {
+    api.set({ mapSource, geometry });
     api.fixture(name);
     const shots = {};
     for (const mode of Object.keys(materials)) { api.set({ mode }); shots[mode] = read(); }
@@ -166,8 +177,8 @@ async function main() {
     return out;
   };
   api.materialState = () => {
-    const m = mesh.material;
-    return { mode: state.mode, iridescence: m.iridescence, iridescenceThicknessRangeNm: [...m.iridescenceThicknessRange],
+    const m = state.geometry === "plane" ? plane.material : mesh.material;
+    return { geometry: state.geometry, mode: state.mode, iridescence: m.iridescence, iridescenceThicknessRangeNm: [...m.iridescenceThicknessRange],
       mapSource: state.mapSource, iridescenceMap: !!m.iridescenceMap, iridescenceThicknessMap: !!m.iridescenceThicknessMap, metalness: m.metalness, roughness: m.roughness };
   };
   api.cameraPosition = () => camera.position.toArray();
@@ -175,9 +186,10 @@ async function main() {
 
   // UI wiring
   const ids = ["polar", "azimuth", "iridescence", "tmin", "tmax", "exposure"];
-  function syncUI() { document.querySelectorAll("input[name=mapSource]").forEach((r) => { r.checked = r.value === state.mapSource; }); for (const k of ids) { $(k).value = state[k]; $("o-" + k).textContent = state[k]; } }
+  function syncUI() { document.querySelectorAll("input[name=mapSource]").forEach((r) => { r.checked = r.value === state.mapSource; }); document.querySelectorAll("input[name=geometry]").forEach((r) => { r.checked = r.value === state.geometry; }); for (const k of ids) { $(k).value = state[k]; $("o-" + k).textContent = state[k]; } }
   for (const k of ids) $(k).addEventListener("input", (e) => api.set({ [k]: Number(e.target.value) }));
   document.querySelectorAll("input[name=mode]").forEach((r) => r.addEventListener("change", (e) => api.set({ mode: e.target.value })));
+  document.querySelectorAll("input[name=geometry]").forEach((r) => r.addEventListener("change", (e) => api.set({ geometry: e.target.value })));
   document.querySelectorAll("input[name=mapSource]").forEach((r) => r.addEventListener("change", (e) => api.set({ mapSource: e.target.value })));
   document.querySelectorAll("[data-fixture]").forEach((b) => b.addEventListener("click", () => api.fixture(b.dataset.fixture)));
   let raf = 0;

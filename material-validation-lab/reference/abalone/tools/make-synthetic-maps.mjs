@@ -15,4 +15,6 @@ function png(w, h, px) {
 const N = 256;
 fs.writeFileSync(path.join(out, "r-gradient-const-g.png"), png(N, N, (x) => [x, 128, 0, 255]));
 fs.writeFileSync(path.join(out, "g-gradient-const-r.png"), png(N, N, (x) => [128, x, 0, 255]));
+// C-09 run 4 (pre-registered): G gradient with R held at 255 to isolate the "R=0.5 halves intensity" suspect.
+fs.writeFileSync(path.join(out, "g-gradient-const-r1.png"), png(N, N, (x) => [255, x, 0, 255]));
 console.log("wrote", out);

@@ -1,6 +1,6 @@
 # MVT-ABALONE-001 — Khronos Abalone Baseline (isolated Three.js reference lane)
 
-**Result label: `fail`** (run 3, pre-registered synthetic-map criterion; see `receipts/receipt.json`). Runs 1–2 are kept as history. A "Map source" switch selects the asset's packed map or the synthetic maps in `assets/synthetic/` (authored by `tools/make-synthetic-maps.mjs`: R gradient/G=0.5 and G gradient/R=0.5, NoColorSpace, flipY=false). This folder has its own `package.json`/`package-lock.json` (three `0.186.1`, playwright-core `1.64.1` dev-only). Nothing here is a gallery dependency.
+**Result label: `inconclusive`** (run 4, pre-registered C-09 sensitivity fixture met the unchanged criterion; awaiting named human review). Run 3 (shell fixture, synthetic maps) remains `fail` as history; runs 1–3 are kept in `receipts/receipt.json`. A "Geometry" switch selects the shell or the C-09 flat sensitivity plane (metalness 1, roughness 0); a third synthetic map `g-gradient-const-r1.png` (G gradient, R=1.0) was added for run 4. A "Map source" switch selects the asset's packed map or the synthetic maps in `assets/synthetic/` (authored by `tools/make-synthetic-maps.mjs`: R gradient/G=0.5 and G gradient/R=0.5, NoColorSpace, flipY=false). This folder has its own `package.json`/`package-lock.json` (three `0.186.1`, playwright-core `1.64.1` dev-only). Nothing here is a gallery dependency.
 
 ## Run it locally (one command)
 
