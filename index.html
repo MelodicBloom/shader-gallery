@@ -5,32 +5,80 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Shader Gallery — Jennipher Troup (MelodicBloom)</title>
 <style>
-body{margin:0;font:16px/1.5 system-ui,sans-serif;background:#0b0b12;color:#e8e6f0;display:flex;justify-content:center}
-main{max-width:720px;padding:48px 24px}
-h1{margin:0 0 8px}a{color:#b9a6ff}
-.cta{display:inline-block;margin:16px 0 28px;padding:12px 20px;background:#6d4dff;color:#fff;border-radius:8px;text-decoration:none;font-weight:600}
-li{margin:8px 0}small{color:#9a97a8}
+body{margin:0;font:16px/1.55 system-ui,sans-serif;background:#0b0b12;color:#e8e6f0;display:flex;justify-content:center}
+main{max-width:760px;padding:48px 24px 64px}
+h1{margin:0 0 8px;font-size:1.85rem;letter-spacing:-0.02em}
+h2{margin:32px 0 10px;font-size:1.15rem}
+p,li{color:#d4d1de}
+a{color:#b9a6ff}
+.lede{color:#cfcadb;margin:0 0 8px}
+.cta{display:inline-block;margin:18px 0 8px;padding:12px 20px;background:#6d4dff;color:#fff;border-radius:8px;text-decoration:none;font-weight:600}
+.cta:hover{background:#7e63ff}
+.meta{color:#9a97a8;font-size:0.92rem;margin:0 0 20px}
+ol.lineup,ul{padding-left:1.25rem}
+ol.lineup li,ul li{margin:10px 0}
+.tag{display:inline-block;font-size:0.75rem;letter-spacing:0.04em;text-transform:uppercase;color:#9a97a8;border:1px solid #3a3750;border-radius:999px;padding:2px 8px;margin-right:6px;vertical-align:middle}
+.card{background:#12121c;border:1px solid #2a2740;border-radius:12px;padding:16px 18px;margin:14px 0}
+.card strong{color:#f0eef8}
+small{color:#9a97a8}
+.status dt{font-weight:600;color:#f0eef8;margin-top:10px}
+.status dd{margin:4px 0 0 0;color:#cfcadb}
 </style>
 </head>
 <body>
 <main>
 <h1>Shader Gallery</h1>
-<p>Interactive WebGL2 shader and material studies by Jennipher Troup (MelodicBloom).</p>
+<p class="lede">Evidence-led WebGL2 material research by Jennipher Troup (MelodicBloom): physics-shaped lighting behaviors driven by math, optical parameters, and higher-order viewing geometry—not screenshot cosmetics.</p>
 <a class="cta" href="docs/">▶ Open the interactive gallery</a>
+<p class="meta">Live studies load now. Formal Material Validation Lab trials advance with receipts; claims stay bounded until a named trial records them.</p>
+
+<h2>What this is aiming for</h2>
+<p>Growth here means a larger catalog of materials <em>and</em> rising mechanical accuracy: effects that respond correctly when the observer angle or light-source direction changes, instead of baking a single hero look.</p>
+<p>The work targets known phenomenological mechanisms—subsurface scattering, layered angle-dependent spectral diffraction / thin-film interference, Fresnel and thickness-coupled response, roughness and metalness coupling, transmission and dispersion—expressed as optical parameters with explicit relationships and controlled scenarios (neutral view, grazing incidence, light sweep).</p>
+<p><strong>Current:</strong> interactive artistic optical studies and open validation trials. <strong>Not claimed yet:</strong> measured or calibrated physical accuracy. A compile or a pretty frame is not a pass.</p>
+
+<h2>Material research lineup</h2>
+<p>Three pilots are contracted in the Material Validation Lab. Validation runs <strong>in sequence</strong> because each receipt unlocks the next decision; the live demos above can be explored in parallel anytime.</p>
+<ol class="lineup">
+<li>
+<span class="tag">1 · Active</span>
+<strong>Abalone / nacre baseline</strong> (MVT-ABALONE-001) —
+Khronos glTF iridescence maps under controlled light and view; channel semantics before any procedural nacre invents thickness. Anchors map–lighting relationships (intensity vs thickness channels, observer polar angle, key-light azimuth).
+</li>
+<li>
+<span class="tag">2 · Next</span>
+<strong>Soap-bubble spectral thin film</strong> (MVT-BUBBLE-001) —
+Two-beam spectral / Fresnel treatment vs an RGB-proxy control; phase-consistent hue/intensity with thickness and incident/view angle. Decides whether spectral integration earns its cost.
+</li>
+<li>
+<span class="tag">3 · Queued</span>
+<strong>Gold-foil field study</strong> (MVT-GOLD-001) —
+Original deterministic fold-height fields coupled to normal and roughness; directional highlight breakup that must survive three light directions, not a single hero pose.
+</li>
+</ol>
+<div class="card">
+<strong>Parallel vs sequence.</strong> Demos and hypothesis shaders can run side by side. Formal trials stay ordered: Abalone map semantics → Bubble spectral vs proxy → Gold foil lighting response → only then a broader Three.js / R3F adapter decision. Parallel trial execution would only make sense after Abalone’s channel/lighting receipt is no longer the blocker for the others.
+</div>
+
 <h2>Live demos</h2>
 <ul>
-<li><a href="docs/">Gallery</a>: live WebGL canvases</li>
-<li><a href="library-v1/">Live Shader Library v1</a>: manifest-driven shader previews</li>
-<li><a href="abalone/">Abalone</a>: iridescent nacre study</li>
-<li><a href="aurora/">Aurora</a>: aurora field study</li>
+<li><a href="docs/">Gallery</a> — interactive WebGL canvases</li>
+<li><a href="library-v1/">Live Shader Library v1</a> — manifest-driven shader previews</li>
+<li><a href="abalone/">Abalone</a> — iridescent nacre study (pairs with pilot 1)</li>
+<li><a href="aurora/">Aurora</a> — aurora field study</li>
 </ul>
-<h2>Status</h2>
-<ul>
-<li><b>Built:</b> the browser demos linked above.</li>
-<li><b>Verified:</b> each page loads and draws to a WebGL canvas.</li>
-<li><b>Not claimed:</b> physical or calibrated material accuracy. These are artistic optical studies. The MVT-ABALONE validation trial is still open and inconclusive.</li>
-</ul>
-<p><small>Source and docs: <a href="https://github.com/MelodicBloom/shader-gallery">github.com/MelodicBloom/shader-gallery</a> (requires a browser with WebGL2)</small></p>
+
+<h2>Status (honest)</h2>
+<dl class="status">
+<dt>Built</dt>
+<dd>The browser demos linked above, plus Lab contracts, records, and tooling.</dd>
+<dt>Page smoke</dt>
+<dd>Each linked page returns HTTP 200 and exposes a WebGL canvas element. That is load smoke—not a verified draw, FPS, or material-fidelity pass.</dd>
+<dt>Lab</dt>
+<dd>MVT-ABALONE-001 is open / inconclusive on physical or calibrated accuracy. Bubble and Gold remain planned. No material is labeled spectral, measured, or PBR-portable without its own executed trial.</dd>
+</dl>
+
+<p><small>Source and Lab docs: <a href="https://github.com/MelodicBloom/shader-gallery">github.com/MelodicBloom/shader-gallery</a> · Material Validation Lab under <code>material-validation-lab/</code> · Needs a browser with WebGL2</small></p>
 </main>
 </body>
 </html>
