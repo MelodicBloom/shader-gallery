@@ -1,6 +1,6 @@
 # MVT-ABALONE-001 — Khronos Abalone Baseline (isolated Three.js reference lane)
 
-**Result label: `inconclusive`** (run 4, pre-registered C-09 sensitivity fixture met the unchanged criterion; awaiting named human review). Run 3 (shell fixture, synthetic maps) remains `fail` as history; runs 1–3 are kept in `receipts/receipt.json`. A "Geometry" switch selects the shell or the C-09 flat sensitivity plane (metalness 1, roughness 0); a third synthetic map `g-gradient-const-r1.png` (G gradient, R=1.0) was added for run 4. A "Map source" switch selects the asset's packed map or the synthetic maps in `assets/synthetic/` (authored by `tools/make-synthetic-maps.mjs`: R gradient/G=0.5 and G gradient/R=0.5, NoColorSpace, flipY=false). This folder has its own `package.json`/`package-lock.json` (three `0.186.1`, playwright-core `1.64.1` dev-only). Nothing here is a gallery dependency.
+**Result label: `inconclusive`** after run 7; awaiting named human review on hardware. Run 3's authored-shell synthetic result remains a pre-registered `fail`. Runs 4–7 established that the same metric can detect the isolated channels and narrowed the compression to the authored shell's effective metalness path: scalar `metalness = 1` passes with the authored map retained, and removing the map passes at scalar `0.5`. This is SwiftShader fixture-sensitivity evidence, not approval to change the authored material. Runs 1–7 remain in `receipts/receipt.json`. A "Geometry" switch selects the authored shell and the bounded diagnostic variants; "Map source" selects the asset map or generated synthetic maps in `assets/synthetic/`. This folder has its own `package.json`/`package-lock.json` (three `0.186.1`, playwright-core `1.64.1` dev-only). Nothing here is a gallery dependency.
 
 ## Run it locally (one command)
 
@@ -24,7 +24,11 @@ The GLB (9.3 MB) is not committed. `fetch-asset` downloads it from the pinned co
 | Claimed | Maps load as `NoColorSpace`; iridescence produces a measurable difference vs the neutral control at all three fixtures; G (thickness) contributes at all three; R (intensity) contributes above criterion only at light-sweep. | measured |
 | Not claimed | Measured abalone optics, physical calibration, mineral simulation, an original material, mobile optimisation, frame rates, KHR conformance of any WebGL2 proxy. | — |
 
-Tensions kept open, not resolved: C-07 (record default thickness 100–400 nm vs asset 600–800 nm) and C-08 (metric revised after run 1; R independence unproven with the asset's own map).
+C-08 is answered by the preserved pre-registered run-3 fail, not closed by a tuned threshold. Tensions still open: C-07 (record default thickness 100–400 nm vs asset 600–800 nm), C-09 (hardware visual interpretation and authored-material sensitivity), and C-10 (the executed source pins differ from the later G0 discovery pins until an exact revision-drift comparison is recorded).
+
+## Review board
+
+Open [`review-board.html`](review-board.html) for the bounded authored-asset and run-7 comparison set. It is a static view over committed SwiftShader captures. It does not perform or replace the required hardware-GPU run, and it cannot change `review.decision` in the receipt.
 
 ## UV/mask diagnostic (label-inert)
 `npm run uvdiag` renders the shell's UVs and the synth-r value under the trial mask and writes `receipt.json → diagnostics.uvCoverage` (pre-registered in `receipts/BUILD_HANDOFF-MVT-ABALONE-001-UVDIAG.md`). It never changes `label`, `review`, `automated`, or `history`; the runner aborts if it would. Measured: shell uP5–uP95 0.54–0.94 (spread 0.40) → H1 inconclusive.

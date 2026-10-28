@@ -9,7 +9,7 @@
 - **Independent variables:** camera polar angle; key-light azimuth; iridescence multiplier; thickness range; isolated R/G test maps.
 - **Dependent measures:** compile/load status; map-channel receipt; three captures; reviewer ratings against declared angular response.
 - **Fixtures:** neutral / grazing / sweep, fixed HDRI and exposure, pinned asset commit/hash.
-- **Result:** planned. No performance or physical-accuracy claim is permitted.
+- **Result:** `inconclusive` after run 7. The authored shell remains below the pre-registered channel criterion, while the same shell clears it when either scalar metalness is raised to `1.0` or the authored metalness map is removed. These SwiftShader measurements isolate fixture sensitivity; they do not establish visual correctness, hardware-GPU behavior, physical accuracy, or a preferred production material. Named human review on hardware remains required, and automated factor splitting stops here.
 
 ## MVT-BUBBLE-001 — optical treatment vs RGB-proxy control
 
