@@ -1,12 +1,12 @@
 import { createStore } from 'zustand/vanilla';
 
 export const uniformContract = {
-  grain: { label: 'Layer detail', min: 0, max: 1, step: 0.01, default: 0.48, uniform: 'grain' },
-  layerSpacing: { label: 'Layer spacing', min: 0.35, max: 1.6, step: 0.01, default: 0.94, uniform: 'layerSpacing' },
-  paletteShift: { label: 'Spectral phase', min: 0, max: 1, step: 0.01, default: 0.32, uniform: 'paletteShift' },
-  spectral: { label: 'Spectral intensity', min: 0, max: 1, step: 0.01, default: 0.62, uniform: 'spectral' },
-  fireStrength: { label: 'Inner fire', min: 0, max: 1.5, step: 0.01, default: 0.78, uniform: 'fireStrength' },
-  roughness: { label: 'Surface roughness', min: 0.08, max: 0.8, step: 0.01, default: 0.26, uniform: 'roughness' },
+  grain: { label: 'Layer detail', description: 'Unitless authored band frequency.', min: 0, max: 1, step: 0.01, default: 0.48, uniform: 'grain' },
+  layerSpacing: { label: 'Layer spacing', description: 'Unitless phase spacing, not physical thickness.', min: 0.35, max: 1.6, step: 0.01, default: 0.94, uniform: 'layerSpacing' },
+  paletteShift: { label: 'Spectral phase', description: 'Authored palette offset.', min: 0, max: 1, step: 0.01, default: 0.32, uniform: 'paletteShift' },
+  spectral: { label: 'Spectral intensity', description: 'Artistic interference amplitude.', min: 0, max: 1, step: 0.01, default: 0.62, uniform: 'spectral' },
+  fireStrength: { label: 'Inner fire', description: 'Authored glint response.', min: 0, max: 1.5, step: 0.01, default: 0.78, uniform: 'fireStrength' },
+  roughness: { label: 'Surface roughness', description: 'Perceptual highlight spread.', min: 0.08, max: 0.8, step: 0.01, default: 0.26, uniform: 'roughness' },
 } as const;
 export type UniformKey = keyof typeof uniformContract;
 export type UniformState = Record<UniformKey, number>;
@@ -41,6 +41,12 @@ export function parsePreset(text: string): ScenePreset {
 }
 export const sceneStore = createStore<ScenePreset>(() => defaults());
 export const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
+export const MAX_RENDER_PIXELS = 1_500_000;
+export function pixelRatioForBudget(width: number, height: number, deviceRatio: number, maxPixels = MAX_RENDER_PIXELS) {
+  if (![width, height, deviceRatio, maxPixels].every(value => Number.isFinite(value) && value > 0)) return 1;
+  const requested = Math.min(deviceRatio, 1.5);
+  return Math.min(requested, Math.sqrt(maxPixels / (width * height)));
+}
 export function setUniform(key: UniformKey, value: number) {
   const c = uniformContract[key]; finite(value, c.min, c.max);
   sceneStore.setState(s => ({ uniforms: { ...s.uniforms, [key]: value } }));

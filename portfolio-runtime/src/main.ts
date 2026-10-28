@@ -1,7 +1,7 @@
 import { ShaderPlayer } from '../../library-v1/runtime/ShaderPlayer.js';
 import fragment from './abalone.glsl?raw';
 import fallbackUrl from '../../library-v1/shaders/aurora/abalone/preview.png';
-import { sceneStore, uniformContract, setUniform, setLightHeading, orbit, resetScene, serializePreset, restorePreset, createEvidenceMatrix, type UniformKey } from './state';
+import { sceneStore, uniformContract, setUniform, setLightHeading, orbit, resetScene, serializePreset, restorePreset, createEvidenceMatrix, pixelRatioForBudget, MAX_RENDER_PIXELS, type UniformKey } from './state';
 import { createPageLifecycle } from './lifecycle';
 import { disposePlayer } from './dispose';
 import './styles.css';
@@ -40,7 +40,9 @@ for (const [key, contract] of Object.entries(uniformContract)) {
   const output = document.createElement('output'); output.id = `value-${key}`;
   const input = document.createElement('input'); input.type = 'range'; input.id = `uniform-${key}`;
   input.min = String(contract.min); input.max = String(contract.max); input.step = String(contract.step);
-  output.htmlFor = input.id; label.htmlFor = input.id; heading.append(output); label.append(heading, input);
+  const help = document.createElement('small'); help.textContent = contract.description;
+  help.id = `help-${key}`; input.setAttribute('aria-describedby', help.id);
+  output.htmlFor = input.id; label.htmlFor = input.id; heading.append(output); label.append(heading, help, input);
   input.addEventListener('input', () => setUniform(key as UniformKey, input.valueAsNumber));
   inputs.set(key as UniformKey, input); element('#uniform-controls').append(label);
 }
@@ -70,6 +72,10 @@ reduced.addEventListener('change', () => sceneStore.setState({ reducedMotion: re
 playback.addEventListener('click', () => sceneStore.setState(s => ({ playback: s.playback === 'playing' ? 'paused' : 'playing' })));
 element('#inspector-toggle').addEventListener('click', () => sceneStore.setState(s => ({ inspectorVisible: !s.inspectorVisible })));
 element('#reset').addEventListener('click', () => { elapsed = 0; resetScene(); presetStatus.textContent = 'Named preset: Midnight nacre'; });
+element('#neutral').addEventListener('click', () => {
+  sceneStore.setState(s => ({ uniforms: { ...s.uniforms, spectral: 0, fireStrength: 0 } }));
+  presetStatus.textContent = 'Neutral comparison: interference and inner fire disabled. Reset restores Midnight nacre.';
+});
 element('#export').addEventListener('click', () => { preset.value = serializePreset(elapsed); presetStatus.textContent = 'Preset exported at the displayed phase.'; });
 element('#restore').addEventListener('click', () => {
   try { restorePreset(preset.value); elapsed = sceneStore.getState().time; dirty = true; presetStatus.textContent = 'Preset restored.'; }
@@ -110,9 +116,9 @@ canvas.addEventListener('keydown', event => {
 
 function resize() {
   if (!player || lost) return;
-  player.options.pixelRatio = Math.min(devicePixelRatio || 1, 1.5);
+  player.options.pixelRatio = pixelRatioForBudget(canvas.clientWidth, canvas.clientHeight, devicePixelRatio || 1);
   player.resize(); dirty = true;
-  element('#dimensions').textContent = `Render size: ${canvas.width} × ${canvas.height} / DPR ${player.options.pixelRatio.toFixed(2)}`;
+  element('#dimensions').textContent = `Render size: ${canvas.width} × ${canvas.height} / DPR ${player.options.pixelRatio.toFixed(2)} · ${MAX_RENDER_PIXELS / 1_000_000} MP cap`;
 }
 const observer = new ResizeObserver(resize); observer.observe(canvas);
 window.addEventListener('resize', resize);
@@ -125,7 +131,7 @@ async function initialize() {
   fallback.hidden = false; canvas.hidden = true;
   status.textContent = 'Preparing WebGL2…';
   element('#error-details').hidden = true;
-  const next = new ShaderPlayer(canvas, fragment, { autoStart: false, autoResize: false, trackPointer: false, preserveDrawingBuffer: false, pixelRatio: Math.min(devicePixelRatio || 1, 1.5) });
+  const next = new ShaderPlayer(canvas, fragment, { autoStart: false, autoResize: false, trackPointer: false, preserveDrawingBuffer: false, pixelRatio: pixelRatioForBudget(canvas.clientWidth || innerWidth, canvas.clientHeight || innerHeight, devicePixelRatio || 1) });
   try {
     await next.init();
     if (current !== generation || lost) { dispose(next, epoch); return; }

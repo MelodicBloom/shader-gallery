@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { sceneStore, uniformContract, resetScene, setUniform, setLightHeading, orbit, serializePreset, restorePreset, parsePreset, createEvidenceMatrix } from './state';
+import { sceneStore, uniformContract, resetScene, setUniform, setLightHeading, orbit, serializePreset, restorePreset, parsePreset, createEvidenceMatrix, pixelRatioForBudget, MAX_RENDER_PIXELS } from './state';
 test('preset round trip restores semantic state and displayed time', () => {
   resetScene(false); setUniform('spectral', 0.8); orbit(1, 0.3, 4);
   sceneStore.setState({ playback: 'paused', reducedMotion: true, inspectorVisible: false });
@@ -45,4 +45,12 @@ test('legacy version-1 presets migrate missing nacre controls without losing val
   assert.equal(migrated.version, 2); assert.equal(migrated.uniforms.spectral, 0.8);
   assert.equal(migrated.uniforms.layerSpacing, uniformContract.layerSpacing.default);
   assert.equal(migrated.uniforms.fireStrength, uniformContract.fireStrength.default);
+});
+test('pixel ratio respects both the device cap and the render-pixel budget', () => {
+  assert.equal(pixelRatioForBudget(1000, 600, 1.25), 1.25);
+  assert.equal(pixelRatioForBudget(1000, 600, 3), 1.5);
+  const fourKRatio = pixelRatioForBudget(3840, 2160, 2);
+  assert.ok(fourKRatio < 0.5);
+  assert.ok(3840 * 2160 * fourKRatio * fourKRatio <= MAX_RENDER_PIXELS + 1);
+  assert.equal(pixelRatioForBudget(0, 600, 2), 1);
 });
