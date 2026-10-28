@@ -23,15 +23,19 @@
     .skip { position: absolute; left: -999px; top: 0; }
     .skip:focus { left: 1rem; top: 1rem; padding: .75rem; background: #fff; color: #000; z-index: 2; }
     header, main, footer { width: min(112rem, calc(100% - 2rem)); margin-inline: auto; }
-    header { padding: clamp(2rem, 6vw, 5rem) 0 2rem; }
-    h1 { max-width: 18ch; margin: 0 0 1rem; font-size: clamp(2.4rem, 7vw, 6.5rem); line-height: .92; letter-spacing: -.045em; }
-    h2 { margin: 3rem 0 1rem; font-size: clamp(1.5rem, 3vw, 2.4rem); }
+    header { padding: clamp(1.5rem, 4vw, 3.25rem) 0 1.25rem; }
+    h1 { max-width: 20ch; margin: 0 0 1rem; font-size: clamp(2.4rem, 5vw, 4.8rem); line-height: .96; letter-spacing: -.045em; }
+    h2 { margin: 2.25rem 0 1rem; font-size: clamp(1.5rem, 3vw, 2.4rem); }
     p { max-width: 78ch; color: var(--muted); line-height: 1.65; }
     .status { display: inline-block; margin: 0 0 1rem; padding: .45rem .7rem; border: 1px solid var(--warn); color: var(--warn); font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
     .notice { padding: 1rem 1.2rem; border-left: .35rem solid var(--warn); background: #29261d; color: #fff4cf; }
+    .intro { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(21rem, .85fr); gap: clamp(1rem, 3vw, 2.5rem); align-items: end; }
+    .jump { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1rem; }
+    .jump a { padding: .55rem .75rem; border: 1px solid var(--line); background: var(--panel); }
     .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .75rem; margin: 1.5rem 0; }
     .fact { padding: 1rem; border: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 90%, transparent); }
     .fact strong { display: block; margin-bottom: .35rem; color: #fff; }
+    .fact code { overflow-wrap: anywhere; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); gap: 1rem; }
     figure { margin: 0; overflow: hidden; border: 1px solid var(--line); background: var(--panel); }
     img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; background: #08090a; }
@@ -43,24 +47,40 @@
     th { color: #fff; background: #20242a; }
     td:first-child { width: 12rem; color: #fff; font-weight: 700; }
     td img { min-width: 16rem; }
-    footer { padding: 4rem 0; color: var(--muted); }
+    footer { padding: 3rem 0 4rem; color: var(--muted); }
+    .maker { max-width: 78ch; margin-bottom: 1.5rem; padding: 1.1rem 1.25rem; border: 1px solid var(--line); background: var(--panel); }
+    .maker strong { color: #fff; }
+    @media (max-width: 54rem) { .intro { grid-template-columns: 1fr; } }
+    @media (max-width: 38rem) {
+      .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .fact { padding: .8rem; }
+      .fact:first-child { grid-column: 1 / -1; }
+      .fact code { font-size: .72rem; }
+    }
     @media (prefers-reduced-motion: no-preference) { a { text-underline-offset: .18em; } }
   </style>
 </head>
 <body>
   <a class="skip" href="#review">Skip to review captures</a>
   <header>
-    <div class="status">Inconclusive · hardware review pending</div>
-    <h1>Abalone evidence, without the hero-shot shortcut.</h1>
-    <p>This board presents the bounded comparison set already recorded by MVT-ABALONE-001. It separates the authored Khronos material from diagnostic overrides and keeps neutral, grazing, and light-sweep fixtures visible together.</p>
-    <p class="notice"><strong>Evidence boundary:</strong> every image below was rendered with headless Chrome and SwiftShader. This page is a review aid, not a hardware-GPU result, physical calibration, KHR conformance claim, or approval to change the authored material.</p>
+    <div class="intro">
+      <div>
+        <div class="status">Inconclusive · hardware review pending</div>
+        <h1>Abalone evidence, without the hero-shot shortcut.</h1>
+        <p>This board presents the bounded comparison set already recorded by MVT-ABALONE-001. It separates the authored Khronos material from diagnostic overrides and keeps neutral, grazing, and light-sweep fixtures visible together.</p>
+      </div>
+      <div>
+        <p class="notice"><strong>Evidence boundary:</strong> every image below was rendered with headless Chrome and SwiftShader. This page is a review aid, not a hardware-GPU result, physical calibration, KHR conformance claim, or approval to change the authored material.</p>
+        <nav class="jump" aria-label="Review sections"><a href="#authored-title">Treatment vs control</a><a href="#matrix-title">Run 7 matrix</a></nav>
+      </div>
+    </div>
     <div class="facts" aria-label="Trial facts">
-      <div class="fact"><strong>Executed asset pin</strong><code>4995a638c96d…</code></div>
+      <div class="fact"><strong>Executed asset pin</strong><code>4995a638c96dbc94376d3d6164e70fee3ac7f7a2</code></div>
       <div class="fact"><strong>Renderer lane</strong>Three.js 0.186.1, isolated lockfile</div>
       <div class="fact"><strong>Current receipt label</strong><code>inconclusive</code></div>
       <div class="fact"><strong>Required next gate</strong>Named human review on hardware</div>
     </div>
-    <p><a href="receipts/receipt.json">Machine receipt</a> · <a href="../../CONFLICT_LEDGER.md">Conflict ledger</a> · <a href="README.md">Trial README</a></p>
+    <p><a href="receipts/receipt.json">Machine receipt</a> · <a href="https://github.com/MelodicBloom/shader-gallery/blob/main/material-validation-lab/CONFLICT_LEDGER.md">Conflict ledger</a> · <a href="README.md">Trial README</a></p>
   </header>
 
   <main id="review">
@@ -115,6 +135,10 @@
   </main>
 
   <footer>
+    <div class="maker">
+      <strong>About Jennipher</strong>
+      <p>Jennipher Troup builds real-time GLSL shader studies, material design systems, and evidence-labeled interactive specimens through <a href="https://melodyfire.space">MelodyFire</a>. Her work pairs expressive surfaces with inspectable controls and receipts, so the visual result and the strength of its claims can be reviewed separately.</p>
+    </div>
     <p>IridescenceAbalone — model © 2015 Abby Crawford; material © 2023 Eric Chadwick; CC BY 4.0. Captures inherit that attribution. Review outcome remains unrecorded.</p>
   </footer>
 </body>
