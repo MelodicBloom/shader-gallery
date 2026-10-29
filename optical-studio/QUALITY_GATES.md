@@ -56,3 +56,16 @@ Date: 2026-10-11 (Eastern Time) — Optical Studio 1.2.0
 - **Reject a material slider** if its GL uniform is absent, inactive or its influence is unmeasurable across a meaningful test sweep.
 - **Do not promote** a shader into the production abalone gallery until mobile performance and independent light/view controls pass on real hardware.
 - **Do not call a preview verified** after a source change until it is redrawn and its SHA-256 digest matches the report.
+
+## 2026-10-29 — dispersion remix and historical video QA supplement
+
+This is an additive QA contract, **not a new pass status**. See [PROVENANCE_AND_REMIX_2026-10-29.md](PROVENANCE_AND_REMIX_2026-10-29.md) for source references, source/license boundary, and the original wording of the attribution.
+
+- Keep the original 7 shader source hashes fixed while inspecting the remix. Three-channel Crystal Lens paths are not seven-wavelength spectral rendering; its base IOR and artistic spread sliders are not yet Cauchy/Abbe controls.
+- Analytical benchmark: given `n_d`, `V_d`, and F/d/C wavelengths 486.13/587.56/656.27 nm, recompute `n_F-n_C=(n_d-1)/V_d` and check normalization at the d line. Confirm decreasing spread with rising Abbe at fixed `n_d`, invalid-input rejection, and unchanged reference readouts when visual spread is exaggerated 3×.
+- The Oct 8 video provenance is historical, not replayed in this update: a prior report recorded 41 timestamped frames across 4:16.872 of `Dispersion.mp4`. Reacquire the source and hash it before saying the video QA was rerun. Earlier black frame extraction was reported as extraction failure, not an observation of a blank source.
+- Video mechanism checklist: silhouette and shape transition, second-object interaction, view/motion parallax, stripe/background warping, rim spectral spread, dark TIR facets, highlights, shadow/bright-core/caustic, floor/reflection and underglow. Record two competing causes and a falsifier for every major apparent mechanism.
+- Use a fixed camera / swept light and fixed light / swept camera, neutral and no-dispersion controls, paused time, known geometry, static stripe chart, and separate artistic-composite versus physical-reference output.
+- Every comparison receipt records reference source/hash, original frame timestamp, target fixture, material parameters/units, GLSL/hash, renderer/browser/GPU identity, viewport/DPR, light, camera, time, exposure, tone map, color space, actual image hash, target-vs-rendered comparison and human verdict.
+- Accessible UI, real browser WebGL2, three-dimensionality, scene-linear HDR bloom, calibrated sample Abbe, target-device frame time and Gallery/Pages deployment remain **NOT TESTED / NOT CLAIMED** until evidence exists. A local analytical instrument or static chart is not GPU runtime evidence.
+- The independent candidate-only analytical Cauchy tool and its six passing local Node tests exist in the 2026-10-29 downloadable handoff package; those source files are **not** part of this documentation-only PR. Do not imply their CI or publication from this commit.
