@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Noise × Kaleidoscope / EXP-001</title><style>
+*{box-sizing:border-box}body{margin:0;background:#0a0d19;color:#ecf2ff;font:16px system-ui,sans-serif}
+main{max-width:1320px;margin:auto;padding:24px}h1{margin:.15em 0;letter-spacing:-.035em}
+p{color:#b6bfd2;line-height:1.5}.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px}
+canvas{display:block;width:100%;height:100%;aspect-ratio:1.2;border:1px solid #303855;border-radius:14px;background:#171a30}
+aside{background:#171c2e;border:1px solid #37435f;border-radius:14px;padding:16px}
+label{display:block;margin:12px 0}input{display:block;width:100%;accent-color:#a3e6e2}
+button{padding:10px 13px;margin:3px;background:#313a53;border:1px solid #65718d;color:white;border-radius:8px;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid #abe9e8}output{float:right}
+@media(max-width:760px){.layout{grid-template-columns:1fr}canvas{aspect-ratio:1}}
+</style></head><body><main>
+<p>MELODICBLOOM / SHADER GALLERY / EXPERIMENT 001</p><h1>Noise × Kaleidoscope</h1>
+<p>Seeded procedural noise and mirrored polar geometry. Independently authored mechanism study; no claim of tutorial node parity.</p>
+<div class="layout"><div><canvas id="view" role="img" aria-label="Procedural kaleidoscope"></canvas><p id="status" role="status" aria-live="polite">Initializing…</p><p id="clock"></p><p>Same parameters, time, resolution and renderer enable reproducible frozen frames. Physical iridescence and cross-device pixel identity are not claimed.</p></div>
+<aside><h2>Bounded controls</h2><div id="controls"></div>
+<button id="pause">Play / Pause</button><button id="zero">Time 0</button><button id="step">Step 1/60s</button>
+<button id="reset">Reset</button><button id="receipt">Copy receipt</button><button id="capture">PNG</button>
+</aside></div><p><a style="color:#a6ddff" href="../../docs/experiments/noise-kaleidoscope-v0.md">Protocol and provenance</a></p>
+</main><script type="module">
+import {CONTROLS,DEFAULTS,validatePatch,receipt} from './contract.mjs';
+const cv=document.getElementById('view'),status=document.getElementById('status'),clock=document.getElementById('clock');
+const gl=cv.getContext('webgl2',{preserveDrawingBuffer:true,alpha:false,antialias:false});
+let state={...DEFAULTS},time=0,playing=!matchMedia('(prefers-reduced-motion: reduce)').matches,prev=null,program,vao,locs={};
+const VERT='#version 300 es\nin vec2 pos;out vec2 v_uv;void main(){v_uv=pos*.5+.5;gl_Position=vec4(pos,0.,1.);}';
+function compile(type,src){let s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s}
+function draw(){
+if(!program)return;let b=cv.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,1.5);
+let w=Math.max(1,Math.round(b.width*d)),h=Math.max(1,Math.round(b.height*d));
+if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}gl.viewport(0,0,w,h);gl.useProgram(program);gl.bindVertexArray(vao);
+gl.uniform2f(locs.resolution,w,h);gl.uniform1f(locs.time,time);
+for(const [key,v] of Object.entries(state))gl.uniform1f(locs[key],v);
+gl.drawArrays(gl.TRIANGLES,0,6);clock.textContent='time '+time.toFixed(3)+'s • '+w+'×'+h+' • seed '+state.seed;
+}
+for(const [key,def]of Object.entries(CONTROLS)){
+let label=document.createElement('label'),output=document.createElement('output'),input=document.createElement('input');
+output.id=key+'Value';input.id=key;input.type='range';
+input.min=def[0];input.max=def[1];input.step=def[2];input.value=def[3];output.value=def[3];
+input.addEventListener('input',()=>{let p={[key]:Number(input.value)};validatePatch(p);state={...state,...p};output.value=input.value;draw()});
+label.append(document.createTextNode(key),output,input);document.getElementById('controls').append(label)
+}
+function sync(){for(let [k,v] of Object.entries(state)){document.getElementById(k).value=v;document.getElementById(k+'Value').value=v}}
+document.getElementById('pause').onclick=()=>{playing=!playing;prev=null;status.textContent=playing?'Playing':'Paused'};
+document.getElementById('zero').onclick=()=>{playing=false;time=0;draw()};
+document.getElementById('step').onclick=()=>{playing=false;time=Math.min(3600,time+1/60);draw()};
+document.getElementById('reset').onclick=()=>{playing=false;time=0;state={...DEFAULTS};sync();draw()};
+document.getElementById('receipt').onclick=async()=>{try{await navigator.clipboard.writeText(JSON.stringify(receipt(state,time),null,2));status.textContent='Receipt copied'}catch(e){status.textContent='Clipboard unavailable on this origin'}};
+document.getElementById('capture').onclick=()=>{draw();let a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download='noise-kaleidoscope-seed-'+state.seed+'.png';a.click()};
+matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',e=>{if(e.matches){playing=false;status.textContent='Reduced motion; frozen'}});
+cv.addEventListener('webglcontextlost',e=>{e.preventDefault();playing=false;status.textContent='WebGL context lost; reload'});
+async function boot(){
+if(!gl)throw Error('WebGL2 unavailable; use a GPU-capable browser');let response=await fetch('./shader.frag.glsl');if(!response.ok)throw Error('GLSL HTTP '+response.status);
+let frag=await response.text(),vs=compile(gl.VERTEX_SHADER,VERT),fs=compile(gl.FRAGMENT_SHADER,frag);
+program=gl.createProgram();gl.attachShader(program,vs);gl.attachShader(program,fs);gl.bindAttribLocation(program,0,'pos');gl.linkProgram(program);
+if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
+gl.deleteShader(vs);gl.deleteShader(fs);
+vao=gl.createVertexArray();gl.bindVertexArray(vao);let buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
+gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
+for(const name of ['resolution','time',...Object.keys(CONTROLS)])locs[name]=gl.getUniformLocation(program,'u_'+name);
+status.textContent='WebGL2 compiled and linked; inspect image for actual draw quality';
+requestAnimationFrame(function animate(t){if(playing&&prev!==null)time=Math.min(3600,time+Math.min(.05,(t-prev)/1000));prev=t;draw();requestAnimationFrame(animate)});
+}
+boot().catch(e=>{playing=false;status.textContent=e.message;console.error(e)});
+</script></body></html>
