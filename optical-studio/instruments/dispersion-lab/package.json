@@ -1,0 +1,16 @@
+{
+  "name": "@melodicbloom/dispersion-instrument",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Analytic Cauchy dispersion lab + Crystal Lens adapter. No npm runtime dependencies.",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test test-cauchy.mjs test-crystal-lens-adapter.mjs",
+    "serve": "python3 -m http.server 8000 --directory ../.."
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
