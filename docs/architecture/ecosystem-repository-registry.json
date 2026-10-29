@@ -1,0 +1,132 @@
+{
+  "registryVersion": "EcosystemRepositoryRegistry/0.1.0",
+  "observedAt": "2026-09-25T15:02:50Z",
+  "authority": "Read-only shallow clones and repository metadata inspected during design",
+  "repositories": [
+    {
+      "id": "repo:MelodicBloom/shader-gallery",
+      "projectId": "project:shader-gallery",
+      "sourceClass": "owned",
+      "status": "active",
+      "authority": {"repository": "MelodicBloom/shader-gallery", "ref": "main", "sha": "7718a006e6757eefe37d184262c0b9d4fb2b1d05"},
+      "observedFiles": ["README.md", "schemas/ecosystem-graph-record.schema.json", "schemas/shader-evidence-receipt.schema.json", "schemas/neo4j-evidence-graph.cypher", "tools/workspace_ingestion_dry_run.py", "packages/shader-library-v1/source/package.json"],
+      "bestUseCases": ["shader package identity", "WebGL compile/render receipts", "preview and gallery release evidence", "cross-project shader lineage"],
+      "doNotIngest": ["generated preview binaries as primary evidence", "unreviewed claims as canonical", "credentials or private environment files"]
+    },
+    {
+      "id": "repo:qt314wink/seed-loom",
+      "projectId": "project:seed-loom",
+      "sourceClass": "owned",
+      "status": "active",
+      "authority": {"repository": "qt314wink/seed-loom", "ref": "main", "sha": "fad01eeb0bf0f83beffb2c5b090af7a43eca54ac"},
+      "observedFiles": ["README.md", "schemas/universal-entity.schema.json", "schemas/evidence-event.schema.json", "knowledge/schema/observation.schema.json", "knowledge/schema/relationship.schema.json", "knowledge/schema/run.schema.json", "packages/analyzer-core/src/verification/verifyTraceability.ts", "docs/SHADER_GRAMMAR.md"],
+      "bestUseCases": ["shared entity and relationship ontology", "creative signal-to-system runs", "observation and experiment receipts", "agent handoff and traceability"],
+      "doNotIngest": ["duplicate Seed-Loom entities into a second incompatible ontology", "unvalidated generated outputs as observed facts"]
+    },
+    {
+      "id": "repo:MelodicBloom/melodyfire",
+      "projectId": "project:melodyfire",
+      "sourceClass": "owned",
+      "status": "active",
+      "authority": {"repository": "MelodicBloom/melodyfire", "ref": "main", "sha": "2b3dba8fecb425fb83637518bb304ab7b208c16a"},
+      "observedFiles": ["README.md", "client/src/components/MandalaCanvas.tsx", "client/src/components/reed-smith/EvidenceChain.tsx", "client/src/components/reed-smith/ResearchBoundary.tsx", "client/src/components/reed-smith/DecisionMatrix.tsx"],
+      "bestUseCases": ["portfolio project registry", "creative artifact and service lineage", "research boundary and decision evidence", "Supabase-backed product and prompt-session references"],
+      "doNotIngest": ["Supabase credentials or private user/session rows", "customer inquiries or personal data without a rights policy"]
+    },
+    {
+      "id": "repo:qt314wink/omni-loom",
+      "projectId": "project:omni-loom",
+      "sourceClass": "owned",
+      "status": "active",
+      "authority": {"repository": "qt314wink/omni-loom", "ref": "main", "sha": "0bbd92798b3d24285dfa046cfaa020f458d6f362"},
+      "observedFiles": ["README.md", "examples/specimen-v0/specimen.json", "docs/specimens/SPECIMEN_V0_PROOF.md", "scripts/specimen/compile_specimen.py", "tests/test_specimen.py", "docs/INTERACTION_INTENT_MATRIX.md"],
+      "bestUseCases": ["deterministic fabrication compiler records", "simulation-only specimen receipts", "safe-failure and repeatability evidence", "material and interaction intent metadata"],
+      "doNotIngest": ["physical fabrication claims", "machine dispatch or device connections", "generated disposable output as authoritative"]
+    },
+    {
+      "id": "repo:qt314wink/aether",
+      "projectId": "project:aether",
+      "sourceClass": "owned",
+      "status": "active",
+      "authority": {"repository": "qt314wink/aether", "ref": "main", "sha": "6a1998b43ad96d7e338c535c432e8f88bc49acaf"},
+      "observedFiles": ["README.md", "assets/wireframe-mockup.md", "docs/phase-1-design-system.md", "docs/phase-2-architecture.md", "docs/phase-4-acceptance.md", "docs/phase-5-release.md"],
+      "bestUseCases": ["premium shader product specification", "design-to-release phase gates", "commercial package and licensing lineage"],
+      "doNotIngest": ["wireframe intent as shipped behavior", "paid source package contents without rights metadata"]
+    },
+    {
+      "id": "repo:qt314wink/epistemic-infrastructure-workflow",
+      "projectId": "project:epistemic-infrastructure-workflow",
+      "sourceClass": "owned",
+      "status": "active",
+      "authority": {"repository": "qt314wink/epistemic-infrastructure-workflow", "ref": "main", "sha": "988171c3cd460b59f19552d179dad0c185bac6ee"},
+      "observedFiles": ["README.md"],
+      "bestUseCases": ["shared governance method", "traceability and decision policy references", "cross-project evidence vocabulary"],
+      "doNotIngest": ["treating a one-file method repository as an operational data source"]
+    },
+    {
+      "id": "repo:qt314wink/mcp-git-ingest",
+      "projectId": "project:mcp-git-ingest",
+      "sourceClass": "owned-fork",
+      "status": "active",
+      "authority": {"repository": "qt314wink/mcp-git-ingest", "ref": "master", "sha": "cd392d5bee561b3978cc2acf6b1305c6d377812f"},
+      "observedFiles": ["README.md", "pyproject.toml", "src/mcp_git_ingest/main.py", "Dockerfile", "smithery.yaml"],
+      "bestUseCases": ["repository structure discovery", "bounded important-file extraction", "source ingestion adapter input"],
+      "doNotIngest": ["repository contents without commit authority", "arbitrary URLs or unbounded recursive cloning"]
+    },
+    {
+      "id": "repo:qt314wink/slang",
+      "projectId": "project:slang-upstream-reference",
+      "sourceClass": "upstream",
+      "status": "observed",
+      "authority": {"repository": "qt314wink/slang", "ref": "master", "sha": "d384b77e6669f5778781ca48ad53264764cc148b"},
+      "observedFiles": ["README.md", "docs/building.md", "examples/", "source/", ".github/workflows/ci-slang-build.yml"],
+      "bestUseCases": ["shader compiler capability reference", "cross-target shader portability metadata", "future Slang adapter research"],
+      "doNotIngest": ["mirror the 11252-file upstream codebase into the initial operational graph", "claim ownership of upstream code"]
+    },
+    {
+      "id": "repo:qt314wink/servers",
+      "projectId": "project:mcp-server-catalog",
+      "sourceClass": "reference-fork",
+      "status": "observed",
+      "authority": {"repository": "qt314wink/servers", "ref": "main", "sha": "d31124c982401739917fd817c2a59db344529c16"},
+      "observedFiles": ["README.md", "CLAUDE.md", "CONTRIBUTING.md", ".mcp.json", "src/memory/", "src/filesystem/", "src/git/"],
+      "bestUseCases": ["MCP server capability catalog", "tool and transport reference", "memory/filesystem/git integration comparison"],
+      "doNotIngest": ["execute server code during ingestion", "treat reference server tools as trusted write capabilities"]
+    },
+    {
+      "id": "repo:qt314wink/mesh-system",
+      "projectId": "project:mesh-system",
+      "sourceClass": "owned",
+      "status": "quarantined",
+      "authority": {"repository": "qt314wink/mesh-system", "ref": "main", "sha": "unborn-empty-repository"},
+      "observedFiles": ["<empty repository>"],
+      "bestUseCases": ["future placeholder only"],
+      "doNotIngest": ["create project meaning from an empty repository"]
+    }
+    ,{
+      "id": "pkg:MelodicBloom/shader-gallery/packages/shader-grammar",
+      "projectId": "project:shader-gallery",
+      "sourceClass": "owned-package",
+      "status": "prototype",
+      "authority": {"repository": "MelodicBloom/shader-gallery", "ref": "shader-grammar-v0.1.0-prototype", "sha": "fbec8af6e261ad7e12c58fefe177e559cbfbdf38"},
+      "observedFiles": ["packages/shader-grammar/README.md", "packages/shader-grammar/HANDOFF.md", "packages/shader-grammar/ontology/fields.json", "packages/shader-grammar/ontology/operators.json", "packages/shader-grammar/ontology/parameters.json", "packages/shader-grammar/schemas/recipe.schema.json", "packages/shader-grammar/scripts/validate.mjs", "packages/shader-grammar/reports/validation-matrix.md"],
+      "bestUseCases": ["shader recipe ontology", "cross-material parameter reuse", "renderer adapter metadata", "grammar validation evidence"],
+      "doNotIngest": ["treat qualitative cost tiers as measured performance", "treat recipe names as production material proof", "mirror the package as a separate repository"]
+    },
+    {
+      "id": "archive:Interactiveshader.zip",
+      "projectId": "project:shader-gallery",
+      "sourceClass": "prototype-consumer-candidate",
+      "status": "assessment-pending",
+      "authority": {"repository": "external-upload", "ref": "archive", "sha": "6fa8f6909ad19ff0e173f04ef424e0cf416788f23684a2274b7d0e637350694f"},
+      "observedFiles": ["package.json", "pnpm-lock.yaml", "src/App.tsx", "src/index.css", "vite.config.ts"],
+      "bestUseCases": ["interaction prototype reference", "Three.js/R3F consumer adapter test", "visual control and shader UX study"],
+      "doNotIngest": ["execute package scripts during ingestion", "promote inline GLSL to canonical library source", "treat prototype motion or performance as validated evidence"]
+    }
+  ],
+  "notAccessibleOrNotConfirmed": [
+    {"name": "shadergrammar", "reason": "repository not accessible under qt314wink/shadergrammar during inspection"},
+    {"name": "observation", "reason": "repository not accessible under qt314wink/observation during inspection"},
+    {"name": "agent-orchestration", "reason": "repository not accessible under qt314wink/agent-orchestration during inspection"}
+  ]
+}

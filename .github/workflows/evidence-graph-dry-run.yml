@@ -5,6 +5,8 @@ on:
     paths:
       - "schemas/**"
       - "tools/workspace_ingestion_dry_run.py"
+      - "tools/neo4j_ingest.py"
+      - "tools/test_neo4j_ingestion.py"
       - "tools/test_workspace_ingestion_dry_run.py"
       - "docs/architecture/**"
       - "docs/ecosystem/**"
@@ -14,6 +16,8 @@ on:
     branches: [main]
     paths:
       - "schemas/**"
+      - "tools/neo4j_ingest.py"
+      - "tools/test_neo4j_ingestion.py"
       - "tools/workspace_ingestion_dry_run.py"
       - "tools/test_workspace_ingestion_dry_run.py"
       - "docs/architecture/**"
@@ -35,6 +39,9 @@ jobs:
 
       - name: Run ingestion unit tests
         run: python3 -m unittest tools/test_workspace_ingestion_dry_run.py
+
+      - name: Run federated Neo4j ingestion tests
+        run: python3 -m unittest tools/test_neo4j_ingestion.py
 
       - name: Generate repository dry-run receipt
         run: |

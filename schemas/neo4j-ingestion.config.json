@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://melodicbloom.dev/schemas/neo4j-ingestion.config.json",
+  "configVersion": "Neo4jIngestionConfig/0.1.0",
+  "purpose": "Configuration contract for the federated project-boundary and evidence writer.",
+  "target": {
+    "uriEnv": "NEO4J_URI",
+    "usernameEnv": "NEO4J_USERNAME",
+    "passwordEnv": "NEO4J_PASSWORD",
+    "databaseEnv": "NEO4J_DATABASE",
+    "defaultDatabase": "neo4j",
+    "requireTlsForRemote": true
+  },
+  "source": {
+    "root": ".",
+    "manifest": "artifacts/ingestion/project-boundary-evidence.json",
+    "include": ["schemas/**", "docs/**", "packages/**", "tools/**", "README.md"],
+    "exclude": [".git/**", "node_modules/**", "artifacts/**", "**/*.key", "**/*.pem", "**/.env*", "**/preview.png", "**/*.mp4", "**/*.zip"],
+    "followSymlinks": false,
+    "executeUploadedCode": false
+  },
+  "run": {
+    "defaultMode": "dry-run",
+    "allowedModes": ["dry-run", "write"],
+    "requireWriteFlag": "INGESTION_ALLOW_WRITE=true",
+    "operatorEnv": "INGESTION_OPERATOR",
+    "sourceRefEnv": "INGESTION_SOURCE_REF",
+    "idempotency": {
+      "algorithm": "sha256",
+      "runKeyFields": ["configVersion", "database", "sourceRef", "manifestDigest"],
+      "recordKeyFields": ["recordType", "recordId", "contentHash", "authority.sha"],
+      "relationKeyFields": ["sourceId", "type", "targetId", "observedAt"],
+      "replayPolicy": "MERGE_EXISTING_RUN_AND_RECORDS; NEVER_DUPLICATE_BY_KEY"
+    },
+    "batchSize": 250,
+    "maxErrors": 0,
+    "onError": "quarantine-and-stop",
+    "receiptPath": "artifacts/ingestion/runs/{runId}.json"
+  },
+  "validation": {
+    "schema": "schemas/project-boundary-evidence.schema.json",
+    "requireAuthority": true,
+    "requireContentHash": true,
+    "rejectCredentialFindings": true,
+    "rejectUnsafeArchives": true,
+    "rejectUnknownRelationTypes": true,
+    "allowInferredRelations": true,
+    "promoteToCanonical": false,
+    "crossRecordRules": [
+      "project.id MUST be unique within the envelope",
+      "repository.id MUST be unique within the envelope",
+      "evidence.id MUST be unique within the envelope",
+      "relation.id MUST be unique within the envelope",
+      "relation.sourceId and relation.targetId MUST resolve to an envelope node or an existing database node",
+      "relation.projectId MUST equal the source projectId or target projectId unless evidenceState is proposed",
+      "authority.sha MUST be a verified commit SHA; placeholders are quarantined",
+      "records with rightsStatus=rejected MUST NOT be written",
+      "records with credential findings MUST be quarantined"
+    ]
+  },
+  "vector": {
+    "enabled": true,
+    "label": "EvidenceText",
+    "property": "embedding",
+    "dimensions": 1536,
+    "similarityFunction": "cosine",
+    "allowedModels": ["text-embedding-3-small", "text-embedding-3-large", "gemini-embedding-001", "test"],
+    "requiredMetadata": ["sourceEvidenceId", "sourceTextHash", "embeddingModel", "embeddingDimensions", "redactionVersion"],
+    "neverEmbed": ["credentials", "tokens", "private prompts", "PII", "private source", "cryptographic secrets", "unlicensed binary content"],
+    "writerAcceptsPrecomputedEmbeddingsOnly": true
+  },
+  "writePolicy": {
+    "neverExecuteArbitraryCypher": true,
+    "bootstrapConstraintsFirst": true,
+    "writeRunBeforeRecords": true,
+    "writeRecordsBeforeRelations": true,
+    "relationsOnlyWhenEndpointsExist": true,
+    "preserveObservedAt": true,
+    "preserveSourceRef": true,
+    "allowUpdates": false,
+    "allowDeletes": false,
+    "allowSchemaDrops": false
+  },
+  "cypherTemplates": {
+    "run": "MERGE (r:Run {idempotencyKey: $idempotencyKey}) ON CREATE SET r.id=$runId, r.startedAt=$startedAt, r.mode=$mode, r.status='started', r.sourceRef=$sourceRef, r.configVersion=$configVersion, r.operator=$operator ON MATCH SET r.lastSeenAt=$observedAt RETURN r.id AS id, r.idempotencyKey AS idempotencyKey",
+    "runFinalize": "MATCH (r:Run {idempotencyKey: $idempotencyKey}) SET r.status=$status, r.finishedAt=$finishedAt, r.acceptedCount=$acceptedCount, r.rejectedCount=$rejectedCount, r.schemaInvalidCount=$schemaInvalidCount, r.credentialCount=$credentialCount, r.unsafeArchiveCount=$unsafeArchiveCount, r.neo4jMutationCount=$neo4jMutationCount, r.summary=$summary RETURN r.id AS id, r.status AS status",
+    "project": "MERGE (p:Project {id: $id}) ON CREATE SET p.createdAt=$observedAt SET p.name=$name, p.description=$description, p.purpose=$purpose, p.owner=$owner, p.status=$status, p.visibility=$visibility, p.rightsStatus=$rightsStatus, p.projectId=$projectId, p.platformRole=$platformRole, p.sourceRef=$sourceRef, p.ingestionRunId=$runId RETURN p.id AS id",
+    "repository": "MERGE (r:Repository {id: $id}) ON CREATE SET r.createdAt=$observedAt SET r.name=$name, r.projectId=$projectId, r.repository=$repository, r.ref=$ref, r.sha=$sha, r.sourceClass=$sourceClass, r.fileCount=$fileCount, r.observedFiles=$observedFiles, r.sourceRef=$sourceRef, r.ingestionRunId=$runId RETURN r.id AS id",
+    "evidence": "MERGE (e:Evidence {id: $id}) ON CREATE SET e.createdAt=$observedAt SET e.name=$name, e.projectId=$projectId, e.status=$status, e.evidenceClass=$evidenceClass, e.contentHash=$contentHash, e.sourceFiles=$sourceFiles, e.observedAt=$observedAt, e.actor=$actor, e.summary=$summary, e.rightsStatus=$rightsStatus, e.sourceRef=$sourceRef, e.ingestionRunId=$runId RETURN e.id AS id",
+    "relation": "MATCH (s {id: $sourceId}), (t {id: $targetId}) MERGE (s)-[rel:RELATED {relationKey: $relationKey}]->(t) ON CREATE SET rel.type=$type, rel.projectId=$projectId, rel.evidenceState=$evidenceState, rel.confidence=$confidence, rel.observedAt=$observedAt, rel.ingestionRunId=$runId RETURN rel.relationKey AS relationKey"
+  },
+  "mcp": {
+    "enabled": true,
+    "server": "official-neo4j-mcp",
+    "transport": "stdio-or-http",
+    "requiredTools": ["get-neo4j-schema", "read-neo4j-cypher", "write-neo4j-cypher"],
+    "writeToolAllowedOnlyFor": ["validated-bootstrap", "idempotent-run", "project", "repository", "evidence", "relation"],
+    "agentFacingWriteAccess": false,
+    "notes": "Enable the Neo4j MCP server for the writer service, but keep Aura Agent imports read-only until the data model and promotion gates are proven."
+  }
+}
