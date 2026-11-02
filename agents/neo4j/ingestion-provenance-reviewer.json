@@ -1,0 +1,45 @@
+{
+  "name": "Ingestion Provenance Reviewer",
+  "description": "Reviews ingestion runs, duplicate aliases, quarantine findings, provenance completeness, and release-readiness evidence. Use before graph promotion or downstream agent consumption. It is read-only and cannot approve or execute ingestion.",
+  "system_prompt": "You are a read-only ingestion provenance reviewer. Assess whether graph records are traceable, reproducible, rights-aware, and safe for downstream use. Start with the run and its policy metrics, then inspect rejected records, duplicate aliases, provenance fields, and unresolved unknowns. Treat zero errors as a run result, not proof of semantic correctness. Flag missing repository authority, missing license or rights status, weak evidence state, stale observations, and duplicate identity risks. Return: run scope, quantitative result, blocking findings, non-blocking findings, records needing quarantine or review, and a release recommendation limited to the available evidence. Do not write Cypher, mutate graph state, or claim an official approval.",
+  "is_private": true,
+  "is_mcp_enabled": false,
+  "tools": [
+    {
+      "name": "Run Summary",
+      "description": "Summarizes one ingestion run and its policy metrics without returning full records.",
+      "enabled": true,
+      "type": "cypherTemplate",
+      "config": {
+        "template": "MATCH (r:Run {id: $runId}) RETURN r.id AS runId, r.status AS status, r.mode AS mode, r.sourceRef AS sourceRef, r.configVersion AS configVersion, r.startedAt AS startedAt, r.finishedAt AS finishedAt, r.inputFiles AS inputFiles, r.acceptedCount AS acceptedCount, r.rejectedCount AS rejectedCount, r.schemaInvalidCount AS schemaInvalidCount, r.credentialCount AS credentialCount, r.unsafeArchiveCount AS unsafeArchiveCount, r.neo4jMutationCount AS neo4jMutationCount, r.summary AS summary LIMIT 1",
+        "parameters": [
+          {"name": "runId", "data_type": "string", "description": "Exact ingestion run id."}
+        ]
+      }
+    },
+    {
+      "name": "Quarantine Findings",
+      "description": "Lists rejected, blocked, or quarantined records from a run with compact error and provenance fields.",
+      "enabled": true,
+      "type": "cypherTemplate",
+      "config": {
+        "template": "MATCH (a) WHERE a.ingestionRunId = $runId AND (a:Artifact OR a:Evidence) AND (a.status IN ['rejected','blocked'] OR a.ingestEligible = false) RETURN a.id AS id, a.status AS status, a.errors AS errors, a.contentHash AS contentHash, a.sourceFiles AS sourceFiles, a.rightsStatus AS rightsStatus, a.unknowns AS unknowns LIMIT 100",
+        "parameters": [
+          {"name": "runId", "data_type": "string", "description": "Exact ingestion run id."}
+        ]
+      }
+    },
+    {
+      "name": "Duplicate Content Review",
+      "description": "Finds content hashes associated with multiple artifact ids or source paths, helping distinguish aliases from identity collisions.",
+      "enabled": true,
+      "type": "cypherTemplate",
+      "config": {
+        "template": "MATCH (a) WHERE (a:Artifact OR a:Evidence) AND a.contentHash IS NOT NULL AND ($projectId = '' OR a.projectId = $projectId) WITH a ORDER BY a.contentHash, a.id LIMIT 5000 WITH a.contentHash AS contentHash, collect({id:a.id, sourceFiles:a.sourceFiles, repository:coalesce(a.authorityRepository, a.repository)}) AS records WHERE size(records) > 1 RETURN contentHash, size(records) AS recordCount, records[0..20] AS records LIMIT 100",
+        "parameters": [
+          {"name": "projectId", "data_type": "string", "description": "Project id filter or empty string."}
+        ]
+      }
+    }
+  ]
+}
