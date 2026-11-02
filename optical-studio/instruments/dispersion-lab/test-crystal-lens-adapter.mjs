@@ -66,3 +66,17 @@ test('custom candidate preserves export schema linkage', () => {
   near(a.derived.physicalSpread, (1.62 - 1) / 30);
   assert.ok(a.derived.futureDirectIorUniforms.nB_as_nF > a.derived.futureDirectIorUniforms.nG_as_nd);
 });
+
+test('rejects invalid displayExaggeration and preferSpectral', () => {
+  assert.throws(() => spreadToDispersionControls(0.02, { displayExaggeration: -1 }), RangeError);
+  assert.throws(() => spreadToDispersionControls(0.02, { displayExaggeration: NaN }), RangeError);
+  assert.throws(() => spreadToDispersionControls(0.02, { preferSpectral: 0 }), RangeError);
+  assert.throws(() => spreadToDispersionControls(0.02, { preferSpectral: 1.5 }), RangeError);
+});
+
+test('saturated spread reports achieved vs target and warns', () => {
+  const a = adaptCandidate('custom', 2.55, 9);
+  assert.equal(a.derived.saturated, true);
+  assert.ok(a.derived.appearanceSpreadTarget > a.derived.appearanceSpreadAchieved);
+  assert.match(a.warnings.join(' '), /exceeds max representable/);
+});

@@ -9,6 +9,8 @@ export const CRYSTAL_LENS_ND_MIN = 1.40;
 export const CRYSTAL_LENS_ND_MAX = 1.70;
 /** Artistic half-span when spectral=1 and dispersionUI=0 (nB−nR ≈ 0.135). */
 export const ARTISTIC_CHANNEL_SPAN_AT_UNIT = 0.055 + 0.080;
+/** Max product spectral*(1+dispersionUI) with spectral∈[0,1], dispersionUI∈[0,2]. */
+export const MAX_CONTROL_PRODUCT = 1 * (1 + 2);
 
 export function ndToPaletteShift(nd) {
   const raw = (nd - CRYSTAL_LENS_ND_MIN) / (CRYSTAL_LENS_ND_MAX - CRYSTAL_LENS_ND_MIN);
@@ -31,8 +33,14 @@ export function spreadToDispersionControls(deltaFC, { displayExaggeration = 3, p
   if (!(deltaFC >= 0) || !Number.isFinite(deltaFC)) {
     throw new RangeError(`deltaFC must be finite ≥ 0, got ${deltaFC}`);
   }
-  const appearanceSpread = deltaFC * displayExaggeration;
-  const productNeeded = appearanceSpread / ARTISTIC_CHANNEL_SPAN_AT_UNIT;
+  if (!Number.isFinite(displayExaggeration) || displayExaggeration < 0) {
+    throw new RangeError(`displayExaggeration must be finite ≥ 0, got ${displayExaggeration}`);
+  }
+  if (!Number.isFinite(preferSpectral) || preferSpectral <= 0 || preferSpectral > 1) {
+    throw new RangeError(`preferSpectral must be finite in (0, 1], got ${preferSpectral}`);
+  }
+  const appearanceSpreadTarget = deltaFC * displayExaggeration;
+  const productNeeded = appearanceSpreadTarget / ARTISTIC_CHANNEL_SPAN_AT_UNIT;
   let spectral = preferSpectral;
   let dispersionUI = productNeeded / spectral - 1;
   if (dispersionUI < 0) {
@@ -42,11 +50,16 @@ export function spreadToDispersionControls(deltaFC, { displayExaggeration = 3, p
     dispersionUI = 2;
     spectral = Math.min(1, productNeeded / (1 + dispersionUI));
   }
+  const product = spectral * (1 + dispersionUI);
+  const appearanceSpreadAchieved = product * ARTISTIC_CHANNEL_SPAN_AT_UNIT;
+  const saturated = appearanceSpreadTarget > appearanceSpreadAchieved + 1e-12;
   return {
     spectral,
     dispersionUI,
-    appearanceSpreadTarget: appearanceSpread,
-    product: spectral * (1 + dispersionUI),
+    appearanceSpreadTarget,
+    appearanceSpreadAchieved,
+    saturated,
+    product,
     displayExaggeration,
   };
 }
@@ -61,6 +74,11 @@ export function adaptCandidate(presetId, nd, vd, options = {}) {
   if (ndMap.outOfRange) {
     warnings.push(
       `nd ${nd} outside Crystal Lens authored range [${CRYSTAL_LENS_ND_MIN}, ${CRYSTAL_LENS_ND_MAX}]; paletteShift clamped → rendered baseIOR ${ndMap.baseIORRendered.toFixed(4)}`,
+    );
+  }
+  if (spreadMap.saturated) {
+    warnings.push(
+      `appearance spread target ${spreadMap.appearanceSpreadTarget.toFixed(4)} exceeds max representable ${spreadMap.appearanceSpreadAchieved.toFixed(4)} (spectral×(1+dispersionUI) capped); achieved spread reported separately`,
     );
   }
   warnings.push(
@@ -78,7 +96,6 @@ export function adaptCandidate(presetId, nd, vd, options = {}) {
       paletteShift: Number(ndMap.paletteShift.toFixed(4)),
       spectral: Number(spreadMap.spectral.toFixed(4)),
       dispersionUI: Number(spreadMap.dispersionUI.toFixed(4)),
-      // unchanged artistic defaults — adapter does not invent finish/lighting
       grain: null,
       roughness: null,
       warp: null,

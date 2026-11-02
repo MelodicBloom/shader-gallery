@@ -7,7 +7,7 @@ Independent educational analytical instrument, not GPU shader and not a calibrat
 | Need | Why | Install |
 |---|---|---|
 | Browser with ES modules (Chromium / Firefox / WebKit) | UI | phone/desktop browser |
-| Local HTTP static server | `file://` blocks ES module imports | `python3 -m http.server` or any static server |
+| Local HTTP static server | `file://` blocks ES module imports | see launch below |
 | Node.js ≥ 18 | unit tests + adapter CLI only | Termux: `pkg install nodejs-lts`; desktop: node 18+ |
 | Python 3 (optional) | convenient static server | Termux: `pkg install python` |
 
@@ -15,12 +15,33 @@ Independent educational analytical instrument, not GPU shader and not a calibrat
 
 ## Run (desktop / Termux)
 
-From the repository root (parent of `optical-studio/`):
+Serve the **repository root** (the folder that contains `optical-studio/`), not this lab folder:
 
 ```sh
-# Termux once: pkg install python nodejs-lts
+# Termux once:
+pkg install python nodejs-lts
+
+cd /path/to/shader-gallery   # repo root
+
+# Preferred — from repo root:
 python3 -m http.server 8000
-# open http://127.0.0.1:8000/optical-studio/instruments/dispersion-lab/
+
+# Or from this package (serves repo root via --directory ../../..):
+npm run serve --prefix optical-studio/instruments/dispersion-lab
+
+# If `python` / `python3 -m` fails on Termux, use either:
+python -m http.server 8000
+# or (no Python):
+npx --yes serve -p 8000 .
+```
+
+Then open: `http://127.0.0.1:8000/optical-studio/instruments/dispersion-lab/`
+
+Do **not** open `file://…/index.html` — ES modules will be blocked.
+
+Tests:
+
+```sh
 node --test optical-studio/instruments/dispersion-lab/test-cauchy.mjs
 node --test optical-studio/instruments/dispersion-lab/test-crystal-lens-adapter.mjs
 # or from this folder:
@@ -31,6 +52,8 @@ The five material choices are pedagogical approximate `n_d/V_d` pairs described 
 
 The chart shows seven numerical Cauchy samples, not seven WebGL ray paths. The current Crystal Lens is three-proxy-channel Snell GLSL and its controls are not bound to this instrument. Export is candidate-only JSON; do not import to production shader without a material/control-adapter test and a new image/source receipt.
 
+UI bounds for refractive index (`1.01`–`2.55`) and Abbe (`9`–`95`) match the sliders; out-of-range typed values are clamped or rejected so chart/export stay in sync with the controls.
+
 ## Crystal Lens adapter 0.1
 
 ```sh
@@ -40,7 +63,8 @@ node -e "import('./optical-studio/instruments/dispersion-lab/crystal-lens-adapte
 
 Maps Instrument export → proposed `paletteShift` / `spectral` / `dispersionUI` only.
 - `nd` outside 1.40–1.70 clamps and sets `outOfRange`.
-- Physical `nF−nC` is scaled by the instrument’s 3× display exaggeration into the shader’s authored channel span — appearance heuristic, not a calibration.
+- Invalid `displayExaggeration` / `preferSpectral` throw before uniforms are computed.
+- Physical `nF−nC` × display exaggeration maps into the shader’s authored channel span; when the target exceeds the max representable span, `appearanceSpreadAchieved` + a saturation warning are reported.
 - `grain` / `roughness` / lighting uniforms stay `null` (adapter does not invent them).
 - `connectedToLiveShader: false` until an image/source receipt and QUALITY_GATES entry exist.
 

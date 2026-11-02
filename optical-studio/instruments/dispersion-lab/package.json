@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "node --test test-cauchy.mjs test-crystal-lens-adapter.mjs",
-    "serve": "python3 -m http.server 8000 --directory ../.."
+    "serve": "python3 -m http.server 8000 --directory ../../.."
   },
   "dependencies": {},
   "devDependencies": {}
