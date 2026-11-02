@@ -121,8 +121,8 @@ export function buildLivePreview({
   assertSafeOutput(repositoryRoot, outputRoot);
   const manifestPath = path.join(packageRoot, "manifest.json");
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-  if (!Array.isArray(manifest.shaders) || manifest.shaders.length !== 15) {
-    throw new Error(`Expected exactly 15 manifest entries; received ${manifest.shaders?.length ?? "none"}.`);
+  if (!Array.isArray(manifest.shaders) || manifest.shaders.length === 0) {
+    throw new Error(`Expected at least one manifest entry; received ${manifest.shaders?.length ?? "none"}.`);
   }
 
   validateRequiredAssets(packageRoot, manifest);

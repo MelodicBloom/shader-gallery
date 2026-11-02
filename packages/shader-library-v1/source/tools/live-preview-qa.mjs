@@ -75,6 +75,7 @@ try {
 
     const results = await page.evaluate(() => ({
       cards: document.querySelectorAll("[data-shader-card]").length,
+      entries: window.__shaderLibraryQA?.entries,
       webgl2: Boolean(document.createElement("canvas").getContext("webgl2")),
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       firstCanvas: (() => {
@@ -83,7 +84,12 @@ try {
       })()
     }));
 
-    if (results.cards !== 15) throw new Error(`${viewport.name}: expected 15 cards, found ${results.cards}`);
+    if (!Number.isInteger(results.entries) || results.entries < 1) {
+      throw new Error(`${viewport.name}: manifest entry count is unavailable`);
+    }
+    if (results.cards !== results.entries) {
+      throw new Error(`${viewport.name}: expected ${results.entries} cards, found ${results.cards}`);
+    }
     if (!results.webgl2) throw new Error(`${viewport.name}: WebGL2 is unavailable in browser QA`);
     if (results.overflow > 1) throw new Error(`${viewport.name}: horizontal overflow ${results.overflow}px`);
     if (!results.firstCanvas || results.firstCanvas.width < 2 || results.firstCanvas.height < 2) {
@@ -116,6 +122,27 @@ try {
   await reducedPage.waitForSelector('html[data-qa-state="ready"][data-reduced-motion="true"]');
   await reducedContext.close();
   console.log("✓ reduced-motion behavior");
+
+  const opticalContext = await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1 });
+  const opticalPage = await opticalContext.newPage();
+  const opticalErrors = [];
+  opticalPage.on("pageerror", error => opticalErrors.push(error.message));
+  await opticalPage.goto(new URL("/docs/optical-studies-02.html", baseUrl).href, { waitUntil: "networkidle" });
+  await opticalPage.waitForFunction(() => window.opticalStudio?.state && document.querySelector("#status")?.textContent === "Live optical study");
+
+  await opticalPage.evaluate(() => window.dispatchEvent(new PageTransitionEvent("pagehide", { persisted: true })));
+  const pausedAt = await opticalPage.evaluate(() => window.opticalStudio.state.time);
+  await opticalPage.waitForTimeout(180);
+  const stillPausedAt = await opticalPage.evaluate(() => window.opticalStudio.state.time);
+  if (stillPausedAt > pausedAt + 0.11) throw new Error("optical study continued rendering after pagehide");
+
+  await opticalPage.evaluate(() => window.dispatchEvent(new PageTransitionEvent("pageshow", { persisted: true })));
+  await opticalPage.waitForTimeout(240);
+  const resumedAt = await opticalPage.evaluate(() => window.opticalStudio.state.time);
+  if (resumedAt <= stillPausedAt + 0.02) throw new Error("optical study did not resume after persisted pageshow");
+  if (opticalErrors.length) throw new Error(`optical study browser errors:\n${opticalErrors.join("\n")}`);
+  await opticalContext.close();
+  console.log("✓ optical study resumes after bfcache restoration");
 } finally {
   await browser.close();
   await new Promise(resolve => server.close(resolve));

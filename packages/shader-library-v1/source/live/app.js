@@ -480,8 +480,8 @@ async function boot() {
       if (!response.ok) throw new Error(`Manifest request failed: ${response.status}`);
       return response.json();
     });
-    if (!Array.isArray(manifest.shaders) || manifest.shaders.length !== 15) {
-      throw new Error(`Expected 15 shader records; received ${manifest.shaders?.length ?? "none"}.`);
+    if (!Array.isArray(manifest.shaders) || manifest.shaders.length === 0) {
+      throw new Error(`Expected at least one shader record; received ${manifest.shaders?.length ?? "none"}.`);
     }
 
     document.querySelector("#shader-count").textContent = String(manifest.shaders.length);

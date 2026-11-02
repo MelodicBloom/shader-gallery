@@ -11,13 +11,13 @@ function write(file, content) {
   fs.writeFileSync(file, content);
 }
 
-function makeFixture() {
+function makeFixture(count = 15) {
   const repositoryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "shader-live-preview-test-"));
   const packageRoot = path.join(repositoryRoot, "packages/shader-library-v1/source");
   const outputRoot = path.join(repositoryRoot, "library-v1");
   const shaders = [];
 
-  for (let index = 1; index <= 15; index += 1) {
+  for (let index = 1; index <= count; index += 1) {
     const id = `shader-${String(index).padStart(2, "0")}`;
     const root = `shaders/${id}`;
     shaders.push({
@@ -47,8 +47,9 @@ function assertNoTransactionDebris(repositoryRoot) {
   assert.deepEqual(debris, []);
 }
 
-const fixture = makeFixture();
-try {
+for (const count of [15, 18]) {
+  const fixture = makeFixture(count);
+  try {
   write(path.join(fixture.outputRoot, "sentinel.txt"), "original\n");
 
   const missingPreview = path.join(fixture.packageRoot, fixture.shaders[0].preview);
@@ -73,11 +74,23 @@ try {
 
   buildLivePreview({ ...fixture, logger: silentLogger });
   assert.equal(fs.existsSync(path.join(fixture.outputRoot, "sentinel.txt")), false);
-  assert.equal(JSON.parse(fs.readFileSync(path.join(fixture.outputRoot, "build-report.json"), "utf8")).shaderCount, 15);
-  assert.equal(fs.existsSync(path.join(fixture.outputRoot, fixture.shaders[14].preview)), true);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(fixture.outputRoot, "build-report.json"), "utf8")).shaderCount, count);
+  assert.equal(fs.existsSync(path.join(fixture.outputRoot, fixture.shaders.at(-1).preview)), true);
   assertNoTransactionDebris(fixture.repositoryRoot);
 
   console.log("✓ live-preview build preserves the previous tree on preflight and staging failures");
+  } finally {
+    fs.rmSync(fixture.repositoryRoot, { recursive: true, force: true });
+  }
+}
+
+const empty = makeFixture(0);
+try {
+  write(path.join(empty.outputRoot, "sentinel.txt"), "original\n");
+  assert.throws(() => buildLivePreview({ ...empty, logger: silentLogger }), /Expected at least one manifest entry/);
+  assert.equal(fs.readFileSync(path.join(empty.outputRoot, "sentinel.txt"), "utf8"), "original\n");
+  assertNoTransactionDebris(empty.repositoryRoot);
+  console.log("✓ an empty manifest preserves the previous preview tree");
 } finally {
-  fs.rmSync(fixture.repositoryRoot, { recursive: true, force: true });
+  fs.rmSync(empty.repositoryRoot, { recursive: true, force: true });
 }

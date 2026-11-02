@@ -14,9 +14,10 @@ p{color:#aab0c2;max-width:64ch}.grid{display:grid;grid-template-columns:repeat(a
 .card div{padding:15px}.card h2{margin:0 0 5px;font-size:1rem}.card small{color:#818aa2}
 </style>
 </head>
-<body><main class="shell"><header><h1>Shader Library</h1><p>Fifteen compile-validated WebGL2 material, optical, atmospheric, flow, aurora, and glow studies.</p></header><section id="grid" class="grid"></section></main>
+<body><main class="shell"><header><h1>Shader Library</h1><p><span id="shader-count" aria-live="polite">Loading</span> compile-validated WebGL2 material, optical, atmospheric, flow, aurora, and glow studies.</p></header><section id="grid" class="grid"></section></main>
 <script type="module">
 const manifest=await fetch("./manifest.json").then(r=>r.json());
+document.querySelector("#shader-count").textContent=String(manifest.shaders.length);
 const grid=document.querySelector("#grid");
 for(const shader of manifest.shaders){
  const card=document.createElement("article");card.className="card";
