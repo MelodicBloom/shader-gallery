@@ -2,6 +2,8 @@
 
 [**Open the live gallery →**](https://melodicbloom.github.io/shader-gallery/docs/) · [Repository source](https://github.com/MelodicBloom/shader-gallery)
 
+Explore [Shader Library v1](https://melodicbloom.github.io/shader-gallery/library-v1/), [Abalone](https://melodicbloom.github.io/shader-gallery/abalone/), and [Aurora](https://melodicbloom.github.io/shader-gallery/aurora/).
+
 > Evidence-led WebGL2 shader and material research: interactive optical studies, reproducible previews, and licensed-source attribution.
 
 **Visual proof:** the deployed [live gallery](https://melodicbloom.github.io/shader-gallery/docs/) is the current visual surface. It is intentionally linked rather than represented by an unversioned screenshot or GIF.
@@ -134,3 +136,4 @@ shader-gallery/
 ## 📄 License
 
 MIT © [Jennipher Troup](https://github.com/qt314wink)
+
