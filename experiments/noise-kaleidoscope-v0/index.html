@@ -45,7 +45,7 @@ document.getElementById('pause').onclick=()=>{playing=!playing;prev=null;status.
 document.getElementById('zero').onclick=()=>{playing=false;time=0;draw()};
 document.getElementById('step').onclick=()=>{playing=false;time=Math.min(3600,time+1/60);draw()};
 document.getElementById('reset').onclick=()=>{playing=false;time=0;state={...DEFAULTS};sync();draw()};
-document.getElementById('receipt').onclick=async()=>{try{await navigator.clipboard.writeText(JSON.stringify(receipt(state,time),null,2));status.textContent='Receipt copied'}catch(e){status.textContent='Clipboard unavailable on this origin'}};
+document.getElementById('receipt').onclick=async()=>{if(!program||gl.isContextLost()){status.textContent='Renderer unavailable; no receipt captured';return}draw();const snapshot=receipt(state,time,{width:cv.width,height:cv.height,pixelRatio:Math.min(devicePixelRatio||1,1.5)});try{await navigator.clipboard.writeText(JSON.stringify(snapshot,null,2));status.textContent='Receipt copied'}catch(e){status.textContent='Clipboard unavailable on this origin'}};
 document.getElementById('capture').onclick=()=>{draw();let a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download='noise-kaleidoscope-seed-'+state.seed+'.png';a.click()};
 matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',e=>{if(e.matches){playing=false;status.textContent='Reduced motion; frozen'}});
 cv.addEventListener('webglcontextlost',e=>{e.preventDefault();playing=false;status.textContent='WebGL context lost; reload'});

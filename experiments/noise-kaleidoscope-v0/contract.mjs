@@ -13,7 +13,7 @@ export function validatePatch(patch) {
   if (!patch || typeof patch !== 'object' || Array.isArray(patch)) throw new TypeError('Object required');
   for (const [key,value] of Object.entries(patch)) {
     const limits=CONTROLS[key];
-    if (!limits || typeof value !== 'number' || !Number.isFinite(value) || value<limits[0] || value>limits[1]) throw new RangeError('Invalid control: '+key);
+    if (!Object.hasOwn(CONTROLS,key) || typeof value !== 'number' || !Number.isFinite(value) || value<limits[0] || value>limits[1]) throw new RangeError('Invalid control: '+key);
     if ((key==='sectors'||key==='seed') && !Number.isInteger(value)) throw new RangeError('Integer required: '+key);
   }
   return Object.freeze({...patch});
@@ -25,8 +25,9 @@ export function foldPolar(x,y,n,rotation=0) {
   const a=((theta%period)+period)%period, f=Math.min(a,period-a), r=Math.hypot(x,y);
   return [r*Math.cos(f),r*Math.sin(f)];
 }
-export function receipt(state,time) {
+export function receipt(state,time,viewport) {
   validatePatch(state);
   if (Object.keys(state).length!==Object.keys(CONTROLS).length || !Number.isFinite(time) || time<0 || time>3600) throw new RangeError('Incomplete or invalid receipt');
-  return {schemaVersion:'0.1.0',engine:'WebGL2 procedural fBm',controls:{...state},timeSeconds:time,renderValidation:'requires browser evidence'};
+  if (!viewport || !Number.isSafeInteger(viewport.width) || viewport.width<1 || !Number.isSafeInteger(viewport.height) || viewport.height<1 || !Number.isFinite(viewport.pixelRatio) || viewport.pixelRatio<=0) throw new RangeError('Invalid viewport');
+  return {schemaVersion:'0.2.0',engine:'WebGL2 procedural fBm',controls:{...state},timeSeconds:time,viewport:{width:viewport.width,height:viewport.height,pixelRatio:viewport.pixelRatio},renderValidation:'requires browser evidence'};
 }
