@@ -7,7 +7,7 @@ let mode='fixture',source='fixtures/benchmark-12s.wav',lastRAF=0,deltaEMA=0,carr
 function alertError(message){$('error').hidden=false;$('error').textContent=message;$('engine-status').textContent='EXPERIMENT PAUSED';running=false;}
 function readUI(){for(const key of Object.keys(DEFAULTS))if($(key)&&$(key).type==='range')params[key]=Number($(key).value);params=sanitizeParams(params);}
 function writeUI(){for(const [key,val] of Object.entries(params))if($(key)&&$(key).type==='range'){$(key).value=String(val);$(key+'-out').textContent=key==='grid'||key==='segments'?String(val):Number(val).toFixed(2);}}
-function preset(name){params={...PRESETS[name]};writeUI();reset();document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset===name)));}
+function preset(name){params={...PRESETS[name]};writeUI();renderer?.setGrid(params.grid);reset();document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset===name)));}
 function reset(){frame=0;renderedFrame=-1;renderer?.reset();player.pause();try{player.currentTime=0;}catch{} drawExact(0);}
 function drawExact(target){
  if(!renderer||!samples.length)return;
@@ -57,7 +57,7 @@ function exportReceipt(){
 }
 function saveBlob(blob,name){const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}
 function capture(){// preserveDrawingBuffer must remain enabled for a reliable synchronous export.
- if(!renderer)return;drawExact(frame);canvas.toBlob(blob=>{if(blob)saveBlob(blob,`KF-001-frame-${frame}.png`);else alertError('PNG capture failed');},'image/png');}
+ if(!renderer)return;drawExact(frame);const capturedFrame=frame;canvas.toBlob(blob=>{if(blob)saveBlob(blob,`KF-001-frame-${capturedFrame}.png`);else alertError('PNG capture failed');},'image/png');}
 function wire(){writeUI();for(const key of Object.keys(DEFAULTS))if($(key)&&$(key).type==='range')$(key).addEventListener('input',()=>{readUI();writeUI();document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed','false'));if(key==='grid')renderer.setGrid(params.grid);renderer.reset();drawExact(frame);});
  document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>preset(b.dataset.preset)));
  $('play').addEventListener('click',async()=>{if(running){pause();return;}if(frame>=Math.min(FPS*DURATION,samples.length-1))reset();lastRAF=0;carryMs=0;running=true;$('play').textContent='Ⅱ   PAUSE';try{await player.play();}catch{};});
