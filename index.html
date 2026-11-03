@@ -15,7 +15,8 @@ a{color:#b9a6ff}
 .cta{display:inline-block;margin:18px 0 8px;padding:12px 20px;background:#6d4dff;color:#fff;border-radius:8px;text-decoration:none;font-weight:600}
 .cta:hover{background:#6243df}
 a:focus-visible{outline:3px solid #f9bd8e;outline-offset:4px}
-.meta{color:#9a97a8;font-size:0.92rem;margin:0 0 20px}
+.meta{color:#bdb9cb;font-size:0.92rem;margin:0 0 20px}
+.feature{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,220px);gap:24px;align-items:center;margin:20px 0 28px}.feature figure{margin:0}.feature img{display:block;width:100%;height:auto;border-radius:12px}.feature figcaption{font-size:.78rem;color:#bdb9cb;margin-top:8px}.demo-links{display:flex;flex-wrap:wrap;gap:10px;padding:0;list-style:none}.demo-links li{margin:0}.demo-links a{display:block;border:1px solid #504967;border-radius:8px;padding:8px 12px;text-decoration:none}.demo-links a:hover{background:#29233e}@media(max-width:600px){main{padding-top:28px}.feature{grid-template-columns:1fr 112px;gap:12px}.feature img{border-radius:8px}.feature figcaption{font-size:.7rem}}
 ol.lineup,ul{padding-left:1.25rem}
 ol.lineup li,ul li{margin:10px 0}
 .tag{display:inline-block;font-size:0.75rem;letter-spacing:0.04em;text-transform:uppercase;color:#9a97a8;border:1px solid #3a3750;border-radius:999px;padding:2px 8px;margin-right:6px;vertical-align:middle}
@@ -31,7 +32,13 @@ small{color:#9a97a8}
 <h1>Shader Gallery</h1>
 <p class="lede">Evidence-led WebGL2 material research by Jennipher Troup (MelodicBloom): interactive optical studies, procedural materials, and reproducible validation.</p>
 <a class="cta" href="docs/">▶ Open the interactive gallery</a>
-<p class="meta">Explore the studies below. Formal Material Validation Lab trials advance with receipts; claims stay bounded until a named trial records them.</p>
+<div class="feature">
+<div><p class="meta">Explore the studies below. Material Validation Lab trials advance with receipts; claims stay bounded until a named trial records them.</p>
+<ul class="demo-links" aria-label="Explore the studies">
+<li><a href="library-v1/">Shader Library</a></li><li><a href="abalone/">Abalone</a></li><li><a href="aurora/">Aurora</a></li>
+</ul></div>
+<figure><img src="library-v1/shaders/materials/labradorite-schiller/preview.png" alt="Stored preview of the Labradorite Schiller shader"><figcaption>Shader Library v1 · stored preview</figcaption></figure>
+</div>
 
 <h2>What this is aiming for</h2>
 <p>Growth here means a larger catalog of materials <em>and</em> rising mechanical accuracy: effects that respond correctly when the observer angle or light-source direction changes, instead of baking a single hero look.</p>

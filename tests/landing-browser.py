@@ -26,6 +26,8 @@ def main():
             response=page.goto(URL,wait_until='domcontentloaded');assert response.status==200
             expect(page).to_have_title('Shader Gallery — Jennipher Troup (MelodicBloom)')
             expect(page.get_by_role('heading',name='Shader Gallery',exact=True)).to_be_visible()
+            preview=page.get_by_role('img',name='Stored preview of the Labradorite Schiller shader')
+            expect(preview).to_be_visible();assert preview.evaluate('(img) => img.complete && img.naturalWidth > 0')
             page.keyboard.press('Tab');cta=page.get_by_role('link',name='▶ Open the interactive gallery')
             expect(cta).to_be_focused()
             evidence=ROOT/'landing-evidence';evidence.mkdir(exist_ok=True)
