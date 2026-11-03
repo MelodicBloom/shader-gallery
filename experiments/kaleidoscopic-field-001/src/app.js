@@ -65,7 +65,8 @@ function wire(){writeUI();$('segments').disabled=true;for(const key of Object.ke
  player.addEventListener('play',()=>{if($('reduced').checked){pause();return;}transport='audio';running=true;lastRAF=0;carryMs=0;$('play').textContent='Ⅱ   PAUSE';$('transport-status').textContent='AUDIO LINKED';});
  player.addEventListener('pause',()=>{if(player.paused&&transport==='audio')pause();});
  player.addEventListener('ended',pause);
- player.addEventListener('seeked',()=>{if(samples.length)drawExact(Math.floor(player.currentTime*FPS));});
+ // A requested frame divided by FPS can round just below an integer in binary.
+ player.addEventListener('seeked',()=>{if(samples.length)drawExact(Math.round(player.currentTime*FPS));});
  $('reset').addEventListener('click',reset);$('capture').addEventListener('click',capture);$('receipt').addEventListener('click',exportReceipt);
  $('time').addEventListener('input',e=>{pause();const f=Number(e.target.value);try{player.currentTime=f/FPS;}catch{}drawExact(f);});
  $('fixture').addEventListener('click',useFixture);$('upload').addEventListener('change',e=>useUpload(e.target.files[0]));

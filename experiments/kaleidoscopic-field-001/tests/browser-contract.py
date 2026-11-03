@@ -64,10 +64,12 @@ def main():
             assert page.evaluate('window.__draws.at(-1)')==216*216
             with page.expect_download() as event:
                 page.locator('#capture').click()
-                page.locator('#time').evaluate("el => { el.value='1'; el.dispatchEvent(new Event('input',{bubbles:true})); }")
+                page.locator('#time').evaluate("el => { el.value='123'; el.dispatchEvent(new Event('input',{bubbles:true})); }")
             assert event.value.suggested_filename=='KF-001-frame-0.png'
+            page.wait_for_function("Number(document.querySelector('#time').value) === 123 && !document.querySelector('#player').seeking",timeout=90000)
             png=EVIDENCE/'frame-0.png'; event.value.save_as(png)
             assert png.read_bytes().startswith(b'\x89PNG\r\n\x1a\n')
+            page.locator('#reset').click(timeout=90000)
             page.locator('#reduced').uncheck()
             page.locator('#player').evaluate('el => el.play()')
             expect(page.locator('#transport-status')).to_have_text('AUDIO LINKED')
@@ -87,7 +89,7 @@ def main():
                 'checkout_sha':os.environ.get('GITHUB_SHA'), 'run_id':os.environ.get('GITHUB_RUN_ID'),
                 'browser':browser.version, 'renderer':renderer,
                 'checks':['both symmetry uniforms','manual receipt','preset grid draw count',
-                          'delayed frame-zero capture name','native audio play and pause'],
+                          'delayed frame-zero capture name','frame 123 seek','native audio play and pause'],
                 'artifacts':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (target,png)},
                 'limitations':['automated control smoke, not visual acceptance or hardware performance',
                                'receipt and PNG are independent trial outputs, not a matched pair']
