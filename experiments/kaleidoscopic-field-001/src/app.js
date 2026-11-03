@@ -3,12 +3,12 @@ import {KaleidoscopicRenderer} from './gl.js';
 import {audioEnvelopeFromFile,isEnvelopeValid} from './audio.js';
 const $=id=>document.getElementById(id),canvas=$('view'),player=$('player');
 let renderer=null,params={...DEFAULTS},samples=[],frame=0,running=!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-let mode='fixture',source='fixtures/benchmark-12s.wav',lastRAF=0,deltaEMA=0,carryMs=0,objectURL=null,renderedFrame=-1,fixtureSamples=[];
+let mode='fixture',source='fixtures/benchmark-12s.wav',lastRAF=0,deltaEMA=0,carryMs=0,objectURL=null,renderedFrame=-1,fixtureSamples=[],transport='paused';
 function alertError(message){$('error').hidden=false;$('error').textContent=message;$('engine-status').textContent='EXPERIMENT PAUSED';running=false;}
 function readUI(){for(const key of Object.keys(DEFAULTS))if($(key)&&$(key).type==='range')params[key]=Number($(key).value);params=sanitizeParams(params);}
 function writeUI(){for(const [key,val] of Object.entries(params))if($(key)&&$(key).type==='range'){$(key).value=String(val);$(key+'-out').textContent=key==='grid'||key==='segments'?String(val):Number(val).toFixed(2);}}
 function preset(name){params={...PRESETS[name]};$('segment-mode').value=name==='proof'?'schedule':'manual';$('segments').disabled=$('segment-mode').value==='schedule';writeUI();renderer?.setGrid(params.grid);reset();document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset===name)));}
-function reset(){frame=0;renderedFrame=-1;renderer?.reset();player.pause();try{player.currentTime=0;}catch{} drawExact(0);}
+function reset(){pause();frame=0;renderedFrame=-1;renderer?.reset();try{player.currentTime=0;}catch{} drawExact(0);}
 function drawExact(target){
  if(!renderer||!samples.length)return;
  target=Math.max(0,Math.min(samples.length-1,Math.round(target)));
@@ -30,10 +30,10 @@ function tick(stamp){requestAnimationFrame(tick);if(!renderer||!samples.length||
  if(dt){deltaEMA=deltaEMA?deltaEMA*.88+dt*.12:dt;}
  lastRAF=stamp;
  const end=Math.min(FPS*DURATION,samples.length-1);
- if(!player.paused&&!player.ended&&player.readyState>=2){drawExact(Math.min(end,Math.floor(player.currentTime*FPS)));if(player.currentTime>=end/FPS)pause();}
- else {carryMs+=dt;const advance=Math.floor(carryMs/(1000/FPS));if(advance>0){carryMs-=advance*(1000/FPS);const target=Math.min(end,frame+advance);drawExact(target);if(target>=end)pause();}}
+ if(transport==='audio'&&!player.paused&&!player.ended&&player.readyState>=2){drawExact(Math.min(end,Math.floor(player.currentTime*FPS)));if(player.currentTime>=end/FPS)pause();}
+ else if(transport==='silent'){carryMs+=dt;const advance=Math.floor(carryMs/(1000/FPS));if(advance>0){carryMs-=advance*(1000/FPS);const target=Math.min(end,frame+advance);drawExact(target);if(target>=end)pause();}}
 }
-function pause(){running=false;carryMs=0;lastRAF=0;$('play').textContent='▶   PLAY';player.pause();}
+function pause(){transport='paused';running=false;carryMs=0;lastRAF=0;$('play').textContent='▶   PLAY';$('transport-status').textContent='PAUSED';player.pause();}
 async function useFixture(){
  try{const response=await fetch('./fixtures/envelope-60fps.json',{cache:'no-store'});if(!response.ok)throw Error('fixture HTTP '+response.status);
  const x=await response.json();if(!isEnvelopeValid(x.samples))throw Error('Invalid fixture envelope');
@@ -61,11 +61,15 @@ function capture(){// preserveDrawingBuffer must remain enabled for a reliable s
 function wire(){writeUI();$('segments').disabled=true;for(const key of Object.keys(DEFAULTS))if($(key)&&$(key).type==='range')$(key).addEventListener('input',()=>{readUI();writeUI();document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed','false'));if(key==='grid')renderer.setGrid(params.grid);renderer.reset();drawExact(frame);});
  $('segment-mode').addEventListener('change',e=>{$('segments').disabled=e.target.value==='schedule';drawExact(frame);});
  document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>preset(b.dataset.preset)));
- $('play').addEventListener('click',async()=>{if(running){pause();return;}if(frame>=Math.min(FPS*DURATION,samples.length-1))reset();lastRAF=0;carryMs=0;running=true;$('play').textContent='Ⅱ   PAUSE';try{await player.play();}catch{};});
+ $('play').addEventListener('click',async()=>{if(running){pause();return;}if(frame>=Math.min(FPS*DURATION,samples.length-1))reset();$('reduced').checked=false;lastRAF=0;carryMs=0;try{await player.play();}catch{transport='silent';running=true;$('play').textContent='Ⅱ   PAUSE';$('transport-status').textContent='SILENT PLAYBACK';}});
+ player.addEventListener('play',()=>{if($('reduced').checked){pause();return;}transport='audio';running=true;lastRAF=0;carryMs=0;$('play').textContent='Ⅱ   PAUSE';$('transport-status').textContent='AUDIO LINKED';});
+ player.addEventListener('pause',()=>{if(player.paused&&transport==='audio')pause();});
+ player.addEventListener('ended',pause);
+ player.addEventListener('seeked',()=>{if(samples.length)drawExact(Math.floor(player.currentTime*FPS));});
  $('reset').addEventListener('click',reset);$('capture').addEventListener('click',capture);$('receipt').addEventListener('click',exportReceipt);
  $('time').addEventListener('input',e=>{pause();const f=Number(e.target.value);try{player.currentTime=f/FPS;}catch{}drawExact(f);});
  $('fixture').addEventListener('click',useFixture);$('upload').addEventListener('change',e=>useUpload(e.target.files[0]));
- $('reduced').checked=!running;$('reduced').addEventListener('change',e=>{if(e.target.checked)pause();else{running=true;$('play').textContent='Ⅱ   PAUSE';}});
+ $('reduced').checked=!running;$('reduced').addEventListener('change',e=>{if(e.target.checked)pause();});
  window.addEventListener('keydown',e=>{if(e.code==='Space'&&!['INPUT','BUTTON'].includes(document.activeElement.tagName)){e.preventDefault();$('play').click();}});
  canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();alertError('WebGL context lost. Reload the page to recreate GPU resources.');});
 }

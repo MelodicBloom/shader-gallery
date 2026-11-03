@@ -40,7 +40,7 @@ def main():
             ''')
             errors=[]
             page.on('pageerror', lambda error: errors.append(str(error)))
-            page.goto(URL, wait_until='networkidle')
+            page.goto(URL, wait_until='domcontentloaded')
             expect(page.locator('#engine-status')).to_have_text('WEBGL2 / GPU FIELD ACTIVE')
             page.get_by_text('REFERENCE SYNTH / 12 S').wait_for()
             assert page.locator('#segments').is_disabled()
@@ -65,9 +65,19 @@ def main():
                 page.locator('#capture').click()
                 page.locator('#time').evaluate("el => { el.value='1'; el.dispatchEvent(new Event('input',{bubbles:true})); }")
             assert event.value.suggested_filename=='KF-001-frame-0.png'
+            page.locator('#reduced').uncheck()
+            page.locator('#player').evaluate('el => el.play()')
+            expect(page.locator('#transport-status')).to_have_text('AUDIO LINKED')
+            page.wait_for_function("Number(document.querySelector('#time').value) > 1", timeout=30000)
+            page.locator('#player').evaluate('el => el.pause()')
+            expect(page.locator('#transport-status')).to_have_text('PAUSED')
+            paused=page.locator('#time').input_value()
+            page.wait_for_timeout(500)
+            assert page.locator('#time').input_value()==paused
+            assert page.locator('#player').evaluate('el => el.paused')
             assert not errors, errors
             browser.close()
-        print('PASS: WebGL2 uniform, reference/manual modes, grid preset and frame-zero downloads')
+        print('PASS: WebGL2 uniform, modes, grid, capture frame and audio transport')
     finally:
         try:
             os.killpg(server.pid, signal.SIGTERM)

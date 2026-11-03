@@ -73,6 +73,8 @@ The supplied 12-second WAV is synthesized by `tools/build-fixture.mjs`. Its kick
 
 The **simulation clock** advances in 1/60 s increments, even if the display misses frames; audio-element playback can require catch-up simulation. **UI FPS** describes requestAnimationFrame cadence, not measured GPU rendering time. There is no 60-FPS performance certification from this experiment alone.
 
+Native audio play and pause events control the experiment transport, and native seeks reconstruct the corresponding frame. Holding motion pauses playback. If the main PLAY action cannot start audio, the transport explicitly reports silent playback and advances using the wall clock; an audio pause does not silently switch to that fallback.
+
 ### 5. Schedule and reset semantics
 
 `0≤t<4`: N=9, amplitude multiplier 1.0. `4≤t<8`: N=12, 1.2. `8≤t≤12`: N=7, 0.8. The exact source of this schedule is `src/control.js:scheduleAt()`; `docs/parameter-schedule.json` is a declarative mirror for external implementations.
