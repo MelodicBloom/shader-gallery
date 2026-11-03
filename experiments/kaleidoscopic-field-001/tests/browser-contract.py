@@ -1,16 +1,17 @@
 """Hosted WebGL2 control/receipt smoke; software rendering is not device acceptance."""
 import json
+import hashlib
 import os
 from pathlib import Path
 import signal
 import subprocess
-import tempfile
 import time
 import urllib.request
 
 from playwright.sync_api import expect, sync_playwright
 
 ROOT = Path(__file__).resolve().parent.parent
+EVIDENCE = ROOT / 'test-evidence'
 URL = 'http://127.0.0.1:4177/'
 
 def main():
@@ -26,6 +27,7 @@ def main():
         else:
             raise RuntimeError('server did not start')
         with sync_playwright() as p:
+            EVIDENCE.mkdir(exist_ok=True)
             browser = p.chromium.launch(args=['--use-angle=swiftshader', '--enable-unsafe-swiftshader'])
             page = browser.new_page(accept_downloads=True, reduced_motion='reduce')
             page.add_init_script('''
@@ -49,9 +51,8 @@ def main():
             assert page.evaluate('window.__segments.slice(-2)')==[20,20]
             with page.expect_download() as event:
                 page.locator('#receipt').click()
-            with tempfile.TemporaryDirectory() as tmp:
-                target=Path(tmp)/'receipt.json'; event.value.save_as(target)
-                receipt=json.loads(target.read_text())
+            target=EVIDENCE/'manual-receipt.json'; event.value.save_as(target)
+            receipt=json.loads(target.read_text())
             assert receipt['capture']['schedule']['segments']==20
             assert receipt['capture']['schedule']['segmentSource']=='manual'
             page.locator('#segment-mode').select_option('schedule')
@@ -65,6 +66,8 @@ def main():
                 page.locator('#capture').click()
                 page.locator('#time').evaluate("el => { el.value='1'; el.dispatchEvent(new Event('input',{bubbles:true})); }")
             assert event.value.suggested_filename=='KF-001-frame-0.png'
+            png=EVIDENCE/'frame-0.png'; event.value.save_as(png)
+            assert png.read_bytes().startswith(b'\x89PNG\r\n\x1a\n')
             page.locator('#reduced').uncheck()
             page.locator('#player').evaluate('el => el.play()')
             expect(page.locator('#transport-status')).to_have_text('AUDIO LINKED')
@@ -76,6 +79,21 @@ def main():
             assert page.locator('#time').input_value()==paused
             assert page.locator('#player').evaluate('el => el.paused')
             assert not errors, errors
+            renderer=page.locator('#view').evaluate('''canvas => {
+              const gl=canvas.getContext('webgl2'), ext=gl.getExtension('WEBGL_debug_renderer_info');
+              return ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+            }''')
+            manifest={
+                'checkout_sha':os.environ.get('GITHUB_SHA'), 'run_id':os.environ.get('GITHUB_RUN_ID'),
+                'browser':browser.version, 'renderer':renderer,
+                'checks':['both symmetry uniforms','manual receipt','preset grid draw count',
+                          'delayed frame-zero capture name','native audio play and pause'],
+                'artifacts':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (target,png)},
+                'limitations':['automated control smoke, not visual acceptance or hardware performance',
+                               'receipt and PNG are independent trial outputs, not a matched pair']
+            }
+            (EVIDENCE/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+            print('Renderer:',renderer)
             browser.close()
         print('PASS: WebGL2 uniform, modes, grid, capture frame and audio transport')
     finally:
