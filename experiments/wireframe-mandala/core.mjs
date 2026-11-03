@@ -82,6 +82,13 @@ export function generate(input = DEFAULT, timeSeconds = 0) {
   }
   return { params:p, segments:out };
 }
+/** Accumulate elapsed time without rounding each display refresh. */
+export function stepClock(elapsed, delta) {
+  if (!Number.isFinite(elapsed) || elapsed < 0 || !Number.isFinite(delta) || delta < 0) throw new RangeError('Invalid clock');
+  const next = elapsed + Math.min(delta, 0.08);
+  return { elapsed: next, frameTime: Math.round(next * 30) / 30 };
+}
+
 /** Reproducibility fingerprint, *not* a cryptographic hash. */
 export function fingerprint(segments) {
   let h = 2166136261;

@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { normalize, generate, fingerprint, SOURCE_ID } from '../core.mjs';
 const argv=process.argv.slice(2);
 const get=(flag,fallback)=>{const i=argv.indexOf(flag);return i<0?fallback:argv[i+1]};
-const preset=get('--preset',new URL('../presets/starting-preset.json',import.meta.url).pathname);
+const preset=get('--preset',fileURLToPath(new URL('../presets/starting-preset.json',import.meta.url)));
 const time=Number(get('--time','0'));
 if(!Number.isFinite(time)||time<0||time>86400)throw new RangeError('--time must be a finite number between 0 and 86400');
 const params=normalize(JSON.parse(await readFile(preset,'utf8')));
