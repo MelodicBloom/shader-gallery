@@ -1,8 +1,12 @@
 # 🌌 Shader Gallery
 
-**▶ Live demo:** [melodicbloom.github.io/shader-gallery/docs/](https://melodicbloom.github.io/shader-gallery/docs/): interactive WebGL gallery (also [Library v1](https://melodicbloom.github.io/shader-gallery/library-v1/), [Abalone](https://melodicbloom.github.io/shader-gallery/abalone/), [Aurora](https://melodicbloom.github.io/shader-gallery/aurora/))
+[**Open the live gallery →**](https://melodicbloom.github.io/shader-gallery/docs/) · [Repository source](https://github.com/MelodicBloom/shader-gallery)
 
-> Evidence-led WebGL2 shader and material research: experimental optical studies, reproducible previews, and licensed-source attribution.
+Explore [Shader Library v1](https://melodicbloom.github.io/shader-gallery/library-v1/), [Abalone](https://melodicbloom.github.io/shader-gallery/abalone/), and [Aurora](https://melodicbloom.github.io/shader-gallery/aurora/).
+
+> Evidence-led WebGL2 shader and material research: interactive optical studies, reproducible previews, and licensed-source attribution.
+
+**Visual proof:** the deployed [live gallery](https://melodicbloom.github.io/shader-gallery/docs/) is the current visual surface. It is intentionally linked rather than represented by an unversioned screenshot or GIF.
 
 ![GLSL](https://img.shields.io/badge/GLSL-WebGL-orange?style=flat-square)
 ![Status](https://img.shields.io/badge/status-in%20development-yellow?style=flat-square)
@@ -16,10 +20,22 @@ Shader Gallery is an active portfolio laboratory for interactive GLSL material s
 
 The work is deliberately experimental: a shader can be compile-validated without being a measured or physically calibrated material. Material claims, performance tiers, and cross-device behavior remain bounded until a named trial records them.
 
+## Demo evidence and verification status
+
+| Scope | Evidence currently available | Status |
+|---|---|---|
+| Deployed gallery route | The [`/docs/` gallery](https://melodicbloom.github.io/shader-gallery/docs/) loaded with its hero and preview canvases during a browser check on 2026-10-27. | Verified in a desktop browser |
+| Hero screenshot / GIF | No repository-owned, version-bound screenshot or GIF is currently recorded. | Still needed |
+| Mobile viewport | No mobile capture or receipt is recorded. | Unverified |
+| Keyboard access | The public gallery entry source includes pointer-activated cards; no keyboard acceptance result is recorded. | Needs implementation and browser check |
+| Reduced motion | No `prefers-reduced-motion` behavior is present in the public gallery entry source, and no reduced-motion result is recorded. | Needs implementation and browser check |
+
+These statuses apply to the public gallery entry page. They do not negate validation evidence held by individual studies; they prevent the README from making a broader accessibility or cross-device claim than the current public surface supports.
+
 ## What this demonstrates
 
 - WebGL2 / GLSL 300 ES implementation, packaging, and native validation.
-- View- and light-responsive optical appearance studies with accessible controls, reduced-motion behavior, and static fallbacks.
+- View- and light-responsive optical appearance studies; interaction and motion-fallback verification is tracked below.
 - Deterministic preview and archive-integrity workflows rather than screenshot-only presentation.
 - Research-to-implementation discipline: source license, attribution, transfer boundary, and evidence status are recorded before reuse.
 
@@ -120,3 +136,4 @@ shader-gallery/
 ## 📄 License
 
 MIT © [Jennipher Troup](https://github.com/qt314wink)
+

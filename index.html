@@ -13,7 +13,8 @@ p,li{color:#d4d1de}
 a{color:#b9a6ff}
 .lede{color:#cfcadb;margin:0 0 8px}
 .cta{display:inline-block;margin:18px 0 8px;padding:12px 20px;background:#6d4dff;color:#fff;border-radius:8px;text-decoration:none;font-weight:600}
-.cta:hover{background:#7e63ff}
+.cta:hover{background:#6243df}
+a:focus-visible{outline:3px solid #f9bd8e;outline-offset:4px}
 .meta{color:#9a97a8;font-size:0.92rem;margin:0 0 20px}
 ol.lineup,ul{padding-left:1.25rem}
 ol.lineup li,ul li{margin:10px 0}
@@ -28,9 +29,9 @@ small{color:#9a97a8}
 <body>
 <main>
 <h1>Shader Gallery</h1>
-<p class="lede">Evidence-led WebGL2 material research by Jennipher Troup (MelodicBloom): physics-shaped lighting behaviors driven by math, optical parameters, and higher-order viewing geometry—not screenshot cosmetics.</p>
+<p class="lede">Evidence-led WebGL2 material research by Jennipher Troup (MelodicBloom): interactive optical studies, procedural materials, and reproducible validation.</p>
 <a class="cta" href="docs/">▶ Open the interactive gallery</a>
-<p class="meta">Live studies load now. Formal Material Validation Lab trials advance with receipts; claims stay bounded until a named trial records them.</p>
+<p class="meta">Explore the studies below. Formal Material Validation Lab trials advance with receipts; claims stay bounded until a named trial records them.</p>
 
 <h2>What this is aiming for</h2>
 <p>Growth here means a larger catalog of materials <em>and</em> rising mechanical accuracy: effects that respond correctly when the observer angle or light-source direction changes, instead of baking a single hero look.</p>
@@ -41,7 +42,7 @@ small{color:#9a97a8}
 <p>Three pilots are contracted in the Material Validation Lab. Validation runs <strong>in sequence</strong> because each receipt unlocks the next decision; the live demos above can be explored in parallel anytime.</p>
 <ol class="lineup">
 <li>
-<span class="tag">1 · Active</span>
+<span class="tag">1 · Planned</span>
 <strong>Abalone / nacre baseline</strong> (MVT-ABALONE-001) —
 Khronos glTF iridescence maps under controlled light and view; channel semantics before any procedural nacre invents thickness. Anchors map–lighting relationships (intensity vs thickness channels, observer polar angle, key-light azimuth).
 </li>
@@ -68,17 +69,18 @@ Original deterministic fold-height fields coupled to normal and roughness; direc
 <li><a href="aurora/">Aurora</a> — aurora field study</li>
 </ul>
 
-<h2>Status (honest)</h2>
+<h2>Evidence status</h2>
 <dl class="status">
 <dt>Built</dt>
 <dd>The browser demos linked above, plus Lab contracts, records, and tooling.</dd>
 <dt>Page smoke</dt>
-<dd>Each linked page returns HTTP 200 and exposes a WebGL canvas element. That is load smoke—not a verified draw, FPS, or material-fidelity pass.</dd>
+<dd>Links provide entry points to individual studies. A loaded page alone does not verify rendering, frame rate, or material fidelity.</dd>
 <dt>Lab</dt>
-<dd>MVT-ABALONE-001 is open / inconclusive on physical or calibrated accuracy. Bubble and Gold remain planned. No material is labeled spectral, measured, or PBR-portable without its own executed trial.</dd>
+<dd>MVT-ABALONE-001 is planned; Bubble and Gold are also planned. Separate exploratory checks do not establish a completed pilot or calibrated physical accuracy.</dd>
 </dl>
 
 <p><small>Source and Lab docs: <a href="https://github.com/MelodicBloom/shader-gallery">github.com/MelodicBloom/shader-gallery</a> · Material Validation Lab under <code>material-validation-lab/</code> · Needs a browser with WebGL2</small></p>
 </main>
 </body>
 </html>
+
