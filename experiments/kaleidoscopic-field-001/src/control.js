@@ -54,6 +54,13 @@ export function scheduleAt(time) {
     displacementMultiplier: time < 4 ? 1 : time < 8 ? 1.2 : 0.8,
   };
 }
+// The reference schedule remains available for reproducibility; manual mode
+// uses the bounded slider or preset value while preserving the other phases.
+export function effectiveScheduleAt(time, params, mode) {
+  const scheduled=scheduleAt(time);
+  return {...scheduled, segments:mode==='manual' ? sanitizeParams(params).segments : scheduled.segments,
+    segmentSource:mode==='manual' ? 'manual' : 'reference-schedule'};
+}
 export function foldAngle(angle, sectors) {
   const wedge=Math.PI/sectors;
   const full=2*wedge;
@@ -77,3 +84,4 @@ export function buildProvenance(params, samples, runtime={}) {
     ]
   };
 }
+

@@ -77,6 +77,8 @@ The **simulation clock** advances in 1/60 s increments, even if the display miss
 
 `0≤t<4`: N=9, amplitude multiplier 1.0. `4≤t<8`: N=12, 1.2. `8≤t≤12`: N=7, 0.8. The exact source of this schedule is `src/control.js:scheduleAt()`; `docs/parameter-schedule.json` is a declarative mirror for external implementations.
 
+The symmetry mode defaults to the reference schedule. Manual/preset mode uses the bounded sector control instead, while the scheduled displacement multiplier remains active. PROOF selects the reference schedule; RESTRAINED and ENERGETIC select manual mode. Exported capture schedules include the effective segment count and its source so the receipt describes the values sent to both views.
+
 Every seek backward reconstructs all intervening feedback steps from zero. Preset/parameter changes reset and replay to the selected frame, eliminating stale accumulated state. This costs O(frameIndex * fieldPixels) and is deliberate for traceability, not optimal for very long clips. For future long-running use, snapshot state periodically with receipt checksums.
 
 ## Contracts
@@ -105,3 +107,4 @@ The user-exported receipt has schema `kaleidoscopic-field-trace/v1`; it includes
 ## Nonclaims
 
 A shared mathematical mechanism is not proof of pixel-level parity. Browser tests on one GPU are not cross-device performance validation. Synthetic beat annotations are not measured live beat detection. This does not represent a complete TouchDesigner `.toe` file.
+

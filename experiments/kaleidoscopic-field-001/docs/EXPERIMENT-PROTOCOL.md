@@ -10,7 +10,7 @@ Node.js >=20, Chromium/Firefox/Safari with WebGL2, hardware acceleration. For 60
 
 ## Trial A / deterministic browser comparator
 
-1. From specimen root run `npm run fixture`, then `npm test` (expect **8 passing** test cases).
+1. From specimen root run `npm run fixture`, then `npm test` (expect **9 passing** test cases).
 2. Run `npm run dev` and navigate to `http://127.0.0.1:4177/`.
 3. Check top status `WEBGL2 / GPU FIELD ACTIVE`. If initialization fails, record error and stop rather than marking a visual pass.
 4. Select **PROOF**, **USE REFERENCE AUDIO**, and **RESET**. Export receipt at frame 0 and PNG capture. Record image crop/point visibility.
@@ -18,7 +18,7 @@ Node.js >=20, Chromium/Firefox/Safari with WebGL2, hardware acceleration. For 60
 6. Reset and re-seek to `360`. Compare the same-pixel RGB values from two independently reconstructed captures **on the same browser/GPU**. Difference should be zero or explainable by nondeterministic GPU/driver behavior; note actual differences, do not assume zero.
 7. Repeat with **RESTRAINED** and **ENERGETIC** presets. Ensure the field resets on each change and that no stale history remains.
 8. Set `displacement = 0`; verify right side loses height relief but still renders points. Then set to `3`; verify increase in geometric relief (avoid inferring physical depth accuracy).
-9. Change `segments` from 3→20; verify radial symmetry count and check the transition for abrupt sector changes. This change is **intentionally instantaneous**, not an interpolated morph.
+9. Select **Manual / preset** symmetry mode, then change `segments` from 3→20; verify radial symmetry count and check the transition for abrupt sector changes. This change is **intentionally instantaneous**, not an interpolated morph. Select **Reference schedule** to restore the 9/12/7 phase values. Verify the receipt's `capture.schedule.segmentSource` and effective `segments`.
 10. Load a local audio file under 90MB (optional). Confirm on-device decode and event-proxy change; exported JSON must disclose `kind: upload` without including raw audio.
 
 ## Trial B / TouchDesigner reconstruction
@@ -38,7 +38,7 @@ Follow `docs/TOUCHDESIGNER.md`; use exactly the same authored audio fixture WAV 
 
 ## Acceptance gates / stop conditions
 
-- **G0 — structural:** 8 unit tests pass, JS parses, fixture remains 720 samples, schedule boundaries match 240/480.
+- **G0 — structural:** 9 unit tests pass, JS parses, fixture remains 720 samples, schedule boundaries match 240/480.
 - **G1 — browser visual:** WebGL2 shaders compile and link; both views are nonempty and differentiated; controls are responsive; screenshots and receipts download. Requires an actual browser render run.
 - **G2 — deterministic:** same source audio, params, environment and frame reconstruct the expected field on repeated seeks. Compare artifacts; no unsupported pixel guarantee.
 - **G3 — timing:** on a named target device, profile ≥1800 consecutive animation callbacks; calculate p50/p95 wall frame interval, dropped-frame fraction, render call duration and GPU timer queries when supported. Target ≥95% callbacks ≤16.7ms on 60Hz; mark target FAIL if not met. Do not infer this from one UI FPS reading.
@@ -53,3 +53,4 @@ Stop and record a failure receipt if shaders fail to compile/link, audio decode 
 ## Expected initial results and limitations
 
 The reference source demonstrates a generative technique; the WebGL2 version tests shared principles, not copied implementation. Nominal 60Hz simulation is not proof of 60FPS. In this build environment Chromium could not initialize its headless GPU backend, so G1/G2/G3/G4 require a real hardware browser trial.
+

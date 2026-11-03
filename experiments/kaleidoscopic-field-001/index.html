@@ -26,7 +26,8 @@
     <div class="file-row"><button id="fixture">USE REFERENCE AUDIO</button><label class="file-label" for="upload">LOAD OWN AUDIO</label><input type="file" id="upload" accept="audio/*"><span id="audio-name">REFERENCE SYNTH / GENERATED</span></div><audio id="player" controls preload="auto"></audio><p class="smallnote" id="audio-note">Audio analysis is precomputed for deterministic playback; beat annotations in the included fixture are authored, not inferred.</p>
    </div>
    <div class="controls card"><div class="eyebrow">03 / FIELD PARAMETERS</div><div class="control-grid">
-    <label>SYMMETRY SECTORS <output for="segments" id="segments-out"></output><input id="segments" type="range" min="3" max="20" step="1"></label>
+    <label>SYMMETRY MODE <select id="segment-mode"><option value="schedule">Reference schedule</option><option value="manual">Manual / preset</option></select></label>
+    <label>MANUAL SYMMETRY SECTORS <output for="segments" id="segments-out"></output><input id="segments" type="range" min="3" max="20" step="1"></label>
     <label>DEPTH AMPLITUDE <output for="displacement" id="displacement-out"></output><input id="displacement" type="range" min="0" max="3" step="0.05"></label>
     <label>FEEDBACK MEMORY <output for="persistence" id="persistence-out"></output><input id="persistence" type="range" min="0" max="0.985" step="0.005"></label>
     <label>FIELD EVOLUTION <output for="speed" id="speed-out"></output><input id="speed" type="range" min="0" max="2" step="0.05"></label>
@@ -39,3 +40,4 @@
   <footer><span>METHOD: FIELD → FEEDBACK → FOLD → POINT DISPLACEMENT</span><span>UNMEASURED GPU PERF · WEBGL2 REFERENCE</span><a href="./docs/ARCHITECTURE.md">ARCHITECTURE ↗</a></footer>
  </main><script type="module" src="./src/app.js"></script>
 </body></html>
+

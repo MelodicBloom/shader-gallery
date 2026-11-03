@@ -1,4 +1,4 @@
-import {FPS,DURATION,DEFAULTS,PRESETS,sanitizeParams,audioAt,derivedAudio,scheduleAt,buildProvenance} from './control.js';
+import {FPS,DURATION,DEFAULTS,PRESETS,sanitizeParams,audioAt,derivedAudio,effectiveScheduleAt,buildProvenance} from './control.js';
 import {KaleidoscopicRenderer} from './gl.js';
 import {audioEnvelopeFromFile,isEnvelopeValid} from './audio.js';
 const $=id=>document.getElementById(id),canvas=$('view'),player=$('player');
@@ -7,7 +7,7 @@ let mode='fixture',source='fixtures/benchmark-12s.wav',lastRAF=0,deltaEMA=0,carr
 function alertError(message){$('error').hidden=false;$('error').textContent=message;$('engine-status').textContent='EXPERIMENT PAUSED';running=false;}
 function readUI(){for(const key of Object.keys(DEFAULTS))if($(key)&&$(key).type==='range')params[key]=Number($(key).value);params=sanitizeParams(params);}
 function writeUI(){for(const [key,val] of Object.entries(params))if($(key)&&$(key).type==='range'){$(key).value=String(val);$(key+'-out').textContent=key==='grid'||key==='segments'?String(val):Number(val).toFixed(2);}}
-function preset(name){params={...PRESETS[name]};writeUI();renderer?.setGrid(params.grid);reset();document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset===name)));}
+function preset(name){params={...PRESETS[name]};$('segment-mode').value=name==='proof'?'schedule':'manual';$('segments').disabled=$('segment-mode').value==='schedule';writeUI();renderer?.setGrid(params.grid);reset();document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset===name)));}
 function reset(){frame=0;renderedFrame=-1;renderer?.reset();player.pause();try{player.currentTime=0;}catch{} drawExact(0);}
 function drawExact(target){
  if(!renderer||!samples.length)return;
@@ -19,7 +19,7 @@ function drawExact(target){
   renderer.step(i/FPS,params,a);
  }
  frame=target;const a=derivedAudio(audioAt(samples,frame/FPS),params.audioGain),t=frame/FPS;
- renderer.render(params,a,t,scheduleAt(t));renderedFrame=target;
+ renderer.render(params,a,t,effectiveScheduleAt(t,params,$('segment-mode').value));renderedFrame=target;
  $('rms').textContent=a.rms.toFixed(2);$('hit').textContent=a.hit.toFixed(2);
  $('rms-fill').style.width=(a.rms*100).toFixed(1)+'%';$('hit-fill').style.width=(a.hit*100).toFixed(1)+'%';
  $('time').value=String(frame);$('time').max=String(Math.min(FPS*DURATION,samples.length-1));
@@ -51,14 +51,15 @@ async function useUpload(file){
 function exportReceipt(){
  const a=derivedAudio(audioAt(samples,frame/FPS),params.audioGain);
  const record={...buildProvenance(params,samples,{userAgent:navigator.userAgent,canvas:{width:canvas.width,height:canvas.height},uiFPS:deltaEMA?+(1000/deltaEMA).toFixed(2):null}),
- capture:{frame,seconds:frame/FPS,schedule:scheduleAt(frame/FPS),audio:a},audio:{kind:mode,source,uploadedContentExcluded:true}, capturedAt:new Date().toISOString(),
+ capture:{frame,seconds:frame/FPS,schedule:effectiveScheduleAt(frame/FPS,params,$('segment-mode').value),audio:a},audio:{kind:mode,source,uploadedContentExcluded:true}, capturedAt:new Date().toISOString(),
  validation:{shaderCompilation:'runtime-only',performance:'browser-observed-ui-cadence-not-GPU-timing',touchDesignerParity:'not-tested',reproducibility:'fixed frame and provided audio envelope'} };
  saveBlob(new Blob([JSON.stringify(record,null,2)],{type:'application/json'}),`KF-001-receipt-frame-${frame}.json`);
 }
 function saveBlob(blob,name){const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}
 function capture(){// preserveDrawingBuffer must remain enabled for a reliable synchronous export.
  if(!renderer)return;drawExact(frame);const capturedFrame=frame;canvas.toBlob(blob=>{if(blob)saveBlob(blob,`KF-001-frame-${capturedFrame}.png`);else alertError('PNG capture failed');},'image/png');}
-function wire(){writeUI();for(const key of Object.keys(DEFAULTS))if($(key)&&$(key).type==='range')$(key).addEventListener('input',()=>{readUI();writeUI();document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed','false'));if(key==='grid')renderer.setGrid(params.grid);renderer.reset();drawExact(frame);});
+function wire(){writeUI();$('segments').disabled=true;for(const key of Object.keys(DEFAULTS))if($(key)&&$(key).type==='range')$(key).addEventListener('input',()=>{readUI();writeUI();document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed','false'));if(key==='grid')renderer.setGrid(params.grid);renderer.reset();drawExact(frame);});
+ $('segment-mode').addEventListener('change',e=>{$('segments').disabled=e.target.value==='schedule';drawExact(frame);});
  document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>preset(b.dataset.preset)));
  $('play').addEventListener('click',async()=>{if(running){pause();return;}if(frame>=Math.min(FPS*DURATION,samples.length-1))reset();lastRAF=0;carryMs=0;running=true;$('play').textContent='Ⅱ   PAUSE';try{await player.play();}catch{};});
  $('reset').addEventListener('click',reset);$('capture').addEventListener('click',capture);$('receipt').addEventListener('click',exportReceipt);
@@ -69,3 +70,4 @@ function wire(){writeUI();for(const key of Object.keys(DEFAULTS))if($(key)&&$(ke
  canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();alertError('WebGL context lost. Reload the page to recreate GPU resources.');});
 }
 try{renderer=new KaleidoscopicRenderer(canvas);$('engine-status').textContent='WEBGL2 / GPU FIELD ACTIVE';wire();await useFixture();if(running)$('play').textContent='Ⅱ   PAUSE';requestAnimationFrame(tick);}catch(e){alertError('Renderer error: '+(e?.message||e));console.error(e);}
+

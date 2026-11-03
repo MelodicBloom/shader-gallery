@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
-import {FPS,DURATION,DEFAULTS,sanitizeParams,foldAngle,expectedFrameCount,audioAt,derivedAudio,scheduleAt,buildProvenance} from '../src/control.js';
+import {FPS,DURATION,DEFAULTS,sanitizeParams,foldAngle,expectedFrameCount,audioAt,derivedAudio,scheduleAt,effectiveScheduleAt,buildProvenance} from '../src/control.js';
 import {isEnvelopeValid} from '../src/audio.js';
 import {FIELD_FRAGMENT,PLANE_FRAGMENT,POINT_VERTEX,POINT_FRAGMENT} from '../src/shaders.js';
 const fixture=JSON.parse(fs.readFileSync(new URL('../fixtures/envelope-60fps.json',import.meta.url)));
@@ -8,6 +8,8 @@ test('strictly bounded controls',()=>{const x=sanitizeParams({segments:999,displ
 test('symmetry fold is periodic and mirrored',()=>{for(let n=3;n<20;n++)for(let a=-15;a<15;a+=.29){assert.ok(Math.abs(foldAngle(a,n)-foldAngle(-a,n))<1e-10);assert.ok(Math.abs(foldAngle(a,n)-foldAngle(a+2*Math.PI/n,n))<1e-10);}});
 test('audio values deterministically interpolate',()=>{const s=[{rms:0,kick:1,snare:0,rhythm:1},{rms:1,kick:0,snare:1,rhythm:1}];const a=audioAt(s,.5/FPS);assert.equal(a.rms,.5);assert.equal(a.kick,.5);assert.ok(derivedAudio(a,2).motion>=0);});
 test('schedule is piecewise constant with explicit boundaries',()=>{assert.deepEqual([0,3.999,4,7.999,8,12].map(t=>scheduleAt(t).segments),[9,9,12,12,7,7]);});
+test('manual segments override only the scheduled sector count',()=>{const params={...DEFAULTS,segments:20};assert.deepEqual([0,4,8].map(t=>effectiveScheduleAt(t,params,'manual').segments),[20,20,20]);assert.deepEqual([0,4,8].map(t=>effectiveScheduleAt(t,params,'schedule').segments),[9,12,7]);assert.equal(effectiveScheduleAt(4,params,'manual').displacementMultiplier,1.2);assert.equal(effectiveScheduleAt(4,params,'manual').segmentSource,'manual');});
 test('provenance separates evidence and untested parity',()=>{const p=buildProvenance(DEFAULTS,fixture.samples);assert.equal(p.schema,'kaleidoscopic-field-trace/v1');assert.equal(p.sampleCount,720);assert.match(p.limitations.join(' '),/not guaranteed/);});
 test('shaders include time-dependent feedback, fold, and displacement',()=>{assert.match(FIELD_FRAGMENT,/uPrevious/);assert.match(FIELD_FRAGMENT,/uPersistence/);assert.match(PLANE_FRAGMENT,/fold\(/);assert.match(POINT_VERTEX,/displacement/);assert.match(POINT_FRAGMENT,/gl_PointCoord/);});
 test('invalid audio envelope is rejected',()=>{assert.equal(isEnvelopeValid([{rms:NaN,kick:0,snare:0,rhythm:0}]),false);assert.equal(isEnvelopeValid([]),false);});
+
