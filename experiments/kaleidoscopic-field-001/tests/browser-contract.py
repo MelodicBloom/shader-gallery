@@ -36,7 +36,7 @@ def main():
               const get=gl.getUniformLocation, set=gl.uniform1f, draw=gl.drawArrays;
               gl.getUniformLocation=function(p,n){const l=get.call(this,p,n);if(l)names.set(l,n);return l};
               gl.uniform1f=function(l,v){if(names.get(l)==='uSegments')window.__segments.push(v);return set.call(this,l,v)};
-              gl.drawArrays=function(mode,first,count){if(mode===this.POINTS)window.__draws.push(count);return draw.call(this,mode,first,count)};
+              gl.drawArrays=function(mode,first,count){if(mode===this.POINTS)window.__draws.push(count);if(window.__skipSlowReplay && mode===this.TRIANGLES)return;return draw.call(this,mode,first,count)};
               const toBlob=HTMLCanvasElement.prototype.toBlob;
               HTMLCanvasElement.prototype.toBlob=function(cb,...args){return toBlob.call(this,blob=>setTimeout(()=>cb(blob),500),...args)};
             ''')
@@ -64,11 +64,15 @@ def main():
             assert page.evaluate('window.__draws.at(-1)')==216*216
             with page.expect_download() as event:
                 page.locator('#capture').click()
+                # The capture is already requested. Skip expensive triangle work only
+                # during this bookkeeping test; it is not a pixel-replay result.
+                page.evaluate('window.__skipSlowReplay=true')
                 page.locator('#time').evaluate("el => { el.value='123'; el.dispatchEvent(new Event('input',{bubbles:true})); }")
             assert event.value.suggested_filename=='KF-001-frame-0.png'
             page.wait_for_function("Number(document.querySelector('#time').value) === 123 && !document.querySelector('#player').seeking",timeout=90000)
             png=EVIDENCE/'frame-0.png'; event.value.save_as(png)
             assert png.read_bytes().startswith(b'\x89PNG\r\n\x1a\n')
+            page.evaluate('window.__skipSlowReplay=false')
             page.locator('#reset').click(timeout=90000)
             page.locator('#reduced').uncheck()
             page.locator('#player').evaluate('el => el.play()')
@@ -98,6 +102,7 @@ def main():
                           'cancelled audio start remains paused'],
                 'artifacts':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (target,png)},
                 'limitations':['automated control smoke, not visual acceptance or hardware performance',
+                               'frame 123 bookkeeping test skips triangle drawing during replay',
                                'receipt and PNG are independent trial outputs, not a matched pair']
             }
             (EVIDENCE/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
