@@ -40,9 +40,20 @@ async def run():
         async with page.expect_download() as receipt:
             await page.get_by_role('button', name='Export receipt').click()
         assert (await receipt.value).suggested_filename.endswith('.json')
+        # Delay the PNG callback while animation advances; its filename must
+        # still identify the frame present when encoding began.
+        await page.evaluate("""() => {
+          const original = HTMLCanvasElement.prototype.toBlob;
+          HTMLCanvasElement.prototype.toBlob = function(callback, ...args) {
+            window.__capturedFingerprint = document.querySelector('#readout').textContent.match(/hash=([0-9a-f]+)/)[1];
+            return original.call(this, blob => setTimeout(() => callback(blob), 250), ...args);
+          };
+        }""")
+        await page.get_by_role('button', name='Resume').click()
         async with page.expect_download() as png:
             await page.get_by_role('button', name='Save PNG').click()
-        assert (await png.value).suggested_filename.endswith('.png')
+        expected = await page.evaluate('window.__capturedFingerprint')
+        assert (await png.value).suggested_filename == f'mandala-{expected}.png'
         assert not errors, errors
         print('Chromium UI smoke PASS: pause, mode, bounded rejection, reset, JSON and PNG downloads; zero JS exceptions')
         await browser.close()
