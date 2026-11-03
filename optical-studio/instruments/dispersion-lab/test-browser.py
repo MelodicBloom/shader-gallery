@@ -34,6 +34,14 @@ def main():
             nd = page.locator('#ndNumber')
             vd = page.locator('#vdNumber')
             export = page.locator('#export')
+            page.get_by_role('button', name='Crown · N-BK7').click()
+            with page.expect_download() as event:
+                export.click()
+            with tempfile.TemporaryDirectory() as tmp:
+                target = Path(tmp) / 'crown.json'
+                event.value.save_as(target)
+                crown = json.loads(target.read_text())
+            assert crown['presetId'] == 'crown' and crown['nd'] == 1.517 and crown['vd'] == 64.2
             vd.fill('')
             assert export.is_disabled()
             vd.fill('3')
