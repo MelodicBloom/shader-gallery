@@ -3,7 +3,7 @@ import {KaleidoscopicRenderer} from './gl.js';
 import {audioEnvelopeFromFile,isEnvelopeValid} from './audio.js';
 const $=id=>document.getElementById(id),canvas=$('view'),player=$('player');
 let renderer=null,params={...DEFAULTS},samples=[],frame=0,running=!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-let mode='fixture',source='fixtures/benchmark-12s.wav',lastRAF=0,deltaEMA=0,carryMs=0,objectURL=null,renderedFrame=-1,fixtureSamples=[],transport='paused';
+let mode='fixture',source='fixtures/benchmark-12s.wav',lastRAF=0,deltaEMA=0,carryMs=0,objectURL=null,renderedFrame=-1,fixtureSamples=[],transport='paused',playRequest=0;
 function alertError(message){$('error').hidden=false;$('error').textContent=message;$('engine-status').textContent='EXPERIMENT PAUSED';running=false;}
 function readUI(){for(const key of Object.keys(DEFAULTS))if($(key)&&$(key).type==='range')params[key]=Number($(key).value);params=sanitizeParams(params);}
 function writeUI(){for(const [key,val] of Object.entries(params))if($(key)&&$(key).type==='range'){$(key).value=String(val);$(key+'-out').textContent=key==='grid'||key==='segments'?String(val):Number(val).toFixed(2);}}
@@ -33,7 +33,7 @@ function tick(stamp){requestAnimationFrame(tick);if(!renderer||!samples.length||
  if(transport==='audio'&&!player.paused&&!player.ended&&player.readyState>=2){drawExact(Math.min(end,Math.floor(player.currentTime*FPS)));if(player.currentTime>=end/FPS)pause();}
  else if(transport==='silent'){carryMs+=dt;const advance=Math.floor(carryMs/(1000/FPS));if(advance>0){carryMs-=advance*(1000/FPS);const target=Math.min(end,frame+advance);drawExact(target);if(target>=end)pause();}}
 }
-function pause(){transport='paused';running=false;carryMs=0;lastRAF=0;$('play').textContent='▶   PLAY';$('transport-status').textContent='PAUSED';player.pause();}
+function pause(){playRequest++;transport='paused';running=false;carryMs=0;lastRAF=0;$('play').textContent='▶   PLAY';$('transport-status').textContent='PAUSED';player.pause();}
 async function useFixture(){
  try{const response=await fetch('./fixtures/envelope-60fps.json',{cache:'no-store'});if(!response.ok)throw Error('fixture HTTP '+response.status);
  const x=await response.json();if(!isEnvelopeValid(x.samples))throw Error('Invalid fixture envelope');
@@ -61,8 +61,8 @@ function capture(){// preserveDrawingBuffer must remain enabled for a reliable s
 function wire(){writeUI();$('segments').disabled=true;for(const key of Object.keys(DEFAULTS))if($(key)&&$(key).type==='range')$(key).addEventListener('input',()=>{readUI();writeUI();document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed','false'));if(key==='grid')renderer.setGrid(params.grid);renderer.reset();drawExact(frame);});
  $('segment-mode').addEventListener('change',e=>{$('segments').disabled=e.target.value==='schedule';drawExact(frame);});
  document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>preset(b.dataset.preset)));
- $('play').addEventListener('click',async()=>{if(running){pause();return;}if(frame>=Math.min(FPS*DURATION,samples.length-1))reset();$('reduced').checked=false;lastRAF=0;carryMs=0;try{await player.play();}catch{transport='silent';running=true;$('play').textContent='Ⅱ   PAUSE';$('transport-status').textContent='SILENT PLAYBACK';}});
- player.addEventListener('play',()=>{if($('reduced').checked){pause();return;}transport='audio';running=true;lastRAF=0;carryMs=0;$('play').textContent='Ⅱ   PAUSE';$('transport-status').textContent='AUDIO LINKED';});
+ $('play').addEventListener('click',async()=>{if(running){pause();return;}if(frame>=Math.min(FPS*DURATION,samples.length-1))reset();$('reduced').checked=false;lastRAF=0;carryMs=0;const request=++playRequest;try{await player.play();}catch{if(request!==playRequest)return;transport='silent';running=true;$('play').textContent='Ⅱ   PAUSE';$('transport-status').textContent='SILENT PLAYBACK';}});
+ player.addEventListener('play',()=>{if(player.paused)return;if($('reduced').checked){pause();return;}transport='audio';running=true;lastRAF=0;carryMs=0;$('play').textContent='Ⅱ   PAUSE';$('transport-status').textContent='AUDIO LINKED';});
  player.addEventListener('pause',()=>{if(player.paused&&transport==='audio')pause();});
  player.addEventListener('ended',pause);
  // A requested frame divided by FPS can round just below an integer in binary.

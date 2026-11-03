@@ -80,6 +80,11 @@ def main():
             page.wait_for_timeout(500)
             assert page.locator('#time').input_value()==paused
             assert page.locator('#player').evaluate('el => el.paused')
+            page.locator('#player').evaluate("el => { el.play=()=>new Promise((_,reject)=>setTimeout(()=>reject(new Error('test rejection')),2000)); }")
+            page.locator('#play').click()
+            page.locator('#reduced').check()
+            page.wait_for_timeout(2200)
+            expect(page.locator('#transport-status')).to_have_text('PAUSED')
             assert not errors, errors
             renderer=page.locator('#view').evaluate('''canvas => {
               const gl=canvas.getContext('webgl2'), ext=gl.getExtension('WEBGL_debug_renderer_info');
@@ -89,7 +94,8 @@ def main():
                 'checkout_sha':os.environ.get('GITHUB_SHA'), 'run_id':os.environ.get('GITHUB_RUN_ID'),
                 'browser':browser.version, 'renderer':renderer,
                 'checks':['both symmetry uniforms','manual receipt','preset grid draw count',
-                          'delayed frame-zero capture name','frame 123 seek','native audio play and pause'],
+                          'delayed frame-zero capture name','frame 123 seek','native audio play and pause',
+                          'cancelled audio start remains paused'],
                 'artifacts':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (target,png)},
                 'limitations':['automated control smoke, not visual acceptance or hardware performance',
                                'receipt and PNG are independent trial outputs, not a matched pair']
