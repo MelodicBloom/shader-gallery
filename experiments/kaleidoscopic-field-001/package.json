@@ -1,0 +1,14 @@
+{
+  "name": "kaleidoscopic-field-001",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {"node": ">=20"},
+  "scripts": {
+    "dev": "node tools/serve.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "fixture": "node tools/build-fixture.mjs",
+    "check": "npm test"
+  }
+}
