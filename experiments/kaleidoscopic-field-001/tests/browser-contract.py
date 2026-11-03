@@ -8,7 +8,7 @@ import subprocess
 import time
 import urllib.request
 
-from playwright.sync_api import expect, sync_playwright
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError, expect, sync_playwright
 
 ROOT = Path(__file__).resolve().parent.parent
 EVIDENCE = ROOT / 'test-evidence'
@@ -69,7 +69,11 @@ def main():
                 page.evaluate('window.__skipSlowReplay=true')
                 page.locator('#time').evaluate("el => { el.value='123'; el.dispatchEvent(new Event('input',{bubbles:true})); }")
             assert event.value.suggested_filename=='KF-001-frame-0.png'
-            page.wait_for_function("Number(document.querySelector('#time').value) === 123 && !document.querySelector('#player').seeking",timeout=90000)
+            try:
+                page.wait_for_function("Number(document.querySelector('#time').value) === 123 && !document.querySelector('#player').seeking",timeout=20000)
+            except PlaywrightTimeoutError:
+                print('Seek diagnostics:',page.evaluate('''() => {const p=document.querySelector('#player');return {frame:document.querySelector('#time').value,currentTime:p.currentTime,seeking:p.seeking,readyState:p.readyState,networkState:p.networkState,error:p.error?.code,seekable:p.seekable.length};}'''))
+                raise
             png=EVIDENCE/'frame-0.png'; event.value.save_as(png)
             assert png.read_bytes().startswith(b'\x89PNG\r\n\x1a\n')
             page.evaluate('window.__skipSlowReplay=false')

@@ -12,5 +12,11 @@ try {
   const response=await fetch('http://127.0.0.1:4189/');
   assert.equal(response.status,200);
   assert.match(await response.text(),/<!doctype html>/i);
-  console.log('PASS: missing directory index returns 404 without stopping the server');
+  const bytes=await fetch('http://127.0.0.1:4189/',{headers:{Range:'bytes=0-8'}});
+  assert.equal(bytes.status,206);assert.match(bytes.headers.get('content-range'),/^bytes 0-8\/\d+$/);
+  assert.equal((await bytes.arrayBuffer()).byteLength,9);
+  const invalid=await fetch('http://127.0.0.1:4189/',{headers:{Range:'bytes=99999999-'}});
+  assert.equal(invalid.status,416);
+  console.log('PASS: missing index, byte range, and unsatisfiable range');
 } finally { server.kill(); }
+
