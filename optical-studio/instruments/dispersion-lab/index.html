@@ -17,11 +17,11 @@ import { parseBoundedInput } from './input-validation.mjs';
 const $=s=>document.querySelector(s);let active=PRESETS[1].id;const labels={nd:$('#nd'),vd:$('#vd')};const numbers={nd:$('#ndNumber'),vd:$('#vdNumber')};
 const BOUNDS={nd:{min:Number(labels.nd.min),max:Number(labels.nd.max)},vd:{min:Number(labels.vd.min),max:Number(labels.vd.max)}};
 for(const p of PRESETS){const b=document.createElement('button');b.textContent=p.name;b.type='button';b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{active=p.id;setParams(p.nd,p.vd)});$('#presets').append(b)}
-function parseKey(key,raw){return parseBoundedInput(raw,BOUNDS[key].min,BOUNDS[key].max)}
+function parseKey(key,raw){return parseBoundedInput(raw,BOUNDS[key].min,BOUNDS[key].max,Number(labels[key].step))}
 function setParams(nd,vd){labels.nd.value=numbers.nd.value=String(nd);labels.vd.value=numbers.vd.value=String(vd);draw()}
 for(const key of ['nd','vd']){
   labels[key].addEventListener('input',()=>{const c=parseKey(key,labels[key].value);if(c===null)return;numbers[key].value=String(c);active='custom';draw()});
-  numbers[key].addEventListener('input',()=>{const c=parseKey(key,numbers[key].value);if(c===null){$('#error').textContent=`${key} must be between ${BOUNDS[key].min} and ${BOUNDS[key].max}`;$('#export').disabled=true;return}labels[key].value=String(c);active='custom';draw()});
+  numbers[key].addEventListener('input',()=>{const c=parseKey(key,numbers[key].value);if(c===null){$('#error').textContent=`${key} must be between ${BOUNDS[key].min} and ${BOUNDS[key].max} in steps of ${labels[key].step}`;$('#export').disabled=true;return}labels[key].value=String(c);active='custom';draw()});
 }
 function draw(){const nd=parseKey('nd',numbers.nd.value),vd=parseKey('vd',numbers.vd.value);if(nd===null||vd===null){$('#error').textContent='Enter values within the displayed bounds.';$('#export').disabled=true;return}let r;try{r=reference(nd,vd);$('#error').textContent='';$('#export').disabled=false}catch(e){$('#error').textContent=e.message;$('#export').disabled=true;return}
 for(const b of $('#presets').children)b.setAttribute('aria-pressed',String(PRESETS.find(p=>p.id===active)?.name===b.textContent));

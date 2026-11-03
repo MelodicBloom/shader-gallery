@@ -8,4 +8,7 @@ test('empty, incomplete and out-of-range input is rejected without clamping', ()
   }
   assert.equal(parseBoundedInput('1.517', 1.01, 2.55), 1.517);
   assert.equal(parseBoundedInput('1.01', 1.01, 2.55), 1.01);
+  assert.equal(parseBoundedInput('9.05', 9, 95, 0.1), null);
+  assert.equal(parseBoundedInput('9.1', 9, 95, 0.1), 9.1);
+  assert.equal(parseBoundedInput('1.517', 1.01, 2.55, 0.001), 1.517);
 });

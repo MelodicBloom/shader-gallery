@@ -38,6 +38,8 @@ def main():
             assert export.is_disabled()
             vd.fill('3')
             assert vd.input_value() == '3' and export.is_disabled()
+            vd.fill('9.05')
+            assert vd.input_value() == '9.05' and export.is_disabled()
             vd.fill('30')
             assert vd.input_value() == '30' and export.is_enabled()
             nd.fill('1')
