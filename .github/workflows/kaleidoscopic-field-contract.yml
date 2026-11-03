@@ -19,3 +19,6 @@ jobs:
       - name: Verify bounded control and fixture contracts
         working-directory: experiments/kaleidoscopic-field-001
         run: npm test
+      - name: Verify server survives missing directory indexes
+        working-directory: experiments/kaleidoscopic-field-001
+        run: node tests/server-smoke.mjs
