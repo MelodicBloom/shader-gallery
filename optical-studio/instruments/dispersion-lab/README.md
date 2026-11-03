@@ -24,15 +24,15 @@ pkg install python nodejs-lts
 cd /path/to/shader-gallery   # repo root
 
 # Preferred — from repo root:
-python3 -m http.server 8000
+python3 -m http.server 8000 --bind 127.0.0.1
 
 # Or from this package (serves repo root via --directory ../../..):
 npm run serve --prefix optical-studio/instruments/dispersion-lab
 
 # If `python` / `python3 -m` fails on Termux, use either:
-python -m http.server 8000
+python -m http.server 8000 --bind 127.0.0.1
 # or (no Python):
-npx --yes serve -p 8000 .
+npx --yes serve -l tcp://127.0.0.1:8000 .
 ```
 
 Then open: `http://127.0.0.1:8000/optical-studio/instruments/dispersion-lab/`
@@ -52,7 +52,7 @@ The five material choices are pedagogical approximate `n_d/V_d` pairs described 
 
 The chart shows seven numerical Cauchy samples, not seven WebGL ray paths. The current Crystal Lens is three-proxy-channel Snell GLSL and its controls are not bound to this instrument. Export is candidate-only JSON; do not import to production shader without a material/control-adapter test and a new image/source receipt.
 
-UI bounds for refractive index (`1.01`–`2.55`) and Abbe (`9`–`95`) match the sliders; out-of-range typed values are clamped or rejected so chart/export stay in sync with the controls.
+UI bounds for refractive index (`1.01`–`2.55`) and Abbe (`9`–`95`) match the sliders. Incomplete or out-of-range typed values remain editable and disable export until corrected; valid values update the chart and slider.
 
 ## Crystal Lens adapter 0.1
 

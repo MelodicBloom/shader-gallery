@@ -8,8 +8,8 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node --test test-cauchy.mjs test-crystal-lens-adapter.mjs",
-    "serve": "python3 -m http.server 8000 --directory ../../.."
+    "test": "node --test test-cauchy.mjs test-crystal-lens-adapter.mjs test-input-validation.mjs",
+    "serve": "python3 -m http.server 8000 --bind 127.0.0.1 --directory ../../.."
   },
   "dependencies": {},
   "devDependencies": {}

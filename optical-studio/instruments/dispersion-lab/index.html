@@ -13,17 +13,17 @@
 <p class="footer">Provenance: <a href="https://oavivo.github.io/dispersion/">oavivo Dispersion</a> inspired material-strip / make-your-own pedagogy. Mathematical formulation follows <a href="https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_dispersion/README.md">Khronos KHR_materials_dispersion</a>. Original MelodicBloom UI and computation; no oavivo code/assets incorporated. Candidate-only, uncalibrated.</p>
 </main><script type="module">
 import { PRESETS, reference, indexAtNm, exportCandidate } from './cauchy.mjs';
+import { parseBoundedInput } from './input-validation.mjs';
 const $=s=>document.querySelector(s);let active=PRESETS[1].id;const labels={nd:$('#nd'),vd:$('#vd')};const numbers={nd:$('#ndNumber'),vd:$('#vdNumber')};
 const BOUNDS={nd:{min:Number(labels.nd.min),max:Number(labels.nd.max)},vd:{min:Number(labels.vd.min),max:Number(labels.vd.max)}};
 for(const p of PRESETS){const b=document.createElement('button');b.textContent=p.name;b.type='button';b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{active=p.id;setParams(p.nd,p.vd)});$('#presets').append(b)}
-function clampKey(key,raw){const n=Number(raw);if(!Number.isFinite(n))return null;return Math.min(BOUNDS[key].max,Math.max(BOUNDS[key].min,n))}
+function parseKey(key,raw){return parseBoundedInput(raw,BOUNDS[key].min,BOUNDS[key].max)}
 function setParams(nd,vd){labels.nd.value=numbers.nd.value=String(nd);labels.vd.value=numbers.vd.value=String(vd);draw()}
 for(const key of ['nd','vd']){
-  labels[key].addEventListener('input',()=>{const c=clampKey(key,labels[key].value);if(c===null)return;labels[key].value=String(c);numbers[key].value=String(c);active='custom';draw()});
-  numbers[key].addEventListener('input',()=>{const raw=numbers[key].value;if(raw===''||raw==='.'||raw==='-'||raw.endsWith('.'))return;const c=clampKey(key,raw);if(c===null){$('#error').textContent=`${key} must be between ${BOUNDS[key].min} and ${BOUNDS[key].max}`;$('#export').disabled=true;return}numbers[key].value=String(c);labels[key].value=String(c);active='custom';draw()});
-  numbers[key].addEventListener('change',()=>{const c=clampKey(key,numbers[key].value);if(c===null){numbers[key].value=labels[key].value;return}numbers[key].value=String(c);labels[key].value=String(c);active='custom';draw()});
+  labels[key].addEventListener('input',()=>{const c=parseKey(key,labels[key].value);if(c===null)return;numbers[key].value=String(c);active='custom';draw()});
+  numbers[key].addEventListener('input',()=>{const c=parseKey(key,numbers[key].value);if(c===null){$('#error').textContent=`${key} must be between ${BOUNDS[key].min} and ${BOUNDS[key].max}`;$('#export').disabled=true;return}labels[key].value=String(c);active='custom';draw()});
 }
-function draw(){const nd=Number(numbers.nd.value),vd=Number(numbers.vd.value);let r;try{r=reference(nd,vd);$('#error').textContent='';$('#export').disabled=false}catch(e){$('#error').textContent=e.message;$('#export').disabled=true;return}
+function draw(){const nd=parseKey('nd',numbers.nd.value),vd=parseKey('vd',numbers.vd.value);if(nd===null||vd===null){$('#error').textContent='Enter values within the displayed bounds.';$('#export').disabled=true;return}let r;try{r=reference(nd,vd);$('#error').textContent='';$('#export').disabled=false}catch(e){$('#error').textContent=e.message;$('#export').disabled=true;return}
 for(const b of $('#presets').children)b.setAttribute('aria-pressed',String(PRESETS.find(p=>p.id===active)?.name===b.textContent));
 $('#nF').textContent=r.nF.toFixed(6);$('#nD').textContent=r.ndComputed.toFixed(6);$('#nC').textContent=r.nC.toFixed(6);$('#spread').textContent=r.deltaFC.toFixed(6);
 $('#note').textContent=PRESETS.find(p=>p.id===active)?.note||'Custom transparent isotropic model; no real specimen inferred.';
@@ -33,6 +33,6 @@ for(let nm=450;nm<=700;nm+=50){let xp=x(nm);g.beginPath();g.moveTo(xp,30);g.line
 const ticks=5;for(let i=0;i<=ticks;i++){const n=min+(max-min)*(i/ticks);const yp=y(n);g.beginPath();g.moveTo(55,yp);g.lineTo(W-35,yp);g.stroke();g.fillText(n.toFixed(3),4,yp+5)}
 for(const [nm,col] of [[486.13,'#84adff'],[587.56,'#91f9dd'],[656.27,'#ffb2a0']]){g.strokeStyle=col;g.setLineDash([5,5]);g.beginPath();g.moveTo(x(nm),26);g.lineTo(x(nm),H-46);g.stroke();g.setLineDash([])}
 g.beginPath();for(let nm=420;nm<=730;nm+=2){let xp=x(nm),yp=y(indexAtNm(nd,vd,nm));if(nm===420)g.moveTo(xp,yp);else g.lineTo(xp,yp)}g.lineWidth=5;g.strokeStyle='#c1afff';g.stroke();g.fillStyle='#cfdeeb';g.fillText('n(λ) / two-term Cauchy',66,26)}
-$('#export').addEventListener('click',()=>{const data=exportCandidate(active,Number(numbers.nd.value),Number(numbers.vd.value));const blob=new Blob([JSON.stringify(data,null,2)+'\n'],{type:'application/json'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=`dispersion-candidate-${active}.json`;a.click();URL.revokeObjectURL(u)});
+$('#export').addEventListener('click',()=>{const nd=parseKey('nd',numbers.nd.value),vd=parseKey('vd',numbers.vd.value);if(nd===null||vd===null)return;const data=exportCandidate(active,nd,vd);const blob=new Blob([JSON.stringify(data,null,2)+'\n'],{type:'application/json'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=`dispersion-candidate-${active}.json`;a.click();URL.revokeObjectURL(u)});
 setParams(1.517,64.2);
 </script></body></html>
