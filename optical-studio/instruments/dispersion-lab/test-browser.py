@@ -1,6 +1,8 @@
 """Browser acceptance for editable values and candidate-only export."""
 import json
+import os
 from pathlib import Path
+import signal
 import subprocess
 import tempfile
 import time
@@ -8,12 +10,11 @@ import urllib.request
 
 from playwright.sync_api import sync_playwright
 
-ROOT = Path(__file__).resolve().parents[3]
-URL = 'http://127.0.0.1:8765/optical-studio/instruments/dispersion-lab/'
+URL = 'http://127.0.0.1:8000/optical-studio/instruments/dispersion-lab/'
 
 
 def main():
-    server = subprocess.Popen(['python3', '-m', 'http.server', '8765', '--bind', '127.0.0.1', '--directory', str(ROOT)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    server = subprocess.Popen(['npm', 'run', 'serve'], cwd=Path(__file__).parent, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
     try:
         for _ in range(50):
             try:
@@ -55,7 +56,10 @@ def main():
             browser.close()
         print('PASS: intermediate input, bounds, and candidate JSON download')
     finally:
-        server.terminate()
+        try:
+            os.killpg(server.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
         server.wait(timeout=10)
 
 
