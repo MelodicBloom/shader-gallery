@@ -3,7 +3,7 @@ Status: **draft / not implemented.**
 
 ## Crystal Lens (`shaders/crystal-lens/shader.glsl`)
 - Today: `warp` displaces backdrop UV across the whole wall.
-- Plan: multiply warp offset by a lens silhouette mask `m = smoothstep(r+e, r-e, length(p))` so refraction stays inside the lens. Additive: new `u_lensLocal` (default 1, 0 = legacy whole-wall warp).
+- Plan: multiply warp offset by a lens silhouette mask `m = 1.0 - smoothstep(r-e, r+e, length(p))`, with `e > 0`, so refraction stays inside the lens. Keep the lower edge below the upper edge: GLSL leaves `smoothstep` undefined when `edge0 >= edge1`. Additive: new `u_lensLocal` (default 1, 0 = legacy whole-wall warp).
 
 ## Ripple Pool (`shaders/ripple-pool/shader.glsl`)
 - Today: blanks/knocks off at extreme X/Z orbit.
