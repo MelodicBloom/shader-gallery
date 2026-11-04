@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "Opal Fire",
+  "slug": "optical-studio/opal-fire",
+  "category": "Optical",
+  "description": "Small flashes catch the light at several depths beneath a polished surface. Experimental appearance study.",
+  "status": "experimental",
+  "renderer": {
+    "api": "webgl2",
+    "glslVersion": "300 es",
+    "vertexContract": "fullscreen-quad-v_uv"
+  },
+  "uniforms": {
+    "u_time": {
+      "type": "float",
+      "default": 0,
+      "ui": "hidden",
+      "semanticRole": "light-sweep-time"
+    },
+    "u_resolution": {
+      "type": "vec2",
+      "default": [
+        512,
+        512
+      ],
+      "ui": "hidden",
+      "semanticRole": "viewport-size"
+    },
+    "cameraOrbit": {
+      "type": "vec3",
+      "default": [
+        0.35,
+        0.18,
+        3.4
+      ],
+      "ui": "hidden",
+      "semanticRole": "camera-yaw-pitch-distance"
+    },
+    "lightDirection": {
+      "type": "vec3",
+      "default": [
+        0,
+        0,
+        0
+      ],
+      "ui": "hidden",
+      "semanticRole": "optional-world-space-key-light"
+    },
+    "grain": {
+      "type": "float",
+      "default": 0.48,
+      "ui": "slider",
+      "semanticRole": "Domain detail",
+      "min": 0,
+      "max": 1,
+      "step": 0.01
+    },
+    "paletteShift": {
+      "type": "float",
+      "default": 0.32,
+      "ui": "slider",
+      "semanticRole": "Color bias",
+      "min": 0,
+      "max": 1,
+      "step": 0.01
+    },
+    "spectral": {
+      "type": "float",
+      "default": 0.62,
+      "ui": "slider",
+      "semanticRole": "Color strength",
+      "min": 0,
+      "max": 1,
+      "step": 0.01
+    },
+    "roughness": {
+      "type": "float",
+      "default": 0.26,
+      "ui": "slider",
+      "semanticRole": "Roughness",
+      "min": 0.08,
+      "max": 0.8,
+      "step": 0.01
+    }
+  },
+  "controlLabels": {
+    "grain": "Domain detail",
+    "paletteShift": "Color bias",
+    "spectral": "Color strength",
+    "roughness": "Roughness"
+  },
+  "shaderSourceHash": "sha256:3ea0efb4435922cce72928f32ecdb87a3b0b530fb376a08d9d4b1e04a3bbe2a4",
+  "modelBoundary": {
+    "evidenceClass": "HYPOTHESIS",
+    "calibrated": false,
+    "note": "Appearance model; optical constants, spectral calibration, spatial bloom, and hardware profiling remain unverified."
+  },
+  "provenance": {
+    "source": "Optical Studio v1.2 standalone embedded study",
+    "metadata": "Reconstructed from viewer uniform contracts; see local v1.2 source-and-QA bundle for full original per-specimen metadata"
+  }
+}
