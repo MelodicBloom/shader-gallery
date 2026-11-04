@@ -9,9 +9,9 @@ Run the three pilot trials against a pinned source snapshot, using Shader Librar
 | Field | Verified value |
 |---|---|
 | Repository | `MelodicBloom/shader-gallery` |
-| Lab branch | `feat/material-validation-lab-v0` |
-| Base snapshot | `main` at `1497a52` before the PR #18 repair rebase |
-| Existing unresolved review debt | No inherited PR #15/PR #17 debt: the source archive includes 18 studies and Optical Studies resumes after persisted `pageshow` |
+| Lab authority | merged to `main` by PR #18 as `f9bebc950864d83e6748f97cd4b2319f0a965c98` on 2026-10-24; historic PR head `61b3142a66444708196ccad7ec0d407150ba81ab` |
+| Historical base snapshot | PR #18 was based on `main@1497a52d1e22312c287fc3f88a3fe695f6fa559f`; it is not the current execution base |
+| Existing unresolved review debt | No inherited PR #15/PR #17 debt: source archive parity is currently verified at 80 source files / 19 manifest shaders, and Optical Studies resumes after persisted `pageshow` |
 | Authority | Lab docs/records/tools only; does not merge, deploy, or alter existing shader behavior |
 
 ## Commands

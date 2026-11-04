@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "0.1.0",
+  "taskId": "VMA-001-G0-01",
+  "observedAt": "2026-10-24T00:00:00Z",
+  "status": "inconclusive",
+  "scope": "authority reconciliation and control-contract audit only",
+  "repository": "MelodicBloom/shader-gallery",
+  "base": {
+    "branch": "main",
+    "sha": "f9bebc950864d83e6748f97cd4b2319f0a965c98",
+    "source": "merged PR #18"
+  },
+  "workBranch": "codex/vma001-g0-abalone",
+  "authorities": [
+    {
+      "role": "material-validation-contract",
+      "ref": "main:packages/shader-library-v1/source/material-validation-lab/materials/abalone-baseline.record.json",
+      "status": "planned"
+    },
+    {
+      "role": "optical-study-candidate",
+      "ref": "PR #13",
+      "sha": "bc84ebc6b13d2d5d1d1dacdfdef5c526ac8597d7",
+      "status": "open-draft-not-in-main"
+    },
+    {
+      "role": "portfolio-runtime-candidate",
+      "ref": "feature/issue-11-abalone-runtime",
+      "sha": "089326c",
+      "status": "separate-branch-not-in-main",
+      "historicalMerge": "PR #14 -> bf694970248a2e4d9a21e8e6cd55ac10d96b2afe"
+    }
+  ],
+  "externalAsset": {
+    "sourceId": "SRC-KHR-ABALONE",
+    "downloaded": false,
+    "sourceCommit": "TO_PIN",
+    "glbSha256": "TO_PIN",
+    "licenseDisposition": "CC-BY-4.0 attribution required; not independently revalidated in G0"
+  },
+  "commands": [
+    {
+      "command": "node packages/shader-library-v1/source/tools/verify-source-archive.mjs",
+      "exitCode": 0,
+      "result": "80 source files and 19 manifest shaders"
+    },
+    {
+      "command": "node packages/shader-library-v1/source/tools/validate-material-lab.mjs",
+      "exitCode": 0,
+      "result": "3 records valid; source registry aligned"
+    },
+    {
+      "command": "node packages/shader-library-v1/source/tools/test-validate-material-lab.mjs",
+      "exitCode": 0,
+      "result": "extracted-package and mutation suite passed"
+    },
+    {
+      "command": "npm ci (isolated portfolio-runtime worktree at 089326c)",
+      "exitCode": 0,
+      "result": "23 packages installed"
+    },
+    {
+      "command": "npm run check (isolated portfolio-runtime worktree)",
+      "exitCode": 0,
+      "result": "TypeScript check passed"
+    },
+    {
+      "command": "npm run build (isolated portfolio-runtime worktree)",
+      "exitCode": 0,
+      "result": "Vite production build passed"
+    },
+    {
+      "command": "npm run test (isolated portfolio-runtime worktree)",
+      "exitCode": 1,
+      "result": "blocked by host EPERM creating tsx IPC socket at /tmp/tsx-0/17.pipe; no code failure conclusion"
+    }
+  ],
+  "notRun": [
+    "Khronos GLB download, hashing, or texture inspection",
+    "Three.js adapter or dependency addition",
+    "WebGL2 browser render, controlled captures, GPU or mobile performance measurement",
+    "shader/runtime/manifest/deployment changes"
+  ],
+  "nextDecision": "Human review of G0 audit, then explicit authorization for G1 source acquisition and reference-lane execution."
+}

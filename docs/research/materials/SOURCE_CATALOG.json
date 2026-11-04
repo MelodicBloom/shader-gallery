@@ -1,0 +1,205 @@
+{
+  "schemaVersion": "0.2.0",
+  "title": "Shader Gallery Material Research Source Catalog",
+  "observedAt": "2026-10-27",
+  "purpose": "Discovery and provenance ledger; not an import manifest or a production-readiness claim.",
+  "evidenceGrades": {
+    "E2": "direct primary source retrieved at listed locator on observedAt",
+    "E3": "named prior research summary awaiting direct re-check",
+    "E4": "proposal or untested recommendation",
+    "E5": "excluded or non-permissive without further authorization"
+  },
+  "usePolicy": [
+    "Floating branch URLs are discovery only. A trial must record an immutable commit SHA and downloaded artifact SHA-256 before reuse.",
+    "A source may be studied without being copied. Copying/adapting needs the source's license disposition, attribution requirement, and an independently executed compile or behavior check.",
+    "No external source establishes physical calibration, mobile performance, or production readiness for Shader Gallery."
+  ],
+  "sources": [
+    {
+      "id": "SRC-KHR-ABALONE-2026-10",
+      "grade": "E2",
+      "status": "approved-for-bounded-study-pending-asset-hash",
+      "title": "Khronos glTF Sample Assets — IridescenceAbalone",
+      "locator": "https://github.com/KhronosGroup/glTF-Sample-Assets/tree/8f492390ddc7a2ae221a1369ef560589cf8c70fb/Models/IridescenceAbalone",
+      "observedCommit": "8f492390ddc7a2ae221a1369ef560589cf8c70fb",
+      "license": "CC-BY-4.0; attribution to Abby Crawford (2015) and Eric Chadwick (2023) per asset README",
+      "verifiedFacts": ["photogrammetry abalone asset", "uses KHR_materials_iridescence", "R/G pack iridescence intensity/thickness; ORM is separately packed", "partial metalness is an acknowledged artistic approximation"],
+      "permittedStudyUse": ["reference GLB and map-channel inspection", "controlled comparison fixture", "attributed asset loading after binary hash"],
+      "notTransferred": ["measured abalone optics", "original Shader Gallery material authorship", "partial metalness as physical fact"],
+      "nextGate": "G1 pins downloaded GLB SHA-256 and records all asset-derived observations in MVT-ABALONE-001."
+    },
+    {
+      "id": "SRC-KHR-IRIDESCENCE-2026-10",
+      "grade": "E2",
+      "status": "reference-only",
+      "title": "Khronos KHR_materials_iridescence specification",
+      "locator": "https://github.com/KhronosGroup/glTF/blob/78784e13221bd9d469056963140d9c4a82d76346/extensions/2.0/Khronos/KHR_materials_iridescence/README.md",
+      "observedCommit": "78784e13221bd9d469056963140d9c4a82d76346",
+      "license": "Khronos specification; implementation code is not imported by this catalog",
+      "verifiedFacts": ["factor multiplies iridescence texture red channel", "thickness uses texture green channel between nm minimum/maximum", "BRDF implementation can vary with resource constraints"],
+      "permittedStudyUse": ["interchange semantics", "map-channel and unit interpretation", "conformance vocabulary"],
+      "notTransferred": ["Khronos renderer implementation", "claim that a fullscreen proxy is glTF-conformant"],
+      "nextGate": "Compare loaded asset JSON/maps with the pinned specification revision; record deviations rather than silently normalizing them."
+    },
+    {
+      "id": "SRC-THREE-PHYSICAL-2026-10",
+      "grade": "E2",
+      "status": "approved-for-isolated-reference-lane-pending-version-lock",
+      "title": "three.js MeshPhysicalMaterial",
+      "locator": "https://github.com/mrdoob/three.js/blob/f17eb5d689094a3fbd4cd0d64d54729a48036ce0/src/materials/MeshPhysicalMaterial.js",
+      "observedCommit": "f17eb5d689094a3fbd4cd0d64d54729a48036ce0",
+      "license": "MIT",
+      "verifiedFacts": ["iridescence, anisotropy, transmission and dispersion are supported material features", "iridescence/thickness maps are non-colour data", "advanced effects add per-pixel cost and environment lighting materially affects evaluation", "legacy iridescenceThicknessRange is deprecated in favor of minimum/maximum properties"],
+      "permittedStudyUse": ["version-pinned Khronos reference adapter", "map semantics cross-check", "controlled reference rendering"],
+      "notTransferred": ["gallery-wide Three.js/R3F migration", "performance claim outside named environment"],
+      "nextGate": "Lock an npm version and lockfile in an isolated directory; do not depend on the observed development-branch SHA."
+    },
+    {
+      "id": "SRC-OVIEDO-BUBBLE-2026-10",
+      "grade": "E2",
+      "status": "approved-for-bounded-study-pending-file-review",
+      "title": "Soap Bubble Iridescence Simulator",
+      "locator": "https://github.com/SantiagoGR11/pompa-iridiscencia/tree/0291b28d8855b5cbe76a450eff1791de3042d198",
+      "observedCommit": "0291b28d8855b5cbe76a450eff1791de3042d198",
+      "license": "MIT",
+      "verifiedFacts": ["public repository describes a WebGL thin-film-interference bubble simulation", "repository topics include spectral rendering and thin films"],
+      "permittedStudyUse": ["inspect and potentially adapt a small, attributed two-interface/Fresnel mechanism after file-level review", "test vocabulary"],
+      "notTransferred": ["repository UI", "unreviewed files", "multi-bounce or drainage claims"],
+      "nextGate": "Pin the exact adapted source file hash, compile in the declared WebGL environment, and test phase-consistent oscillation against the RGB proxy control."
+    },
+    {
+      "id": "SRC-OPENPBR-VIEWER-2026-10",
+      "grade": "E2",
+      "status": "reference-only",
+      "title": "OpenPBR-viewer",
+      "locator": "https://github.com/jamportz/OpenPBR-viewer/tree/cc319276a1ac2b7af7dfe75b77d9dbe9d9ac6dd0",
+      "observedCommit": "cc319276a1ac2b7af7dfe75b77d9dbe9d9ac6dd0",
+      "license": "MIT, copyright Jamie Portsmouth 2024",
+      "verifiedFacts": ["repository describes itself as an OpenPBR WebGL pathtracer example", "the previously cited portsmouth URL redirects to jamportz; this catalog preserves the new canonical locator"],
+      "permittedStudyUse": ["comparison vocabulary and independent reference-renderer investigation"],
+      "notTransferred": ["path-tracer architecture", "gallery realtime performance assumptions", "uncompiled feature claims"],
+      "nextGate": "Compile and inspect only the modules relevant to a named comparison question before any code reuse."
+    },
+    {
+      "id": "SRC-KHR-ANISOTROPY-BARN-LAMP",
+      "grade": "E3",
+      "status": "candidate-to-pin",
+      "title": "Khronos Anisotropy Barn Lamp sample asset",
+      "locator": "https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/AnisotropyBarnLamp",
+      "license": "TO_VERIFY at pinned asset revision",
+      "proposedUse": ["directional reflection/map-channel study for Silver Specular and Labradorite"],
+      "limits": ["not evidence that metal anisotropy equals labradorite internal plate behaviour"],
+      "nextGate": "Locate, pin, license-check, and inspect texture semantics before promotion beyond candidate."
+    },
+    {
+      "id": "SRC-KHR-DISPERSION-TEST",
+      "grade": "E3",
+      "status": "candidate-to-pin",
+      "title": "Khronos DispersionTest sample asset",
+      "locator": "https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/DispersionTest",
+      "license": "TO_VERIFY at pinned asset revision",
+      "proposedUse": ["transmission/IOR/dispersion fixture for prism-family studies"],
+      "limits": ["not evidence for Opal Fire or Labradorite internal colour structures"],
+      "nextGate": "Pin asset and compare against an isolated reference lane."
+    },
+    {
+      "id": "SRC-THREE-CUSTOM-SHADER-MATERIAL",
+      "grade": "E2",
+      "status": "candidate-to-pin",
+      "title": "THREE-CustomShaderMaterial",
+      "locator": "https://github.com/FarazzShaikh/THREE-CustomShaderMaterial",
+      "license": "MIT",
+      "verifiedFacts": ["project describes itself as extending Three.js standard materials with custom shaders"],
+      "proposedUse": ["only if the isolated Three.js lane needs a PBR extension point that native material controls cannot express"],
+      "limits": ["adds a dependency surface; no adoption decision has been made"],
+      "nextGate": "Demonstrate an unmet native MeshPhysicalMaterial requirement and pin a version."
+    },
+    {
+      "id": "SRC-DREI",
+      "grade": "E2",
+      "status": "candidate-to-pin",
+      "title": "pmndrs/drei",
+      "locator": "https://github.com/pmndrs/drei",
+      "license": "MIT",
+      "verifiedFacts": ["repository provides helpers for react-three-fiber"],
+      "proposedUse": ["future R3F-only transmission/refraction exploration"],
+      "limits": ["Shader Gallery does not currently use React Three Fiber; this is not a reason to migrate"],
+      "nextGate": "A measured presentation requirement must justify an R3F decision first."
+    },
+    {
+      "id": "SRC-REACT-POSTPROCESSING",
+      "grade": "E2",
+      "status": "candidate-to-pin",
+      "title": "pmndrs/react-postprocessing",
+      "locator": "https://github.com/pmndrs/react-postprocessing",
+      "license": "MIT; underlying postprocessing dependency license must be recorded at adoption",
+      "verifiedFacts": ["repository describes postprocessing for react-three-fiber"],
+      "proposedUse": ["future Bloom/Flare Burst experiments after a separate R3F decision"],
+      "limits": ["no present R3F lane; no HDR/bloom performance conclusion"],
+      "nextGate": "Treat as deferred until the presentation architecture changes by evidence."
+    },
+    {
+      "id": "SRC-MATERIAL-MAKER",
+      "grade": "E2",
+      "status": "candidate-to-pin",
+      "title": "Material Maker",
+      "locator": "https://github.com/RodZill4/material-maker",
+      "license": "MIT",
+      "verifiedFacts": ["procedural-texture authoring and 3D-painting tool based on Godot"],
+      "proposedUse": ["offline procedural-map authoring and comparison baselines"],
+      "limits": ["not a runtime dependency and not evidence of browser compatibility"],
+      "nextGate": "Document graph/version/export settings and resulting map hashes if used."
+    },
+    {
+      "id": "SRC-WEBGL-NOISE",
+      "grade": "E2",
+      "status": "candidate-to-pin",
+      "title": "Ashima webgl-noise",
+      "locator": "https://github.com/ashima/webgl-noise",
+      "license": "MIT",
+      "verifiedFacts": ["procedural noise routines compatible with WebGL"],
+      "proposedUse": ["small, attributed organic/geological field building blocks"],
+      "limits": ["noise is a structural primitive, not material optics or art direction"],
+      "nextGate": "Copy only a named routine after its exact file/version is pinned and compile-tested."
+    },
+    {
+      "id": "SRC-GLITCH-CORE",
+      "grade": "E3",
+      "status": "locator-unresolved",
+      "title": "glitch-core kaleidoscope shader collection",
+      "locator": "TO_VERIFY — prior research named this source but did not preserve a durable repository locator",
+      "proposedUse": ["kaleidoscopic postprocess investigation"],
+      "limits": ["not eligible for import until repository identity, license, and specific module are independently recovered"],
+      "nextGate": "Recover primary URL and license; otherwise replace with original implementation."
+    },
+    {
+      "id": "SRC-SPARKLES",
+      "grade": "E3",
+      "status": "locator-unresolved",
+      "title": "sparkles optical shader collection",
+      "locator": "TO_VERIFY — prior research described thin-film, diffraction, sparkle, anisotropy, dispersion and GLSL/WGSL modules without preserving a canonical locator",
+      "proposedUse": ["experimental comparison only"],
+      "limits": ["short visible history and no independent compile/performance review; not an approved dependency"],
+      "nextGate": "Recover canonical repository, license, revision and one module-level test before evaluation."
+    },
+    {
+      "id": "SRC-LYGIA",
+      "grade": "E3",
+      "status": "excluded-pending-commercial-license-review",
+      "title": "LYGIA shader library",
+      "locator": "https://github.com/patriciogonzalezvivo/lygia",
+      "license": "Prior research recorded dual Prosperity/Patron licensing; re-check current terms before any commercial use.",
+      "limits": ["public availability is not sufficient reuse permission"],
+      "nextGate": "Do not import under this project until terms are explicitly approved."
+    },
+    {
+      "id": "SRC-SHADERTOY-GENERAL",
+      "grade": "E4",
+      "status": "not-a-reuse-license",
+      "title": "General Shadertoy discovery pool",
+      "locator": "https://www.shadertoy.com/",
+      "limits": ["individual shaders require their own license review; common CC BY-NC-SA defaults are not a commercial-reuse path"],
+      "nextGate": "Treat as visual study only unless the individual work has a compatible explicit license and attribution path."
+    }
+  ]
+}
