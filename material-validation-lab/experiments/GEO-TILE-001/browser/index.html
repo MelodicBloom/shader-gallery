@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GEO-TILE-001 · Map inspector</title>
+<link rel="stylesheet" href="style.css">
+<main>
+  <header><h1>GEO-TILE-001</h1><p>Inspect the original synthetic fields, their map semantics, and a movable diagnostic light.</p></header>
+  <div class="workspace">
+    <section><canvas id="view" width="256" height="256" aria-label="Procedural tile map preview"></canvas><p id="status" role="status">Loading generated fields…</p></section>
+    <aside>
+      <label>Generated parameter set<select id="preset"><option value="seed42">Seed 42 · 6 tiles · wear 0.4</option><option value="seed43">Seed 43 · 6 tiles · wear 0.4</option><option value="unworn">Seed 42 · 6 tiles · wear 0</option><option value="fourtiles">Seed 42 · 4 tiles · wear 0.4</option></select></label>
+      <label>View<select id="map"><option value="relight">Diagnostic light</option><option value="diagnostic_preview.png">Original CPU preview</option><option value="base_color.png">Base color · sRGB</option><option value="height.png">Height · 16-bit linear</option><option value="normal_tangent_proxy.png">Normal proxy · +Y</option><option value="roughness.png">Roughness · linear</option><option value="ambient_occlusion_proxy.png">Cavity proxy</option><option value="wear_mask.png">Wear mask</option><option value="metalness.png">Metalness · zero</option></select></label>
+      <label>Light azimuth <output id="angle-value">45°</output><input id="angle" type="range" min="0" max="360" value="45"></label>
+      <p id="semantics"></p><p><a id="receipt" href="generated/seed42/receipt.json">Open generation receipt</a></p>
+      <p><a href="../README.md">Source and protocol</a></p>
+    </aside>
+  </div>
+  <footer>Original synthetic fields; diagnostic lighting is an illustration, not a PBR or InstaMAT comparison result. Normal-Y, UV behavior, physical scale, grazing response, and GPU performance remain unvalidated.</footer>
+</main><script type="module" src="viewer.js"></script>
+</html>
