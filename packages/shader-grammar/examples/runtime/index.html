@@ -1,0 +1,11 @@
+<!doctype html><html lang="en">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shader Grammar · Thin-film example runtime</title><link rel="stylesheet" href="style.css">
+<main><h1>Thin-film example</h1><p>A small WebGL2 host for the existing <code>thinFilmApprox</code> function. This is an illustrative RGB approximation, not a recipe compiler or a calibrated spectral renderer.</p>
+<canvas id="view" width="960" height="540" aria-label="RGB thin-film approximation; thickness varies across the horizontal strip"></canvas>
+<p id="status" role="status">Loading the original GLSL example…</p>
+<div class="controls"><label>Center thickness <output id="thickness-value">400 nm</output><input id="thickness" type="range" min="0" max="2000" step="1" value="400"></label><label>Illustrative incidence angle <output id="angle-value">25°</output><input id="angle" type="range" min="0" max="85" step="1" value="25"></label></div>
+<p>The strip spans ±100 nm around the selected thickness, clamped at zero. The angle supplies <code>cosTheta</code> to the original function. No geometry, measured response, or cross-device color equivalence is established.</p>
+<details><summary>Inspect the exact function being hosted</summary><pre id="source"></pre></details>
+<p><a href="../minimal-thin-film.recipe.json">Original example recipe</a> · <a href="../../README.md">Ontology and scope</a></p>
+</main><script type="module" src="viewer.js"></script></html>
