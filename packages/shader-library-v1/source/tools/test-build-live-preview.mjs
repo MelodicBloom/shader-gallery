@@ -36,6 +36,8 @@ function makeFixture(count = 15) {
   write(path.join(packageRoot, "live/app.js"), "console.log('test');\n");
   write(path.join(packageRoot, "live/styles.css"), "html {}\n");
   write(path.join(packageRoot, "src/core/ShaderPlayer.js"), "export class ShaderPlayer {}\n");
+  write(path.join(packageRoot, "ports/grain/index.html"), "<!doctype html><title>grain</title>\n");
+  write(path.join(packageRoot, "ports/grain/reference/frozen.svg"), "<svg/>\n");
 
   return { repositoryRoot, packageRoot, outputRoot, shaders };
 }
@@ -76,7 +78,17 @@ for (const count of [15, 18]) {
   assert.equal(fs.existsSync(path.join(fixture.outputRoot, "sentinel.txt")), false);
   assert.equal(JSON.parse(fs.readFileSync(path.join(fixture.outputRoot, "build-report.json"), "utf8")).shaderCount, count);
   assert.equal(fs.existsSync(path.join(fixture.outputRoot, fixture.shaders.at(-1).preview)), true);
+  assert.equal(fs.readFileSync(path.join(fixture.outputRoot, "ports/grain/reference/frozen.svg"), "utf8"), "<svg/>\n");
+  assert.equal(JSON.parse(fs.readFileSync(path.join(fixture.outputRoot, "build-report.json"), "utf8")).portFiles, 2);
   assertNoTransactionDebris(fixture.repositoryRoot);
+
+  // Removing a port at its source removes only the generated port on rebuild.
+  const priorManifest = fs.readFileSync(path.join(fixture.outputRoot, "manifest.json"));
+  fs.rmSync(path.join(fixture.packageRoot, "ports"), { recursive: true });
+  buildLivePreview({ ...fixture, logger: silentLogger });
+  assert.equal(fs.existsSync(path.join(fixture.outputRoot, "ports")), false);
+  assert.deepEqual(fs.readFileSync(path.join(fixture.outputRoot, "manifest.json")), priorManifest);
+  assert.equal(fs.existsSync(path.join(fixture.outputRoot, fixture.shaders.at(-1).preview)), true);
 
   console.log("✓ live-preview build preserves the previous tree on preflight and staging failures");
   } finally {

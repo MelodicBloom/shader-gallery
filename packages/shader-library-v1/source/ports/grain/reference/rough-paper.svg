@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="384" height="384" viewBox="0 0 384 384">
+<title>Preserved roughPaper filter from SVG Filter Lab</title>
+<desc>The upstream filter is unchanged. This fixture includes its original diffuse lighting; the comparison uses a separate grain-only derivative.</desc>
+<defs>
+<filter id="roughPaper"><feTurbulence id="rp-turb" type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise"/><feDiffuseLighting in="noise" lighting-color="white" surfaceScale="2" result="light"><feDistantLight azimuth="45" elevation="60"/></feDiffuseLighting><feComposite in="light" in2="SourceGraphic" operator="in"/></filter>
+</defs>
+<rect width="384" height="384" fill="rgb(224,209,183)" filter="url(#roughPaper)"/>
+</svg>
