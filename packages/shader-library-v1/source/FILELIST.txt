@@ -1,13 +1,91 @@
-Shader Library v1 source extraction
-
-73 package files extracted beneath packages/shader-library-v1/source/:
-- package metadata, license, README, integration notes, and deployment configuration
-- canonical and docs manifests
-- metadata schema
-- manifest-driven shader.glsl files and matching meta.json files
-- ShaderPlayer runtime and fullscreen vertex shader
-- native EGL/GLES3 compile-link-render validator
-- metadata, preview, PNG, docs, and browser-harness tooling
-- validation and inventory records
-
-Generated preview PNGs are intentionally produced by CI rather than committed.
+.github/workflows/shader-ci.yml
+FILELIST.txt
+INTEGRATION.md
+LICENSE
+README.md
+VALIDATION.log
+docs/index.html
+docs/manifest.json
+docs/shaders/flow/radial-field-bloom/preview.png
+live/app.js
+live/index.html
+live/styles.css
+manifest.json
+material-validation-lab/SOURCE_REGISTRY.json
+material-validation-lab/manifest.json
+material-validation-lab/materials/abalone-baseline.record.json
+material-validation-lab/materials/gold-foil-field.record.json
+material-validation-lab/materials/soap-bubble-spectral.record.json
+netlify.toml
+package.json
+ports/grain/README.md
+ports/grain/app.mjs
+ports/grain/contract.mjs
+ports/grain/index.html
+ports/grain/provenance.json
+ports/grain/reference/rough-paper.svg
+ports/grain/renderer.mjs
+ports/grain/shader.glsl
+ports/grain/styles.css
+schemas/shader-meta.schema.json
+shaders/atmospheric/celestial-veil/meta.json
+shaders/atmospheric/celestial-veil/shader.glsl
+shaders/atmospheric/prismatic-fog/meta.json
+shaders/atmospheric/prismatic-fog/shader.glsl
+shaders/aurora/abalone/meta.json
+shaders/aurora/abalone/shader.glsl
+shaders/aurora/aurora-wave/meta.json
+shaders/aurora/aurora-wave/shader.glsl
+shaders/flow/chromatic-flow/meta.json
+shaders/flow/chromatic-flow/shader.glsl
+shaders/flow/radial-field-bloom/meta.json
+shaders/flow/radial-field-bloom/shader.glsl
+shaders/glow/euphoric-glow/meta.json
+shaders/glow/euphoric-glow/shader.glsl
+shaders/materials/ethereal-sheen/meta.json
+shaders/materials/ethereal-sheen/shader.glsl
+shaders/materials/labradorite-schiller/meta.json
+shaders/materials/labradorite-schiller/shader.glsl
+shaders/materials/liquid-crystal/meta.json
+shaders/materials/liquid-crystal/shader.glsl
+shaders/materials/oil-slick/meta.json
+shaders/materials/oil-slick/shader.glsl
+shaders/materials/opal-core/meta.json
+shaders/materials/opal-core/shader.glsl
+shaders/materials/opal-fire/meta.json
+shaders/materials/opal-fire/shader.glsl
+shaders/materials/pearl-sheen/meta.json
+shaders/materials/pearl-sheen/shader.glsl
+shaders/materials/soap-bubble/meta.json
+shaders/materials/soap-bubble/shader.glsl
+shaders/materials/thin-film/meta.json
+shaders/materials/thin-film/shader.glsl
+shaders/optical/holographic/meta.json
+shaders/optical/holographic/shader.glsl
+shaders/optical/interference/meta.json
+shaders/optical/interference/shader.glsl
+shaders/optical/spectral-prism/meta.json
+shaders/optical/spectral-prism/shader.glsl
+src/core/ShaderPlayer.js
+src/core/fullscreen.vert.glsl
+src/core/index.js
+src/index.js
+tools/browser-common.mjs
+tools/browser-harness.html
+tools/build-docs.mjs
+tools/build-live-preview.mjs
+tools/generate-previews.mjs
+tools/glsl-smoke.c
+tools/grain-port-qa.mjs
+tools/grain-port.test.mjs
+tools/live-preview-qa.mjs
+tools/native-runner.mjs
+tools/png.mjs
+tools/render-expression.mjs
+tools/test-build-live-preview.mjs
+tools/test-native-runner.mjs
+tools/test-validate-material-lab.mjs
+tools/validate-material-lab.mjs
+tools/validate-meta.mjs
+tools/validate-shaders.mjs
+tools/verify-source-archive.mjs
