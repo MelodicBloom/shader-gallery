@@ -130,6 +130,8 @@ try {
       assert.ok(pixels.spatialVariation[backend] > 8, `${backend} spatial variation`);
       for (const key of Object.keys(pixels.sensitivity)) assert.ok(pixels.sensitivity[key][backend] > 1000, `${backend} ${key} sensitivity`);
     }
+    const check = { viewport, reducedMotion: true, pageIdentity: "pass", layout: "pass", pixels, controls: "pending", contextRecovery: "pending", consoleErrors: errors };
+    checks.push(check);
     // Keyboard input exercises the actual shared controls, with a rendered change.
     const before = await page.locator("#gl-preview").screenshot();
     await page.locator("#strength").focus();
@@ -147,19 +149,22 @@ try {
     assert.equal(await page.locator("#seed").inputValue(), "7");
     assert.equal(await page.locator("#strength").inputValue(), "0.65");
     await page.waitForFunction(() => document.querySelector("#svg-status").textContent.includes("seed 7"));
+    check.controls = "pass";
+    await page.screenshot({ path: path.join(output, `grain-${viewport.width}.png`), fullPage: true });
     // Real context loss and restoration, followed by another control change.
-    await page.evaluate(() => document.querySelector("canvas").getContext("webgl2").getExtension("WEBGL_lose_context").loseContext());
+    const loss = await page.evaluateHandle(() => document.querySelector("canvas").getContext("webgl2").getExtension("WEBGL_lose_context"));
+    await loss.evaluate(extension => extension.loseContext());
     await page.waitForSelector('html[data-webgl="unavailable"]');
     assert.equal(await page.locator("#gl-fallback").isVisible(), true);
     await page.locator("#seed").fill("9");
     await page.waitForFunction(() => document.querySelector("#svg-status").textContent.includes("seed 9"));
-    await page.evaluate(() => document.querySelector("canvas").getContext("webgl2").getExtension("WEBGL_lose_context").restoreContext());
+    await loss.evaluate(extension => extension.restoreContext());
     await page.waitForSelector('html[data-webgl="ready"]');
     await page.locator("#reset").click();
     await page.waitForFunction(() => document.querySelector("#svg-status").textContent.includes("seed 7"));
-    await page.screenshot({ path: path.join(output, `grain-${viewport.width}.png`), fullPage: true });
+    await loss.dispose();
     assert.deepEqual(errors, [], "No browser console or runtime errors");
-    checks.push({ viewport, reducedMotion: true, pageIdentity: "pass", layout: "pass", consoleErrors: errors, controls: "pass", contextRecovery: "pass", pixels });
+    check.contextRecovery = "pass";
     console.log(`PASS grain ${viewport.width}×${viewport.height}: pixels, controls, layout, fallback/recovery`);
     await context.close();
   }
