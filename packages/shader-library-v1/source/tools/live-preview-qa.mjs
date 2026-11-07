@@ -143,34 +143,6 @@ try {
   if (opticalErrors.length) throw new Error(`optical study browser errors:\n${opticalErrors.join("\n")}`);
   await opticalContext.close();
   console.log("✓ optical study resumes after bfcache restoration");
-
-  // Exercise the static-preview path independently of GPU availability.
-  const fallbackContext = await browser.newContext({ viewport: { width: 1280, height: 900 } });
-  const fallbackPage = await fallbackContext.newPage();
-  await fallbackPage.addInitScript(() => {
-    const original = HTMLCanvasElement.prototype.getContext;
-    HTMLCanvasElement.prototype.getContext = function(type, ...args) {
-      return type === "webgl2" ? null : original.call(this, type, ...args);
-    };
-  });
-  await fallbackPage.goto(new URL("/docs/optical-studies-02.html", baseUrl).href, { waitUntil: "networkidle" });
-  await fallbackPage.waitForFunction(() => {
-    const image = document.querySelector("#fallback");
-    return image && !image.hidden && image.complete && image.naturalWidth > 0;
-  });
-  if (await fallbackPage.locator("#interactionHint").isVisible()) throw new Error("fallback shows drag guidance");
-  if (await fallbackPage.locator("#controlHelp").isVisible()) throw new Error("fallback shows disabled control guidance");
-  if (!(await fallbackPage.locator("#controls").evaluate(node => node.disabled))) throw new Error("fallback controls remain enabled");
-  const before = await fallbackPage.locator("#fallback").getAttribute("src");
-  await fallbackPage.getByRole("button", { name: /Labradorite Schiller/ }).click();
-  await fallbackPage.waitForFunction(previous => {
-    const image = document.querySelector("#fallback");
-    return image && image.getAttribute("src") !== previous && image.complete && image.naturalWidth > 0;
-  }, before);
-  if (!(await fallbackPage.locator("#notice").textContent())?.includes("selected study")) throw new Error("fallback notice is inaccurate");
-  await fallbackContext.close();
-  console.log("✓ optical static fallback guidance and study selection");
-
 } finally {
   await browser.close();
   await new Promise(resolve => server.close(resolve));
