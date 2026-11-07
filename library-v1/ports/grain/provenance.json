@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "specimen": "isotropic-grain-01",
+  "source": {
+    "repository": "MelodicBloom/svg-filter-lab",
+    "commit": "1d58b4a178d74f30d1f83699d1043eab8306455d",
+    "path": "index.html",
+    "filterId": "roughPaper",
+    "url": "https://github.com/MelodicBloom/svg-filter-lab/blob/1d58b4a178d74f30d1f83699d1043eab8306455d/index.html#L57",
+    "gitBlob": "76089b51a5402075fda706c648aa0c77e989bce6",
+    "sha256": "87f49e68630152272b4a3391c28d58eddab192909073dc5b8fa810d6f8a8314e",
+    "filterExcerptSha256": "861d10e49bc7e341f2eaafc71d644a2cd7c4e25aa32a03f518c4142e280e4e56",
+    "declaredLicense": "MIT (upstream README)"
+  },
+  "preservedFixture": {
+    "path": "reference/rough-paper.svg",
+    "sha256": "03b8191cc94637b731e4947170f53acb87410e25fdfdd70d2394d44eb847b070",
+    "adaptations": "Added SVG namespace, title, description, viewport, and a solid substrate around the byte-preserved filter."
+  },
+  "derivative": {
+    "svg": "Isolated isotropic fractalNoise; removed lighting and compositing; explicit seed, grayscale, opaque multiply strength, sRGB filter space, fixed 384-pixel viewport. This is not the complete original specimen.",
+    "glsl": "Independent seeded integer-hash value noise with weighted octaves. No SVG algorithm or pixel equivalence claimed.",
+    "sharedControls": {
+      "strength": [
+        0,
+        1
+      ],
+      "frequency": [
+        0.01,
+        0.5
+      ],
+      "octaves": [
+        1,
+        5
+      ],
+      "seed": [
+        0,
+        65535
+      ]
+    },
+    "defaultControls": {
+      "strength": 0.65,
+      "frequency": 0.16,
+      "octaves": 3,
+      "seed": 7
+    }
+  },
+  "authorization": {
+    "date": "2026-11-06",
+    "basis": "Owner instruction in this conversation: Go ahead, and get started on the work, following the grain-first recommendation.",
+    "scope": "Isotropic grain comparison only. Lighting and glass remain later owner-gated slices."
+  },
+  "boundaries": [
+    "SVG Filter Lab stays separate and unchanged.",
+    "woodGrain / Brushed Metal stays SVG-only.",
+    "No risograph or posterize port.",
+    "No manifest promotion, calibration, physical-accuracy, performance-certification, or hardware-GPU claim."
+  ]
+}

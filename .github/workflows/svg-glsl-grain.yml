@@ -1,0 +1,54 @@
+name: SVG GLSL grain comparison
+
+on:
+  pull_request:
+    paths:
+      - 'packages/shader-library-v1/source/ports/grain/**'
+      - 'packages/shader-library-v1/source/tools/grain-port*'
+      - 'packages/shader-library-v1/source/tools/build-live-preview.mjs'
+      - 'packages/shader-library-v1/source/tools/test-build-live-preview.mjs'
+      - 'library-v1/ports/grain/**'
+      - 'docs/svg-glsl/**'
+      - '.github/workflows/svg-glsl-grain.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  grain-comparison:
+    # Playwright 1.55's dependency installer does not support Ubuntu 26.04.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: packages/shader-library-v1/source
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+      - name: Check controls, provenance, build, and reversible removal
+        run: |
+          node --test tools/grain-port.test.mjs
+          node tools/test-build-live-preview.mjs
+          # This port does not change manifest shaders. Reuse their committed frames.
+          node --input-type=module -e 'import fs from "node:fs"; const m=JSON.parse(fs.readFileSync("manifest.json")); for(const s of m.shaders) fs.copyFileSync(`../../../library-v1/${s.preview}`, s.preview);'
+          node tools/build-live-preview.mjs
+          git diff --exit-code -- ../../../library-v1
+      - name: Install existing browser QA runtime
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Check pixels and controls in desktop and phone-width Chromium
+        env:
+          GRAIN_QA_OUTPUT: ${{ runner.temp }}/svg-glsl-grain-evidence
+        run: node tools/grain-port-qa.mjs
+      - name: Upload revision-bound receipt and screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: svg-glsl-grain-evidence
+          path: ${{ runner.temp }}/svg-glsl-grain-evidence
+          if-no-files-found: warn
+          retention-days: 14

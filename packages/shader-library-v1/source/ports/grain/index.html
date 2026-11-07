@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grain — SVG ↔ GLSL Comparison</title>
+  <meta name="description" content="An isolated, seeded comparison of native SVG grain and a GLSL value-noise candidate.">
+  <link rel="icon" href="data:,"><link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<main>
+  <nav aria-label="Breadcrumb"><a href="../../">Shader Library</a><span aria-hidden="true"> / </span><span>Material studies · 01</span></nav>
+  <header><p class="eyebrow">SVG ↔ GLSL / GRAIN STUDY</p><h1>One surface.<br>Two ways to make it.</h1><p class="intro">Explore how seed, scale, and strength shape a surface. Both swatches share the same controls; each keeps its own noise algorithm.</p></header>
+  <form id="controls" aria-label="Shared grain controls">
+    <label for="strength">Strength <output id="strength-value" for="strength">0.65</output><input id="strength" name="strength" type="range" min="0" max="1" step="0.01" value="0.65"></label>
+    <label for="frequency">Frequency <output id="frequency-value" for="frequency">0.16</output><input id="frequency" name="frequency" type="range" min="0.01" max="0.5" step="0.01" value="0.16"></label>
+    <label for="octaves">Octaves <output id="octaves-value" for="octaves">3</output><input id="octaves" name="octaves" type="range" min="1" max="5" step="1" value="3"></label>
+    <label for="seed">Seed<input id="seed" name="seed" type="number" min="0" max="65535" step="1" value="7" required></label>
+    <button type="button" id="reset">Reset study</button>
+  </form>
+  <p id="input-status" role="status" aria-live="polite"></p>
+  <section class="comparison" aria-label="Grain comparison">
+    <article><div class="card-heading"><h2>Native SVG</h2><span class="tag">REFERENCE</span></div><img id="svg-preview" width="384" height="384" alt="Native SVG grain rendered with the shared controls"><p id="svg-status" role="status">Preparing reference…</p><p class="caption">Seeded fractalNoise, isolated from the teaching specimen.</p></article>
+    <article><div class="card-heading"><h2>GLSL</h2><span class="tag candidate">CANDIDATE</span></div><canvas id="gl-preview" width="384" height="384" role="img" aria-label="GLSL grain rendered with the shared controls"></canvas><div id="gl-fallback" hidden>GLSL preview unavailable.<br>The SVG reference remains interactive.</div><p id="gl-status" role="status">Preparing candidate…</p><p class="caption">Seeded value noise with weighted octaves. Approximate correspondence.</p></article>
+  </section>
+  <footer><p><strong>What this comparison establishes</strong><br>Shared controls and independent rendered output. Pixel equality, physical accuracy, calibration, and performance certification remain outside this study.</p><p><a href="./reference/rough-paper.svg">Preserved SVG specimen</a> · <a href="./provenance.json">Source receipt</a><br>SVG Filter Lab remains the teaching home. This grain-only derivative adds no lighting or glass port.</p></footer>
+  <noscript><p>This comparison needs JavaScript. <a href="./reference/rough-paper.svg">Open the preserved native SVG specimen.</a></p></noscript>
+</main>
+<script type="module" src="./app.mjs"></script>
+</body>
+</html>
