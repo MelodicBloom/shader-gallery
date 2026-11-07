@@ -12,6 +12,7 @@ on:
       - "packages/shader-library-v1/source/manifest.json"
       - "packages/shader-library-v1/source/shaders/**"
       - "docs/optical-studies-02.html"
+      - "qa/optical-fallback-qa.mjs"
       - "library-v1/**"
       - ".github/workflows/shader-library-v1-live-preview.yml"
   push:
@@ -26,6 +27,7 @@ on:
       - "packages/shader-library-v1/source/manifest.json"
       - "packages/shader-library-v1/source/shaders/**"
       - "docs/optical-studies-02.html"
+      - "qa/optical-fallback-qa.mjs"
       - "library-v1/**"
       - ".github/workflows/shader-library-v1-live-preview.yml"
   workflow_dispatch:
@@ -35,7 +37,7 @@ permissions:
 
 jobs:
   validate-live-preview:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
 
     steps:
@@ -108,6 +110,9 @@ jobs:
       - name: Run browser QA at mobile, tablet, and desktop widths
         working-directory: packages/shader-library-v1/source
         run: node tools/live-preview-qa.mjs
+
+      - name: Check optical static fallback
+        run: node qa/optical-fallback-qa.mjs
 
       - name: Upload isolated live preview
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
