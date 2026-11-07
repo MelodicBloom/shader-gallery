@@ -143,7 +143,7 @@ try {
   if (opticalErrors.length) throw new Error(`optical study browser errors:\n${opticalErrors.join("\n")}`);
   await opticalContext.close();
   console.log("✓ optical study resumes after bfcache restoration");
-  
+
   // Exercise the static-preview path independently of GPU availability.
   const fallbackContext = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const fallbackPage = await fallbackContext.newPage();
