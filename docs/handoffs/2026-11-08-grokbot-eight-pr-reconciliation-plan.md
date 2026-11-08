@@ -50,13 +50,17 @@ Related, **do not silently merge with**: #40 portfolio-runtime reverse-side irid
 set -euo pipefail
 git status --short --branch
 git remote -v
-git fetch --no-tags origin main \
-  feat/material-validation-lab-v0 feat/mvt-abalone-001 \
-  feat/optical-studio-v1.2-abalone-lab \
-  feat/material-atlas-opal-v0-1 codex/shader-grammar-intake \
-  experiment/geotile-001-instamat-reconstruction \
-  experiment/wireframe-mandala-001 \
-  experiment/noise-kaleidoscope-v0 experiment/kaleidoscopic-field-001
+git fetch --no-tags origin \
+  refs/heads/main:refs/remotes/origin/main \
+  refs/heads/feat/material-validation-lab-v0:refs/remotes/origin/feat/material-validation-lab-v0 \
+  refs/heads/feat/mvt-abalone-001:refs/remotes/origin/feat/mvt-abalone-001 \
+  refs/heads/feat/optical-studio-v1.2-abalone-lab:refs/remotes/origin/feat/optical-studio-v1.2-abalone-lab \
+  refs/heads/feat/material-atlas-opal-v0-1:refs/remotes/origin/feat/material-atlas-opal-v0-1 \
+  refs/heads/codex/shader-grammar-intake:refs/remotes/origin/codex/shader-grammar-intake \
+  refs/heads/experiment/geotile-001-instamat-reconstruction:refs/remotes/origin/experiment/geotile-001-instamat-reconstruction \
+  refs/heads/experiment/wireframe-mandala-001:refs/remotes/origin/experiment/wireframe-mandala-001 \
+  refs/heads/experiment/noise-kaleidoscope-v0:refs/remotes/origin/experiment/noise-kaleidoscope-v0 \
+  refs/heads/experiment/kaleidoscopic-field-001:refs/remotes/origin/experiment/kaleidoscopic-field-001
 git rev-parse origin/main
 git merge-base origin/main HEAD
 git diff --check
@@ -129,7 +133,8 @@ The multi-ref fetch above is an **inspection starting point**; if an individual 
 - [ ] [Normal gradient thread](https://github.com/MelodicBloom/shader-gallery/pull/19#discussion_r4439244677): current finite differences shrink when --size increases. Introduce proper UV texel-spacing normalization for height derivatives and a resolution-independent strength parameter. Red test compares same UV coordinates at sizes 256/512/1024 with same tiles/seed/wear and asserts normals within documented quantization tolerance instead of systematically flattening. Verify normal-Y convention and explicit orientation.
 - [ ] Reproducibility: same seed/params/size yields byte-identical PNGs and SHA-256 receipt; changing seed changes output; invalid size/bounds fail predictably; 16-bit height metadata preserved.
 - [ ] Compare existing [#45 GEO-TILE browser host](https://github.com/MelodicBloom/shader-gallery/pull/45), stacked on #19. When normal generation changes, regenerate each preview plus its source-bound hashes, update #45 only after coordinating owner and branch; never claim prior deployment hashes still describe new maps. Native InstaMAT graph and material fidelity remain unverified.
-- [ ] CLI from material-validation-lab/experiments/GEO-TILE-001: python3 -m unittest discover -s . -p 'test_*.py' -v; python3 generate_maps.py --size 256 --tiles 6 --seed 42 --output <verified scratch directory>; generate 512/1024 scratch outputs with same parameters; inspect normal-map consistency; validate material-lab package and source archive on rebased candidate; git diff --check.
+- [ ] CLI from material-validation-lab/experiments/GEO-TILE-001: python3 -m unittest discover -s . -p 'test_*.py' -v; scratch="$(mktemp -d)"
+python3 generate_maps.py --size 256 --tiles 6 --seed 42 --output "$scratch/maps-256"; generate 512/1024 scratch outputs with same parameters; inspect normal-map consistency; validate material-lab package and source archive on rebased candidate; git diff --check.
 - [ ] Because the old PR is mergeable=false and brings 20 files including merged-Lab snapshots, propose a *content-limited repair branch* that imports GEO-TILE generator/tests/docs/skill only, with provenance to original PR and clean current-main base; obtain owner approval before retargeting/cherry-picking or abandoning original branch.
 
 **Accept:** constant-scale normals across sizes, deterministic receipts and re-generated map proofs; upstream Lab regressions remain intact; reviewable diff without reintroducing stale material records.
