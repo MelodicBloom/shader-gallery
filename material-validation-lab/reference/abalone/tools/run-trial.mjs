@@ -7,6 +7,8 @@ import { ASSET, SPEC, THREE_VERSION } from "./pins.mjs";
 import { buildRunReceipt, gitCommit, runReceiptFileName } from "./run-receipt.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+// Read commit + dirty flag BEFORE the trial rewrites captures, so its own outputs do not mark the tree dirty.
+const startCommit = gitCommit(root);
 const capDir = path.join(root, "receipts", "captures");
 fs.mkdirSync(capDir, { recursive: true });
 const sha = (b) => crypto.createHash("sha256").update(b).digest("hex");
@@ -236,7 +238,7 @@ const receipt = {
   nonClaims: ["measured-abalone", "original-material", "mobile-optimized", "physical calibration", "mineral simulation", "frame rate / performance", "KHR_materials_iridescence conformance of any WebGL2 proxy"],
 };
 // Per-run receipt: commit, UA/renderer (or "unavailable"), timestamp, verdict capped at inconclusive unless measured fail/blocked.
-const run = buildRunReceipt({ label, commit: gitCommit(root), environment: boot.environment, browserVersion, now: new Date(receipt.generatedAt), reviewDecision: receipt.review.decision });
+const run = buildRunReceipt({ label, commit: startCommit, environment: boot.environment, browserVersion, now: new Date(receipt.generatedAt), reviewDecision: receipt.review.decision });
 receipt.run = run;
 const runsDir = path.join(root, "receipts", "runs"); fs.mkdirSync(runsDir, { recursive: true });
 fs.writeFileSync(path.join(runsDir, runReceiptFileName(run)), JSON.stringify(run, null, 2) + "\n");
