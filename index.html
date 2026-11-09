@@ -6,7 +6,10 @@
 <title>Shader Gallery — Jennipher Troup (MelodicBloom)</title>
 <style>
 body{margin:0;font:16px/1.55 system-ui,sans-serif;background:#0b0b12;color:#e8e6f0;display:flex;justify-content:center}
-main{max-width:760px;padding:48px 24px 64px}
+main{max-width:760px;width:100%;min-width:0;box-sizing:border-box;padding:48px 24px 64px}
+a,code{overflow-wrap:anywhere}
+.webgl-note{border-left:3px solid #f9bd8e;padding-left:12px;color:#f3e3d4}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 h1{margin:0 0 8px;font-size:1.85rem;letter-spacing:-0.02em}
 h2{margin:32px 0 10px;font-size:1.15rem}
 p,li{color:#d4d1de}
@@ -32,6 +35,7 @@ small{color:#9a97a8}
 <h1>Shader Gallery</h1>
 <p class="lede">Evidence-led WebGL2 material research by Jennipher Troup (MelodicBloom): interactive optical studies, procedural materials, and reproducible validation.</p>
 <a class="cta" href="docs/">▶ Open the interactive gallery</a>
+<p id="webgl-note" class="webgl-note" role="status" hidden></p>
 <div class="feature">
 <div><p class="meta">Explore the studies below. Material Validation Lab trials advance with receipts; claims stay bounded until a named trial records them.</p>
 <ul class="demo-links" aria-label="Explore the studies">
@@ -88,6 +92,12 @@ Original deterministic fold-height fields coupled to normal and roughness; direc
 
 <p><small>Source and Lab docs: <a href="https://github.com/MelodicBloom/shader-gallery">github.com/MelodicBloom/shader-gallery</a> · Material Validation Lab under <code>material-validation-lab/</code> · Live Shader Library v1 previews require WebGL2; Gallery, Abalone, and Aurora request WebGL 1. Static library previews remain available without live WebGL2.</small></p>
 </main>
+<script>
+// No-WebGL fallback note. The landing itself needs no WebGL; this only tells visitors which linked studies will not run here.
+(function(){var n=document.getElementById('webgl-note');if(!n)return;var c=document.createElement('canvas'),g2=null,g1=null;
+try{g2=c.getContext('webgl2')}catch(e){}if(!g2){try{g1=c.getContext('webgl')||c.getContext('experimental-webgl')}catch(e){}}
+if(g2)return;n.hidden=false;n.textContent=g1?'This browser exposes WebGL 1 but not WebGL2: Gallery, Abalone, and Aurora can run; Shader Library v1 shows its stored static previews instead of live shaders.':'This browser does not expose WebGL: the linked studies cannot render live here. Shader Library v1 still shows stored static previews, and this page remains readable.'})();
+</script>
 </body>
 </html>
 

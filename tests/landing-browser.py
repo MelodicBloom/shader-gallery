@@ -40,6 +40,16 @@ def main():
             assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
             expect(page.get_by_role('heading',name='Shader Gallery',exact=True)).to_be_visible()
             page.screenshot(path=str(evidence/'landing-mobile.png'))
+            page.set_viewport_size({'width':320,'height':640});page.evaluate('window.scrollTo(0,0)')
+            assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'),'horizontal overflow at 320px'
+            assert page.evaluate("getComputedStyle(document.querySelector('.cta')).animationName") in ('none','')
+            # No-WebGL fallback: stub getContext so no WebGL context is available.
+            nogl=browser.new_page(viewport={'width':390,'height':844})
+            nogl.add_init_script("HTMLCanvasElement.prototype.getContext=function(){return null}")
+            nogl.goto(URL,wait_until='domcontentloaded')
+            note=nogl.locator('#webgl-note');expect(note).to_be_visible();expect(note).to_contain_text('does not expose WebGL')
+            expect(nogl.get_by_role('heading',name='Shader Gallery',exact=True)).to_be_visible()
+            nogl.close()
             assert not errors,errors
             browser.close()
         print('PASS: local root keyboard navigation, four route responses, and mobile layout smoke')

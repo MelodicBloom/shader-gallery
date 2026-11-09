@@ -29,3 +29,12 @@ test('browser requirement distinguishes live library from WebGL 1 studies',()=>{
   assert.match(html,/Gallery, Abalone, and Aurora request WebGL 1/i);
   assert.doesNotMatch(html,/Needs a browser with WebGL2/i);
 });
+
+test('landing has keyboard focus, reduced-motion guard, mobile viewport and a no-WebGL note',()=>{
+  assert.match(html,/<meta name="viewport" content="width=device-width,initial-scale=1">/);
+  assert.match(html,/a:focus-visible\{outline:3px/);
+  assert.match(html,/@media \(prefers-reduced-motion:reduce\)/);
+  assert.match(html,/id="webgl-note"[^>]*role="status"[^>]*hidden/);
+  assert.match(html,/does not expose WebGL/);
+  assert.doesNotMatch(html,/maximum-scale|user-scalable=no/i);
+});
