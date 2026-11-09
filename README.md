@@ -86,8 +86,9 @@ The manifest-driven package currently contains 18 experimental shaders across ma
 git clone https://github.com/MelodicBloom/shader-gallery
 cd shader-gallery
 # Open any shader's index.html directly in browser
-# or:
-npx serve .
+# or (loopback only, not every network interface):
+npx --yes serve -l tcp://127.0.0.1:3000 .
+# or: python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
 Legacy standalone shaders may live in their own folders. The active package lives under `packages/shader-library-v1/source/`; run its own validation commands from that directory.
