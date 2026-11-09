@@ -3,6 +3,7 @@ import fragment from './abalone.glsl?raw';
 import fallbackUrl from '../../library-v1/shaders/aurora/abalone/preview.png';
 import { sceneStore, uniformContract, setUniform, setLightHeading, orbit, resetScene, serializePreset, restorePreset, createEvidenceMatrix, type UniformKey } from './state';
 import { createPageLifecycle } from './lifecycle';
+import { disposePlayer } from './dispose';
 import './styles.css';
 
 const element = <T extends HTMLElement>(selector: string) => document.querySelector<T>(selector)!;
@@ -21,6 +22,9 @@ const evidenceStatus = element('#evidence-status');
 const media = matchMedia('(prefers-reduced-motion: reduce)');
 sceneStore.setState({ reducedMotion: media.matches });
 let player: ShaderPlayer | null = null, raf = 0, lost = false, generation = 0;
+// contextEpoch counts webglcontextlost events; playerEpoch is the epoch the current player was built in.
+let contextEpoch = 0, playerEpoch = 0;
+const dispose = (p: ShaderPlayer | null, epoch: number) => disposePlayer(p as any, epoch, contextEpoch);
 let elapsed = 0, previous = performance.now(), sample: number[] = [], lastReport = 0;
 let motionState = sceneStore.getState(), dirty = true;
 const inputs = new Map<UniformKey, HTMLInputElement>();
@@ -116,28 +120,29 @@ document.addEventListener('visibilitychange', () => { previous = performance.now
 
 async function initialize() {
   const current = ++generation;
-  cancelAnimationFrame(raf); player?.destroy(); player = null;
+  cancelAnimationFrame(raf); dispose(player, playerEpoch); player = null;
+  const epoch = contextEpoch;
   fallback.hidden = false; canvas.hidden = true;
   status.textContent = 'Preparing WebGL2…';
   element('#error-details').hidden = true;
   const next = new ShaderPlayer(canvas, fragment, { autoStart: false, autoResize: false, trackPointer: false, preserveDrawingBuffer: false, pixelRatio: Math.min(devicePixelRatio || 1, 1.5) });
   try {
     await next.init();
-    if (current !== generation || lost) { next.destroy(); return; }
+    if (current !== generation || lost) { dispose(next, epoch); return; }
     for (const contract of Object.values(uniformContract)) {
       if (next.uniforms.get(contract.uniform)?.type !== 'float') throw new Error(`Uniform contract mismatch: ${contract.uniform} must be an active float.`);
     }
     for (const [uniform, type] of Object.entries(vectorUniformContract)) {
       if (next.uniforms.get(uniform)?.type !== type) throw new Error(`Uniform contract mismatch: ${uniform} must be an active ${type}.`);
     }
-    player = next; canvas.hidden = false; resize(); fallback.hidden = true;
+    player = next; playerEpoch = epoch; canvas.hidden = false; resize(); fallback.hidden = true;
     status.textContent = 'WebGL2 / GLSL ES 3.00 · compiled + linked';
     element('#performance').textContent = motionState.reducedMotion || motionState.playback === 'paused'
       ? 'Frame cadence: motion stopped; render on change' : 'Frame cadence: sampling…';
     previous = performance.now(); dirty = true;
     raf = requestAnimationFrame(frame);
   } catch (error) {
-    next.destroy(); status.textContent = `Static preview · ${(error as Error).message.split('\n')[0]}`;
+    dispose(next, epoch); status.textContent = `Static preview · ${(error as Error).message.split('\n')[0]}`;
     element('#error-details').hidden = false;
     element('#render-error').textContent = (error as Error).message;
     fallback.alt = 'Static Abalone interference preview. Live WebGL2 rendering is unavailable.';
@@ -175,12 +180,12 @@ const lifecycle = createPageLifecycle({
     previous = performance.now(); sample = []; dirty = true;
     cancelAnimationFrame(raf); raf = requestAnimationFrame(frame);
   },
-  release: () => { ++generation; observer.disconnect(); player?.destroy(); player = null; },
+  release: () => { ++generation; observer.disconnect(); dispose(player, playerEpoch); player = null; },
   reinitialize: () => { lost = false; observer.observe(canvas); void initialize(); },
   contextUnusable: () => !player || !player.gl || player.gl.isContextLost(),
 });
 canvas.addEventListener('webglcontextlost', event => {
-  event.preventDefault(); lost = true; ++generation; lifecycle.contextlost();
+  event.preventDefault(); lost = true; ++generation; ++contextEpoch; lifecycle.contextlost();
   fallback.hidden = false; canvas.hidden = true; status.textContent = 'Context lost · static preview · waiting for recovery';
   element('#performance').textContent = 'Frame cadence: context lost';
 });
