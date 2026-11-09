@@ -8,7 +8,8 @@
     "fetch-asset": "node tools/fetch-asset.mjs",
     "serve": "node tools/serve.mjs",
     "trial": "node tools/fetch-asset.mjs && node tools/run-trial.mjs",
-    "uvdiag": "node tools/fetch-asset.mjs && node tools/run-uvdiag.mjs"
+    "uvdiag": "node tools/fetch-asset.mjs && node tools/run-uvdiag.mjs",
+    "test": "node --test tests/run-receipt.test.mjs"
   },
   "dependencies": {
     "three": "0.186.1"

@@ -14,9 +14,12 @@ const $ = (id) => document.getElementById(id);
 const state = { mode: "treatment", mapSource: "asset", geometry: "shell", polar: 20, azimuth: 45, iridescence: 1, tmin: 600, tmax: 800, exposure: 0 };
 const api = { ready: false, error: null, state };
 window.__mvt = api;
+let raf = 0; // light-sweep loop; module scope so fallback() can stop it
 
 function fallback(reason) {
-  api.error = reason;
+  if (raf) { cancelAnimationFrame(raf); raf = 0; }
+  api.ready = false; api.error = reason;
+  document.querySelector(".controls")?.setAttribute("aria-disabled", "true");
   $("view").hidden = true; $("fallback").hidden = false;
   $("runtime").textContent = `Live view unavailable (${reason}). Showing recorded static capture.`;
 }
@@ -30,6 +33,8 @@ async function main() {
   const canvas = $("view");
   const gl = canvas.getContext("webgl2", { preserveDrawingBuffer: true, antialias: false });
   if (!gl) return fallback("WebGL2 not available");
+  // Register before any await so a context loss during asset loading is not missed.
+  canvas.addEventListener("webglcontextlost", (e) => { e.preventDefault(); fallback("WebGL context lost"); });
   const renderer = new THREE.WebGLRenderer({ canvas, context: gl });
   renderer.setPixelRatio(1);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -226,16 +231,17 @@ async function main() {
   document.querySelectorAll("input[name=geometry]").forEach((r) => r.addEventListener("change", (e) => api.set({ geometry: e.target.value })));
   document.querySelectorAll("input[name=mapSource]").forEach((r) => r.addEventListener("change", (e) => api.set({ mapSource: e.target.value })));
   document.querySelectorAll("[data-fixture]").forEach((b) => b.addEventListener("click", () => api.fixture(b.dataset.fixture)));
-  let raf = 0;
+  if (reduceMotion) { $("sweep").hidden = true; }
   $("sweep").addEventListener("click", () => {
-    if (reduceMotion) return;
+    if (reduceMotion || !api.ready) return;
     if (raf) { cancelAnimationFrame(raf); raf = 0; return; }
     const tick = () => { api.set({ azimuth: (state.azimuth + 1) % 360 }); raf = requestAnimationFrame(tick); };
     raf = requestAnimationFrame(tick);
   });
-  canvas.addEventListener("webglcontextlost", (e) => { e.preventDefault(); fallback("WebGL context lost"); });
+  if (api.error) return; // context was lost while loading
   apply();
   api.ready = true;
+  document.querySelector(".controls")?.removeAttribute("aria-disabled");
 }
 
 function drawChannels(img) {

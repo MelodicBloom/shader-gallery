@@ -4,6 +4,7 @@ import fs from "node:fs"; import path from "node:path"; import crypto from "node
 import { chromium } from "playwright-core";
 import { start } from "./serve.mjs";
 import { ASSET, SPEC, THREE_VERSION } from "./pins.mjs";
+import { buildRunReceipt, gitCommit, runReceiptFileName } from "./run-receipt.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const capDir = path.join(root, "receipts", "captures");
@@ -17,7 +18,7 @@ const page = await browser.newPage({ viewport: { width: 1200, height: 1400 }, de
 const consoleErrors = [];
 page.on("console", (m) => { if (m.type() === "error") consoleErrors.push(m.text()); });
 page.on("pageerror", (e) => consoleErrors.push(String(e)));
-await page.goto(`http://localhost:${port}/`);
+await page.goto(`http://127.0.0.1:${port}/`);
 await page.waitForFunction(() => window.__mvt && (window.__mvt.ready || window.__mvt.error), null, { timeout: 120000 });
 const boot = await page.evaluate(() => ({ ready: window.__mvt.ready, error: window.__mvt.error, environment: window.__mvt.environment, mapReceipt: window.__mvt.mapReceipt, synthMapReceipt: window.__mvt.synthMapReceipt, assetSha256: window.__mvt.assetSha256 }));
 const browserVersion = browser.version(); if (!boot.ready) console.error("BOOT", JSON.stringify(boot));
@@ -234,6 +235,11 @@ const receipt = {
   ],
   nonClaims: ["measured-abalone", "original-material", "mobile-optimized", "physical calibration", "mineral simulation", "frame rate / performance", "KHR_materials_iridescence conformance of any WebGL2 proxy"],
 };
+// Per-run receipt: commit, UA/renderer (or "unavailable"), timestamp, verdict capped at inconclusive unless measured fail/blocked.
+const run = buildRunReceipt({ label, commit: gitCommit(root), environment: boot.environment, browserVersion, now: new Date(receipt.generatedAt), reviewDecision: receipt.review.decision });
+receipt.run = run;
+const runsDir = path.join(root, "receipts", "runs"); fs.mkdirSync(runsDir, { recursive: true });
+fs.writeFileSync(path.join(runsDir, runReceiptFileName(run)), JSON.stringify(run, null, 2) + "\n");
 fs.writeFileSync(path.join(root, "receipts", "receipt.json"), JSON.stringify(receipt, null, 2) + "\n");
-console.log(`MVT-ABALONE-001 label=${label} mapNoColorSpace=${mapOk} synthNoCS=${synthNoCS} synthetic=${JSON.stringify(synthPerCheck)} sensitivity=${JSON.stringify(sensPerCheck)} sensVariants=${JSON.stringify(sensPerVariant)} shellSens=${JSON.stringify(shellSensPerCheck)} shellSensVariants=${JSON.stringify(shellSensPerVariant)} rough0=${JSON.stringify(factorEval["shell-rough0"]?.perCheck)} metal1=${JSON.stringify(factorEval["shell-metal1"]?.perCheck)} metal1mapkept=${JSON.stringify(factorEval["shell-metal1-mapkept"]?.perCheck)} metal05mapnull=${JSON.stringify(factorEval["shell-metal05-mapnull"]?.perCheck)} assetEffects=${JSON.stringify(effects)} renderer=${boot.environment?.renderer}`);
+console.log(`MVT-ABALONE-001 label=${label} mapNoColorSpace=${mapOk} synthNoCS=${synthNoCS} synthetic=${JSON.stringify(synthPerCheck)} sensitivity=${JSON.stringify(sensPerCheck)} sensVariants=${JSON.stringify(sensPerVariant)} shellSens=${JSON.stringify(shellSensPerCheck)} shellSensVariants=${JSON.stringify(shellSensPerVariant)} rough0=${JSON.stringify(factorEval["shell-rough0"]?.perCheck)} metal1=${JSON.stringify(factorEval["shell-metal1"]?.perCheck)} metal1mapkept=${JSON.stringify(factorEval["shell-metal1-mapkept"]?.perCheck)} metal05mapnull=${JSON.stringify(factorEval["shell-metal05-mapnull"]?.perCheck)} assetEffects=${JSON.stringify(effects)} renderer=${boot.environment?.renderer} run.verdict=${run.verdict} run.commit=${run.commit.sha.slice(0, 7)} run.scope="${run.evidenceScope}"`);
 process.exit(label === "blocked" ? 2 : label === "fail" ? 1 : 0);

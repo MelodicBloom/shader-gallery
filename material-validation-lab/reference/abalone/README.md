@@ -6,7 +6,7 @@
 
 ```bash
 cd material-validation-lab/reference/abalone && npm ci && npm run fetch-asset && npm run serve
-# open http://localhost:4173/
+# open http://127.0.0.1:4173/  (server binds loopback only)
 ```
 
 Re-run the trial and regenerate captures + receipt: `npm run trial` (needs Chrome; env var `CHROME_PATH` overrides the default `/usr/bin/google-chrome`).
@@ -54,3 +54,10 @@ metalness path dominates. Label stays `inconclusive` pending named human review.
 `automated.shellMetal05MapNull` (measured: both pass; anchor shell-metal1 pass; authored shell synthetic fail), 2×2 in
 `automated.metalMapOutcome`. Proposed reading: either raising the scalar or removing the map is sufficient alone.
 Label stays `inconclusive` pending named human review.
+
+## Per-run receipt
+Every `npm run trial` also writes `receipts/runs/run-<timestamp>-<sha7>.json` and the same object at `receipt.json → run`:
+commit SHA (+ dirty-tree flag), user agent, WebGL renderer/vendor/version (or `"unavailable"`), ISO timestamp, and a
+`verdict` that is `fail`/`blocked` only when measured and otherwise capped at `inconclusive` (no named human review). On
+software EGL / SwiftShader, `evidenceScope` says **compile and render only — not GPU evidence, not visual evidence**.
+Unit tests: `npm test` (`tests/run-receipt.test.mjs`, no browser needed).

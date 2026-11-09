@@ -15,7 +15,7 @@ const server = await start(0);
 const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH || "/usr/bin/google-chrome", args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] });
 const page = await browser.newPage({ viewport: { width: 1200, height: 1400 }, deviceScaleFactor: 1 });
 const errs = []; page.on("pageerror", (e) => errs.push(String(e))); page.on("console", (m) => { if (m.type() === "error") errs.push(m.text()); });
-await page.goto(`http://localhost:${server.address().port}/`);
+await page.goto(`http://127.0.0.1:${server.address().port}/`);
 await page.waitForFunction(() => window.__mvt && (window.__mvt.ready || window.__mvt.error), null, { timeout: 120000 });
 const FIX = ["neutral", "grazing", "light-sweep"];
 const raw = {};
