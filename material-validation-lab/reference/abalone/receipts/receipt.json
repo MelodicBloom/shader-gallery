@@ -1,7 +1,7 @@
 {
   "schemaVersion": "0.1.0",
   "trial": "MVT-ABALONE-001",
-  "generatedAt": "2026-10-26T15:59:52.776Z",
+  "generatedAt": "2026-11-09T18:07:40.146Z",
   "command": "cd material-validation-lab/reference/abalone && npm ci && npm run trial",
   "label": "inconclusive",
   "labelReason": "Run-7 metalness scalar vs map (pre-registered, METALMAP handoff): shell-metal1-mapkept=pass, shell-metal05-mapnull=pass, shell-metal1 anchor=pass -> metal1-mapkept passes and metal1 passes: scalar metalness=1 sufficient; nulling the map was unnecessary (proposed); metal05-mapnull passes: removing the map alone (at 0.5) is enough (proposed). Run-6 one-factor splits (pre-registered, FACTORS handoff): shell-rough0=fail, shell-metal1=pass -> metal1 clears, rough0 fails: metalness path dominates (proposed). Run-5 shell-sens fixture (shell mesh + metalness 1/roughness 0/maps removed) met the pre-registered criterion (automated.shellSens.automatedChannelCheck=pass); run-4 plane sensitivity=pass; authored-shell synthetic=fail preserved (run-3 fail in history); asset=fail (post-hoc metric). Awaiting named human review (required for pass).",
@@ -5127,5 +5127,29 @@
     "mineral simulation",
     "frame rate / performance",
     "KHR_materials_iridescence conformance of any WebGL2 proxy"
-  ]
+  ],
+  "run": {
+    "schemaVersion": "0.1.0",
+    "timestamp": "2026-11-09T18:07:40.146Z",
+    "commit": {
+      "sha": "5aa0ce2b5f318f8d39b9bd179365a67ef7d4047d",
+      "dirtyWorkingTree": false
+    },
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "browser": "Chrome 156.0.8078.47 (headless, playwright-core)",
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "vendor": "Google Inc. (Google)",
+    "glVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "rendererClass": "software",
+    "trialLabel": "inconclusive",
+    "verdict": "inconclusive",
+    "verdictBasis": "capped at inconclusive: human review pending; software rasterizer",
+    "evidenceScope": "compile and render only (software EGL / SwiftShader or unknown renderer): not GPU evidence, not visual evidence",
+    "nonClaims": [
+      "GPU verification",
+      "visual pass",
+      "frame rate / performance",
+      "physical calibration"
+    ]
+  }
 }
