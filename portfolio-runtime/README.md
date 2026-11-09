@@ -28,3 +28,9 @@ The development server uses `http://127.0.0.1:5173/` and refuses to silently cho
 ## Scope and next gate
 
 The first specimen has an analytic surface and fixed controlled lighting. Future imported geometry, multi-object scenes, composer layers, audio and any scene framework require a separate measured need and scope decision. Local Chromium QA does not establish Safari/Firefox, physical touch devices, hardware GPU timing, or final hiring-portfolio art direction. Evidence receipts and screenshots are kept in the task's `outputs` folder rather than committed as runtime claims.
+
+## Page and GL lifecycle
+`src/lifecycle.ts` (unit-tested in `src/lifecycle.test.ts`) handles back/forward cache and context loss:
+- `pagehide`: always cancels the rAF loop. `persisted=true` keeps the context but flags the page suspended; otherwise the player is destroyed.
+- `pageshow` with `persisted=true`: restarts the loop, or re-initializes when the player was released or `gl.isContextLost()`.
+- `webglcontextlost`: stops the loop and shows the static preview; `webglcontextrestored` re-initializes (deferred to `pageshow` if it fires while suspended).

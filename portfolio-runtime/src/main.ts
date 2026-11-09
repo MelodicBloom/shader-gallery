@@ -2,6 +2,7 @@ import { ShaderPlayer } from '../../library-v1/runtime/ShaderPlayer.js';
 import fragment from './abalone.glsl?raw';
 import fallbackUrl from '../../library-v1/shaders/aurora/abalone/preview.png';
 import { sceneStore, uniformContract, setUniform, setLightHeading, orbit, resetScene, serializePreset, restorePreset, createEvidenceMatrix, type UniformKey } from './state';
+import { createPageLifecycle } from './lifecycle';
 import './styles.css';
 
 const element = <T extends HTMLElement>(selector: string) => document.querySelector<T>(selector)!;
@@ -166,11 +167,26 @@ function frame(now: number) {
   }
   raf = requestAnimationFrame(frame);
 }
+const lifecycle = createPageLifecycle({
+  stopLoop: () => { cancelAnimationFrame(raf); raf = 0; },
+  startLoop: () => {
+    if (!player || lost) return;
+    observer.observe(canvas); resize();
+    previous = performance.now(); sample = []; dirty = true;
+    cancelAnimationFrame(raf); raf = requestAnimationFrame(frame);
+  },
+  release: () => { ++generation; observer.disconnect(); player?.destroy(); player = null; },
+  reinitialize: () => { lost = false; observer.observe(canvas); void initialize(); },
+  contextUnusable: () => !player || !player.gl || player.gl.isContextLost(),
+});
 canvas.addEventListener('webglcontextlost', event => {
-  event.preventDefault(); lost = true; ++generation; cancelAnimationFrame(raf);
-  fallback.hidden = false; status.textContent = 'Context lost · static preview · waiting for recovery';
+  event.preventDefault(); lost = true; ++generation; lifecycle.contextlost();
+  fallback.hidden = false; canvas.hidden = true; status.textContent = 'Context lost · static preview · waiting for recovery';
   element('#performance').textContent = 'Frame cadence: context lost';
 });
-canvas.addEventListener('webglcontextrestored', () => { lost = false; void initialize(); });
-window.addEventListener('pagehide', () => { ++generation; cancelAnimationFrame(raf); observer.disconnect(); player?.destroy(); });
+canvas.addEventListener('webglcontextrestored', () => lifecycle.contextrestored());
+// bfcache: pagehide always stops rAF; persisted pages keep the (flagged) context and resume on pageshow,
+// non-persisted pages release it. pageshow re-initializes if the context was lost or released meanwhile.
+window.addEventListener('pagehide', event => lifecycle.pagehide(event.persisted));
+window.addEventListener('pageshow', event => lifecycle.pageshow(event.persisted));
 void initialize();
