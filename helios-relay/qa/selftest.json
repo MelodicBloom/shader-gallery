@@ -1,0 +1,438 @@
+{
+  "checks": [
+    {
+      "name": "webgl2-context",
+      "pass": true,
+      "detail": {
+        "ok": true,
+        "vendor": "Google Inc. (Google)",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shading": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "software": true,
+        "timer": true,
+        "floatBuffer": true,
+        "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+        "platform": "Linux x86_64"
+      }
+    },
+    {
+      "name": "compile-vertex",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "compile-fragment",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "link",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "gl-no-error",
+      "pass": true,
+      "detail": {
+        "err": 0,
+        "stored": 0
+      }
+    },
+    {
+      "name": "source-es300",
+      "pass": true,
+      "detail": {}
+    },
+    {
+      "name": "no-texture-lookup",
+      "pass": true,
+      "detail": {}
+    },
+    {
+      "name": "no-march-loop",
+      "pass": true,
+      "detail": {
+        "note": "Raster meshes. The old 80-step march ceiling is unused."
+      }
+    },
+    {
+      "name": "quality-tessellation",
+      "pass": true,
+      "detail": {
+        "v64": 34560,
+        "v32": 14400
+      }
+    },
+    {
+      "name": "coverage-default",
+      "pass": true,
+      "detail": {
+        "coverage": 0.40606770833333333,
+        "w": 960,
+        "h": 640
+      }
+    },
+    {
+      "name": "luminance-bins",
+      "pass": true,
+      "detail": {
+        "bins": 231
+      }
+    },
+    {
+      "name": "reveal-delta",
+      "pass": true,
+      "detail": {
+        "closed": 0.20536295572916666,
+        "open": 0.6599527994791666,
+        "delta": 0.45458984375
+      }
+    },
+    {
+      "name": "byte-equal-repeat",
+      "pass": true,
+      "detail": {
+        "hash": "a36b7593"
+      }
+    },
+    {
+      "name": "aba-restore",
+      "pass": true,
+      "detail": {}
+    },
+    {
+      "name": "period-0-12-24",
+      "pass": true,
+      "detail": {}
+    },
+    {
+      "name": "period-offset",
+      "pass": true,
+      "detail": {
+        "mean": 0,
+        "within2": 1
+      }
+    },
+    {
+      "name": "reset-drift",
+      "pass": true,
+      "detail": {}
+    },
+    {
+      "name": "yaw-pi-equivalent",
+      "pass": true,
+      "detail": {}
+    },
+    {
+      "name": "quality-coverage",
+      "pass": true,
+      "detail": {
+        "c64": 0.40606770833333333,
+        "c32": 0.4028662109375
+      }
+    },
+    {
+      "name": "pulse-angle",
+      "pass": true,
+      "detail": [
+        {
+          "phase": 0,
+          "errorDeg": 1.0151851768635904,
+          "count": 3215,
+          "gotDeg": 1.0151851768635904,
+          "expected": 0
+        },
+        {
+          "phase": 0.25,
+          "errorDeg": 0.49192996002161643,
+          "count": 5685,
+          "gotDeg": 89.50807003997839,
+          "expected": 90
+        },
+        {
+          "phase": 0.5,
+          "errorDeg": 0.012486735668335632,
+          "count": 1988,
+          "gotDeg": 179.98751326433168,
+          "expected": 180
+        },
+        {
+          "phase": 0.75,
+          "errorDeg": 2.5860205687651243,
+          "count": 622,
+          "gotDeg": -92.58602056876515,
+          "expected": 270
+        }
+      ]
+    },
+    {
+      "name": "glow-off-architecture",
+      "pass": true,
+      "detail": {
+        "glowCov": 0.40606770833333333,
+        "cov": 0.40606770833333333,
+        "meanLuma": 0.44651508122560934
+      }
+    },
+    {
+      "name": "corner-states-nonempty",
+      "pass": true,
+      "detail": [
+        {
+          "a": 0,
+          "e": 0,
+          "coverage": 0.39129069010416667
+        },
+        {
+          "a": 0,
+          "e": 1,
+          "coverage": 0.39129069010416667
+        },
+        {
+          "a": 1,
+          "e": 0,
+          "coverage": 0.46208821614583334
+        },
+        {
+          "a": 1,
+          "e": 1,
+          "coverage": 0.46208821614583334
+        }
+      ]
+    },
+    {
+      "name": "dpr-pixel-budget",
+      "pass": true,
+      "detail": {
+        "dprHigh": {
+          "dpr": 1.1640625,
+          "bw": 1490,
+          "bh": 838,
+          "cssW": 1280,
+          "cssH": 720
+        },
+        "dprUrl": {
+          "dpr": 1.1640625,
+          "bw": 1490,
+          "bh": 838,
+          "cssW": 1280,
+          "cssH": 720
+        }
+      }
+    },
+    {
+      "name": "multitouch-10",
+      "pass": true,
+      "detail": {
+        "c1": true,
+        "c2": true,
+        "c3": true,
+        "c4": true,
+        "c5": true,
+        "c6": true,
+        "c7": true,
+        "c8": true,
+        "c9": true,
+        "c10": true,
+        "case1": {
+          "a": 0.25,
+          "e": 0.8,
+          "yaw": 0.4,
+          "t": 0,
+          "phase": 0,
+          "steps": 64,
+          "glow": 0,
+          "playing": false,
+          "visible": true
+        },
+        "case2": {
+          "a": 0.5,
+          "e": 0.8,
+          "yaw": 0,
+          "t": 0,
+          "phase": 0,
+          "steps": 64,
+          "glow": 0,
+          "playing": false,
+          "visible": true
+        },
+        "case3": {
+          "a": 0.5,
+          "e": 0.8,
+          "yaw": 1.5707963267948966,
+          "t": 0,
+          "phase": 0,
+          "steps": 64,
+          "glow": 0,
+          "playing": false,
+          "visible": true
+        },
+        "case6": {
+          "a": 0.19999999999999996,
+          "e": 0.5,
+          "yaw": 0,
+          "t": 0,
+          "phase": 0,
+          "steps": 64,
+          "glow": 0,
+          "playing": false,
+          "visible": true
+        },
+        "case7": {
+          "a": 0.2,
+          "e": 0.5,
+          "yaw": 0,
+          "t": 0,
+          "phase": 0,
+          "steps": 64,
+          "glow": 0,
+          "playing": false,
+          "visible": true
+        },
+        "case8": {
+          "a": 0,
+          "e": 0.9375,
+          "yaw": 0,
+          "t": 0,
+          "phase": 0,
+          "steps": 64,
+          "glow": 0,
+          "playing": false,
+          "visible": true
+        },
+        "case10": {
+          "a": 0.08333333333333333,
+          "e": 0.96875,
+          "yaw": 0,
+          "t": 0,
+          "phase": 0,
+          "steps": 64,
+          "glow": 0,
+          "playing": false,
+          "visible": true
+        }
+      }
+    },
+    {
+      "name": "slider-not-pointer",
+      "pass": true,
+      "detail": {
+        "sliderA": 0.62
+      }
+    },
+    {
+      "name": "keyboard",
+      "pass": true,
+      "detail": {
+        "keyA": true,
+        "keyE": true,
+        "keyY": true,
+        "keyR": true,
+        "state": {
+          "a": 0.45,
+          "e": 0.55,
+          "yaw": 0,
+          "t": 0,
+          "phase": 0,
+          "steps": 64,
+          "glow": 0,
+          "playing": false,
+          "visible": true
+        }
+      }
+    },
+    {
+      "name": "pause-hidden-logic",
+      "pass": true,
+      "detail": {
+        "clockStart": 0,
+        "hiddenLogic": 0,
+        "playedLogic": 0.6,
+        "pausedLogic": 0.6
+      }
+    },
+    {
+      "name": "pause-hidden-raf",
+      "pass": true,
+      "detail": {
+        "advances": 23,
+        "playedT": 1.6165999999999998,
+        "pausedMark": 1.6165999999999998,
+        "afterPause": 1.6165999999999998,
+        "hiddenMark": 1.6165999999999998,
+        "afterHidden": 1.6165999999999998,
+        "hidden": false
+      }
+    },
+    {
+      "name": "finite-output",
+      "pass": true,
+      "detail": {
+        "available": true,
+        "complete": true,
+        "nonfinite": 0,
+        "sampled": true
+      }
+    },
+    {
+      "name": "context-restore",
+      "pass": true,
+      "detail": {
+        "beforeLoss": "36116761",
+        "afterLoss": "36116761"
+      }
+    },
+    {
+      "name": "shader-failure-visible",
+      "pass": true,
+      "detail": {
+        "failed": false,
+        "errorShown": true,
+        "restored": true,
+        "text": ""
+      }
+    },
+    {
+      "name": "webgl-denial-path",
+      "pass": true,
+      "detail": {
+        "denialText": "WebGL2 context unavailable. HELIOS RELAY needs a WebGL2 browser."
+      }
+    }
+  ],
+  "pass": 32,
+  "fail": 0,
+  "gl": {
+    "ok": true,
+    "vendor": "Google Inc. (Google)",
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "shading": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+    "software": true,
+    "timer": true,
+    "floatBuffer": true,
+    "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "platform": "Linux x86_64"
+  },
+  "buffer": {
+    "dpr": 1,
+    "bw": 960,
+    "bh": 640,
+    "cssW": 960,
+    "cssH": 640
+  },
+  "bounds": {
+    "bmin": [
+      -1.351025613623631,
+      -0.24,
+      -1.351025613623631
+    ],
+    "bmax": [
+      1.351025613623631,
+      1.1682840050167551,
+      1.351025613623631
+    ]
+  },
+  "reducedMotion": false
+}

@@ -1,0 +1,267 @@
+{
+  "instrument": "HELIOS RELAY",
+  "renderer": "raster-rigid-mesh",
+  "quality_reference": 64,
+  "date": "2026-11-09",
+  "score": {
+    "total": 12,
+    "maximum": 12,
+    "performance": "pass"
+  },
+  "target_ms": {
+    "median": 33.3,
+    "p95": 50
+  },
+  "gl": {
+    "ok": true,
+    "vendor": "Google Inc. (Google)",
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "shading": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+    "software": true,
+    "timer": true,
+    "floatBuffer": true,
+    "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "platform": "Linux x86_64"
+  },
+  "selftest": {
+    "pass": 32,
+    "fail": 0
+  },
+  "raymarch_baseline": {
+    "note": "Raymarch baseline, short samples, same SwiftShader. Failed the 33.3/50 ms target.",
+    "profiles": [
+      {
+        "label": "960x640",
+        "frames": 12,
+        "warmup": 8,
+        "buffer": [
+          960,
+          640
+        ],
+        "gpu_median_ms": 383.606601,
+        "gpu_p95_ms": 390.04022,
+        "raf_median_ms": 383.3
+      },
+      {
+        "label": "390x844",
+        "frames": 30,
+        "warmup": 10,
+        "buffer": [
+          390,
+          844
+        ],
+        "gpu_median_ms": 230.832172,
+        "gpu_p95_ms": 285.990893,
+        "raf_median_ms": 233.3
+      },
+      {
+        "label": "1280x720",
+        "frames": 30,
+        "warmup": 10,
+        "buffer": [
+          1280,
+          720
+        ],
+        "gpu_median_ms": 531.873161,
+        "gpu_p95_ms": 600.240766,
+        "raf_median_ms": 533.3
+      }
+    ]
+  },
+  "raster_benchmark": {
+    "fullProtocol": true,
+    "measured": [
+      {
+        "label": "probe-960",
+        "warmup": 8,
+        "frames": 12,
+        "cpu": {
+          "n": 12,
+          "min": 0,
+          "median": 0,
+          "p95": 0.10000000055879354,
+          "max": 0.10000000055879354
+        },
+        "raf": {
+          "n": 12,
+          "min": 16.59999999999991,
+          "median": 16.699999999999818,
+          "p95": 164.00000000037244,
+          "max": 164.00000000037244
+        },
+        "gpu": {
+          "n": 12,
+          "min": 11.923109,
+          "median": 12.355463,
+          "p95": 13.216124,
+          "max": 13.216124
+        },
+        "gpuMissing": 0,
+        "disjoint": 0,
+        "timer": true,
+        "buffer": {
+          "dpr": 1,
+          "bw": 960,
+          "bh": 640,
+          "cssW": 960,
+          "cssH": 640
+        },
+        "gl": {
+          "ok": true,
+          "vendor": "Google Inc. (Google)",
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "shading": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+          "software": true,
+          "timer": true,
+          "floatBuffer": true,
+          "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+          "platform": "Linux x86_64"
+        }
+      },
+      {
+        "label": "css-390x844",
+        "warmup": 120,
+        "frames": 600,
+        "cpu": {
+          "n": 600,
+          "min": 0,
+          "median": 0,
+          "p95": 0.10000000055879354,
+          "max": 2.1000000005587935
+        },
+        "raf": {
+          "n": 600,
+          "min": 16.5,
+          "median": 16.69999999999891,
+          "p95": 16.700000000000728,
+          "max": 2013.8000000001866
+        },
+        "gpu": {
+          "n": 600,
+          "min": 6.892902,
+          "median": 7.768101,
+          "p95": 10.62103,
+          "max": 16.265855
+        },
+        "gpuMissing": 0,
+        "disjoint": 0,
+        "timer": true,
+        "buffer": {
+          "dpr": 1,
+          "bw": 390,
+          "bh": 844,
+          "cssW": 390,
+          "cssH": 844
+        },
+        "gl": {
+          "ok": true,
+          "vendor": "Google Inc. (Google)",
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "shading": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+          "software": true,
+          "timer": true,
+          "floatBuffer": true,
+          "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+          "platform": "Linux x86_64"
+        }
+      },
+      {
+        "label": "css-1280x720",
+        "warmup": 120,
+        "frames": 600,
+        "cpu": {
+          "n": 600,
+          "min": 0,
+          "median": 0,
+          "p95": 0.10000000055879354,
+          "max": 3.2999999998137355
+        },
+        "raf": {
+          "n": 600,
+          "min": 16.599999999998545,
+          "median": 16.700000000000728,
+          "p95": 33.30000000000291,
+          "max": 2262.2000000007465
+        },
+        "gpu": {
+          "n": 600,
+          "min": 13.131093,
+          "median": 14.08727,
+          "p95": 16.273194,
+          "max": 34.495163
+        },
+        "gpuMissing": 0,
+        "disjoint": 0,
+        "timer": true,
+        "buffer": {
+          "dpr": 1,
+          "bw": 1280,
+          "bh": 720,
+          "cssW": 1280,
+          "cssH": 720
+        },
+        "gl": {
+          "ok": true,
+          "vendor": "Google Inc. (Google)",
+          "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "shading": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+          "software": true,
+          "timer": true,
+          "floatBuffer": true,
+          "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+          "platform": "Linux x86_64"
+        }
+      }
+    ]
+  },
+  "reduced_motion": {
+    "boot": {
+      "a": 0.45,
+      "e": 0.55,
+      "yaw": 0,
+      "t": 0,
+      "phase": 0,
+      "steps": 64,
+      "glow": 1,
+      "playing": false,
+      "visible": true
+    },
+    "afterControl": {
+      "a": 0.2,
+      "e": 0.8,
+      "yaw": 0.5,
+      "t": 0,
+      "phase": 0,
+      "steps": 64,
+      "glow": 1,
+      "playing": false,
+      "visible": true
+    },
+    "played": {
+      "a": 0.2,
+      "e": 0.8,
+      "yaw": 0.5,
+      "t": 0,
+      "phase": 0,
+      "steps": 64,
+      "glow": 1,
+      "playing": true,
+      "visible": true
+    },
+    "later": {
+      "a": 0.2,
+      "e": 0.8,
+      "yaw": 0.5,
+      "t": 0.23870000000000005,
+      "phase": 0.019891666248440742,
+      "steps": 64,
+      "glow": 1,
+      "playing": true,
+      "visible": true
+    }
+  }
+}
