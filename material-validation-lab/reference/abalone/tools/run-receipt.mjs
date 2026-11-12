@@ -1,6 +1,8 @@
 // Per-run receipt for MVT-ABALONE-001: who/what/when rendered this run, and how far the result may be claimed.
 // Pure helpers (no browser) so they can be unit-tested with node:test.
 import { execFileSync } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
 
 export const SOFTWARE_RENDERER = /swiftshader|llvmpipe|softpipe|software|basic render driver|mesa offscreen/i;
 
@@ -51,4 +53,19 @@ export function runReceiptFileName(run) {
   const stamp = run.timestamp.replace(/[:.]/g, "-");
   const sha = run.commit.sha === "unavailable" ? "nosha" : run.commit.sha.slice(0, 7);
   return `run-${stamp}-${sha}.json`;
+}
+
+/** Write one immutable attempt receipt without replacing the last complete trial receipt. */
+export function writeRunAttempt(root, run) {
+  const runsDir = path.join(root, "receipts", "runs");
+  fs.mkdirSync(runsDir, { recursive: true });
+  const file = path.join(runsDir, runReceiptFileName(run));
+  fs.writeFileSync(file, JSON.stringify(run, null, 2) + "\n", { flag: "wx" });
+  return file;
+}
+
+/** Carry label-inert diagnostics into a regenerated complete receipt. */
+export function carryForwardDiagnostics(nextReceipt, previousReceipt) {
+  if (nextReceipt?.diagnostics !== undefined || previousReceipt?.diagnostics === undefined) return nextReceipt;
+  return { ...nextReceipt, diagnostics: previousReceipt.diagnostics };
 }

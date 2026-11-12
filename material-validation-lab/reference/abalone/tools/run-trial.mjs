@@ -4,9 +4,11 @@ import fs from "node:fs"; import path from "node:path"; import crypto from "node
 import { chromium } from "playwright-core";
 import { start } from "./serve.mjs";
 import { ASSET, SPEC, THREE_VERSION } from "./pins.mjs";
-import { buildRunReceipt, gitCommit, runReceiptFileName } from "./run-receipt.mjs";
+import { buildRunReceipt, carryForwardDiagnostics, gitCommit, writeRunAttempt } from "./run-receipt.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const receiptPath = path.join(root, "receipts", "receipt.json");
+const previousReceipt = fs.existsSync(receiptPath) ? JSON.parse(fs.readFileSync(receiptPath, "utf8")) : null;
 // Read commit + dirty flag BEFORE the trial rewrites captures, so its own outputs do not mark the tree dirty.
 const startCommit = gitCommit(root);
 const capDir = path.join(root, "receipts", "captures");
@@ -82,6 +84,14 @@ if (boot.ready) {
   fs.writeFileSync(path.join(root, "receipts", "captures", "page.png"), await page.screenshot({ fullPage: true }));
 }
 await browser.close(); server.close();
+
+// A failed page boot has no measurement tensor. Record the attempt separately and preserve the last complete receipt.
+if (!boot.ready) {
+  const run = buildRunReceipt({ label: "blocked", commit: startCommit, environment: boot.environment, browserVersion });
+  writeRunAttempt(root, run);
+  console.error(`MVT-ABALONE-001 blocked: ${boot.error || "page did not become ready"}; preserved receipts/receipt.json`);
+  process.exit(2);
+}
 
 const mr = boot.mapReceipt || {};
 const mapOk = mr.iridescenceMap?.colorSpace === mr.noColorSpaceConstant && mr.iridescenceThicknessMap?.colorSpace === mr.noColorSpaceConstant;
@@ -162,7 +172,7 @@ const clean = consoleErrors.length === 0;
 // Run-5 labelling (pre-registered in SHELLSENS handoff): shell-sens (and run-4 plane) clear -> inconclusive (awaiting human review;
 // authored shell fail preserved); shell-sens fails -> fail. Never pass without named human review.
 const label = !boot.ready ? "blocked" : !mapOk || !synthNoCS ? "fail" : !sensOk || !shellSensOk ? "fail" : clean ? "inconclusive" : "fail";
-const receipt = {
+let receipt = {
   schemaVersion: "0.1.0", trial: "MVT-ABALONE-001", generatedAt: new Date().toISOString(),
   command: "cd material-validation-lab/reference/abalone && npm ci && npm run trial",
   label,
@@ -237,11 +247,11 @@ const receipt = {
   ],
   nonClaims: ["measured-abalone", "original-material", "mobile-optimized", "physical calibration", "mineral simulation", "frame rate / performance", "KHR_materials_iridescence conformance of any WebGL2 proxy"],
 };
+receipt = carryForwardDiagnostics(receipt, previousReceipt);
 // Per-run receipt: commit, UA/renderer (or "unavailable"), timestamp, verdict capped at inconclusive unless measured fail/blocked.
 const run = buildRunReceipt({ label, commit: startCommit, environment: boot.environment, browserVersion, now: new Date(receipt.generatedAt), reviewDecision: receipt.review.decision });
 receipt.run = run;
-const runsDir = path.join(root, "receipts", "runs"); fs.mkdirSync(runsDir, { recursive: true });
-fs.writeFileSync(path.join(runsDir, runReceiptFileName(run)), JSON.stringify(run, null, 2) + "\n");
-fs.writeFileSync(path.join(root, "receipts", "receipt.json"), JSON.stringify(receipt, null, 2) + "\n");
+writeRunAttempt(root, run);
+fs.writeFileSync(receiptPath, JSON.stringify(receipt, null, 2) + "\n");
 console.log(`MVT-ABALONE-001 label=${label} mapNoColorSpace=${mapOk} synthNoCS=${synthNoCS} synthetic=${JSON.stringify(synthPerCheck)} sensitivity=${JSON.stringify(sensPerCheck)} sensVariants=${JSON.stringify(sensPerVariant)} shellSens=${JSON.stringify(shellSensPerCheck)} shellSensVariants=${JSON.stringify(shellSensPerVariant)} rough0=${JSON.stringify(factorEval["shell-rough0"]?.perCheck)} metal1=${JSON.stringify(factorEval["shell-metal1"]?.perCheck)} metal1mapkept=${JSON.stringify(factorEval["shell-metal1-mapkept"]?.perCheck)} metal05mapnull=${JSON.stringify(factorEval["shell-metal05-mapnull"]?.perCheck)} assetEffects=${JSON.stringify(effects)} renderer=${boot.environment?.renderer} run.verdict=${run.verdict} run.commit=${run.commit.sha.slice(0, 7)} run.scope="${run.evidenceScope}"`);
 process.exit(label === "blocked" ? 2 : label === "fail" ? 1 : 0);

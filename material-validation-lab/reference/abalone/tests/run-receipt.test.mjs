@@ -1,6 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildRunReceipt, runReceiptFileName, gitCommit } from "../tools/run-receipt.mjs";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { buildRunReceipt, carryForwardDiagnostics, runReceiptFileName, gitCommit, writeRunAttempt } from "../tools/run-receipt.mjs";
 
 const swift = { renderer: "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero)), SwiftShader driver)", userAgent: "Mozilla/5.0 HeadlessChrome/156", vendor: "Google Inc.", glVersion: "WebGL 2.0" };
 const hw = { renderer: "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Direct3D11)", userAgent: "Mozilla/5.0 Chrome/156", vendor: "Google Inc.", glVersion: "WebGL 2.0" };
@@ -53,4 +56,26 @@ test("gitCommit returns a 40-hex sha or 'unavailable'", () => {
   const c = gitCommit(process.cwd());
   assert.ok(c.sha === "unavailable" || /^[0-9a-f]{40}$/.test(c.sha));
   assert.equal(gitCommit("/").sha, "unavailable");
+});
+
+test("a blocked attempt is append-only and does not replace the last complete receipt", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "mvt-abalone-blocked-"));
+  const receipts = path.join(root, "receipts"); fs.mkdirSync(receipts);
+  const canonical = path.join(receipts, "receipt.json");
+  fs.writeFileSync(canonical, "last-complete-receipt\n");
+  const blocked = buildRunReceipt({ label: "blocked", commit, environment: undefined, now });
+  const attempt = writeRunAttempt(root, blocked);
+  assert.equal(fs.readFileSync(canonical, "utf8"), "last-complete-receipt\n");
+  assert.deepEqual(JSON.parse(fs.readFileSync(attempt, "utf8")), blocked);
+  assert.throws(() => writeRunAttempt(root, blocked), /EEXIST/);
+});
+
+test("complete receipt regeneration carries label-inert UV diagnostics forward", () => {
+  const diagnostics = { uvCoverage: { label: "measured", h1: { verdict: "inconclusive" } } };
+  const previous = { label: "inconclusive", diagnostics };
+  const next = { label: "inconclusive", history: [{ run: 7, result: "fail preserved" }] };
+  const merged = carryForwardDiagnostics(next, previous);
+  assert.deepEqual(merged.diagnostics, diagnostics);
+  assert.deepEqual(merged.history, next.history);
+  assert.equal(carryForwardDiagnostics({ ...next, diagnostics: { newer: true } }, previous).diagnostics.newer, true);
 });
