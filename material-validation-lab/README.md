@@ -61,3 +61,7 @@ It owns source provenance, compatibility decisions, controlled material records,
 3. Port the Bubble mechanism in isolation; compare it against a non-spectral RGB proxy control.
 4. Build Gold Foil from original fields; evaluate lighting response rather than an image match.
 5. Only then choose whether a Three.js/R3F presentation adapter earns implementation. The current Shader Library has no R3F dependency, so adding one now would be architecture by enthusiasm.
+
+## Pilot #1 status — MVT-ABALONE-001
+
+Executed 2026-10-26 in `reference/abalone/` (isolated Three.js lane). The current trial label is **`inconclusive`** and named human review on hardware is still pending. Run 3 preserved a pre-registered **fail** for the authored shell with isolated synthetic R/G maps. Runs 4–7 showed that the locked channel criterion is detectable on the plane and shell, and isolated the authored shell's low effective metalness path as the dominant compressor under this SwiftShader metric: scalar `metalness = 1` passes with the authored map retained, and removing the map also passes at scalar `0.5`. That is fixture-sensitivity evidence, not a production-material recommendation or physical validation. The canonical record remains `fail`; C-07, C-09, and C-10 stay open; no further automated factor split is planned before review. Use [`reference/abalone/review-board.html`](reference/abalone/review-board.html) for the bounded comparison set, then inspect the machine receipt at `reference/abalone/receipts/receipt.json` and the pre-registration/build documents under `receipts/`.

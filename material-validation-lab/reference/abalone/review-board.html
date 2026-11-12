@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" href="data:,">
+  <title>MVT-ABALONE-001 review board</title>
+  <style>
+    :root {
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      color: #f7f4ef;
+      background: #111214;
+      --panel: #1a1d21;
+      --line: #353a42;
+      --muted: #b6bdc8;
+      --warn: #ffd166;
+      --accent: #8de2d6;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: radial-gradient(circle at top, #253038 0, #111214 38rem); }
+    a { color: var(--accent); }
+    .skip { position: absolute; left: -999px; top: 0; }
+    .skip:focus { left: 1rem; top: 1rem; padding: .75rem; background: #fff; color: #000; z-index: 2; }
+    header, main, footer { width: min(112rem, calc(100% - 2rem)); margin-inline: auto; }
+    header { padding: clamp(1.5rem, 4vw, 3.25rem) 0 1.25rem; }
+    h1 { max-width: 20ch; margin: 0 0 1rem; font-size: clamp(2.4rem, 5vw, 4.8rem); line-height: .96; letter-spacing: -.045em; }
+    h2 { margin: 2.25rem 0 1rem; font-size: clamp(1.5rem, 3vw, 2.4rem); }
+    p { max-width: 78ch; color: var(--muted); line-height: 1.65; }
+    .status { display: inline-block; margin: 0 0 1rem; padding: .45rem .7rem; border: 1px solid var(--warn); color: var(--warn); font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+    .notice { padding: 1rem 1.2rem; border-left: .35rem solid var(--warn); background: #29261d; color: #fff4cf; }
+    .intro { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(21rem, .85fr); gap: clamp(1rem, 3vw, 2.5rem); align-items: end; }
+    .jump { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1rem; }
+    .jump a { padding: .55rem .75rem; border: 1px solid var(--line); background: var(--panel); }
+    .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .75rem; margin: 1.5rem 0; }
+    .fact { padding: 1rem; border: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 90%, transparent); }
+    .fact strong { display: block; margin-bottom: .35rem; color: #fff; }
+    .fact code { overflow-wrap: anywhere; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); gap: 1rem; }
+    figure { margin: 0; overflow: hidden; border: 1px solid var(--line); background: var(--panel); }
+    img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; background: #08090a; }
+    figcaption { min-height: 5.5rem; padding: .8rem 1rem 1rem; color: var(--muted); line-height: 1.45; }
+    figcaption strong { color: #fff; }
+    .matrix { overflow-x: auto; border: 1px solid var(--line); }
+    table { width: 100%; min-width: 70rem; border-collapse: collapse; background: var(--panel); }
+    th, td { padding: .75rem; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { color: #fff; background: #20242a; }
+    td:first-child { width: 12rem; color: #fff; font-weight: 700; }
+    td img { min-width: 16rem; }
+    footer { padding: 3rem 0 4rem; color: var(--muted); }
+    .maker { max-width: 78ch; margin-bottom: 1.5rem; padding: 1.1rem 1.25rem; border: 1px solid var(--line); background: var(--panel); }
+    .maker strong { color: #fff; }
+    @media (max-width: 54rem) { .intro { grid-template-columns: 1fr; } }
+    @media (max-width: 38rem) {
+      .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .fact { padding: .8rem; }
+      .fact:first-child { grid-column: 1 / -1; }
+      .fact code { font-size: .72rem; }
+    }
+    @media (prefers-reduced-motion: no-preference) { a { text-underline-offset: .18em; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#review">Skip to review captures</a>
+  <header>
+    <div class="intro">
+      <div>
+        <div class="status">Inconclusive · hardware review pending</div>
+        <h1>Abalone evidence, without the hero-shot shortcut.</h1>
+        <p>This board presents the bounded comparison set already recorded by MVT-ABALONE-001. It separates the authored Khronos material from diagnostic overrides and keeps neutral, grazing, and light-sweep fixtures visible together.</p>
+      </div>
+      <div>
+        <p class="notice"><strong>Evidence boundary:</strong> every image below was rendered with headless Chrome and SwiftShader. This page is a review aid, not a hardware-GPU result, physical calibration, KHR conformance claim, or approval to change the authored material.</p>
+        <nav class="jump" aria-label="Review sections"><a href="#authored-title">Treatment vs control</a><a href="#matrix-title">Run 7 matrix</a></nav>
+      </div>
+    </div>
+    <div class="facts" aria-label="Trial facts">
+      <div class="fact"><strong>Executed asset pin</strong><code>4995a638c96dbc94376d3d6164e70fee3ac7f7a2</code></div>
+      <div class="fact"><strong>Renderer lane</strong>Three.js 0.186.1, isolated lockfile</div>
+      <div class="fact"><strong>Current receipt label</strong><code>inconclusive</code></div>
+      <div class="fact"><strong>Required next gate</strong>Named human review on hardware</div>
+    </div>
+    <p><a href="receipts/receipt.json">Machine receipt</a> · <a href="https://github.com/MelodicBloom/shader-gallery/blob/main/material-validation-lab/CONFLICT_LEDGER.md">Conflict ledger</a> · <a href="README.md">Trial README</a></p>
+  </header>
+
+  <main id="review">
+    <section aria-labelledby="authored-title">
+      <h2 id="authored-title">1. Authored asset: treatment versus neutral control</h2>
+      <p>The control keeps the geometry and fixture but sets <code>iridescence: 0</code> and removes the iridescence map. Compare across fixtures; a single attractive frame is insufficient.</p>
+      <div class="grid">
+        <figure><img src="receipts/captures/neutral-treatment.png" alt="Authored abalone treatment at the neutral fixture"><figcaption><strong>Neutral · treatment</strong><br>Authored asset maps, iridescence enabled.</figcaption></figure>
+        <figure><img src="receipts/captures/neutral-control.png" alt="Authored abalone neutral control at the neutral fixture"><figcaption><strong>Neutral · control</strong><br>Iridescence zero, map removed.</figcaption></figure>
+        <figure><img src="receipts/captures/grazing-treatment.png" alt="Authored abalone treatment at the grazing fixture" loading="lazy"><figcaption><strong>Grazing · treatment</strong><br>View-angle comparison.</figcaption></figure>
+        <figure><img src="receipts/captures/grazing-control.png" alt="Authored abalone neutral control at the grazing fixture" loading="lazy"><figcaption><strong>Grazing · control</strong><br>Same fixture, neutral material.</figcaption></figure>
+        <figure><img src="receipts/captures/light-sweep-treatment.png" alt="Authored abalone treatment at the light-sweep fixture" loading="lazy"><figcaption><strong>Light sweep · treatment</strong><br>Recorded sweep state.</figcaption></figure>
+        <figure><img src="receipts/captures/light-sweep-control.png" alt="Authored abalone neutral control at the light-sweep fixture" loading="lazy"><figcaption><strong>Light sweep · control</strong><br>Same light state, neutral material.</figcaption></figure>
+      </div>
+    </section>
+
+    <section aria-labelledby="matrix-title">
+      <h2 id="matrix-title">2. Run 7: metalness-path sensitivity matrix</h2>
+      <p id="matrix-help">All cells use the generated R-gradient/G-constant diagnostic map. The authored shell row fails the locked automated threshold; the three override rows pass. That ordering isolates sensitivity—it does not rank artistic quality or physical correctness. On narrow screens, scroll this matrix sideways.</p>
+      <div class="matrix" role="region" aria-label="Run 7 capture matrix" aria-describedby="matrix-help" tabindex="0">
+        <table>
+          <thead><tr><th scope="col">Variant</th><th scope="col">Neutral</th><th scope="col">Grazing</th><th scope="col">Light sweep</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Authored: 0.5 + map<br><strong>Automated fail</strong></td>
+              <td><img src="receipts/captures/synth-r-neutral-treatment.png" alt="Authored shell with synthetic R map at neutral fixture" loading="lazy"></td>
+              <td><img src="receipts/captures/synth-r-grazing-treatment.png" alt="Authored shell with synthetic R map at grazing fixture" loading="lazy"></td>
+              <td><img src="receipts/captures/synth-r-light-sweep-treatment.png" alt="Authored shell with synthetic R map at light-sweep fixture" loading="lazy"></td>
+            </tr>
+            <tr>
+              <td>1.0 + map kept<br><strong>Automated pass</strong></td>
+              <td><img src="receipts/captures/metal1mapkept-synth-r-neutral-treatment.png" alt="Metalness one with authored map kept at neutral fixture" loading="lazy"></td>
+              <td><img src="receipts/captures/metal1mapkept-synth-r-grazing-treatment.png" alt="Metalness one with authored map kept at grazing fixture" loading="lazy"></td>
+              <td><img src="receipts/captures/metal1mapkept-synth-r-light-sweep-treatment.png" alt="Metalness one with authored map kept at light-sweep fixture" loading="lazy"></td>
+            </tr>
+            <tr>
+              <td>0.5 + map removed<br><strong>Automated pass</strong></td>
+              <td><img src="receipts/captures/metal05mapnull-synth-r-neutral-treatment.png" alt="Metalness point five with map removed at neutral fixture" loading="lazy"></td>
+              <td><img src="receipts/captures/metal05mapnull-synth-r-grazing-treatment.png" alt="Metalness point five with map removed at grazing fixture" loading="lazy"></td>
+              <td><img src="receipts/captures/metal05mapnull-synth-r-light-sweep-treatment.png" alt="Metalness point five with map removed at light-sweep fixture" loading="lazy"></td>
+            </tr>
+            <tr>
+              <td>1.0 + map removed<br><strong>Automated pass anchor</strong></td>
+              <td><img src="receipts/captures/metal1-synth-r-neutral-treatment.png" alt="Metalness one with map removed at neutral fixture" loading="lazy"></td>
+              <td><img src="receipts/captures/metal1-synth-r-grazing-treatment.png" alt="Metalness one with map removed at grazing fixture" loading="lazy"></td>
+              <td><img src="receipts/captures/metal1-synth-r-light-sweep-treatment.png" alt="Metalness one with map removed at light-sweep fixture" loading="lazy"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="maker">
+      <strong>About Jennipher</strong>
+      <p>Jennipher Troup builds real-time GLSL shader studies, material design systems, and evidence-labeled interactive specimens through <a href="https://melodyfire.space">MelodyFire</a>. Her work pairs expressive surfaces with inspectable controls and receipts, so the visual result and the strength of its claims can be reviewed separately.</p>
+    </div>
+    <p>IridescenceAbalone — model © 2015 Abby Crawford; material © 2023 Eric Chadwick; CC BY 4.0. Captures inherit that attribution. Review outcome remains unrecorded.</p>
+  </footer>
+</body>
+</html>

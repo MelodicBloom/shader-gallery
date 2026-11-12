@@ -1,28 +1,116 @@
 {
   "id": "MVT-ABALONE-001",
   "name": "Khronos Abalone Baseline",
-  "status": "planned",
+  "status": "fail",
   "materialClass": "iridescent-reference-asset",
-  "sourceRefs": ["SRC-KHR-ABALONE", "SRC-KHR-IRIDESCENCE", "SRC-THREE-PHYSICAL"],
-  "requiredPins": ["source commit SHA", "downloaded GLB SHA-256", "Three.js version", "renderer/browser version"],
+  "sourceRefs": [
+    "SRC-KHR-ABALONE",
+    "SRC-KHR-IRIDESCENCE",
+    "SRC-THREE-PHYSICAL"
+  ],
+  "requiredPins": [
+    "source commit SHA",
+    "downloaded GLB SHA-256",
+    "Three.js version",
+    "renderer/browser version"
+  ],
   "controls": {
     "physics": [
-      {"key":"iridescence","unit":"ratio","min":0,"max":1,"default":1},
-      {"key":"iridescenceThicknessRangeNm","unit":"nm","min":0,"max":2000,"default":[100,400]}
+      {
+        "key": "iridescence",
+        "unit": "ratio",
+        "min": 0,
+        "max": 1,
+        "default": 1
+      },
+      {
+        "key": "iridescenceThicknessRangeNm",
+        "unit": "nm",
+        "min": 0,
+        "max": 2000,
+        "default": [
+          100,
+          400
+        ]
+      }
     ],
     "art": [
-      {"key":"exposure","unit":"EV","min":-4,"max":4,"default":0}
+      {
+        "key": "exposure",
+        "unit": "EV",
+        "min": -4,
+        "max": 4,
+        "default": 0
+      }
     ]
   },
   "maps": [
-    {"semantic":"iridescenceIntensity","channel":"R","colorSpace":"NoColorSpace"},
-    {"semantic":"iridescenceThickness","channel":"G","colorSpace":"NoColorSpace"},
-    {"semantic":"occlusion","channel":"R","colorSpace":"NoColorSpace"},
-    {"semantic":"roughness","channel":"G","colorSpace":"NoColorSpace"},
-    {"semantic":"metalness","channel":"B","colorSpace":"NoColorSpace"}
+    {
+      "semantic": "iridescenceIntensity",
+      "channel": "R",
+      "colorSpace": "NoColorSpace"
+    },
+    {
+      "semantic": "iridescenceThickness",
+      "channel": "G",
+      "colorSpace": "NoColorSpace"
+    },
+    {
+      "semantic": "occlusion",
+      "channel": "R",
+      "colorSpace": "NoColorSpace"
+    },
+    {
+      "semantic": "roughness",
+      "channel": "G",
+      "colorSpace": "NoColorSpace"
+    },
+    {
+      "semantic": "metalness",
+      "channel": "B",
+      "colorSpace": "NoColorSpace"
+    }
   ],
-  "fixtures": ["neutral", "grazing", "light-sweep"],
-  "fallback": {"type":"static-capture","required":true,"label":"Static reference capture; live material unavailable."},
-  "modelBoundary": {"calibrated":false,"claims":["documented-reference-asset"],"nonClaims":["measured-abalone", "original-material", "mobile-optimized"]},
-  "trial": "MVT-ABALONE-001"
+  "fixtures": [
+    "neutral",
+    "grazing",
+    "light-sweep"
+  ],
+  "fallback": {
+    "type": "static-capture",
+    "required": true,
+    "label": "Static reference capture; live material unavailable."
+  },
+  "modelBoundary": {
+    "calibrated": false,
+    "claims": [
+      "documented-reference-asset"
+    ],
+    "nonClaims": [
+      "measured-abalone",
+      "original-material",
+      "mobile-optimized"
+    ]
+  },
+  "trial": "MVT-ABALONE-001",
+  "resolvedPins": [
+    {
+      "requirement": "source commit SHA",
+      "value": "KhronosGroup/glTF-Sample-Assets@4995a638c96dbc94376d3d6164e70fee3ac7f7a2"
+    },
+    {
+      "requirement": "downloaded GLB SHA-256",
+      "value": "d15ab000d3b04f177e101b2a36aacbf1c99490fc9bfe3868d481d75736946bab"
+    },
+    {
+      "requirement": "Three.js version",
+      "value": "0.186.1"
+    },
+    {
+      "requirement": "renderer/browser version",
+      "value": "Chrome 156.0.8078.47 headless; ANGLE Vulkan SwiftShader (software)"
+    }
+  ],
+  "receiptRef": "material-validation-lab/reference/abalone/receipts/receipt.json",
+  "resultSummary": "inconclusive: neutral control and G-channel effects measured at all fixtures; R-channel effect below criterion at neutral/grazing with the asset map; synthetic R/G test maps and human review outstanding. See CONFLICT_LEDGER C-07, C-08."
 }
