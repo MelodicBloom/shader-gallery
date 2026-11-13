@@ -12,6 +12,8 @@ Status: research/implementation packet, 2026-10-29. No site deployment, Gallery 
 - **Won’t claim:** their UI as ours; calibrated Abbe of a real sample; Pages-published Optical Studio yet; perf/a11y without receipts.
 
 **Teeth next:** Cauchy presets on crystal-lens (or a dedicated study) → link from Gallery after #37/#10 → fold the Oct 8 video QA contract into QUALITY_GATES → keep Nacre HDR as the physics track under measured labels.
+
+**Editorial clarification:** The line above is preserved as historical user-supplied wording. PR #10 concerns Neo4j graph ingestion and is not a dependency of Gallery navigation or Pages deployment. Any Gallery link remains gated on the relevant Pages route and assets passing a deployment smoke test, as specified in the publication plan below.
 Receipt: `/workspace/reports/hiring-pack-2026/lucky-dispersion-claim-card-remix-2026-10-29.md`
 
 Note: the receipt path is user-reported; this environment has not opened that file and does not claim to have created or updated it.
