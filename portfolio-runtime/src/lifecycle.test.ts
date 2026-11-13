@@ -124,6 +124,7 @@ test('released resources are rebuilt even when the context reports healthy', () 
   assert.deepEqual(calls, ['stop', 'release', 'reinit']);
   assert.equal(lc.state, 'running');
   lc.pagehide(true); lc.pageshow(true);
+  assert.equal(lc.state, 'running');
   assert.deepEqual(calls, ['stop', 'release', 'reinit', 'stop', 'start']);
 });
 
@@ -134,6 +135,7 @@ test('deferred restoration is consumed once even if the context already reports 
   lc.pageshow(true);
   assert.equal(lc.state, 'running');
   lc.pagehide(true); lc.pageshow(true);
+  assert.equal(lc.state, 'running');
   assert.deepEqual(calls, ['stop', 'stop', 'reinit', 'stop', 'start']);
 });
 
@@ -153,6 +155,7 @@ test('state notifications follow loop cancellation, release, and recovery', () =
     release: () => calls.push('release'), reinitialize: () => calls.push('reinit'),
     contextUnusable: () => false, onState: state => calls.push(state),
   });
+  lc.pageshow(false);
   assert.deepEqual(calls, []);
   lc.pagehide(true); lc.pageshow(true); lc.contextlost(); lc.contextrestored();
   lc.pagehide(false); lc.pageshow(true);
@@ -164,10 +167,23 @@ test('state notifications follow loop cancellation, release, and recovery', () =
 
 test('a released page with context loss and deferred restoration rebuilds on return', () => {
   const { calls, lc, setUnusable } = harness();
-  lc.pagehide(false); lc.contextlost(); setUnusable(true); lc.contextrestored();
+  lc.pagehide(false); lc.contextlost(); setUnusable(true);
+  assert.equal(lc.state, 'released');
+  lc.contextrestored();
   assert.equal(lc.state, 'released');
   assert.deepEqual(calls, ['stop', 'release', 'stop']);
   lc.pageshow(true);
   assert.deepEqual(calls, ['stop', 'release', 'stop', 'reinit']);
   assert.equal(lc.state, 'running');
+});
+
+test('restoration after pageshow waits for the lost context, then subsequent caching resumes normally', () => {
+  const { calls, lc, setUnusable } = harness();
+  lc.contextlost(); setUnusable(true); lc.pagehide(true); lc.pageshow(true);
+  assert.equal(lc.state, 'context-lost');
+  assert.deepEqual(calls, ['stop', 'stop']);
+  lc.contextrestored();
+  lc.pagehide(true); lc.pageshow(true);
+  assert.equal(lc.state, 'running');
+  assert.deepEqual(calls, ['stop', 'stop', 'reinit', 'stop', 'start']);
 });
