@@ -188,6 +188,63 @@ test('restoration after pageshow waits for the lost context, then subsequent cac
   assert.deepEqual(calls, ['stop', 'stop', 'reinit', 'stop', 'start']);
 });
 
+test('a suspended page resumes even when pageshow is not marked persisted', () => {
+  const { calls, lc } = harness();
+  assert.equal(lc.state, 'running');
+  lc.pagehide(true); lc.pageshow(false);
+  assert.deepEqual(calls, ['stop', 'start']);
+  assert.equal(lc.state, 'running');
+});
+
+test('deferred context rebuild is consumed once and subsequent cache cycles resume normally', () => {
+  const { calls, lc } = harness();
+  for (let cycle = 0; cycle < 2; cycle++) {
+    lc.pagehide(true); lc.contextlost(); lc.contextrestored();
+    assert.equal(lc.state, 'suspended');
+    lc.pageshow(true);
+    assert.equal(lc.state, 'running');
+  }
+  lc.pagehide(true); lc.pageshow(true);
+  assert.deepEqual(calls, ['stop', 'stop', 'reinit', 'stop', 'stop', 'reinit', 'stop', 'start']);
+});
+
+test('restoration before pagehide allows a healthy cached page to resume', () => {
+  const { calls, lc } = harness();
+  lc.contextlost(); lc.contextrestored();
+  lc.pagehide(true); lc.pageshow(true);
+  assert.deepEqual(calls, ['stop', 'reinit', 'stop', 'start']);
+  assert.equal(lc.state, 'running');
+});
+
+test('release followed by context events rebuilds on pageshow and clears release state', () => {
+  const { calls, lc } = harness();
+  lc.pagehide(false); lc.contextlost();
+  assert.equal(lc.state, 'released');
+  lc.contextrestored();
+  assert.deepEqual(calls, ['stop', 'release', 'stop']);
+  lc.pageshow(true);
+  assert.equal(lc.state, 'running');
+  lc.pagehide(true); lc.pageshow(true);
+  assert.deepEqual(calls, ['stop', 'release', 'stop', 'reinit', 'stop', 'start']);
+});
+
+test('state notifications follow hook actions through loss, release and recovery', () => {
+  const calls: string[] = [];
+  const lc = createPageLifecycle({
+    stopLoop: () => calls.push('stop'), startLoop: () => calls.push('start'),
+    release: () => calls.push('release'), reinitialize: () => calls.push('reinit'),
+    contextUnusable: () => true, onState: state => calls.push(state),
+  });
+  assert.deepEqual(calls, []);
+  lc.pagehide(true); lc.contextlost(); lc.pageshow(true); lc.contextrestored();
+  lc.pagehide(false); lc.pageshow(true);
+  assert.deepEqual(calls, [
+    'stop', 'suspended', 'stop', 'context-lost', 'context-lost', 'reinit', 'running',
+    'stop', 'release', 'released', 'reinit', 'running',
+  ]);
+  assert.equal(lc.state, 'running');
+});
+
 test('released player is rebuilt even when the context reports healthy and pageshow is not persisted', () => {
   const { calls, lc } = harness();
   lc.pagehide(false); lc.pageshow(false);
