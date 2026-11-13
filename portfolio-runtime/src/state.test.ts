@@ -72,8 +72,12 @@ test('version-2 presets reject missing, mistyped and out-of-range required field
     ['missing reduced motion', p => { delete p.reducedMotion; }],
     ['numeric inspector flag', p => { p.inspectorVisible = 1; }],
   ];
+  for (const [key, values] of Object.entries({
+    version: [undefined, 0], material: [undefined], uniforms: [null, 1], camera: [1],
+    playback: [null, 'PLAYING'], reducedMotion: [0, 'true'], inspectorVisible: [undefined, null, 'false'],
+  })) for (const value of values) cases.push([`${key}=${value}`, p => { p[key] = value; }]);
   for (const [key, contract] of Object.entries(uniformContract)) {
-    for (const value of [null, '0.5', contract.min - 0.001, contract.max + 0.001]) {
+    for (const value of [null, '0.5', false, contract.min - 0.001, contract.max + 0.001]) {
       cases.push([`${key}=${value}`, p => { p.uniforms[key] = value; }]);
     }
     cases.push([`missing ${key}`, p => { delete p.uniforms[key]; }]);
@@ -143,12 +147,14 @@ test('legacy migration fills absent uniforms but rejects invalid supplied contro
 test('uniform and light setters accept endpoints and reject invalid writes without publishing', () => {
   resetScene(false);
   for (const key of Object.keys(uniformContract) as Array<keyof typeof uniformContract>) {
+    resetScene(false);
     const contract = uniformContract[key];
     for (const value of [contract.min, contract.max]) {
       const before = sceneStore.getState();
       setUniform(key, value);
       assert.deepEqual(sceneStore.getState(), { ...before, uniforms: { ...before.uniforms, [key]: value } });
       assert.notEqual(sceneStore.getState().uniforms, before.uniforms);
+      assert.equal(before.uniforms[key], value === contract.min ? contract.default : contract.min);
     }
     for (const value of [NaN, Infinity, -Infinity, contract.min - 0.001, contract.max + 0.001]) {
       const before = sceneStore.getState();
@@ -225,10 +231,13 @@ test('evidence inputs span every camera/light pair and are independent of live s
   assert.equal(new Set(matrix.map(c => JSON.stringify([c.preset.camera, c.preset.lightHeading]))).size, 9);
   const next = createEvidenceMatrix();
   matrix[0].preset.camera.yaw = 0;
+  assert.deepEqual(matrix.slice(1), expected.slice(1));
+  assert.deepEqual(createEvidenceMatrix(), expected);
   assert.deepEqual(next, expected);
 });
 
 test('pixel budget handles custom limits, fractional DPR and every invalid input position', () => {
+  assert.equal(pixelRatioForBudget(500, 1000, 2), pixelRatioForBudget(1000, 500, 2));
   assert.equal(pixelRatioForBudget(100, 100, 0.75), 0.75);
   assert.equal(pixelRatioForBudget(100, 100, 2, 2500), 0.5);
   assert.equal(pixelRatioForBudget(100, 100, 2, 22500), 1.5);
@@ -239,4 +248,18 @@ test('pixel budget handles custom limits, fractional DPR and every invalid input
       assert.equal(pixelRatioForBudget(...args), 1, `argument ${index}: ${invalid}`);
     }
   }
+});
+
+test('light heading endpoints update only the light and invalid input does not notify subscribers', () => {
+  resetScene(false);
+  for (const value of [-3.14, 3.14]) {
+    const before = sceneStore.getState(); setLightHeading(value);
+    assert.deepEqual(sceneStore.getState(), { ...before, lightHeading: value });
+  }
+  let notifications = 0;
+  const unsubscribe = sceneStore.subscribe(() => { notifications++; });
+  try {
+    for (const value of [-3.141, 3.141, NaN, Infinity, -Infinity]) assert.throws(() => setLightHeading(value));
+    assert.equal(notifications, 0);
+  } finally { unsubscribe(); }
 });

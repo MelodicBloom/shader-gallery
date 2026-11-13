@@ -40,7 +40,7 @@ test('undefined player is a no-op', () => {
   assert.equal(disposePlayer(undefined, 1, 2), 'none');
 });
 
-test('absent GL clears references before invoking destroy', () => {
+test('a player without a GL context still runs non-GL cleanup after dropping references', () => {
   let destroyed = 0;
   const player: DisposablePlayer = {
     gl: null, program: {}, quad: {},
@@ -55,38 +55,42 @@ test('absent GL clears references before invoking destroy', () => {
   assert.equal(destroyed, 1);
 });
 
-test('epoch mismatch drops resources before destroy without probing a stale GL context', () => {
+test('stale epochs never query the old context and clear references before destroy', () => {
   let destroyed = 0;
   const player: DisposablePlayer = {
-    gl: { isContextLost() { assert.fail('stale context must not be probed'); } },
+    gl: { isContextLost() { assert.fail('Stale context must not be queried'); } },
     program: {}, quad: {},
     destroy() {
       destroyed++;
-      assert.equal(this.gl, null); assert.equal(this.program, null); assert.equal(this.quad, null);
+      assert.equal(this.gl, null);
+      assert.equal(this.program, null);
+      assert.equal(this.quad, null);
     },
   };
   assert.equal(disposePlayer(player, 1, 3), 'dropped');
   assert.equal(destroyed, 1);
 });
 
-test('healthy resources are still available to destroy in a nonzero current epoch', () => {
+test('same nonzero epoch preserves healthy resources until destroy', () => {
   const gl = { isContextLost: () => false }, program = {}, quad = {};
   let destroyed = 0;
   const player: DisposablePlayer = {
     gl, program, quad,
     destroy() {
       destroyed++;
-      assert.equal(this.gl, gl); assert.equal(this.program, program); assert.equal(this.quad, quad);
+      assert.equal(this.gl, gl);
+      assert.equal(this.program, program);
+      assert.equal(this.quad, quad);
     },
   };
-  assert.equal(disposePlayer(player, 3, 3), 'deleted');
+  assert.equal(disposePlayer(player, 7, 7), 'deleted');
   assert.equal(destroyed, 1);
 });
 
-test('repeated disposal never deletes GL resources twice', () => {
+test('disposing the same cleaned-up player again cannot delete GL objects twice', () => {
   const f = fakePlayer(false);
-  assert.equal(disposePlayer(f.p, 0, 0), 'deleted');
-  assert.equal(disposePlayer(f.p, 0, 0), 'dropped');
+  assert.equal(disposePlayer(f.p, 2, 2), 'deleted');
+  assert.equal(disposePlayer(f.p, 2, 2), 'dropped');
   assert.deepEqual(f.deletes, ['program', 'buffer', 'vao']);
   assert.equal(f.destroyed(), 2);
 });
