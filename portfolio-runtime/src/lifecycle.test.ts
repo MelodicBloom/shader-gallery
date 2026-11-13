@@ -109,3 +109,65 @@ test('state notifications follow lifecycle actions including the wait for contex
   lc.pagehide(false);
   assert.deepEqual(events, ['stop', 'release', 'released']);
 });
+
+test('ordinary pageshow resumes a suspended page and later first-load events stay inert', () => {
+  const { calls, lc } = harness();
+  assert.equal(lc.state, 'running');
+  lc.pagehide(true); lc.pageshow(false); lc.pageshow(false);
+  assert.deepEqual(calls, ['stop', 'start']);
+  assert.equal(lc.state, 'running');
+});
+
+test('released resources are rebuilt even when the context reports healthy', () => {
+  const { calls, lc } = harness();
+  lc.pagehide(false); lc.pageshow(false);
+  assert.deepEqual(calls, ['stop', 'release', 'reinit']);
+  assert.equal(lc.state, 'running');
+  lc.pagehide(true); lc.pageshow(true);
+  assert.deepEqual(calls, ['stop', 'release', 'reinit', 'stop', 'start']);
+});
+
+test('deferred restoration is consumed once even if the context already reports healthy', () => {
+  const { calls, lc } = harness();
+  lc.pagehide(true); lc.contextlost(); lc.contextrestored();
+  assert.equal(lc.state, 'suspended');
+  lc.pageshow(true);
+  assert.equal(lc.state, 'running');
+  lc.pagehide(true); lc.pageshow(true);
+  assert.deepEqual(calls, ['stop', 'stop', 'reinit', 'stop', 'start']);
+});
+
+test('multiple independent context losses can each recover', () => {
+  const { calls, lc } = harness();
+  for (let cycle = 0; cycle < 2; cycle++) {
+    lc.contextlost(); assert.equal(lc.state, 'context-lost');
+    lc.contextrestored(); assert.equal(lc.state, 'running');
+  }
+  assert.deepEqual(calls, ['stop', 'reinit', 'stop', 'reinit']);
+});
+
+test('state notifications follow loop cancellation, release, and recovery', () => {
+  const calls: string[] = [];
+  const lc = createPageLifecycle({
+    stopLoop: () => calls.push('stop'), startLoop: () => calls.push('start'),
+    release: () => calls.push('release'), reinitialize: () => calls.push('reinit'),
+    contextUnusable: () => false, onState: state => calls.push(state),
+  });
+  assert.deepEqual(calls, []);
+  lc.pagehide(true); lc.pageshow(true); lc.contextlost(); lc.contextrestored();
+  lc.pagehide(false); lc.pageshow(true);
+  assert.deepEqual(calls, [
+    'stop', 'suspended', 'start', 'running', 'stop', 'context-lost', 'reinit', 'running',
+    'stop', 'release', 'released', 'reinit', 'running',
+  ]);
+});
+
+test('a released page with context loss and deferred restoration rebuilds on return', () => {
+  const { calls, lc, setUnusable } = harness();
+  lc.pagehide(false); lc.contextlost(); setUnusable(true); lc.contextrestored();
+  assert.equal(lc.state, 'released');
+  assert.deepEqual(calls, ['stop', 'release', 'stop']);
+  lc.pageshow(true);
+  assert.deepEqual(calls, ['stop', 'release', 'stop', 'reinit']);
+  assert.equal(lc.state, 'running');
+});
