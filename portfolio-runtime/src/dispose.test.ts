@@ -35,3 +35,42 @@ test('restored context but player from an earlier epoch: no GL deletes', () => {
 test('null player is a no-op', () => {
   assert.equal(disposePlayer(null, 0, 0), 'none');
 });
+
+test('undefined player is a no-op', () => {
+  assert.equal(disposePlayer(undefined, 2, 2), 'none');
+});
+
+test('missing context drops references before invoking destroy', () => {
+  let destroyed = 0;
+  const player: DisposablePlayer = {
+    gl: null, program: {}, quad: {},
+    destroy() {
+      destroyed++;
+      assert.equal(this.gl, null); assert.equal(this.program, null); assert.equal(this.quad, null);
+    },
+  };
+  assert.equal(disposePlayer(player, 2, 2), 'dropped');
+  assert.equal(destroyed, 1);
+});
+
+test('stale epoch avoids querying the context and clears objects before cleanup', () => {
+  let destroyed = 0;
+  const player: DisposablePlayer = {
+    gl: { isContextLost() { assert.fail('stale contexts must not be queried'); } },
+    program: {}, quad: {},
+    destroy() {
+      destroyed++;
+      assert.equal(this.gl, null); assert.equal(this.program, null); assert.equal(this.quad, null);
+    },
+  };
+  assert.equal(disposePlayer(player, 1, 3), 'dropped');
+  assert.equal(destroyed, 1);
+});
+
+test('disposing an already destroyed player never deletes GL resources twice', () => {
+  const f = fakePlayer(false);
+  assert.equal(disposePlayer(f.p, 2, 2), 'deleted');
+  assert.equal(disposePlayer(f.p, 2, 2), 'dropped');
+  assert.deepEqual(f.deletes, ['program', 'buffer', 'vao']);
+  assert.equal(f.destroyed(), 2);
+});
