@@ -141,10 +141,11 @@ function init(){
 function frame(now){
  const dt=Math.min(Math.max((now-previous)/1000,0),.1);previous=now;
  if(state.playing&&!document.hidden)state.time=(state.time+dt)%86400;
- if(!lost&&!document.hidden&&(state.playing||dirty)){
+ if(!lost&&!document.hidden){
   const ratio=Math.min(devicePixelRatio||1,1.5);
   const w=Math.max(1,Math.min(2048,Math.round(canvas.clientWidth*ratio))),h=Math.max(1,Math.min(2048,Math.round(canvas.clientHeight*ratio)));
   if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;dirty=true}
+  if(state.playing||dirty){
   try{
    const {p,uniforms}=acquire(study());
    gl.viewport(0,0,w,h);gl.useProgram(p);
@@ -163,6 +164,7 @@ function frame(now){
    }
   }catch(e){showShaderFault(e.message);$('notice').dataset.error='true'}
   dirty=false;
+  }
  }
  if(!lost)raf=requestAnimationFrame(frame);
 }
@@ -172,7 +174,11 @@ function fail(message){lost=true;cancelAnimationFrame(raf);fallback.hidden=false
 canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();fail('Graphics context lost')});
 canvas.addEventListener('webglcontextrestored',()=>{try{init()}catch(e){fail('Graphics context unavailable: '+e.message)}});
 media.addEventListener('change',e=>{if(e.matches){state.playing=false;sync()}});
-window.addEventListener('pagehide',()=>cancelAnimationFrame(raf));
+window.addEventListener('pagehide',()=>{cancelAnimationFrame(raf);raf=0});
+window.addEventListener('pageshow',e=>{
+ if(!e.persisted||lost||!gl)return;
+ previous=performance.now();dirty=true;cancelAnimationFrame(raf);raf=requestAnimationFrame(frame);
+});
 sync();try{init()}catch(e){fail('Live rendering unavailable: '+e.message)}
 window.opticalStudio={
  snapshot,restore(p){state=validate(p);displayed=null;sync()},
