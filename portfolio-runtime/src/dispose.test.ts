@@ -36,6 +36,65 @@ test('null player is a no-op', () => {
   assert.equal(disposePlayer(null, 0, 0), 'none');
 });
 
+test('undefined player is a no-op regardless of epoch', () => {
+  assert.equal(disposePlayer(undefined, 1, 2), 'none');
+});
+
+test('missing context drops stale references before calling destroy', () => {
+  let destroyed = 0;
+  const player: DisposablePlayer = {
+    gl: null, program: {}, quad: {},
+    destroy() {
+      destroyed++;
+      assert.equal(this.gl, null);
+      assert.equal(this.program, null);
+      assert.equal(this.quad, null);
+    },
+  };
+  assert.equal(disposePlayer(player, 3, 3), 'dropped');
+  assert.equal(destroyed, 1);
+});
+
+test('epoch mismatch avoids even querying a stale GL context', () => {
+  let destroyed = 0;
+  const player: DisposablePlayer = {
+    gl: { isContextLost() { assert.fail('stale context must not be queried'); } },
+    program: {}, quad: {},
+    destroy() {
+      destroyed++;
+      assert.equal(this.gl, null);
+      assert.equal(this.program, null);
+      assert.equal(this.quad, null);
+    },
+  };
+  assert.equal(disposePlayer(player, 4, 5), 'dropped');
+  assert.equal(destroyed, 1);
+});
+
+test('healthy disposal preserves resources until the player destroys them', () => {
+  const gl = { isContextLost: () => false }, program = {}, quad = {};
+  let destroyed = 0;
+  const player: DisposablePlayer = {
+    gl, program, quad,
+    destroy() {
+      destroyed++;
+      assert.equal(this.gl, gl);
+      assert.equal(this.program, program);
+      assert.equal(this.quad, quad);
+    },
+  };
+  assert.equal(disposePlayer(player, 7, 7), 'deleted');
+  assert.equal(destroyed, 1);
+});
+
+test('disposal after prior cleanup does not delete GL resources again', () => {
+  const f = fakePlayer(false);
+  assert.equal(disposePlayer(f.p, 0, 0), 'deleted');
+  assert.equal(disposePlayer(f.p, 0, 0), 'dropped');
+  assert.deepEqual(f.deletes, ['program', 'buffer', 'vao']);
+  assert.equal(f.destroyed(), 2);
+});
+
 test('undefined player is a no-op', () => {
   assert.equal(disposePlayer(undefined, 2, 2), 'none');
 });

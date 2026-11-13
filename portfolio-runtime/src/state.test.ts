@@ -55,6 +55,167 @@ test('pixel ratio respects both the device cap and the render-pixel budget', () 
   assert.equal(pixelRatioForBudget(0, 600, 2), 1);
 });
 
+test('all uniform boundaries are accepted and invalid writes leave state untouched', () => {
+  resetScene(false);
+  for (const key of Object.keys(uniformContract) as (keyof typeof uniformContract)[]) {
+    const { min, max } = uniformContract[key];
+    for (const value of [min, max]) {
+      const before = sceneStore.getState();
+      setUniform(key, value);
+      assert.deepEqual(sceneStore.getState(), { ...before, uniforms: { ...before.uniforms, [key]: value } });
+    }
+    for (const value of [min - 0.01, max + 0.01, NaN, Infinity, -Infinity]) {
+      const before = sceneStore.getState();
+      assert.throws(() => setUniform(key, value), key);
+      assert.equal(sceneStore.getState(), before);
+    }
+  }
+});
+
+test('light heading accepts endpoints and rejects invalid values atomically', () => {
+  resetScene(false);
+  for (const value of [-3.14, 3.14]) {
+    const before = sceneStore.getState();
+    setLightHeading(value);
+    assert.deepEqual(sceneStore.getState(), { ...before, lightHeading: value });
+  }
+  for (const value of [-3.15, 3.15, NaN, Infinity, -Infinity]) {
+    const before = sceneStore.getState();
+    assert.throws(() => setLightHeading(value));
+    assert.equal(sceneStore.getState(), before);
+  }
+});
+
+test('preset validation rejects malformed structures and every missing required field atomically', () => {
+  resetScene(false);
+  const valid = JSON.parse(serializePreset());
+  const before = sceneStore.getState();
+  const invalid: unknown[] = [null, [], true, 42, 'preset'];
+  for (const key of Object.keys(valid)) {
+    const p = structuredClone(valid); delete p[key]; invalid.push(p);
+  }
+  for (const section of ['uniforms', 'camera']) {
+    for (const replacement of [null, [], 'invalid', 0]) invalid.push({ ...valid, [section]: replacement });
+    for (const key of Object.keys(valid[section])) {
+      const p = structuredClone(valid); delete p[section][key]; invalid.push(p);
+    }
+  }
+  for (const patch of [{ version: 3 }, { version: '2' }, { material: 'aurora' }, { inspectorVisible: 1 }, { playback: null }]) {
+    invalid.push({ ...valid, ...patch });
+  }
+  for (const text of ['', '{', ...invalid.map(value => JSON.stringify(value))]) {
+    assert.throws(() => restorePreset(text), text);
+    assert.equal(sceneStore.getState(), before);
+  }
+});
+
+test('preset numeric fields accept inclusive bounds and reject nonnumbers and out-of-range values', () => {
+  resetScene(false);
+  const valid = JSON.parse(serializePreset());
+  const fields: { section?: 'uniforms' | 'camera'; key: string; min: number; max: number }[] = [
+    ...Object.entries(uniformContract).map(([key, c]) => ({ section: 'uniforms' as const, key, min: c.min, max: c.max })),
+    { section: 'camera', key: 'yaw', min: -Math.PI, max: Math.PI },
+    { section: 'camera', key: 'pitch', min: -1.2, max: 1.2 },
+    { section: 'camera', key: 'distance', min: 2.4, max: 5 },
+    { key: 'time', min: 0, max: 86400 },
+    { key: 'lightHeading', min: -3.14, max: 3.14 },
+  ];
+  for (const { section, key, min, max } of fields) {
+    for (const value of [min, max, min - 0.01, max + 0.01, null, '0', true]) {
+      const p = structuredClone(valid);
+      (section ? p[section] : p)[key] = value;
+      if (value === min || value === max) {
+        const parsed = parsePreset(JSON.stringify(p));
+        assert.equal(section ? (parsed[section] as Record<string, number>)[key] : parsed[key as keyof typeof parsed], value);
+      } else assert.throws(() => parsePreset(JSON.stringify(p)), `${section ?? 'preset'}.${key}: ${value}`);
+    }
+  }
+});
+
+test('legacy migration defaults missing controls but rejects invalid supplied controls', () => {
+  resetScene(false);
+  const legacy = { ...JSON.parse(serializePreset()), version: 1 };
+  legacy.uniforms = {};
+  const migrated = parsePreset(JSON.stringify(legacy));
+  for (const [key, c] of Object.entries(uniformContract)) {
+    assert.equal(migrated.uniforms[key as keyof typeof uniformContract], c.default);
+    assert.throws(() => parsePreset(JSON.stringify({ ...legacy, uniforms: { [key]: null } })));
+  }
+  assert.equal(migrated.lightHeading, -1.1);
+});
+
+test('serialization projects unknown fields, uses stable order, and never changes displayed time in the store', () => {
+  resetScene(false);
+  const p = JSON.parse(serializePreset());
+  const reordered = Object.fromEntries(Object.entries(p).reverse());
+  restorePreset(JSON.stringify({ ...reordered, extra: 'ignored', uniforms: { ...p.uniforms, extra: 2 }, camera: { ...p.camera, extra: 2 } }));
+  const before = sceneStore.getState();
+  assert.equal(serializePreset(), JSON.stringify(p, null, 2));
+  assert.equal(JSON.parse(serializePreset(86400)).time, 86400);
+  assert.equal(sceneStore.getState(), before);
+  for (const time of [-1, 86401, NaN, Infinity]) assert.throws(() => serializePreset(time));
+  assert.equal(sceneStore.getState(), before);
+});
+
+test('orbit wraps in both directions, clamps both bounds, and preserves omitted distance', () => {
+  resetScene(false);
+  for (const [yaw, expected] of [[Math.PI, -Math.PI], [-Math.PI, -Math.PI], [4 * Math.PI + 0.5, 0.5], [-4 * Math.PI - 0.5, -0.5]]) {
+    orbit(yaw, -9, 99);
+    assert.ok(Math.abs(sceneStore.getState().camera.yaw - expected) < 1e-12);
+    assert.equal(sceneStore.getState().camera.pitch, -1.2);
+    assert.equal(sceneStore.getState().camera.distance, 5);
+  }
+  orbit(0, 0);
+  assert.equal(sceneStore.getState().camera.distance, 5);
+  for (const values of [[NaN, 0, 3], [0, Infinity, 3], [0, 0, -Infinity]]) {
+    const before = sceneStore.getState();
+    assert.throws(() => orbit(values[0], values[1], values[2]));
+    assert.equal(sceneStore.getState(), before);
+  }
+});
+
+test('reset restores defaults with fresh nested state and preserves or overrides reduced motion', () => {
+  resetScene(true);
+  const defaults = structuredClone(sceneStore.getState());
+  setUniform('grain', 1); orbit(2, 1, 5); setLightHeading(2);
+  sceneStore.setState({ playback: 'paused', inspectorVisible: false, time: 15 });
+  resetScene();
+  assert.deepEqual(sceneStore.getState(), defaults);
+  const before = sceneStore.getState();
+  resetScene(false);
+  assert.deepEqual(sceneStore.getState(), { ...defaults, reducedMotion: false });
+  assert.notEqual(sceneStore.getState().uniforms, before.uniforms);
+  assert.notEqual(sceneStore.getState().camera, before.camera);
+});
+
+test('evidence matrix is the full camera/light product and independent of live scene changes', () => {
+  const expected = createEvidenceMatrix();
+  resetScene(true); setUniform('spectral', 0); orbit(-2, -1, 5); setLightHeading(3);
+  const before = sceneStore.getState();
+  const actual = createEvidenceMatrix();
+  assert.deepEqual(actual, expected);
+  assert.equal(sceneStore.getState(), before);
+  const cameras = new Set(actual.map(c => JSON.stringify(c.preset.camera)));
+  const lights = new Set(actual.map(c => c.preset.lightHeading));
+  assert.equal(cameras.size, 3); assert.equal(lights.size, 3);
+  assert.equal(new Set(actual.map(c => JSON.stringify([c.preset.camera, c.preset.lightHeading]))).size, 9);
+  actual[0].preset.camera.yaw = 0;
+  assert.deepEqual(createEvidenceMatrix(), expected);
+});
+
+test('pixel budget handles exact thresholds, custom budgets, and invalid inputs in every position', () => {
+  assert.equal(pixelRatioForBudget(1000, 1000, 1, 1_000_000), 1);
+  assert.equal(pixelRatioForBudget(1000, 1000, 2, 250_000), 0.5);
+  assert.equal(pixelRatioForBudget(100, 100, 0.75), 0.75);
+  for (let position = 0; position < 4; position++) {
+    for (const invalid of [0, -1, NaN, Infinity, -Infinity]) {
+      const args: [number, number, number, number] = [100, 100, 2, MAX_RENDER_PIXELS];
+      args[position] = invalid;
+      assert.equal(pixelRatioForBudget(...args), 1);
+    }
+  }
+});
+
 
 // Each case starts from a valid export so rejection exercises one field at a time.
 test('version-2 presets reject missing, mistyped and out-of-range required fields atomically', () => {
