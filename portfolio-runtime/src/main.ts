@@ -1,9 +1,10 @@
 import { ShaderPlayer } from '../../library-v1/runtime/ShaderPlayer.js';
 import fragment from './abalone.glsl?raw';
 import fallbackUrl from '../../library-v1/shaders/aurora/abalone/preview.png';
-import { sceneStore, uniformContract, setUniform, setLightHeading, orbit, resetScene, serializePreset, restorePreset, createEvidenceMatrix, pixelRatioForBudget, MAX_RENDER_PIXELS, type UniformKey } from './state';
+import { sceneStore, uniformContract, setUniform, setLightHeading, orbit, resetScene, serializePreset, restorePreset, createEvidenceMatrix, MAX_RENDER_PIXELS, type UniformKey } from './state';
 import { createPageLifecycle } from './lifecycle';
 import { disposePlayer } from './dispose';
+import { synchronizeClock, resizeWithinBudget } from './runtime-regressions.js';
 import './styles.css';
 
 const element = <T extends HTMLElement>(selector: string) => document.querySelector<T>(selector)!;
@@ -60,9 +61,10 @@ function synchronize() {
   element('#inspector').hidden = !s.inspectorVisible;
   element('main').classList.toggle('inspector-hidden', !s.inspectorVisible);
   const toggle = element('#inspector-toggle'); toggle.textContent = s.inspectorVisible ? 'Hide inspector' : 'Show inspector'; toggle.setAttribute('aria-expanded', String(s.inspectorVisible));
-  if (s.time !== motionState.time) elapsed = s.time;
-  // Paused/reduced motion preserves the displayed phase, including while orbiting.
-  motionState = s; previous = performance.now(); dirty = true; sample = [];
+  // Only motion-mode or explicit phase changes reset the frame clock. Ordinary
+  // orbit/slider updates must not discard time since the preceding frame.
+  ({ elapsed, previous } = synchronizeClock(elapsed, previous, motionState, s, performance.now()));
+  motionState = s; dirty = true; sample = [];
   if (s.reducedMotion || s.playback === 'paused') element('#performance').textContent = 'Frame cadence: motion stopped; render on change';
 }
 sceneStore.subscribe(synchronize); synchronize();
@@ -71,20 +73,21 @@ media.addEventListener('change', event => sceneStore.setState({ reducedMotion: e
 reduced.addEventListener('change', () => sceneStore.setState({ reducedMotion: reduced.checked }));
 playback.addEventListener('click', () => sceneStore.setState(s => ({ playback: s.playback === 'playing' ? 'paused' : 'playing' })));
 element('#inspector-toggle').addEventListener('click', () => sceneStore.setState(s => ({ inspectorVisible: !s.inspectorVisible })));
-element('#reset').addEventListener('click', () => { elapsed = 0; resetScene(); presetStatus.textContent = 'Named preset: Midnight nacre'; });
+element('#reset').addEventListener('click', () => { elapsed = 0; previous = performance.now(); resetScene(); presetStatus.textContent = 'Named preset: Midnight nacre'; });
 element('#neutral').addEventListener('click', () => {
   sceneStore.setState(s => ({ uniforms: { ...s.uniforms, spectral: 0, fireStrength: 0 } }));
   presetStatus.textContent = 'Neutral comparison: interference and inner fire disabled. Reset restores Midnight nacre.';
 });
 element('#export').addEventListener('click', () => { preset.value = serializePreset(elapsed); presetStatus.textContent = 'Preset exported at the displayed phase.'; });
 element('#restore').addEventListener('click', () => {
-  try { restorePreset(preset.value); elapsed = sceneStore.getState().time; dirty = true; presetStatus.textContent = 'Preset restored.'; }
+  try { restorePreset(preset.value); elapsed = sceneStore.getState().time; previous = performance.now(); dirty = true; presetStatus.textContent = 'Preset restored.'; }
   catch (error) { presetStatus.textContent = `Preset rejected: ${(error as Error).message}`; }
 });
 element('#apply-evidence').addEventListener('click', () => {
   const capture = evidenceMatrix.find(item => item.id === evidenceView.value)!;
   const current = sceneStore.getState();
   elapsed = capture.preset.time;
+  previous = performance.now();
   sceneStore.setState({ ...current, uniforms: capture.preset.uniforms, camera: capture.preset.camera, lightHeading: capture.preset.lightHeading, playback: 'paused', time: capture.preset.time }, true);
   dirty = true;
   evidenceStatus.textContent = `${capture.label} applied: paused at a reproducible light and camera state.`;
@@ -116,9 +119,9 @@ canvas.addEventListener('keydown', event => {
 
 function resize() {
   if (!player || lost) return;
-  player.options.pixelRatio = pixelRatioForBudget(canvas.clientWidth, canvas.clientHeight, devicePixelRatio || 1);
-  player.resize(); dirty = true;
-  element('#dimensions').textContent = `Render size: ${canvas.width} × ${canvas.height} / DPR ${player.options.pixelRatio.toFixed(2)} · ${MAX_RENDER_PIXELS / 1_000_000} MP cap`;
+  const ratio = resizeWithinBudget(player, canvas.clientWidth, canvas.clientHeight, devicePixelRatio || 1, MAX_RENDER_PIXELS);
+  dirty = true;
+  element('#dimensions').textContent = `Render size: ${canvas.width} × ${canvas.height} / scale ${ratio.toFixed(2)} · ${MAX_RENDER_PIXELS / 1_000_000} MP cap`;
 }
 const observer = new ResizeObserver(resize); observer.observe(canvas);
 window.addEventListener('resize', resize);
@@ -131,7 +134,7 @@ async function initialize() {
   fallback.hidden = false; canvas.hidden = true;
   status.textContent = 'Preparing WebGL2…';
   element('#error-details').hidden = true;
-  const next = new ShaderPlayer(canvas, fragment, { autoStart: false, autoResize: false, trackPointer: false, preserveDrawingBuffer: false, pixelRatio: pixelRatioForBudget(canvas.clientWidth || innerWidth, canvas.clientHeight || innerHeight, devicePixelRatio || 1) });
+  const next = new ShaderPlayer(canvas, fragment, { autoStart: false, autoResize: false, trackPointer: false, preserveDrawingBuffer: false, pixelRatio: 1 });
   try {
     await next.init();
     if (current !== generation || lost) { dispose(next, epoch); return; }
