@@ -1,0 +1,142 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "Abalone Inner Fire",
+  "slug": "optical-studio/abalone-inner-fire",
+  "category": "Optical",
+  "description": "Layered nacre with 6-band approximate interference, object-space growth bands, three buried structural layers and light/view-dependent glints. Appearance hypothesis, not a calibrated aragonite optics solver.",
+  "status": "experimental",
+  "renderer": {
+    "api": "webgl2",
+    "glslVersion": "300 es",
+    "vertexContract": "fullscreen-quad-v_uv"
+  },
+  "uniforms": {
+    "u_time": {
+      "type": "float",
+      "default": 0,
+      "ui": "hidden",
+      "semanticRole": "light-sweep-time"
+    },
+    "u_resolution": {
+      "type": "vec2",
+      "default": [
+        512,
+        512
+      ],
+      "ui": "hidden",
+      "semanticRole": "viewport-size"
+    },
+    "cameraOrbit": {
+      "type": "vec3",
+      "default": [
+        0.35,
+        0.18,
+        3.4
+      ],
+      "ui": "hidden",
+      "semanticRole": "camera-yaw-pitch-distance"
+    },
+    "lightDirection": {
+      "type": "vec3",
+      "default": [
+        0,
+        0,
+        0
+      ],
+      "ui": "hidden",
+      "semanticRole": "world-space-light"
+    },
+    "grain": {
+      "type": "float",
+      "default": 0.56,
+      "ui": "slider",
+      "semanticRole": "Growth texture",
+      "min": 0,
+      "max": 1,
+      "step": 0.01
+    },
+    "paletteShift": {
+      "type": "float",
+      "default": 0.48,
+      "ui": "slider",
+      "semanticRole": "Lamella thickness bias",
+      "min": 0,
+      "max": 1,
+      "step": 0.01
+    },
+    "spectral": {
+      "type": "float",
+      "default": 0.92,
+      "ui": "slider",
+      "semanticRole": "Structural color strength",
+      "min": 0,
+      "max": 2,
+      "step": 0.01
+    },
+    "roughness": {
+      "type": "float",
+      "default": 0.28,
+      "ui": "slider",
+      "semanticRole": "Directional spread",
+      "min": 0.05,
+      "max": 0.85,
+      "step": 0.01
+    },
+    "layerDepth": {
+      "type": "float",
+      "default": 0.6,
+      "ui": "slider",
+      "semanticRole": "Buried layer separation",
+      "min": 0,
+      "max": 1,
+      "step": 0.01
+    },
+    "glintStrength": {
+      "type": "float",
+      "default": 1.35,
+      "ui": "slider",
+      "semanticRole": "Inner fire glints",
+      "min": 0,
+      "max": 3,
+      "step": 0.01
+    },
+    "fireDensity": {
+      "type": "float",
+      "default": 0.72,
+      "ui": "slider",
+      "semanticRole": "Platelet domain density",
+      "min": 0,
+      "max": 1,
+      "step": 0.01
+    },
+    "debugPass": {
+      "type": "float",
+      "default": 0,
+      "ui": "slider",
+      "semanticRole": "Isolation (0 composite, 1–4 layers)",
+      "min": 0,
+      "max": 4,
+      "step": 1
+    }
+  },
+  "controlLabels": {
+    "grain": "Growth texture",
+    "paletteShift": "Lamella thickness bias",
+    "spectral": "Structural color strength",
+    "roughness": "Directional spread",
+    "layerDepth": "Buried layer separation",
+    "glintStrength": "Inner fire glints",
+    "fireDensity": "Platelet domain density",
+    "debugPass": "Isolation (0 composite, 1–4 layers)"
+  },
+  "shaderSourceHash": "sha256:18ba75806613b7513b3b28367a58113310499882196ddd86c9cab9ba1de6d510",
+  "modelBoundary": {
+    "evidenceClass": "HYPOTHESIS",
+    "calibrated": false,
+    "note": "Appearance model; optical constants, spectral calibration, spatial bloom, and hardware profiling remain unverified."
+  },
+  "provenance": {
+    "source": "Optical Studio v1.2 standalone embedded study",
+    "metadata": "Reconstructed from viewer uniform contracts; see local v1.2 source-and-QA bundle for full original per-specimen metadata"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "revision": "optical-02/1.2.0",
+  "studies": [
+    {
+      "slug": "opal-fire",
+      "sourceSha256": "3ea0efb4435922cce72928f32ecdb87a3b0b530fb376a08d9d4b1e04a3bbe2a4",
+      "sliderCount": 4
+    },
+    {
+      "slug": "labradorite-schiller",
+      "sourceSha256": "74ae8a8ffcc9b85f9af1c333e3c6ab868008214f591e8eb64e6198b386083523",
+      "sliderCount": 4
+    },
+    {
+      "slug": "spectral-prism",
+      "sourceSha256": "b5be078bd0ae364c1acf65e92c787590e3c3b4bb974191a6e2fe35f30d9415a5",
+      "sliderCount": 4
+    },
+    {
+      "slug": "crystal-lens",
+      "sourceSha256": "84ca253b7564f068a27514b49b29da329098a0a08823e3219385714a3695a42f",
+      "sliderCount": 8
+    },
+    {
+      "slug": "ripple-pool",
+      "sourceSha256": "635f35a4a4799e8e7dec39fe199aff217f0c1cd6647662a02a31bec2365ceba2",
+      "sliderCount": 8
+    },
+    {
+      "slug": "moissanite-brilliance",
+      "sourceSha256": "67d5d4f7ef53540fdf5f32fe872cc8783e9b420d853c6aec80f099217d8a6c27",
+      "sliderCount": 8
+    },
+    {
+      "slug": "abalone-inner-fire",
+      "sourceSha256": "18ba75806613b7513b3b28367a58113310499882196ddd86c9cab9ba1de6d510",
+      "sliderCount": 8
+    }
+  ]
+}
