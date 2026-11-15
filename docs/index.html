@@ -12,8 +12,9 @@
     header p { color: #8090b0; margin-top: 0.5rem; font-size: 1.05rem; }
     .hero-canvas { width: 100%; height: 60vh; display: block; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 3rem auto; padding: 0 1.5rem; }
-    .card { background: #0d1525; border-radius: 16px; overflow: hidden; border: 1px solid #1a2540; transition: transform 0.2s, border-color 0.2s; cursor: pointer; }
+    .card { display:block; color:inherit; text-decoration:none; background: #0d1525; border-radius: 16px; overflow: hidden; border: 1px solid #1a2540; transition: transform 0.2s, border-color 0.2s; cursor: pointer; }
     .card-link { display: block; color: inherit; text-decoration: none; }
+    .card:focus-visible { outline:3px solid #f9bd8e; outline-offset:4px; }
     .card:hover { transform: translateY(-4px); border-color: #4af; }
     .card-canvas { width: 100%; height: 160px; display: block; background: #060a14; }
     .card-body { padding: 1.25rem; }
@@ -34,12 +35,12 @@
 <canvas class="hero-canvas" id="hero"></canvas>
 
 <div class="grid">
-  <div class="card" onclick="location.href='../aurora/index.html'"><canvas class="card-canvas" id="c1"></canvas><div class="card-body"><h2>Aurora</h2><p>Soft ribbons of northern light rendered with domain warping and fractional Brownian motion.</p><span class="badge">fbm</span><span class="badge">domain warp</span></div></div>
-  <div class="card"><canvas class="card-canvas" id="c2"></canvas><div class="card-body"><h2>Mandala</h2><p>Sacred geometry through polar coordinate mirroring and radial symmetry.</p><span class="badge">polar</span><span class="badge">symmetry</span></div></div>
-  <div class="card"><canvas class="card-canvas" id="c3"></canvas><div class="card-body"><h2>Fluid Psychedelic</h2><p>Lava-lamp blobs and cycling palette — smooth SDF organic forms.</p><span class="badge">SDF</span><span class="badge">palette</span></div></div>
-  <div class="card"><canvas class="card-canvas" id="c4"></canvas><div class="card-body"><h2>Stained Glass</h2><p>Cathedral jewel tones with Voronoi cell structure and glowing edges.</p><span class="badge">Voronoi</span><span class="badge">edge glow</span></div></div>
-  <div class="card" onclick="location.href='../abalone/index.html'"><canvas class="card-canvas" id="c5"></canvas><div class="card-body"><h2>🐚 Abalone</h2><p>Iridescent thin-film interference — teal, gold, violet, and pink shift with the viewing angle across a warped shell surface.</p><span class="badge pearl">thin-film</span><span class="badge pearl">iridescence</span><span class="badge pearl">fbm warp</span></div></div>
-  <a class="card card-link" href="./optical-studies-02.html"><div class="card-body"><h2>Optical Studies</h2><p>Interactive thin-film and spectral material studies with playback controls and browser recovery support.</p><span class="badge">optical</span><span class="badge">interactive</span></div></a>
+  <a class="card card-link" href="../aurora/index.html"><canvas class="card-canvas" id="c1" aria-label="Aurora shader preview"></canvas><div class="card-body"><h2>Aurora</h2><p>Soft ribbons of northern light rendered with domain warping and fractional Brownian motion.</p><span class="badge">fbm</span><span class="badge">domain warp</span></div></a>
+  <a class="card card-link" href="../mandala/index.html"><canvas class="card-canvas" id="c2" aria-label="Mandala shader preview"></canvas><div class="card-body"><h2>Mandala</h2><p>Sacred geometry through polar coordinate mirroring and radial symmetry.</p><span class="badge">polar</span><span class="badge">symmetry</span></div></a>
+  <a class="card card-link" href="../fluid-psychedelic/index.html"><canvas class="card-canvas" id="c3" aria-label="Fluid Psychedelic shader preview"></canvas><div class="card-body"><h2>Fluid Psychedelic</h2><p>Lava-lamp blobs and cycling palette — smooth SDF organic forms.</p><span class="badge">SDF</span><span class="badge">palette</span></div></a>
+  <a class="card card-link" href="../stained-glass/index.html"><canvas class="card-canvas" id="c4" aria-label="Stained Glass shader preview"></canvas><div class="card-body"><h2>Stained Glass</h2><p>Cathedral jewel tones with Voronoi cell structure and glowing edges.</p><span class="badge">Voronoi</span><span class="badge">edge glow</span></div></a>
+  <a class="card card-link" href="../abalone/index.html"><canvas class="card-canvas" id="c5" aria-label="Abalone shader preview"></canvas><div class="card-body"><h2>🐚 Abalone</h2><p>Iridescent thin-film interference — teal, gold, violet, and pink shift with the viewing angle across a warped shell surface.</p><span class="badge pearl">thin-film</span><span class="badge pearl">iridescence</span><span class="badge pearl">fbm warp</span></div></a>
+  <a class="card card-link" href="./optical-studies-02.html"><div class="card-body"><h2>Optical Studies 02</h2><p>Interactive thin-film and spectral material studies with playback controls and browser recovery support.</p><span class="badge">optical</span><span class="badge">interactive</span></div></a>
 </div>
 
 <footer><a href="https://github.com/MelodicBloom/shader-gallery">GitHub</a> &middot; <a href="https://github.com/qt314wink">Jennipher Troup</a> &middot; MIT</footer>
@@ -47,7 +48,10 @@
 <script>
 function initShader(canvas, fragSrc) {
   const gl = canvas.getContext('webgl');
-  if (!gl) return;
+  if (!gl) {
+    canvas.setAttribute('data-render-state', 'fallback');
+    return;
+  }
   canvas.width = canvas.offsetWidth * devicePixelRatio;
   canvas.height = canvas.offsetHeight * devicePixelRatio;
   const vert = gl.createShader(gl.VERTEX_SHADER);
@@ -65,7 +69,8 @@ function initShader(canvas, fragSrc) {
   const uRes = gl.getUniformLocation(prog, 'u_res');
   gl.uniform2f(uRes, canvas.width, canvas.height);
   let t = 0;
-  function draw() { t += 0.016; gl.uniform1f(uTime, t); gl.drawArrays(gl.TRIANGLE_STRIP,0,4); requestAnimationFrame(draw); }
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function draw() { t += 0.016; gl.uniform1f(uTime, t); gl.drawArrays(gl.TRIANGLE_STRIP,0,4); if (!reduced) requestAnimationFrame(draw); }
   draw();
 }
 
