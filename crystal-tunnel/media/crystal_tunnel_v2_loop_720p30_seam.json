@@ -1,0 +1,13 @@
+{
+ "frames": 1200,
+ "fps": 30.0,
+ "duration_s": 40.0,
+ "wrap_step_last_to_first": 13.689286024305556,
+ "consecutive_step_mean": 9.607153442032134,
+ "consecutive_step_min": 8.692018229166667,
+ "consecutive_step_max": 12.32619140625,
+ "wrap_step_ratio_to_mean": 1.424905525544511,
+ "first_step_0_to_1": 12.32619140625,
+ "last_step_n-2_to_n-1": 9.81504738136574
+}
+seam clip: repo/media/crystal_tunnel_v2_loop_720p30_seam_check.mp4

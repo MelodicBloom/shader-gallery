@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Tunnel — realtime GLSL kaleidoscope (40 s seamless loop)</title>
+<meta name="description" content="Raymarched 8-fold crystal tunnel: refractive glass with dispersion, PBR gold gears, 3D silk petals, DOF, god rays. Exact 40 s loop.">
+<meta property="og:image" content="media/hero_01.jpg">
+<style>
+ html,body{margin:0;height:100%;background:#000;color:#cfd3ff;font:12px/1.4 ui-monospace,Menlo,monospace;overflow:hidden}
+ canvas{position:fixed;inset:0;width:100vw;height:100vh;display:block}
+ #ui{position:fixed;left:10px;bottom:10px;background:#0009;padding:8px 10px;border-radius:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;transition:opacity .3s}
+ #ui.hide{opacity:0;pointer-events:none}
+ #ui input[type=range]{width:200px} button,select{background:#1b1840;color:#dfe2ff;border:1px solid #3c3a7a;border-radius:5px;padding:2px 8px;font:inherit}
+ #err{position:fixed;top:10px;left:10px;white-space:pre-wrap;color:#ff8080;max-width:90vw}
+ #title{position:fixed;top:10px;right:12px;opacity:.7;text-align:right}
+ a{color:#9fb4ff}
+</style></head><body>
+<canvas id="c"></canvas><div id="err"></div>
+<div id="title">CRYSTAL TUNNEL · v2<br><span style="opacity:.7">H hide UI · F fullscreen · Space pause</span></div>
+<div id="ui">
+ <button id="play">pause</button>
+ <input id="scrub" type="range" min="0" max="40" step="0.01" value="0"><span id="tt">0.00 s</span>
+ quality <select id="q"><option value="low">low</option><option value="high">high</option></select>
+ <span id="fps"></span>
+</div>
+<script type="x-shader" id="scene">/*__SCENE__*/</script>
+<script type="x-shader" id="post">/*__POST__*/</script>
+<script>
+// Two-pass Shadertoy-style pipeline in raw WebGL2: Buffer A (scene, RGBA16F HDR + CoC in alpha, mipmapped) -> Image (post).
+const LOOP_T = 40.0;
+const QUALITY = { low: { scale: 0.5, aa: 1, defs: '#define LOWQ\n' }, high: { scale: 1.0, aa: 2, defs: '' } };
+const cv = document.getElementById('c');
+const gl = cv.getContext('webgl2', { antialias: false, alpha: false });
+const err = m => document.getElementById('err').textContent += m + '\n';
+if (!gl) err('WebGL2 is not available in this browser.');
+if (!gl.getExtension('EXT_color_buffer_float')) err('EXT_color_buffer_float missing: HDR buffer may fail.');
+gl.getExtension('OES_texture_float_linear');
+const VS = `#version 300 es
+in vec2 p; void main(){ gl_Position = vec4(p,0,1); }`;
+const HDR = d => `#version 300 es
+precision highp float; precision highp int;
+${d}
+uniform vec3 iResolution; uniform float iTime; uniform float iTimeDelta; uniform int iFrame;
+uniform sampler2D iChannel0;
+out vec4 outColor;
+`;
+const FTR = `\nvoid main(){ vec4 c; mainImage(c, gl_FragCoord.xy); outColor = c; }`;
+function prog(fsrc){
+  const mk = (t, s) => { const sh = gl.createShader(t); gl.shaderSource(sh, s); gl.compileShader(sh);
+    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) err(gl.getShaderInfoLog(sh)); return sh; };
+  const p = gl.createProgram(); gl.attachShader(p, mk(gl.VERTEX_SHADER, VS)); gl.attachShader(p, mk(gl.FRAGMENT_SHADER, fsrc));
+  gl.bindAttribLocation(p, 0, 'p'); gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) err(gl.getProgramInfoLog(p));
+  return p;
+}
+const sceneSrc = document.getElementById('scene').textContent, postSrc = document.getElementById('post').textContent;
+const post = prog(HDR('') + postSrc + FTR);
+const scenes = {};
+let q = new URLSearchParams(location.search).get('q') || 'low';
+const qsel = document.getElementById('q'); qsel.value = q;
+function sceneFor(k){ if (!scenes[k]) scenes[k] = prog(HDR('#define AA ' + QUALITY[k].aa + '\n' + QUALITY[k].defs) + sceneSrc + FTR); return scenes[k]; }
+qsel.onchange = e => { q = e.target.value; W = 0; };
+const vb = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, vb);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+let tex = null, fbo = null, W = 0, H = 0;
+function resize(){
+  const s = QUALITY[q].scale * Math.min(window.devicePixelRatio || 1, 2);
+  const w = Math.max(16, Math.floor(innerWidth * s)), h = Math.max(16, Math.floor(innerHeight * s));
+  if (w === W && h === H) return; W = w; H = h; cv.width = w; cv.height = h;
+  if (tex) { gl.deleteTexture(tex); gl.deleteFramebuffer(fbo); }
+  tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texStorage2D(gl.TEXTURE_2D, Math.floor(Math.log2(Math.max(w, h))) + 1, gl.RGBA16F, w, h);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  fbo = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+}
+function setU(p, t, dt, f){
+  gl.useProgram(p);
+  gl.uniform3f(gl.getUniformLocation(p, 'iResolution'), W, H, 1);
+  gl.uniform1f(gl.getUniformLocation(p, 'iTime'), t);
+  gl.uniform1f(gl.getUniformLocation(p, 'iTimeDelta'), dt);
+  gl.uniform1i(gl.getUniformLocation(p, 'iFrame'), f);
+  gl.uniform1i(gl.getUniformLocation(p, 'iChannel0'), 0);
+}
+let playing = true, t = 0, last = performance.now(), frame = 0, acc = 0, n = 0;
+const scrub = document.getElementById('scrub'), playBtn = document.getElementById('play');
+const toggle = () => { playing = !playing; playBtn.textContent = playing ? 'pause' : 'play'; };
+playBtn.onclick = toggle;
+scrub.oninput = () => { t = parseFloat(scrub.value); };
+addEventListener('keydown', e => {
+  if (e.key === 'h' || e.key === 'H') { document.getElementById('ui').classList.toggle('hide'); document.getElementById('title').classList.toggle('hide'); document.getElementById('title').style.display = document.getElementById('ui').classList.contains('hide') ? 'none' : ''; }
+  if (e.key === 'f' || e.key === 'F') { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); }
+  if (e.key === ' ') { e.preventDefault(); toggle(); }
+});
+function loop(now){
+  const dt = Math.min((now - last) / 1000, 0.1); last = now;
+  if (playing) t = (t + dt) % LOOP_T;
+  resize();
+  const scene = sceneFor(q);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo); gl.viewport(0, 0, W, H);
+  setU(scene, t, 1 / 60, frame); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  gl.bindTexture(gl.TEXTURE_2D, tex); gl.generateMipmap(gl.TEXTURE_2D);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.viewport(0, 0, W, H);
+  setU(post, t, 1 / 60, frame); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  frame++; acc += dt; n++;
+  if (acc > 0.5) { document.getElementById('fps').textContent = (n / acc).toFixed(1) + ' fps  ' + W + 'x' + H; acc = 0; n = 0; }
+  if (playing) scrub.value = t.toFixed(2);
+  document.getElementById('tt').textContent = t.toFixed(2) + ' s';
+  requestAnimationFrame(loop);
+}
+addEventListener('resize', resize);
+requestAnimationFrame(loop);
+</script></body></html>
