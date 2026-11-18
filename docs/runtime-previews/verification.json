@@ -1,0 +1,345 @@
+{
+  "checkedAt": "2026-11-06T17:26:58.530Z",
+  "pages": [
+    {
+      "id": "noise-kaleidoscope",
+      "url": "https://shader-gallery-hp6nv1dxx-melodicbloom.vercel.app/experiments/noise-kaleidoscope-v0/index.html",
+      "status": 200,
+      "title": "Noise \u00d7 Kaleidoscope / EXP-001",
+      "scripts": [],
+      "styles": [],
+      "success": true,
+      "authFetch": true,
+      "checkedAt": "2026-11-06T17:19:46.301Z",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "id": "benthic-r3f",
+      "url": "https://shader-gallery-8c68jt862-melodicbloom.vercel.app/index.html",
+      "status": 200,
+      "title": "BENTHIC_R3F | Procedural Material System",
+      "scripts": [
+        "./assets/index-BwqvF_jO.js"
+      ],
+      "styles": [
+        "./assets/index-5OESivUM.css"
+      ],
+      "success": true,
+      "authFetch": true,
+      "checkedAt": "2026-11-06T17:19:59.250Z",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "id": "abalone-runtime",
+      "url": "https://shader-gallery-3dqanjb0y-melodicbloom.vercel.app/index.html",
+      "status": 200,
+      "title": "Abalone \u00b7 Material Study 01",
+      "scripts": [
+        "./assets/index-Bng88RGW.js"
+      ],
+      "styles": [
+        "./assets/index-oZ17n_X4.css"
+      ],
+      "success": true,
+      "authFetch": true,
+      "checkedAt": "2026-11-06T17:19:54.830Z",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "id": "nacre-validation",
+      "url": "https://shader-gallery-3xz0c6ilf-melodicbloom.vercel.app/index.html",
+      "status": 200,
+      "title": "Abalone \u00b7 Material Study 01",
+      "scripts": [
+        "./assets/index-pVSsOfee.js"
+      ],
+      "styles": [
+        "./assets/index-oZ17n_X4.css"
+      ],
+      "success": true,
+      "authFetch": true,
+      "checkedAt": "2026-11-06T17:19:51.317Z",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "id": "kaleidoscopic-field",
+      "url": "https://shader-gallery-4z05pqzfo-melodicbloom.vercel.app/experiments/kaleidoscopic-field-001/index.html",
+      "status": 200,
+      "title": "FIELD / 001 \u2014 Kaleidoscopic Motion Laboratory",
+      "scripts": [
+        "./src/app.js"
+      ],
+      "styles": [
+        "./style.css"
+      ],
+      "success": true,
+      "authFetch": true,
+      "checkedAt": "2026-11-06T17:20:02.617Z",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "id": "wireframe-mandala",
+      "url": "https://shader-gallery-86s6k5xmh-melodicbloom.vercel.app/experiments/wireframe-mandala/index.html",
+      "status": 200,
+      "title": "Living Wireframe Mandala \u2014 Bounded Experiment 001",
+      "scripts": [],
+      "styles": [],
+      "success": true,
+      "authFetch": true,
+      "checkedAt": "2026-11-06T17:20:14.507Z",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "id": "material-atlas",
+      "url": "https://shader-gallery-fgowazf2d-melodicbloom.vercel.app/packages/shader-library-v1/source/material-atlas/index.html",
+      "status": 200,
+      "title": "Material Atlas \u00b7 3D Lookdev",
+      "scripts": [
+        "./app.js"
+      ],
+      "styles": [
+        "./style.css"
+      ],
+      "success": true,
+      "authFetch": true,
+      "checkedAt": "2026-11-06T17:20:07.027Z",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "id": "optical-studio",
+      "url": "https://shader-gallery-a9jtc3uo3-melodicbloom.vercel.app/optical-studio/index.html",
+      "status": 200,
+      "title": "Optical Studies \u00b7 02",
+      "scripts": [],
+      "styles": [],
+      "success": true,
+      "authFetch": true,
+      "checkedAt": "2026-11-06T17:20:10.815Z",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "id": "optical-studies",
+      "url": "https://shader-gallery-1ymgp2ozc-melodicbloom.vercel.app/docs/optical-studies-02.html",
+      "status": 200,
+      "title": "Optical Studies \u00b7 02",
+      "scripts": [],
+      "styles": [],
+      "success": true,
+      "authFetch": true,
+      "checkedAt": "2026-11-06T17:20:30.429Z",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "id": "benthic-os",
+      "url": "https://shader-gallery-22qas43xn-melodicbloom.vercel.app/benthic-os/index.html",
+      "status": 200,
+      "title": "BENTHIC_OS | Deep Sea Morphogenesis",
+      "scripts": [],
+      "styles": [],
+      "success": true,
+      "authFetch": true,
+      "checkedAt": "2026-11-06T17:20:49.867Z",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "id": "landing",
+      "url": "https://shader-gallery-b30m0tdya-melodicbloom.vercel.app/index.html",
+      "status": 200,
+      "title": "Shader Gallery \u2014 Jennipher Troup (MelodicBloom)",
+      "scripts": [],
+      "styles": [],
+      "success": true,
+      "authFetch": true,
+      "checkedAt": "2026-11-06T17:20:41.207Z",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "id": "context-recycling",
+      "url": "https://shader-gallery-gc5s30dyj-melodicbloom.vercel.app/library-v1/index.html",
+      "status": 200,
+      "title": "MelodicBloom \u2014 Live Shader Library v1",
+      "scripts": [
+        "./app.js"
+      ],
+      "styles": [
+        "./styles.css"
+      ],
+      "success": true,
+      "authFetch": true,
+      "checkedAt": "2026-11-06T17:20:20.288Z",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "id": "geotile",
+      "url": "https://shader-gallery-5ike8k1lr-melodicbloom.vercel.app/material-validation-lab/experiments/GEO-TILE-001/browser/index.html",
+      "status": 200,
+      "title": "GEO-TILE-001 \u00b7 Map inspector",
+      "scripts": [
+        "viewer.js"
+      ],
+      "styles": [
+        "style.css"
+      ],
+      "success": true,
+      "authFetch": true,
+      "checkedAt": "2026-11-06T17:20:37.485Z",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "id": "shader-grammar-example",
+      "url": "https://shader-gallery-awc5dbwgh-melodicbloom.vercel.app/packages/shader-grammar/examples/runtime/index.html",
+      "status": 200,
+      "title": "Shader Grammar \u00b7 Thin-film example runtime",
+      "scripts": [
+        "viewer.js"
+      ],
+      "styles": [
+        "style.css"
+      ],
+      "success": true,
+      "authFetch": true,
+      "checkedAt": "2026-11-06T17:20:25.302Z",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "id": "mvt-abalone",
+      "url": "https://shader-gallery-48i4iot7a-melodicbloom.vercel.app/material-validation-lab/reference/abalone/index.html",
+      "status": 200,
+      "title": "MVT-ABALONE-001 \u2014 Khronos Abalone Baseline \u00b7 Material Validation Lab",
+      "scripts": [
+        "./app.js"
+      ],
+      "styles": [
+        "./styles.css"
+      ],
+      "success": true,
+      "authFetch": true,
+      "checkedAt": "2026-11-06T17:20:45.589Z",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "id": "library-original-preview",
+      "url": "https://shader-gallery-pzetgz3ng-melodicbloom.vercel.app/library-v1/index.html",
+      "status": 200,
+      "title": "MelodicBloom \u2014 Live Shader Library v1",
+      "contentType": "text/html; charset=utf-8",
+      "checkedAt": "2026-11-06T17:26:08.992Z",
+      "authFetch": true
+    },
+    {
+      "id": "reverse-orbit",
+      "url": "https://shader-gallery-nrjj408li-melodicbloom.vercel.app/index.html",
+      "status": 200,
+      "title": "Abalone \u00b7 Material Study 01",
+      "contentType": "text/html; charset=utf-8",
+      "checkedAt": "2026-11-06T17:26:14.183Z",
+      "authFetch": true
+    }
+  ],
+  "assets": [
+    {
+      "id": "benthic-r3f",
+      "url": "https://shader-gallery-8c68jt862-melodicbloom.vercel.app/assets/index-BwqvF_jO.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "success": true
+    },
+    {
+      "id": "abalone-runtime",
+      "url": "https://shader-gallery-3dqanjb0y-melodicbloom.vercel.app/assets/index-Bng88RGW.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "success": true
+    },
+    {
+      "id": "nacre-validation",
+      "url": "https://shader-gallery-3xz0c6ilf-melodicbloom.vercel.app/assets/index-pVSsOfee.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "success": true
+    },
+    {
+      "id": "kaleidoscopic-field",
+      "url": "https://shader-gallery-4z05pqzfo-melodicbloom.vercel.app/experiments/kaleidoscopic-field-001/src/app.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "success": true
+    },
+    {
+      "id": "material-atlas",
+      "url": "https://shader-gallery-fgowazf2d-melodicbloom.vercel.app/packages/shader-library-v1/source/material-atlas/app.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "success": true
+    },
+    {
+      "id": "context-recycling",
+      "url": "https://shader-gallery-gc5s30dyj-melodicbloom.vercel.app/library-v1/app.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "success": true
+    },
+    {
+      "id": "geotile",
+      "url": "https://shader-gallery-5ike8k1lr-melodicbloom.vercel.app/material-validation-lab/experiments/GEO-TILE-001/browser/viewer.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "success": true
+    },
+    {
+      "id": "shader-grammar-example",
+      "url": "https://shader-gallery-awc5dbwgh-melodicbloom.vercel.app/packages/shader-grammar/examples/runtime/viewer.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "success": true
+    },
+    {
+      "id": "mvt-abalone",
+      "url": "https://shader-gallery-48i4iot7a-melodicbloom.vercel.app/material-validation-lab/reference/abalone/app.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "success": true
+    },
+    {
+      "id": "noise-glsl",
+      "url": "https://shader-gallery-hp6nv1dxx-melodicbloom.vercel.app/experiments/noise-kaleidoscope-v0/shader.frag.glsl",
+      "status": 200,
+      "contentType": "application/octet-stream",
+      "success": true
+    },
+    {
+      "id": "grammar-original-glsl",
+      "url": "https://shader-gallery-awc5dbwgh-melodicbloom.vercel.app/packages/shader-grammar/examples/glsl-thin-film.glsl",
+      "status": 200,
+      "contentType": "application/octet-stream",
+      "success": true
+    },
+    {
+      "id": "geotile-receipt",
+      "url": "https://shader-gallery-5ike8k1lr-melodicbloom.vercel.app/material-validation-lab/experiments/GEO-TILE-001/browser/generated/seed42/receipt.json",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "success": true
+    },
+    {
+      "id": "geotile-map",
+      "url": "https://shader-gallery-5ike8k1lr-melodicbloom.vercel.app/material-validation-lab/experiments/GEO-TILE-001/browser/generated/seed42/diagnostic_preview.png",
+      "status": 200,
+      "contentType": "image/png",
+      "success": true
+    },
+    {
+      "id": "mvt-three",
+      "url": "https://shader-gallery-48i4iot7a-melodicbloom.vercel.app/material-validation-lab/reference/abalone/three/build/three.module.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=utf-8",
+      "success": true
+    }
+  ],
+  "geotileMapHashesMatch": true,
+  "browser": {
+    "status": "blocked-by-vercel-authentication",
+    "interactionAccepted": false,
+    "gpuAccepted": false
+  }
+}
