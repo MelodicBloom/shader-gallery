@@ -62,9 +62,31 @@ def main():
                 data = json.loads(target.read_text())
             assert data['nd'] == 1.62 and data['vd'] == 30
             assert data['presetId'] == 'custom' and 'candidate-only' in data['destination']
+            # Typing keystroke by keystroke: no 0, no mid-typing clamp, aria-invalid + export blocked.
+            vd.fill('')
+            assert vd.input_value() == '' and vd.get_attribute('aria-invalid') == 'true' and export.is_disabled()
+            vd.press_sequentially('3')
+            assert vd.input_value() == '3' and vd.get_attribute('aria-invalid') == 'true' and export.is_disabled()
+            vd.press_sequentially('0')
+            assert vd.input_value() == '30' and vd.get_attribute('aria-invalid') == 'false' and export.is_enabled()
+            # Empty field on blur stays empty and invalid (never becomes 0 or the minimum).
+            vd.fill('')
+            vd.blur()
+            assert vd.input_value() == '' and vd.get_attribute('aria-invalid') == 'true' and export.is_disabled()
+            export.click(force=True)  # disabled: must not download
+            # A complete out-of-range number is clamped only at commit (blur/change).
+            vd.fill('3')
+            assert vd.input_value() == '3' and export.is_disabled()
+            vd.blur()
+            assert vd.input_value() == '9' and vd.get_attribute('aria-invalid') == 'false' and export.is_enabled()
+            assert page.locator('#vd').input_value() == '9'
+            nd.fill('')
+            assert nd.get_attribute('aria-invalid') == 'true' and 'Refractive index' in page.locator('#error').inner_text()
+            page.get_by_role('button', name='Crown · N-BK7').click()
+            assert nd.get_attribute('aria-invalid') == 'false' and vd.get_attribute('aria-invalid') == 'false' and export.is_enabled()
             assert not errors, errors
             browser.close()
-        print('PASS: intermediate input, bounds, and candidate JSON download')
+        print('PASS (software browser): intermediate input, aria-invalid, commit clamp, and candidate JSON download')
     finally:
         try:
             os.killpg(server.pid, signal.SIGTERM)
