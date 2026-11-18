@@ -1,0 +1,210 @@
+{
+  "schemaVersion": "0.1.0",
+  "id": "precious-opal",
+  "name": "Precious Opal \u00b7 Depth & Fire",
+  "family": "Dielectric volume + structural color",
+  "description": "A three-dimensional opal-inspired stone combining a milky scattering body, spatial color domains, angle-dependent diffraction-inspired fire, faceted highlights and editable topology. An artistic approximation; not a validated photonic-crystal solver.",
+  "authority": "qt314wink/shader-grammar:recipes/opalescent-glass.json (volume/interface basis); structural-color extension is experimental",
+  "phenomena": [
+    "dielectric-fresnel",
+    "snell-refraction-approx",
+    "volume-scattering-approx",
+    "structural-color-approx",
+    "microfacet-highlight-approx"
+  ],
+  "renderer": {
+    "webgl2": "shaders/precious-opal.frag",
+    "unreal": "Material-parameter mapping only; no Unreal asset delivered"
+  },
+  "topologies": [
+    "sphere",
+    "cabochon",
+    "crystal"
+  ],
+  "parameters": [
+    {
+      "id": "topology",
+      "label": "Topology",
+      "group": "Shape & surface",
+      "type": "int",
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "default": 0,
+      "unit": "preset",
+      "uniform": "u_topology",
+      "mechanism": "SDF geometry (sphere/cabochon/crystal)"
+    },
+    {
+      "id": "surfaceRelief",
+      "label": "Surface relief",
+      "group": "Shape & surface",
+      "type": "float",
+      "min": 0,
+      "max": 0.13,
+      "step": 0.005,
+      "default": 0.017,
+      "unit": "relative",
+      "uniform": "u_relief",
+      "mechanism": "Displaced SDF plus finite-difference normals"
+    },
+    {
+      "id": "roughness",
+      "label": "Polish / roughness",
+      "group": "Shape & surface",
+      "type": "float",
+      "min": 0.02,
+      "max": 0.8,
+      "step": 0.01,
+      "default": 0.13,
+      "unit": "alpha approx",
+      "uniform": "u_roughness",
+      "mechanism": "Specular lobe width / apparent surface finish"
+    },
+    {
+      "id": "ior",
+      "label": "Refractive index",
+      "group": "Optical interface",
+      "type": "float",
+      "min": 1.3,
+      "max": 1.7,
+      "step": 0.01,
+      "default": 1.45,
+      "unit": "n",
+      "uniform": "u_ior",
+      "mechanism": "Dielectric Fresnel and refracted viewing direction"
+    },
+    {
+      "id": "clarity",
+      "label": "Body clarity",
+      "group": "Optical interface",
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "default": 0.7,
+      "unit": "fraction",
+      "uniform": "u_clarity",
+      "mechanism": "Milky body / optical transmittance blending"
+    },
+    {
+      "id": "scatter",
+      "label": "Opalescent scatter",
+      "group": "Volume",
+      "type": "float",
+      "min": 0,
+      "max": 1.6,
+      "step": 0.02,
+      "default": 0.82,
+      "unit": "relative",
+      "uniform": "u_scatter",
+      "mechanism": "Blue-biased diffuse Rayleigh-like body scattering"
+    },
+    {
+      "id": "fire",
+      "label": "Spectral fire",
+      "group": "Structural color",
+      "type": "float",
+      "min": 0,
+      "max": 2,
+      "step": 0.02,
+      "default": 1.45,
+      "unit": "relative",
+      "uniform": "u_fire",
+      "mechanism": "Angle-sensitive interference-inspired colored domains"
+    },
+    {
+      "id": "domainScale",
+      "label": "Color-domain size",
+      "group": "Structural color",
+      "type": "float",
+      "min": 2,
+      "max": 20,
+      "step": 0.25,
+      "default": 12.0,
+      "unit": "spatial frequency",
+      "uniform": "u_domainScale",
+      "mechanism": "Spatial domains analogous to organized silica-sphere regions"
+    },
+    {
+      "id": "spectralShift",
+      "label": "Spectral orientation",
+      "group": "Structural color",
+      "type": "float",
+      "min": -2,
+      "max": 2,
+      "step": 0.02,
+      "default": 0.08,
+      "unit": "phase",
+      "uniform": "u_spectralShift",
+      "mechanism": "Bragg-inspired hue shift; artistic scale"
+    },
+    {
+      "id": "lightAngle",
+      "label": "Light azimuth",
+      "group": "Lighting",
+      "type": "float",
+      "min": -3.14,
+      "max": 3.14,
+      "step": 0.02,
+      "default": -0.8,
+      "unit": "radians",
+      "uniform": "u_lightAngle",
+      "mechanism": "Directional key light position"
+    },
+    {
+      "id": "lightHeight",
+      "label": "Light elevation",
+      "group": "Lighting",
+      "type": "float",
+      "min": -0.6,
+      "max": 1.5,
+      "step": 0.02,
+      "default": 0.7,
+      "unit": "radians",
+      "uniform": "u_lightHeight",
+      "mechanism": "Directional key light elevation"
+    },
+    {
+      "id": "lightEnergy",
+      "label": "Light energy",
+      "group": "Lighting",
+      "type": "float",
+      "min": 0.2,
+      "max": 2.5,
+      "step": 0.05,
+      "default": 1.35,
+      "unit": "relative",
+      "uniform": "u_lightEnergy",
+      "mechanism": "Key irradiance"
+    },
+    {
+      "id": "exposure",
+      "label": "Exposure",
+      "group": "Lighting",
+      "type": "float",
+      "min": 0.5,
+      "max": 2.2,
+      "step": 0.05,
+      "default": 1.15,
+      "unit": "relative",
+      "uniform": "u_exposure",
+      "mechanism": "Display mapping"
+    }
+  ],
+  "view": {
+    "orbitX": 0.18,
+    "orbitY": -0.28,
+    "zoom": 1
+  },
+  "reducedMotion": "frozen pose and static lights; pointer orbit remains available",
+  "quality": {
+    "tier": "experimental",
+    "evaluation": "Subjective lookdev + shader compile + visual comparison pending",
+    "limits": [
+      "Single surface raymarch; refraction is not multi-bounce transport",
+      "Spectral colors are artistic approximations, not measured opal diffraction",
+      "Lighting uses approximate microfacet specular highlights"
+    ]
+  }
+}

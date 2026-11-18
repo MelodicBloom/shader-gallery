@@ -1,0 +1,28 @@
+name: Material Atlas pilot (isolated)
+on:
+  pull_request:
+    paths:
+      - 'packages/shader-library-v1/source/material-atlas/**'
+      - '.github/workflows/material-atlas-pilot.yml'
+  workflow_dispatch:
+jobs:
+  material-atlas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install native shader validation libraries
+        run: sudo apt-get update && sudo apt-get install -y gcc libegl1-mesa-dev libgles2-mesa-dev
+      - name: Validate renderer-independent state contract
+        working-directory: packages/shader-library-v1/source
+        run: node --test material-atlas/tests/core.test.mjs
+      - name: Compile, link and render three opal topologies under two light positions
+        working-directory: packages/shader-library-v1/source
+        env:
+          NATIVE_VALIDATOR_LIBRARY_MODE: system
+          EGL_PLATFORM: surfaceless
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: node material-atlas/tests/shader.test.mjs
