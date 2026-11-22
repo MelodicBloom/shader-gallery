@@ -1,0 +1,84 @@
+{
+  "recoveredAt": "2026-11-22",
+  "searchedFor": "ion-bloom",
+  "ionBloomFound": false,
+  "items": [
+    {
+      "title": "SVG Filter Sculpting",
+      "restoredPath": "docs/recovered/svg-sculpting.html",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceBranch": "main",
+      "sourceCommit": "b5d0169a769f92dfe920eb5a0066b1ec04164c60",
+      "sourcePath": "index.html",
+      "author": "qt314wink",
+      "authorDate": "2026-06-25T06:58:46-04:00",
+      "summary": "Eleven-card interactive filter showcase: rough paper, wood grain, gooey, heat haze, specular, morphology, chromatic, sharpen, CRT, glow."
+    },
+    {
+      "title": "Nature Materials",
+      "restoredPath": "docs/recovered/nature-materials.html",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceBranch": "main",
+      "sourceCommit": "61aefcbb8741abbda12f53f2d454b84e71a1e837",
+      "sourcePath": "demos/nature.html",
+      "author": "qt314wink",
+      "authorDate": "2026-06-25T09:35:44-04:00",
+      "summary": "Hummingbird, butterfly, dragonfly, fish scale, chameleon, and feather filter studies."
+    },
+    {
+      "title": "Specular Glass",
+      "restoredPath": "docs/recovered/glass.html",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceBranch": "main",
+      "sourceCommit": "057f266fedacf23fd825077713d37c974763ccd5",
+      "sourcePath": "demos/glass.html",
+      "author": "qt314wink",
+      "authorDate": "2026-06-24T23:27:28-04:00",
+      "summary": "Frosted glass with a movable specular point light."
+    },
+    {
+      "title": "Memphis Riso",
+      "restoredPath": "docs/recovered/memphis-riso.html",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceBranch": "main",
+      "sourceCommit": "057f266fedacf23fd825077713d37c974763ccd5",
+      "sourcePath": "demos/memphis.html",
+      "author": "qt314wink",
+      "authorDate": "2026-06-24T23:27:28-04:00",
+      "summary": "Risograph grain over a Memphis composition."
+    },
+    {
+      "title": "Chromatic Aberration",
+      "restoredPath": "docs/recovered/chromatic.html",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceBranch": "main",
+      "sourceCommit": "057f266fedacf23fd825077713d37c974763ccd5",
+      "sourcePath": "demos/chromatic.html",
+      "author": "qt314wink",
+      "authorDate": "2026-06-24T23:27:28-04:00",
+      "summary": "Offset RGB channels as a chromatic study."
+    },
+    {
+      "title": "Posterize",
+      "restoredPath": "docs/recovered/posterize.html",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceBranch": "main",
+      "sourceCommit": "057f266fedacf23fd825077713d37c974763ccd5",
+      "sourcePath": "demos/posterize.html",
+      "author": "qt314wink",
+      "authorDate": "2026-06-24T23:27:28-04:00",
+      "summary": "Vintage ink quantizer / posterization pass."
+    },
+    {
+      "title": "CRT Scanlines",
+      "restoredPath": "docs/recovered/crt.html",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceBranch": "main",
+      "sourceCommit": "057f266fedacf23fd825077713d37c974763ccd5",
+      "sourcePath": "demos/crt.html",
+      "author": "qt314wink",
+      "authorDate": "2026-06-24T23:27:28-04:00",
+      "summary": "Scanline and displacement CRT study."
+    }
+  ]
+}
