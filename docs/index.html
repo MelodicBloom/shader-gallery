@@ -51,13 +51,17 @@
 
 <script>
 function initShader(canvas, fragSrc) {
+  const dpr = window.devicePixelRatio || 1;
+  const width = Math.max(1, Math.floor(canvas.clientWidth * dpr));
+  const height = Math.max(1, Math.floor(canvas.clientHeight * dpr));
+  canvas.width = width;
+  canvas.height = height;
   const gl = canvas.getContext('webgl');
   if (!gl) {
     canvas.setAttribute('data-render-state', 'fallback');
     return;
   }
-  canvas.width = canvas.offsetWidth * devicePixelRatio;
-  canvas.height = canvas.offsetHeight * devicePixelRatio;
+  gl.viewport(0, 0, canvas.width, canvas.height);
   const vert = gl.createShader(gl.VERTEX_SHADER);
   gl.shaderSource(vert, `attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}`);
   gl.compileShader(vert);
