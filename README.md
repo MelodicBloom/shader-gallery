@@ -25,8 +25,8 @@ The work is deliberately experimental: a shader can be compile-validated without
 | Deployed gallery route | The [`/docs/` gallery](https://melodicbloom.github.io/shader-gallery/docs/) loaded with its hero and preview canvases during a browser check on 2026-10-27. | Verified in a desktop browser |
 | Hero screenshot / GIF | No repository-owned, version-bound screenshot or GIF is currently recorded. | Still needed |
 | Mobile viewport | No mobile capture or receipt is recorded. | Unverified |
-| Keyboard access | `/docs/` cards are now real links with visible `:focus-visible` styling; no deployed browser acceptance result is recorded for this revision. | Source fix committed; browser check pending |
-| Reduced motion | `/docs/` now checks `prefers-reduced-motion` and renders one deterministic frame instead of scheduling an animation loop; no deployed browser acceptance result is recorded for this revision. | Source fix committed; browser check pending |
+| Keyboard access | Aurora, Abalone, and Optical Studies 02 are keyboard-focusable links with visible `:focus-visible` styling. Mandala, Fluid Psychedelic, and Stained Glass stay preview-only because this tree has no page for them. No deployed browser acceptance result is recorded for this revision. | Source fix committed; deployed browser check pending |
+| Reduced motion | `/docs/` draws one frame and does not schedule further frames while `prefers-reduced-motion: reduce` matches, including after the preference changes. Hover motion is suppressed in that mode. No deployed browser acceptance result is recorded for this revision. | Source fix committed; deployed browser check pending |
 
 These statuses apply to the public gallery entry page. They do not negate validation evidence held by individual studies; they prevent the README from making a broader accessibility or cross-device claim than the current public surface supports.
 
