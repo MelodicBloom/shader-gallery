@@ -30,6 +30,8 @@ The work is deliberately experimental: a shader can be compile-validated without
 
 These statuses apply to the public gallery entry page. They do not negate validation evidence held by individual studies; they prevent the README from making a broader accessibility or cross-device claim than the current public surface supports.
 
+Aurora now fills the viewport with a night sky, a far curtain, and a nearer teal-to-magenta ribbon. Abalone keeps the same pearl palette and puts it on a dark shell instead of a flat field. Optical Studies 02 was already a lit material stage and is unchanged. None of this is a deployed-route or human art-direction acceptance.
+
 ## What this demonstrates
 
 - WebGL2 / GLSL 300 ES implementation, packaging, and native validation.
