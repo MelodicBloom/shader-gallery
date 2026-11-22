@@ -36,5 +36,12 @@ void main() {
     p *= 2.0;
   }
   float grain = clamp(sum / total, 0.0, 1.0);
-  outColor = vec4(u_base * mix(1.0, grain, u_strength), 1.0);
+  float dx = dFdx(grain);
+  float dy = dFdy(grain);
+  vec3 normal = normalize(vec3(-dx * 18.0, -dy * 18.0, 1.0));
+  vec3 light = normalize(vec3(0.35, 0.62, 0.85));
+  float shade = mix(0.62, 1.18, clamp(dot(normal, light), 0.0, 1.0));
+  float spec = pow(clamp(dot(reflect(-light, normal), vec3(0.0, 0.0, 1.0)), 0.0, 1.0), 28.0);
+  vec3 lit = u_base * shade + spec * 0.22;
+  outColor = vec4(mix(u_base, lit, u_strength), 1.0);
 }
