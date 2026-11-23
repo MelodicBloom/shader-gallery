@@ -18,8 +18,8 @@ void main(){
   vec2 w2=vec2(fbm(uv*3.5+w1*1.4+t*.5),fbm(uv*3.5+w1*1.4-t*.4+9.1));
   vec3 n=normalize(vec3(w2*.8,1.));
   float mu=clamp(n.z,0.15,1.);
-  float nA=1.53; float dNm=400.;
-  float lambda=2.*nA*dNm*mu;
+  float nA=1.53; float dNm=400.; float mOrder=2.;
+  float lambda=(2.*nA*dNm*mu)/mOrder;
   float F0=pow((nA-1.)/(nA+1.),2.);
   float F=F0+(1.-F0)*pow(1.-mu,5.);
   vec3 col=line(lambda)*(0.35+0.65*F);
