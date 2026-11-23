@@ -35,11 +35,11 @@ E_c(λ) = exp(-0.5 * ((λ_c - λ) / σ_c)^2)
 
 Fixed parameters: those six numbers. No free fit. Valid range for `h` is [0, 1]. Wavelengths are fixed. The original noise field `f` still gates brightness. No treeline, no new geometry.
 
-## Bottlenecks
+## BOTTLENECKS
 
 The live shader and the proposal both run 6-iteration fBm three times per pixel, in mediump. That is the cost. The proposal adds only the three Gaussians.
 
-## Failure modes
+## FAILURE MODES
 
 - mediump fBm bands on large screens.
 - The sin-hash noise is not a spectrum. It cannot reproduce a real curtain.

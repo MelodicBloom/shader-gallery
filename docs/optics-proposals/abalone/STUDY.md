@@ -33,11 +33,11 @@ The proposal keeps the original `uv` warp and full-frame domain. It does not dra
 
 `m = 1` with these values puts `λ` at 1224 nm when `μ = 1`. The Gaussian map is zero that far from 455–620 nm, so the frame is black. That render was discarded. The recorded order is `m = 2`, which puts normal incidence at 612 nm.
 
-## Bottlenecks
+## BOTTLENECKS
 
 Six-octave fBm, three times, per pixel, mediump. The Bragg term is a few arithmetic ops.
 
-## Failure modes
+## FAILURE MODES
 
 - Order m = 1 at d = 400 nm is 1224 nm and the wavelength map returns black. That is a parameter failure, not a shell. The proposal uses m = 2.
 - cos θ → 0 at grazing view sends λ → 0 and the Gaussian map returns black. The proposal clamps the cosine to at least 0.15. At m = 2 that is 184 nm, still outside the map, so the hue collapses toward blue before it hits NaN.
