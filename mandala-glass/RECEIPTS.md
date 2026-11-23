@@ -92,3 +92,34 @@ Interpretation: JS work per frame is about 1 ms. The rest is software rasterisat
 | — | Commit 2 (this receipts update) and the draft PR | listed in the PR description. A commit cannot contain its own SHA. |
 
 The Vercel project is **not Git-connected**. Pushing to the branch does not redeploy. To redeploy, run `npx vercel deploy --prod` from `mandala-glass/`.
+
+---
+
+# 2026-11-23 evening: control fixes + GLSL layer (EST)
+
+The user tested the live demo and reported four control bugs. Evidence was captured in headless Chromium on SwiftShader at 1280×720 with `?t=7&q=0`. Pixel diffs exclude the control panel (x < 780 px) and are reported as mean absolute difference per channel (0–255) and % of pixels changed by more than 30.
+
+| # | Bug | Root cause | Fix | Evidence |
+|---|---|---|---|---|
+| 1 | Hue slider does nothing visible | The slider only set the *speed* of a narrow pink→blue band. The band was applied only to `attenuationColor` on 8 small gems, over a 10 s period, so a speed change was nearly invisible and nothing else responded. | The hue clock (6 s per cycle at 1×) now also drives gem emissive colour, a per-frame tint drift on every petal and tile (±0.03 hue in Glass, ±0.2 in Gem) and the thin-film phase `uHue`. Gem mode cycles the gems through the full spectrum. | `fix-A-base.png` (hue 1) vs `fix-B-hue0.png` (hue 0): 1.76 mean abs, 5.4 % px |
+| 2 | Dispersion has no immediate visible effect | three's `dispersion` is a tiny per-channel IOR spread. At 0–1.5 on thin glass over a pale backdrop it gave sub-pixel fringes. | The slider is now 0–1 and maps to `dispersion` 0–5 (×1.6 in Gem). It is set live in the input handler and also drives the hand-written thin-film iridescence strength `uFilm` (below), so the change reads at a glance. | `fix-C-disp0.png` vs `fix-D-disp1-live-slider.png` (slider moved live through an input event): 3.34 mean abs, 14.9 % px |
+| 3 | Bloom only on the centre flower | Bloom threshold was 2.0 HDR. Only the cyan core's emissive (3.8) exceeded it; gems and gold had no emissive. | Threshold 1.5 (above the backdrop and the lit lotus), strength 0.55, radius 0.35. Gems got hue-matched emissive pulsing with the hue clock: 1.0 in Glass, 3.2 in Gem. Core emissive dropped from 3.8 to 2.6 in Glass. | `fix-A-base.png`, `fix-D-*.png`: gems now glow |
+| 4 | Gem switch changed only materials | `applyMaterial()` changed only IOR, dispersion and attenuation. No bloom, emissive or hue behaviour depended on the mode. | In Gem mode the core dims (emissive 1.0, point light 0.6) and the bloom emphasis moves to the gemstones (emissive 3.2), with full-spectrum gem hue cycling, strong tile and petal hue drift, and a wider thin-film spread (`uSpread` 2.4). | `fix-A-base.png` vs `fix-E-gem-live-click.png` (real click on the Gem button): 6.01 mean abs, 20.2 % px |
+
+Bloom tuning took two attempts. The first try at threshold 1.1 flooded the centre again (washed-out lavender petals), so it was raised to 1.5. The thin-film term was also made zero-mean (a chroma shift, not added brightness) so it cannot cause flooding.
+
+## Hand-written GLSL (P2)
+- `src/shaders/thinFilm.pars.glsl` (18 lines): the uniforms `uFilm`, `uHue` and `uSpread`, a cosine thin-film palette, and a Fresnel-weighted view-angle rainbow (`thinFilm()`).
+- `src/shaders/thinFilm.apply.glsl` (3 lines): adds the term to `outgoingLight` before `<opaque_fragment>`.
+- Injected through `onBeforeCompile` in `src/main.js` (`injectFilm`, around lines 127–137) into every glass `MeshPhysicalMaterial`. The uniforms are shared, so one update per frame drives all materials.
+
+## Results
+- Console and page errors: **0** across all 5 captures.
+- Commit: `3d00ce1fd2b22d0f7d1223fa3711ad2fb956938c` (pushed to `cursor/mandala-glass-slice`).
+- Deploy 18:30 EST: `npx vercel deploy --prod` gave `mandala-glass-afmqs45d5-melodicbloom.vercel.app` (ready, aliased to production). `curl https://mandala-glass.vercel.app/` returned **200** and serves bundle `assets/index-BV26iHqq.js`. That bundle has the same hash as the locally tested build and contains `uSpread` (the new GLSL).
+
+## Known issues and unverified
+- I did not take a browser screenshot of the redeployed live URL (to save budget). The bundle-hash match is the evidence.
+- No bench re-run. Bloom and thin-film add negligible JS cost but slightly more GPU work. Real-GPU performance is still unmeasured.
+- In Gem mode the strong tint drift turns the yellow tiles coral and the core's glass shell green at some phases (`fix-E`). It is intentional colour play, but it departs from Ref 1's palette.
+- The centre lotus still blooms fairly bright in Glass mode.
