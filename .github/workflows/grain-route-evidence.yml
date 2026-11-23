@@ -1,0 +1,36 @@
+name: Grain route evidence
+
+on:
+  pull_request:
+    paths:
+      - 'library-v1/ports/grain/**'
+      - 'tools/verification/grain_preview.py'
+      - 'tools/verification/test_grain_preview.py'
+      - '.github/workflows/grain-route-evidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Exercise verifier controls
+        run: python3 -m unittest discover -s tools/verification -p test_grain_preview.py -v
+      - name: Measure the checked-out route
+        run: python3 tools/verification/grain_preview.py --out "$RUNNER_TEMP/grain-route.json"
+      - name: Preserve the receipt
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: grain-route-evidence
+          path: ${{ runner.temp }}/grain-route.json
+          if-no-files-found: warn
+          retention-days: 14
