@@ -32,6 +32,10 @@ n(λ) = A + B / λ² + C / λ⁴
 
 Schott BK7 at 20 °C (published catalog): B1 = 1.03961212, C1 = 0.00600069867 µm², and the two further terms in the Schott data sheet. The live prism shader already refracts three proxy indices. It was not modified.
 
-## Bottlenecks and failure modes
+## BOTTLENECKS
 
-The live file ray-marches an ellipsoid or a five-plane prism and loops cells in the fragment shader. That is the cost. Failure modes: the wavelength proxy is three Gaussians, not a CIE integral; Fresnel at μ = 0 saturates; preserved drawing buffer plus a static preview hides a compile failure; SwiftShader will not match a phone; reduced motion stops the light sweep and holds the current frame.
+The live file ray-marches an ellipsoid or a five-plane prism and loops cells in the fragment shader. That is the cost. The notes add no loops.
+
+## FAILURE MODES
+
+The wavelength proxy is three Gaussians, not a CIE integral. Fresnel at μ = 0 saturates. A preserved drawing buffer plus a static preview hides a compile failure. SwiftShader will not match a phone. Reduced motion sets `playing` false, which changes the button label. On this 1440×900 capture that grew the canvas from 1148×925 to 1148×947, so the same time and the same light rasterize differently. Time stayed 0 and the light stayed (−0.55, 0.65, 1.1).
