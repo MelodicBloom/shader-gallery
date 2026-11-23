@@ -1,0 +1,24 @@
+{
+  "when": "Mon Nov 23 2026 04:35:11 GMT-0500 (Eastern Standard Time)",
+  "out": [
+    {
+      "vp": "1280x720",
+      "n": 300,
+      "rafMedian": 83.40000000000146,
+      "rafP95": 133.39999999999782,
+      "cpuMedian": 1,
+      "cpuP95": 3.5,
+      "quality": 4
+    },
+    {
+      "vp": "390x844",
+      "n": 300,
+      "rafMedian": 50,
+      "rafP95": 83.30000000000109,
+      "cpuMedian": 0.8999999985098839,
+      "cpuP95": 2.100000001490116,
+      "quality": 4
+    }
+  ],
+  "errs": []
+}

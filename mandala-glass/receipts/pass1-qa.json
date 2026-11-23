@@ -1,0 +1,64 @@
+{
+  "tag": "pass1",
+  "base": "http://localhost:4173/",
+  "when": "Mon Nov 23 2026 04:23:43 GMT-0500 (Eastern Standard Time)",
+  "shots": [
+    {
+      "file": "../repo/mandala-glass/receipts/pass1-desktop-hero.png",
+      "q": 0,
+      "r": {
+        "gl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "calls": 1,
+        "tris": 1
+      }
+    },
+    {
+      "file": "../repo/mandala-glass/receipts/pass1-desktop-gem.png",
+      "q": 0,
+      "r": {
+        "gl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "calls": 1,
+        "tris": 1
+      }
+    },
+    {
+      "file": "../repo/mandala-glass/receipts/pass1-desktop-closed.png",
+      "q": 0,
+      "r": {
+        "gl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "calls": 1,
+        "tris": 1
+      }
+    },
+    {
+      "file": "../repo/mandala-glass/receipts/pass1-mobile-hero.png",
+      "q": 0,
+      "r": {
+        "gl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "calls": 1,
+        "tris": 1
+      }
+    },
+    {
+      "file": "../repo/mandala-glass/receipts/pass1-mobile-gem.png",
+      "q": 0,
+      "r": {
+        "gl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "calls": 1,
+        "tris": 1
+      }
+    },
+    {
+      "file": "../repo/mandala-glass/receipts/pass1-mobile-closed.png",
+      "q": 0,
+      "r": {
+        "gl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "calls": 1,
+        "tris": 1
+      }
+    }
+  ],
+  "errors": [],
+  "bench": [],
+  "sims": {}
+}
