@@ -1,0 +1,205 @@
+{
+  "$schema": "../../schema/svg-filter-recipe.schema.json",
+  "id": "marble-vein",
+  "name": "Carved Marble Vein",
+  "version": "0.1.0",
+  "status": "approved",
+  "family": "tactile",
+  "intent": [
+    "stone vein field",
+    "carved mineral streak",
+    "directional marble warp"
+  ],
+  "tags": [
+    "marble",
+    "stone",
+    "vein",
+    "displacement",
+    "carved"
+  ],
+  "filterRegion": {
+    "x": "-8%",
+    "y": "-8%",
+    "width": "116%",
+    "height": "116%"
+  },
+  "colorInterpolation": "sRGB",
+  "primitives": [
+    {
+      "id": "marble-turb",
+      "type": "feTurbulence",
+      "attributes": {
+        "type": "fractalNoise",
+        "baseFrequency": "0.012 0.07",
+        "numOctaves": 4,
+        "seed": 37,
+        "result": "stone"
+      }
+    },
+    {
+      "id": "marble-threshold",
+      "type": "feColorMatrix",
+      "attributes": {
+        "in": "stone",
+        "type": "matrix",
+        "values": "0 0 0 0 0.08  0 0 0 0 0.1  0 0 0 0 0.14  0 0 0 13 -6.3",
+        "result": "veins"
+      }
+    },
+    {
+      "id": "marble-disp",
+      "type": "feDisplacementMap",
+      "attributes": {
+        "in": "veins",
+        "in2": "stone",
+        "scale": 14,
+        "xChannelSelector": "R",
+        "yChannelSelector": "G",
+        "result": "warpedVeins"
+      }
+    },
+    {
+      "id": "marble-blend",
+      "type": "feBlend",
+      "attributes": {
+        "in": "SourceGraphic",
+        "in2": "warpedVeins",
+        "mode": "multiply"
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "key": "vein-x",
+      "label": "Vein X",
+      "type": "number",
+      "default": 0.012,
+      "binding": {
+        "primitiveId": "marble-turb",
+        "attribute": "baseFrequency",
+        "component": 0
+      },
+      "min": 0.003,
+      "max": 0.05,
+      "step": 0.001
+    },
+    {
+      "key": "vein-y",
+      "label": "Vein Y",
+      "type": "number",
+      "default": 0.07,
+      "binding": {
+        "primitiveId": "marble-turb",
+        "attribute": "baseFrequency",
+        "component": 1
+      },
+      "min": 0.01,
+      "max": 0.2,
+      "step": 0.002
+    },
+    {
+      "key": "threshold-mult",
+      "label": "Threshold Multiplier",
+      "type": "number",
+      "default": 13,
+      "binding": {
+        "primitiveId": "marble-threshold",
+        "attribute": "values",
+        "component": 18
+      },
+      "min": 5,
+      "max": 24,
+      "step": 1
+    },
+    {
+      "key": "threshold-sub",
+      "label": "Threshold Offset",
+      "type": "number",
+      "default": -6.3,
+      "binding": {
+        "primitiveId": "marble-threshold",
+        "attribute": "values",
+        "component": 19
+      },
+      "min": -12,
+      "max": -1,
+      "step": 0.1
+    },
+    {
+      "key": "vein-warp",
+      "label": "Vein Warp",
+      "type": "number",
+      "default": 14,
+      "binding": {
+        "primitiveId": "marble-disp",
+        "attribute": "scale"
+      },
+      "min": 0,
+      "max": 35,
+      "step": 1
+    }
+  ],
+  "presets": {
+    "carrara-fine": {
+      "name": "Carrara Fine",
+      "description": "Thin quiet grey veining for broad pale surfaces.",
+      "values": {
+        "vein-x": 0.008,
+        "vein-y": 0.052,
+        "threshold-mult": 10,
+        "threshold-sub": -4.8,
+        "vein-warp": 9
+      }
+    },
+    "calacatta-bold": {
+      "name": "Calacatta Bold",
+      "description": "Large dramatic mineral streaks with stronger warping.",
+      "values": {
+        "vein-x": 0.016,
+        "vein-y": 0.09,
+        "threshold-mult": 16,
+        "threshold-sub": -7.4,
+        "vein-warp": 22
+      }
+    },
+    "nero-vein": {
+      "name": "Nero Vein",
+      "description": "Dense concentrated veins for dark stone treatments.",
+      "values": {
+        "vein-x": 0.023,
+        "vein-y": 0.13,
+        "threshold-mult": 20,
+        "threshold-sub": -9.2,
+        "vein-warp": 17
+      }
+    }
+  },
+  "performance": {
+    "tier": "moderate",
+    "animated": false,
+    "primitiveCount": 4,
+    "recommendedMaxInstances": 8,
+    "recommendedMaxAreaPx": 900000
+  },
+  "accessibility": {
+    "decorative": true,
+    "reducedMotionFallback": null,
+    "notes": "Do not apply to essential body text without an unfiltered semantic duplicate."
+  },
+  "governance": {
+    "recommendedUses": [
+      "marble cards",
+      "architectural panels",
+      "premium dividers"
+    ],
+    "avoid": [
+      "body copy",
+      "small icons",
+      "stacking with heavy lithographic grain"
+    ]
+  },
+  "source": {
+    "origin": "SVG Filter Atelier v2",
+    "migration": "v0.1 signature material migration"
+  }
+}

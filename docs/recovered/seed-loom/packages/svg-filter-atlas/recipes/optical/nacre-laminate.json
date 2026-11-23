@@ -1,0 +1,234 @@
+{
+  "$schema": "../../schema/svg-filter-recipe.schema.json",
+  "id": "nacre-laminate",
+  "name": "Nacre Laminate",
+  "version": "0.1.0",
+  "status": "approved",
+  "family": "optical",
+  "intent": [
+    "iridescent laminate",
+    "pearlescent depth",
+    "directional shell grain"
+  ],
+  "tags": [
+    "nacre",
+    "abalone",
+    "pearl",
+    "specular",
+    "layered-light"
+  ],
+  "filterRegion": {
+    "x": "-12%",
+    "y": "-12%",
+    "width": "124%",
+    "height": "124%"
+  },
+  "colorInterpolation": "sRGB",
+  "primitives": [
+    {
+      "id": "nacre-turb",
+      "type": "feTurbulence",
+      "attributes": {
+        "type": "fractalNoise",
+        "baseFrequency": "0.012 0.08",
+        "numOctaves": 4,
+        "seed": 11,
+        "result": "grain"
+      }
+    },
+    {
+      "id": "nacre-color",
+      "type": "feColorMatrix",
+      "attributes": {
+        "in": "grain",
+        "type": "matrix",
+        "values": "0.7 0.1 0.2 0 0.12  0.16 0.72 0.12 0 0.14  0.08 0.2 0.78 0 0.24  0 0 0 0.55 0",
+        "result": "pearl"
+      }
+    },
+    {
+      "id": "nacre-light",
+      "type": "feSpecularLighting",
+      "attributes": {
+        "in": "grain",
+        "surfaceScale": 5,
+        "specularConstant": 1.2,
+        "specularExponent": 28,
+        "lighting-color": "#e9fbff",
+        "result": "shine"
+      },
+      "children": [
+        {
+          "id": "nacre-dl",
+          "type": "feDistantLight",
+          "attributes": {
+            "azimuth": 225,
+            "elevation": 55
+          }
+        }
+      ]
+    },
+    {
+      "id": "nacre-mask",
+      "type": "feComposite",
+      "attributes": {
+        "in": "shine",
+        "in2": "SourceGraphic",
+        "operator": "in",
+        "result": "shineMask"
+      }
+    },
+    {
+      "id": "nacre-base",
+      "type": "feBlend",
+      "attributes": {
+        "in": "SourceGraphic",
+        "in2": "pearl",
+        "mode": "screen",
+        "result": "base"
+      }
+    },
+    {
+      "id": "nacre-blend",
+      "type": "feBlend",
+      "attributes": {
+        "in": "base",
+        "in2": "shineMask",
+        "mode": "screen"
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "key": "grain-x",
+      "label": "Grain X",
+      "type": "number",
+      "default": 0.012,
+      "binding": {
+        "primitiveId": "nacre-turb",
+        "attribute": "baseFrequency",
+        "component": 0
+      },
+      "min": 0.004,
+      "max": 0.05,
+      "step": 0.001
+    },
+    {
+      "key": "grain-y",
+      "label": "Grain Y",
+      "type": "number",
+      "default": 0.08,
+      "binding": {
+        "primitiveId": "nacre-turb",
+        "attribute": "baseFrequency",
+        "component": 1
+      },
+      "min": 0.02,
+      "max": 0.2,
+      "step": 0.005
+    },
+    {
+      "key": "surface-scale",
+      "label": "Surface Scale",
+      "type": "number",
+      "default": 5,
+      "binding": {
+        "primitiveId": "nacre-light",
+        "attribute": "surfaceScale"
+      },
+      "min": 1,
+      "max": 10,
+      "step": 0.5
+    },
+    {
+      "key": "specular-exponent",
+      "label": "Specular Exponent",
+      "type": "number",
+      "default": 28,
+      "binding": {
+        "primitiveId": "nacre-light",
+        "attribute": "specularExponent"
+      },
+      "min": 4,
+      "max": 60,
+      "step": 2
+    },
+    {
+      "key": "azimuth",
+      "label": "Light Azimuth",
+      "type": "number",
+      "default": 225,
+      "binding": {
+        "primitiveId": "nacre-dl",
+        "attribute": "azimuth"
+      },
+      "min": 0,
+      "max": 360,
+      "step": 5,
+      "unit": "deg"
+    }
+  ],
+  "presets": {
+    "pearl-calm": {
+      "name": "Pearl Calm",
+      "description": "Soft, low-frequency shell depth for broad surfaces.",
+      "values": {
+        "grain-x": 0.009,
+        "grain-y": 0.055,
+        "surface-scale": 3.5,
+        "specular-exponent": 18,
+        "azimuth": 210
+      }
+    },
+    "abalone-ridge": {
+      "name": "Abalone Ridge",
+      "description": "Sharper directional ridges and concentrated shell highlights.",
+      "values": {
+        "grain-x": 0.014,
+        "grain-y": 0.11,
+        "surface-scale": 6.5,
+        "specular-exponent": 38,
+        "azimuth": 250
+      }
+    },
+    "moon-shell": {
+      "name": "Moon Shell",
+      "description": "Subdued cool nacre for secondary surfaces.",
+      "values": {
+        "grain-x": 0.006,
+        "grain-y": 0.035,
+        "surface-scale": 2.5,
+        "specular-exponent": 12,
+        "azimuth": 165
+      }
+    }
+  },
+  "performance": {
+    "tier": "heavy",
+    "animated": false,
+    "primitiveCount": 6,
+    "recommendedMaxInstances": 4,
+    "recommendedMaxAreaPx": 700000
+  },
+  "accessibility": {
+    "decorative": true,
+    "reducedMotionFallback": null,
+    "notes": "Do not apply to essential body text without an unfiltered semantic duplicate."
+  },
+  "governance": {
+    "recommendedUses": [
+      "hero surface",
+      "artwork card",
+      "selected navigation state"
+    ],
+    "avoid": [
+      "long body text",
+      "more than two optical effects on one component",
+      "large continuously scrolling backgrounds"
+    ]
+  },
+  "source": {
+    "origin": "SVG Filter Atelier v2",
+    "migration": "v0.1 signature material migration"
+  }
+}

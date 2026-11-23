@@ -1,0 +1,234 @@
+{
+  "$schema": "../../schema/svg-filter-recipe.schema.json",
+  "id": "guanine-crystal",
+  "name": "Guanine Crystal Facets",
+  "version": "0.1.0",
+  "status": "approved",
+  "family": "optical",
+  "intent": [
+    "iridescent crystal platelets",
+    "directional spectral flash",
+    "faceted biological optics"
+  ],
+  "tags": [
+    "guanine",
+    "crystal",
+    "facets",
+    "iridescence",
+    "flash"
+  ],
+  "filterRegion": {
+    "x": "-10%",
+    "y": "-10%",
+    "width": "120%",
+    "height": "120%"
+  },
+  "colorInterpolation": "sRGB",
+  "primitives": [
+    {
+      "id": "guanine-turb",
+      "type": "feTurbulence",
+      "attributes": {
+        "type": "turbulence",
+        "baseFrequency": "0.075 0.18",
+        "numOctaves": 2,
+        "seed": 41,
+        "result": "facets"
+      }
+    },
+    {
+      "id": "guanine-color",
+      "type": "feColorMatrix",
+      "attributes": {
+        "in": "facets",
+        "type": "matrix",
+        "values": "0.9 0.2 0.4 0 0.05  0.1 0.95 0.2 0 0.08  0.45 0.12 1.1 0 0.18  0 0 0 0.72 0",
+        "result": "iridescence"
+      }
+    },
+    {
+      "id": "guanine-light",
+      "type": "feSpecularLighting",
+      "attributes": {
+        "in": "facets",
+        "surfaceScale": 7,
+        "specularConstant": 1.8,
+        "specularExponent": 34,
+        "lighting-color": "#e7fbff",
+        "result": "flash"
+      },
+      "children": [
+        {
+          "id": "guanine-point",
+          "type": "fePointLight",
+          "attributes": {
+            "x": 130,
+            "y": 70,
+            "z": 240
+          }
+        }
+      ]
+    },
+    {
+      "id": "guanine-mask",
+      "type": "feComposite",
+      "attributes": {
+        "in": "flash",
+        "in2": "SourceGraphic",
+        "operator": "in",
+        "result": "flashMask"
+      }
+    },
+    {
+      "id": "guanine-crystal",
+      "type": "feBlend",
+      "attributes": {
+        "in": "SourceGraphic",
+        "in2": "iridescence",
+        "mode": "color-dodge",
+        "result": "crystal"
+      }
+    },
+    {
+      "id": "guanine-blend",
+      "type": "feBlend",
+      "attributes": {
+        "in": "crystal",
+        "in2": "flashMask",
+        "mode": "screen"
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "key": "facet-x",
+      "label": "Facet X",
+      "type": "number",
+      "default": 0.075,
+      "binding": {
+        "primitiveId": "guanine-turb",
+        "attribute": "baseFrequency",
+        "component": 0
+      },
+      "min": 0.01,
+      "max": 0.25,
+      "step": 0.001
+    },
+    {
+      "key": "facet-y",
+      "label": "Facet Y",
+      "type": "number",
+      "default": 0.18,
+      "binding": {
+        "primitiveId": "guanine-turb",
+        "attribute": "baseFrequency",
+        "component": 1
+      },
+      "min": 0.03,
+      "max": 0.45,
+      "step": 0.01
+    },
+    {
+      "key": "surface-scale",
+      "label": "Surface Scale",
+      "type": "number",
+      "default": 7,
+      "binding": {
+        "primitiveId": "guanine-light",
+        "attribute": "surfaceScale"
+      },
+      "min": 1,
+      "max": 14,
+      "step": 0.5
+    },
+    {
+      "key": "specular-exponent",
+      "label": "Specular Exponent",
+      "type": "number",
+      "default": 34,
+      "binding": {
+        "primitiveId": "guanine-light",
+        "attribute": "specularExponent"
+      },
+      "min": 4,
+      "max": 70,
+      "step": 2
+    },
+    {
+      "key": "light-x",
+      "label": "Light X",
+      "type": "number",
+      "default": 130,
+      "binding": {
+        "primitiveId": "guanine-point",
+        "attribute": "x"
+      },
+      "min": 0,
+      "max": 400,
+      "step": 5
+    }
+  ],
+  "presets": {
+    "relaxed-blue": {
+      "name": "Relaxed Blue",
+      "description": "Close-set cool facets with broad soft highlights.",
+      "values": {
+        "facet-x": 0.052,
+        "facet-y": 0.14,
+        "surface-scale": 5,
+        "specular-exponent": 24,
+        "light-x": 110
+      }
+    },
+    "excited-spectrum": {
+      "name": "Excited Spectrum",
+      "description": "Expanded facets and sharper spectral flashes.",
+      "values": {
+        "facet-x": 0.095,
+        "facet-y": 0.24,
+        "surface-scale": 9,
+        "specular-exponent": 48,
+        "light-x": 230
+      }
+    },
+    "silver-flash": {
+      "name": "Silver Flash",
+      "description": "Fine crystalline grain with a concentrated neutral highlight.",
+      "values": {
+        "facet-x": 0.12,
+        "facet-y": 0.32,
+        "surface-scale": 11,
+        "specular-exponent": 62,
+        "light-x": 175
+      }
+    }
+  },
+  "performance": {
+    "tier": "heavy",
+    "animated": false,
+    "primitiveCount": 6,
+    "recommendedMaxInstances": 3,
+    "recommendedMaxAreaPx": 550000
+  },
+  "accessibility": {
+    "decorative": true,
+    "reducedMotionFallback": null,
+    "notes": "Do not apply to essential body text without an unfiltered semantic duplicate."
+  },
+  "governance": {
+    "recommendedUses": [
+      "scientific artwork",
+      "small hero accents",
+      "spectral interaction feedback"
+    ],
+    "avoid": [
+      "large scrolling backgrounds",
+      "long text",
+      "combining with chromatic aberration at full strength"
+    ]
+  },
+  "source": {
+    "origin": "SVG Filter Atelier v2",
+    "migration": "v0.1 signature material migration"
+  }
+}

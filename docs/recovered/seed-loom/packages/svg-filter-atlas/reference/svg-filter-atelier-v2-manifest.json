@@ -1,0 +1,584 @@
+{
+  "schema": "melodicbloom.svg-filter-atelier/2.0",
+  "name": "SVG Filter Atelier — Material Families",
+  "version": "2.0.0",
+  "recipeCount": 26,
+  "materialRecipeCount": 8,
+  "families": [
+    "optical",
+    "tactile",
+    "pattern",
+    "structural",
+    "living"
+  ],
+  "materialRecipes": [
+    {
+      "id": "nacreLaminate",
+      "title": "Nacre Laminate",
+      "family": "optical",
+      "tags": [
+        "pearl",
+        "specular",
+        "layered light"
+      ],
+      "caption": "Directional grain, softly colorized noise, and a narrow specular response produce layered pearl depth without pretending to be a full thin-film shader.",
+      "filterReference": "nacreLaminate",
+      "parameters": [
+        {
+          "name": "grain X",
+          "type": "range",
+          "default": 0.012,
+          "min": 0.004,
+          "max": 0.05,
+          "step": 0.002,
+          "target": null,
+          "attribute": null,
+          "customBinding": "nacreX"
+        },
+        {
+          "name": "grain Y",
+          "type": "range",
+          "default": 0.08,
+          "min": 0.02,
+          "max": 0.2,
+          "step": 0.01,
+          "target": null,
+          "attribute": null,
+          "customBinding": "nacreY"
+        },
+        {
+          "name": "surfaceScale",
+          "type": "range",
+          "default": 5,
+          "min": 1,
+          "max": 10,
+          "step": 0.5,
+          "target": "nacre-light",
+          "attribute": "surfaceScale",
+          "customBinding": null
+        },
+        {
+          "name": "specularExp",
+          "type": "range",
+          "default": 28,
+          "min": 4,
+          "max": 60,
+          "step": 2,
+          "target": "nacre-light",
+          "attribute": "specularExponent",
+          "customBinding": null
+        },
+        {
+          "name": "azimuth",
+          "type": "range",
+          "default": 225,
+          "min": 0,
+          "max": 360,
+          "step": 15,
+          "target": "nacre-dl",
+          "attribute": "azimuth",
+          "customBinding": null
+        }
+      ],
+      "namedPresets": [
+        "Abalone ridge",
+        "Pearl veil",
+        "Shell fracture"
+      ],
+      "pipeline": "<feTurbulence type=\"fractalNoise\" baseFrequency=\".012 .08\" numOctaves=\"4\" result=\"grain\"/>\n<feColorMatrix in=\"grain\" values=\"…pearl color field…\" result=\"pearl\"/>\n<feSpecularLighting in=\"grain\" surfaceScale=\"5\" specularExponent=\"28\" result=\"shine\">…</feSpecularLighting>\n<feBlend in=\"SourceGraphic\" in2=\"pearl\" mode=\"screen\"/>"
+    },
+    {
+      "id": "washiFiber",
+      "title": "Washi Fiber Field",
+      "family": "tactile",
+      "tags": [
+        "fiber",
+        "paper",
+        "directional noise"
+      ],
+      "caption": "Anisotropic noise stretches into visible pulp fibers; diffuse relief keeps it handmade rather than reading as a flat texture overlay.",
+      "filterReference": "washiFiber",
+      "parameters": [
+        {
+          "name": "fiber X",
+          "type": "range",
+          "default": 0.006,
+          "min": 0.002,
+          "max": 0.03,
+          "step": 0.001,
+          "target": null,
+          "attribute": null,
+          "customBinding": "washiX"
+        },
+        {
+          "name": "fiber Y",
+          "type": "range",
+          "default": 0.48,
+          "min": 0.1,
+          "max": 0.9,
+          "step": 0.02,
+          "target": null,
+          "attribute": null,
+          "customBinding": "washiY"
+        },
+        {
+          "name": "alpha slope",
+          "type": "range",
+          "default": 0.72,
+          "min": 0.2,
+          "max": 1.5,
+          "step": 0.05,
+          "target": "washi-alpha",
+          "attribute": "slope",
+          "customBinding": null
+        },
+        {
+          "name": "surfaceScale",
+          "type": "range",
+          "default": 1.8,
+          "min": 0.5,
+          "max": 5,
+          "step": 0.25,
+          "target": "washi-light",
+          "attribute": "surfaceScale",
+          "customBinding": null
+        }
+      ],
+      "namedPresets": [
+        "Kozo fine",
+        "Deckle coarse",
+        "Pressed linen"
+      ],
+      "pipeline": "<feTurbulence type=\"fractalNoise\" baseFrequency=\".006 .48\" numOctaves=\"4\" result=\"fiber\"/>\n<feComponentTransfer in=\"fiber\"><feFuncA type=\"linear\" slope=\".72\" intercept=\"-.08\"/></feComponentTransfer>\n<feDiffuseLighting in=\"fiber\" surfaceScale=\"1.8\">…</feDiffuseLighting>"
+    },
+    {
+      "id": "lithoGrain",
+      "title": "Lithographic Grain",
+      "family": "pattern",
+      "tags": [
+        "threshold",
+        "ink",
+        "print"
+      ],
+      "caption": "Thresholded high-frequency noise creates irregular ink deposition: closer to worn lithographic grain than a mathematically perfect dot screen.",
+      "filterReference": "lithoGrain",
+      "parameters": [
+        {
+          "name": "grain scale",
+          "type": "range",
+          "default": 0.42,
+          "min": 0.08,
+          "max": 0.9,
+          "step": 0.02,
+          "target": "litho-turb",
+          "attribute": "baseFrequency",
+          "customBinding": null
+        },
+        {
+          "name": "octaves",
+          "type": "range",
+          "default": 2,
+          "min": 1,
+          "max": 4,
+          "step": 1,
+          "target": "litho-turb",
+          "attribute": "numOctaves",
+          "customBinding": null
+        },
+        {
+          "name": "threshold mult",
+          "type": "range",
+          "default": 16,
+          "min": 5,
+          "max": 30,
+          "step": 1,
+          "target": null,
+          "attribute": null,
+          "customBinding": "lithoMult"
+        },
+        {
+          "name": "threshold sub",
+          "type": "range",
+          "default": -7.6,
+          "min": -15,
+          "max": -1,
+          "step": 0.2,
+          "target": null,
+          "attribute": null,
+          "customBinding": "lithoSub"
+        }
+      ],
+      "namedPresets": [
+        "Fine stipple",
+        "Worn plate",
+        "Heavy ink"
+      ],
+      "pipeline": "<feTurbulence type=\"fractalNoise\" baseFrequency=\".42\" numOctaves=\"2\" result=\"grain\"/>\n<feColorMatrix in=\"grain\" values=\"0 … 0 0 0 16 -7.6\" result=\"ink\"/>\n<feComposite in=\"ink\" in2=\"SourceGraphic\" operator=\"in\"/>"
+    },
+    {
+      "id": "stainedGlass",
+      "title": "Stained-Glass Light",
+      "family": "optical",
+      "tags": [
+        "prismatic",
+        "displacement",
+        "specular"
+      ],
+      "caption": "A colorized turbulence field, restrained displacement, and a hard highlight create luminous pane variation for geometric artwork and masks.",
+      "filterReference": "stainedGlass",
+      "parameters": [
+        {
+          "name": "cell scale",
+          "type": "range",
+          "default": 0.018,
+          "min": 0.005,
+          "max": 0.08,
+          "step": 0.003,
+          "target": "glass-turb",
+          "attribute": "baseFrequency",
+          "customBinding": null
+        },
+        {
+          "name": "displacement",
+          "type": "range",
+          "default": 7,
+          "min": 0,
+          "max": 24,
+          "step": 1,
+          "target": "glass-disp",
+          "attribute": "scale",
+          "customBinding": null
+        },
+        {
+          "name": "surfaceScale",
+          "type": "range",
+          "default": 3,
+          "min": 0.5,
+          "max": 8,
+          "step": 0.5,
+          "target": "glass-light",
+          "attribute": "surfaceScale",
+          "customBinding": null
+        },
+        {
+          "name": "highlight",
+          "type": "range",
+          "default": 0.9,
+          "min": 0.1,
+          "max": 2.5,
+          "step": 0.1,
+          "target": "glass-light",
+          "attribute": "specularConstant",
+          "customBinding": null
+        }
+      ],
+      "namedPresets": [
+        "Cathedral calm",
+        "Jewel fracture",
+        "Mosaic shimmer"
+      ],
+      "pipeline": "<feTurbulence type=\"fractalNoise\" baseFrequency=\".018\" result=\"noise\"/>\n<feDisplacementMap in=\"SourceGraphic\" in2=\"noise\" scale=\"7\" result=\"warped\"/>\n<feColorMatrix in=\"noise\" values=\"…jewel field…\"/>\n<feSpecularLighting in=\"noise\" specularExponent=\"24\">…</feSpecularLighting>"
+    },
+    {
+      "id": "brassInlay",
+      "title": "Brass Inlay Edge",
+      "family": "structural",
+      "tags": [
+        "morphology",
+        "metal",
+        "outline"
+      ],
+      "caption": "Two morphology passes isolate a true border ring, which is flooded with brass and given a separate specular highlight before merging with the source.",
+      "filterReference": "brassInlay",
+      "parameters": [
+        {
+          "name": "outer radius",
+          "type": "range",
+          "default": 3,
+          "min": 0.5,
+          "max": 9,
+          "step": 0.5,
+          "target": "brass-outer",
+          "attribute": "radius",
+          "customBinding": null
+        },
+        {
+          "name": "inner radius",
+          "type": "range",
+          "default": 1,
+          "min": 0,
+          "max": 5,
+          "step": 0.5,
+          "target": "brass-inner",
+          "attribute": "radius",
+          "customBinding": null
+        },
+        {
+          "name": "brass color",
+          "type": "color",
+          "default": "#d2a84a",
+          "min": null,
+          "max": null,
+          "step": null,
+          "target": "brass-flood",
+          "attribute": "flood-color",
+          "customBinding": null
+        },
+        {
+          "name": "specularConst",
+          "type": "range",
+          "default": 1.4,
+          "min": 0.1,
+          "max": 3,
+          "step": 0.1,
+          "target": "brass-light",
+          "attribute": "specularConstant",
+          "customBinding": null
+        }
+      ],
+      "namedPresets": [],
+      "pipeline": "<feMorphology in=\"SourceAlpha\" operator=\"dilate\" radius=\"3\" result=\"outer\"/>\n<feMorphology in=\"SourceAlpha\" operator=\"erode\" radius=\"1\" result=\"inner\"/>\n<feComposite in=\"outer\" in2=\"inner\" operator=\"xor\" result=\"ring\"/>\n<feFlood flood-color=\"#d2a84a\"/>"
+    },
+    {
+      "id": "guanineCrystal",
+      "title": "Guanine Crystal Facets",
+      "family": "optical",
+      "tags": [
+        "facets",
+        "iridescence",
+        "flash"
+      ],
+      "caption": "An anisotropic turbulent height field becomes sharp optical facets with a mobile point-light flash—an artistic analogue for crystalline structural color.",
+      "filterReference": "guanineCrystal",
+      "parameters": [
+        {
+          "name": "facet X",
+          "type": "range",
+          "default": 0.075,
+          "min": 0.01,
+          "max": 0.25,
+          "step": 0.005,
+          "target": null,
+          "attribute": null,
+          "customBinding": "guanineX"
+        },
+        {
+          "name": "facet Y",
+          "type": "range",
+          "default": 0.18,
+          "min": 0.03,
+          "max": 0.45,
+          "step": 0.01,
+          "target": null,
+          "attribute": null,
+          "customBinding": "guanineY"
+        },
+        {
+          "name": "surfaceScale",
+          "type": "range",
+          "default": 7,
+          "min": 1,
+          "max": 14,
+          "step": 0.5,
+          "target": "guanine-light",
+          "attribute": "surfaceScale",
+          "customBinding": null
+        },
+        {
+          "name": "specularExp",
+          "type": "range",
+          "default": 34,
+          "min": 4,
+          "max": 70,
+          "step": 2,
+          "target": "guanine-light",
+          "attribute": "specularExponent",
+          "customBinding": null
+        },
+        {
+          "name": "light X",
+          "type": "range",
+          "default": 130,
+          "min": 0,
+          "max": 400,
+          "step": 10,
+          "target": "guanine-point",
+          "attribute": "x",
+          "customBinding": null
+        }
+      ],
+      "namedPresets": [
+        "Relaxed blue",
+        "Excited spectrum",
+        "Platelet flash"
+      ],
+      "pipeline": "<feTurbulence type=\"turbulence\" baseFrequency=\".075 .18\" result=\"facets\"/>\n<feColorMatrix in=\"facets\" values=\"…iridescent field…\"/>\n<feSpecularLighting in=\"facets\" surfaceScale=\"7\" specularExponent=\"34\">\n  <fePointLight x=\"130\" y=\"70\" z=\"240\"/>\n</feSpecularLighting>"
+    },
+    {
+      "id": "mycelialBloom",
+      "title": "Mycelial Bloom Network",
+      "family": "living",
+      "tags": [
+        "living system",
+        "threshold",
+        "glow"
+      ],
+      "caption": "A narrow threshold extracts branching paths from fractal noise; morphology gives them body and a second blurred pass creates restrained bioluminescence.",
+      "filterReference": "mycelialBloom",
+      "parameters": [
+        {
+          "name": "network scale",
+          "type": "range",
+          "default": 0.027,
+          "min": 0.005,
+          "max": 0.09,
+          "step": 0.002,
+          "target": "mycelium-turb",
+          "attribute": "baseFrequency",
+          "customBinding": null
+        },
+        {
+          "name": "threshold mult",
+          "type": "range",
+          "default": 22,
+          "min": 8,
+          "max": 35,
+          "step": 1,
+          "target": null,
+          "attribute": null,
+          "customBinding": "myceliumMult"
+        },
+        {
+          "name": "threshold sub",
+          "type": "range",
+          "default": -10.2,
+          "min": -18,
+          "max": -2,
+          "step": 0.2,
+          "target": null,
+          "attribute": null,
+          "customBinding": "myceliumSub"
+        },
+        {
+          "name": "thread radius",
+          "type": "range",
+          "default": 0.65,
+          "min": 0,
+          "max": 3,
+          "step": 0.1,
+          "target": "mycelium-morph",
+          "attribute": "radius",
+          "customBinding": null
+        },
+        {
+          "name": "glow",
+          "type": "range",
+          "default": 2.2,
+          "min": 0,
+          "max": 7,
+          "step": 0.2,
+          "target": "mycelium-glow",
+          "attribute": "stdDeviation",
+          "customBinding": null
+        }
+      ],
+      "namedPresets": [
+        "Fine hyphae",
+        "Fruit network",
+        "Biolume web"
+      ],
+      "pipeline": "<feTurbulence type=\"fractalNoise\" baseFrequency=\".027\" numOctaves=\"5\" result=\"field\"/>\n<feColorMatrix in=\"field\" values=\"0 … 0 0 0 22 -10.2\" result=\"veins\"/>\n<feMorphology in=\"veins\" operator=\"dilate\" radius=\".65\"/>\n<feFlood flood-color=\"#9bffb1\"/>"
+    },
+    {
+      "id": "marbleVein",
+      "title": "Carved Marble Vein",
+      "family": "tactile",
+      "tags": [
+        "stone",
+        "vein",
+        "displacement"
+      ],
+      "caption": "Stretched fractal noise is thresholded into mineral veins, then displaced by its own underlying stone field for less procedural regularity.",
+      "filterReference": "marbleVein",
+      "parameters": [
+        {
+          "name": "vein X",
+          "type": "range",
+          "default": 0.012,
+          "min": 0.003,
+          "max": 0.05,
+          "step": 0.002,
+          "target": null,
+          "attribute": null,
+          "customBinding": "marbleX"
+        },
+        {
+          "name": "vein Y",
+          "type": "range",
+          "default": 0.07,
+          "min": 0.01,
+          "max": 0.2,
+          "step": 0.005,
+          "target": null,
+          "attribute": null,
+          "customBinding": "marbleY"
+        },
+        {
+          "name": "threshold mult",
+          "type": "range",
+          "default": 13,
+          "min": 5,
+          "max": 24,
+          "step": 1,
+          "target": null,
+          "attribute": null,
+          "customBinding": "marbleMult"
+        },
+        {
+          "name": "threshold sub",
+          "type": "range",
+          "default": -6.3,
+          "min": -12,
+          "max": -1,
+          "step": 0.1,
+          "target": null,
+          "attribute": null,
+          "customBinding": "marbleSub"
+        },
+        {
+          "name": "vein warp",
+          "type": "range",
+          "default": 14,
+          "min": 0,
+          "max": 35,
+          "step": 1,
+          "target": "marble-disp",
+          "attribute": "scale",
+          "customBinding": null
+        }
+      ],
+      "namedPresets": [
+        "Carrara fine",
+        "Onyx storm",
+        "Calacatta bold"
+      ],
+      "pipeline": "<feTurbulence type=\"fractalNoise\" baseFrequency=\".012 .07\" numOctaves=\"4\" result=\"stone\"/>\n<feColorMatrix in=\"stone\" values=\"…threshold veins…\" result=\"veins\"/>\n<feDisplacementMap in=\"veins\" in2=\"stone\" scale=\"14\"/>"
+    }
+  ],
+  "workbench": {
+    "favorites": "local persistence",
+    "compare": {
+      "maxRecipes": 3
+    },
+    "chain": {
+      "maxStages": 4,
+      "execution": "nested SVG groups, inner to outer"
+    },
+    "exports": [
+      "single recipe JSON",
+      "visible collection JSON",
+      "comparison JSON",
+      "chain manifest JSON"
+    ]
+  }
+}

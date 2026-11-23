@@ -1,0 +1,21 @@
+---
+import { compileDefinitions, recipes, type FilterSelection } from "@melodicbloom/svg-filter-atlas";
+
+interface Props {
+  include: readonly FilterSelection[];
+  class?: string;
+}
+
+const { include, class: className } = Astro.props;
+const filterMarkup = compileDefinitions(recipes, include, { svg: false });
+---
+
+<svg
+  aria-hidden="true"
+  class={className}
+  width="0"
+  height="0"
+  style="position:absolute;overflow:hidden"
+>
+  <defs set:html={filterMarkup} />
+</svg>

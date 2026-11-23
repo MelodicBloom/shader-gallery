@@ -1,0 +1,29 @@
+{
+  "schema": "melodicbloom.derived-asset-receipt/0.1",
+  "asset": "examples/truchet-seed35.svg",
+  "producerRepository": "qt314wink/seed-loom",
+  "producerCommit": "fcc8426895b2170549715cbb1a6cb453502180be",
+  "producerEntry": "packages/creative-mechanisms/scripts/registry.mjs",
+  "inputContract": "pattern.truchet",
+  "sourceRecord": "source:notch:manual-2026.2",
+  "sourcePage": "https://manual.notch.one/2026.2/en/docs/reference/nodes/generators/truchet/",
+  "engine": "seed-loom/web-svg-truchet/0.1",
+  "fidelity": "original-approximation-not-notch-parity",
+  "command": "node packages/creative-mechanisms/scripts/registry.mjs compile pattern.truchet --seed=35 --grid=12 --ink=#c0f9f0 --paper=#18182b",
+  "parameters": {
+    "seed": 35,
+    "grid": 12,
+    "tile": 32,
+    "strokeWidth": 2,
+    "ink": "#c0f9f0",
+    "paper": "#18182b"
+  },
+  "outputSha256": "657805983bfdf69d1884674d035e201960cecccb1f80653f324bff07aad7913d",
+  "outputBytes": 13993,
+  "verification": {
+    "ciUrl": "https://github.com/qt314wink/seed-loom/actions/runs/39894945672",
+    "sameDigestReproducedLocally": true,
+    "nativeNotchVerified": false,
+    "browserVisualQA": false
+  }
+}

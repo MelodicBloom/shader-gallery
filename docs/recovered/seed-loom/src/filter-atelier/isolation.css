@@ -1,0 +1,5 @@
+body[data-atelier-open='true'] .site-header,
+body[data-atelier-open='true'] main,
+body[data-atelier-open='true'] footer {
+  display: none !important;
+}
