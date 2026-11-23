@@ -1,56 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- recovered from MelodicBloom/svg-filter-lab 057f266fedacf23fd825077713d37c974763ccd5 demos/glass.html authored 2026-06-24T23:27:28-04:00 by qt314wink -->
-<style>@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}</style><a href="./index.html" style="position:fixed;top:12px;left:12px;z-index:50;color:#f4f1ea;background:#111;padding:.4rem .7rem;border-radius:999px;text-decoration:none;font:14px system-ui">← recovered studies</a>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Glass — SVG Filter Lab</title>
-  <link rel="stylesheet" href="../css/styles.css">
-  <style>
-    body { background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #0f172a 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: system-ui, sans-serif; padding: 40px 24px; overflow: hidden; }
-    nav { position: fixed; top: 20px; left: 24px; }
-    nav a { color: #38bdf8; text-decoration: none; font-size: 0.85rem; }
-    .ambient { position: absolute; width: 500px; height: 500px; background: linear-gradient(45deg, #ec4899, #8b5cf6, #06b6d4); border-radius: 50%; filter: blur(100px); opacity: 0.35; pointer-events: none; }
-    .scene { perspective: 1000px; z-index: 10; }
-    .glass-card { width: 420px; }
-    h1 { font-size: 1.6rem; font-weight: 700; color: #38bdf8; margin-bottom: 12px; }
-    p { font-size: 0.95rem; line-height: 1.6; color: #cbd5e1; margin-bottom: 20px; }
-    .badge { font-family: monospace; font-size: 0.75rem; padding: 4px 10px; background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.25); border-radius: 4px; color: #7dd3fc; }
-    .hint { margin-top: 32px; font-size: 0.8rem; color: #475569; text-align: center; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Specular Glass</title>
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #1e1b4b; font-family: system-ui, sans-serif; color: #e2e8f0; }
+  a.back { position: fixed; top: 12px; left: 12px; color: #f8fafc; background: #111; text-decoration: none; padding: .4rem .7rem; border-radius: 999px; }
+  a.back:focus-visible { outline: 3px solid #f9bd8e; outline-offset: 3px; }
+  svg { width: min(92vw, 640px); height: auto; }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
 </head>
 <body>
-
-  <nav><a href="../index.html">← Filter Lab</a></nav>
-  <div class="ambient"></div>
-
-  <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
-    <defs>
-      <filter id="glass-specular" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blurred" />
-        <feSpecularLighting in="blurred" surfaceScale="5" specularConstant="0.75" specularExponent="20" lighting-color="#ffffff" result="specular">
-          <fePointLight x="150" y="-150" z="250" id="glass-light" />
-        </feSpecularLighting>
-        <feComposite in="specular" in2="SourceAlpha" operator="in" result="maskedSpecular" />
-        <feMerge>
-          <feMergeNode in="SourceGraphic" />
-          <feMergeNode in="maskedSpecular" />
-        </feMerge>
-      </filter>
-    </defs>
-  </svg>
-
-  <div class="scene">
-    <div class="glass-card filter-glass">
-      <h1>Interactive Glass</h1>
-      <p>Move your mouse across the surface. The fePointLight position updates in real-time via setAttribute, shifting the specular highlight to follow your cursor and simulate a dynamic light source.</p>
-      <span class="badge">surfaceScale: 5 · specularExponent: 20 · z: 250</span>
-    </div>
-  </div>
-
-  <p class="hint">Move cursor across the card surface to see specular tracking</p>
-
-  <script type="module" src="../js/animations.js"></script>
+<a class="back" href="./index.html">← recovered studies</a>
+<svg viewBox="0 0 640 480" role="img" aria-label="A drinking glass with a moving highlight">
+  <defs>
+    <filter id="glass-specular" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blurred"/>
+      <feSpecularLighting in="blurred" surfaceScale="6" specularConstant="1.1" specularExponent="28" lighting-color="#ffffff" result="specular">
+        <fePointLight id="glass-light" x="220" y="80" z="180"/>
+      </feSpecularLighting>
+      <feComposite in="specular" in2="SourceAlpha" operator="in" result="masked"/>
+      <feMerge>
+        <feMergeNode in="SourceGraphic"/>
+        <feMergeNode in="masked"/>
+      </feMerge>
+    </filter>
+    <linearGradient id="bowl" x1="0" x2="1">
+      <stop offset="0%" stop-color="#dbeafe" stop-opacity=".35"/>
+      <stop offset="45%" stop-color="#ffffff" stop-opacity=".08"/>
+      <stop offset="100%" stop-color="#93c5fd" stop-opacity=".4"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="480" fill="#312e81"/>
+  <g filter="url(#glass-specular)">
+    <path fill="url(#bowl)" stroke="#e0f2fe" stroke-width="3" d="M230 70 H410 L384 300 H256 Z"/>
+    <rect x="300" y="300" width="40" height="70" fill="#dbeafe" fill-opacity=".25" stroke="#e0f2fe"/>
+    <rect x="250" y="370" width="140" height="14" rx="4" fill="#e0f2fe" fill-opacity=".8"/>
+    <path d="M248 110 H392" stroke="#ffffff" stroke-opacity=".55" stroke-width="6"/>
+  </g>
+</svg>
+<script>
+const light = document.getElementById('glass-light');
+const motion = matchMedia('(prefers-reduced-motion: reduce)');
+addEventListener('pointermove', (event) => {
+  if (motion.matches) return;
+  const box = document.querySelector('svg').getBoundingClientRect();
+  light.setAttribute('x', ((event.clientX - box.left) / box.width) * 640);
+  light.setAttribute('y', ((event.clientY - box.top) / box.height) * 480);
+});
+</script>
 </body>
 </html>

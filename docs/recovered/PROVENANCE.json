@@ -2,6 +2,8 @@
   "recoveredAt": "2026-11-22",
   "searchedFor": "ion-bloom",
   "ionBloomFound": false,
+  "redrawnForRecognition": ["docs/recovered/nature-materials.html preview shapes", "docs/recovered/glass.html page composition"],
+  "note": "Filter primitives in the nature page are the originals. The ellipses were replaced with subject silhouettes so a viewer can name the animal. The glass page was redrawn because the original depended on CSS and script files that were not part of this copy.",
   "items": [
     {
       "title": "SVG Filter Sculpting",
