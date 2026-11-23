@@ -1,0 +1,108 @@
+/* ============================================================
+   SVG Filter Lab — Global Styles
+   Performance-first CSS for SVG filter bindings and fallbacks
+   ============================================================ */
+
+/* Base Reset */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Filter Bindings ─────────────────────────────────────── */
+
+.filter-glitch {
+  filter: url(#glitch-distort);
+  transform: translateZ(0);
+}
+.filter-glitch.is-animating { will-change: transform, filter; }
+@supports not (filter: url(#glitch-distort)) {
+  .filter-glitch { filter: none; opacity: 0.97; }
+}
+
+.filter-crt {
+  filter: url(#crt-scanlines);
+  transform: translateZ(0);
+}
+.filter-crt.is-animating { will-change: filter; }
+@supports not (filter: url(#crt-scanlines)) {
+  .filter-crt {
+    background-image:
+      linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.22) 50%),
+      linear-gradient(90deg, rgba(255,0,0,0.04), rgba(0,255,0,0.02), rgba(0,0,255,0.04));
+    background-size: 100% 4px, 5px 100%;
+  }
+}
+
+.filter-chromatic {
+  filter: url(#chromatic-aberration);
+  transform: translateZ(0);
+}
+@supports not (filter: url(#chromatic-aberration)) {
+  .filter-chromatic { filter: none; }
+}
+
+.filter-glass {
+  filter: url(#glass-specular);
+  transform: translateZ(0);
+}
+.filter-glass.is-animating { will-change: transform, filter; }
+@supports not (filter: url(#glass-specular)) {
+  .filter-glass {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+}
+
+.filter-riso {
+  filter: url(#riso-grain);
+  transform: translateZ(0);
+}
+@supports not (filter: url(#riso-grain)) {
+  .filter-riso { filter: none; }
+}
+
+.filter-posterize {
+  filter: url(#vintage-ink-quantizer);
+  transform: translateZ(0);
+}
+@supports not (filter: url(#vintage-ink-quantizer)) {
+  .filter-posterize { filter: none; }
+}
+
+.filter-combined {
+  filter: url(#crt-glitch-rgb);
+  transform: translateZ(0);
+}
+.filter-combined.is-animating { will-change: transform, filter; }
+@supports not (filter: url(#crt-glitch-rgb)) {
+  .filter-combined {
+    background: rgba(10,10,20,0.92);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+}
+
+/* ── Glassmorphic Container ──────────────────────────────── */
+
+.glass-card {
+  background: rgba(15,23,42,0.6);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 28px;
+  color: #f8fafc;
+  transform: translateZ(0);
+  transform-style: preserve-3d;
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ── Motion Safety ───────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .filter-glitch,
+  .filter-combined,
+  .filter-crt {
+    filter: none;
+    animation: none;
+  }
+}

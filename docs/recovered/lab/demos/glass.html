@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Glass — SVG Filter Lab</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    body { background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #0f172a 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: system-ui, sans-serif; padding: 40px 24px; overflow: hidden; }
+    nav { position: fixed; top: 20px; left: 24px; }
+    nav a { color: #38bdf8; text-decoration: none; font-size: 0.85rem; }
+    .ambient { position: absolute; width: 500px; height: 500px; background: linear-gradient(45deg, #ec4899, #8b5cf6, #06b6d4); border-radius: 50%; filter: blur(100px); opacity: 0.35; pointer-events: none; }
+    .scene { perspective: 1000px; z-index: 10; }
+    .glass-card { width: 420px; }
+    h1 { font-size: 1.6rem; font-weight: 700; color: #38bdf8; margin-bottom: 12px; }
+    p { font-size: 0.95rem; line-height: 1.6; color: #cbd5e1; margin-bottom: 20px; }
+    .badge { font-family: monospace; font-size: 0.75rem; padding: 4px 10px; background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.25); border-radius: 4px; color: #7dd3fc; }
+    .hint { margin-top: 32px; font-size: 0.8rem; color: #475569; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <nav><a href="../index.html">← Filter Lab</a></nav>
+  <div class="ambient"></div>
+
+  <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+    <defs>
+      <filter id="glass-specular" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blurred" />
+        <feSpecularLighting in="blurred" surfaceScale="5" specularConstant="0.75" specularExponent="20" lighting-color="#ffffff" result="specular">
+          <fePointLight x="150" y="-150" z="250" id="glass-light" />
+        </feSpecularLighting>
+        <feComposite in="specular" in2="SourceAlpha" operator="in" result="maskedSpecular" />
+        <feMerge>
+          <feMergeNode in="SourceGraphic" />
+          <feMergeNode in="maskedSpecular" />
+        </feMerge>
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="scene">
+    <div class="glass-card filter-glass">
+      <h1>Interactive Glass</h1>
+      <p>Move your mouse across the surface. The fePointLight position updates in real-time via setAttribute, shifting the specular highlight to follow your cursor and simulate a dynamic light source.</p>
+      <span class="badge">surfaceScale: 5 · specularExponent: 20 · z: 250</span>
+    </div>
+  </div>
+
+  <p class="hint">Move cursor across the card surface to see specular tracking</p>
+
+  <script type="module" src="../js/animations.js"></script>
+</body>
+</html>
