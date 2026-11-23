@@ -26,7 +26,7 @@ void main() {
     outColor = vec4(u_base, 1.0);
     return;
   }
-  vec2 p = gl_FragCoord.xy * u_frequency;
+  vec2 p = vec2(gl_FragCoord.x * u_frequency * 0.22, gl_FragCoord.y * u_frequency * 3.4);
   float sum = 0.0, weight = 0.5, total = 0.0;
   for (int octave = 0; octave < 5; octave++) {
     if (octave >= u_octaves) break;
@@ -35,13 +35,15 @@ void main() {
     weight *= 0.5;
     p *= 2.0;
   }
-  float grain = clamp(sum / total, 0.0, 1.0);
-  float dx = dFdx(grain);
-  float dy = dFdy(grain);
-  vec3 normal = normalize(vec3(-dx * 18.0, -dy * 18.0, 1.0));
-  vec3 light = normalize(vec3(0.35, 0.62, 0.85));
-  float shade = mix(0.62, 1.18, clamp(dot(normal, light), 0.0, 1.0));
-  float spec = pow(clamp(dot(reflect(-light, normal), vec3(0.0, 0.0, 1.0)), 0.0, 1.0), 28.0);
-  vec3 lit = u_base * shade + spec * 0.22;
-  outColor = vec4(mix(u_base, lit, u_strength), 1.0);
+  float fiber = clamp(sum / total, 0.0, 1.0);
+  float laid = 0.65 + 0.35 * sin(gl_FragCoord.y * u_frequency * 2.2 + fiber * 6.28318);
+  float ringDist = length(gl_FragCoord.xy - vec2(-80.0, 520.0));
+  float ring = smoothstep(0.02, 0.0, abs(fract(ringDist * 0.018) - 0.5) - 0.46);
+  float height = fiber * 0.65 + laid * 0.25 + ring * 0.1;
+  vec3 normal = normalize(vec3(-dFdx(height) * 22.0, -dFdy(height) * 22.0, 1.0));
+  vec3 light = normalize(vec3(0.25, 0.72, 0.7));
+  float shade = mix(0.55, 1.22, clamp(dot(normal, light), 0.0, 1.0));
+  float spec = pow(clamp(dot(reflect(-light, normal), vec3(0.0, 0.0, 1.0)), 0.0, 1.0), 36.0);
+  vec3 paper = u_base * shade * mix(0.82, 1.0, laid) * mix(1.0, 0.62, ring);
+  outColor = vec4(mix(u_base, paper, u_strength) + spec * u_strength * 0.16, 1.0);
 }
