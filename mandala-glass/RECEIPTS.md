@@ -82,4 +82,13 @@ Interpretation: JS work per frame is about 1 ms. The rest is software rasterisat
 - Refs 2–4 and their synthesis are not implemented in this slice.
 
 ## Commits / PR / deploy
-(filled in as they happen)
+| Time (EST) | Item | Value |
+|---|---|---|
+| 04:36 | Commit 1 (app + QA receipts) | `315123638683837cad40a6230ac0b285b9bc620c` on `cursor/mandala-glass-slice` |
+| 04:37 | Vercel production deploy (CLI `vercel deploy --prod` from this folder, account `wildfiremelody`, team `melodicbloom`, project `mandala-glass`, built from the commit-1 working tree) | **https://mandala-glass.vercel.app** |
+| 04:37 | `curl` production URL | HTTP 200, `<title>Mandala Glass — procedural dispersive glass study` |
+| 04:37 | `curl` deployment-specific URL `mandala-glass-oonbo94fn-melodicbloom.vercel.app` | HTTP 302 (Vercel Deployment Protection / SSO on per-deployment URLs). **Use the production URL**, which is public. |
+| 04:38 | Headless screenshot of live URL (SwiftShader) | `receipts/live-vercel-1280.png`, `receipts/live-vercel-390.png`; 0 console errors; WebGL path (no fallback); auto quality 0 (desktop) and 1 (mobile) |
+| — | Commit 2 (this receipts update) and the draft PR | listed in the PR description. A commit cannot contain its own SHA. |
+
+The Vercel project is **not Git-connected**. Pushing to the branch does not redeploy. To redeploy, run `npx vercel deploy --prod` from `mandala-glass/`.
