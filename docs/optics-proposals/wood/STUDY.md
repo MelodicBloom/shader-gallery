@@ -20,6 +20,10 @@ Fixed parameters if this were ever applied, and not applied now:
 | T | (1, 0, 0) in the plane | 1 | unit vector |
 | fiber contrast | 0.35 | 1 | 0–1 |
 
-## Bottlenecks and failure modes
+## BOTTLENECKS
 
-The live shader is one 5-octave value-noise loop. That is cheap. Failure modes of a fiber specular: `T · L` near ±1 makes the square roots zero and the highlight vanish (grazing along the fiber); mediump noise bands; the SVG `feTurbulence` path is not Kajiya–Kay and will not match the GLSL lobe; SwiftShader derivatives (`dFdx`) disagree with real GPUs; strength 0 is defined to return the base color exactly, so a specular term must be multiplied by strength or the zero-strength test fails; reduced motion does not apply because this page does not animate.
+The live shader is one 5-octave value-noise loop. That is cheap. A fiber specular would add a handful of dots and one power, not another octave loop.
+
+## FAILURE MODES
+
+A fiber specular, if it were applied: `T · L` near ±1 makes the square roots zero and the highlight vanish (grazing along the fiber); mediump noise bands; the SVG `feTurbulence` path is not Kajiya–Kay and will not match the GLSL lobe; SwiftShader derivatives (`dFdx`) disagree with real GPUs; strength 0 is defined to return the base color exactly, so a specular term must be multiplied by strength or the zero-strength test fails; reduced motion does not apply because this page does not animate.
