@@ -20,18 +20,20 @@ export function parameters(input = {}) {
   return Object.freeze(p);
 }
 
-/** Laid-paper fibers: anisotropic noise, not the isotropic roughPaper fixture. */
+/** A grain-only derivative of roughPaper's isotropic fractalNoise primitive. */
 export function svgMarkup(input) {
   const p = parameters(input);
-  const across = p.frequency * 0.22;
-  const along = p.frequency * 3.4;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${SIZE}" height="${SIZE}" viewBox="0 0 ${SIZE} ${SIZE}">
   <defs><filter id="grain" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
-    <feTurbulence type="fractalNoise" baseFrequency="${across} ${along}" numOctaves="${p.octaves}" seed="${p.seed}" result="fibers"/>
-    <feDiffuseLighting in="fibers" lighting-color="white" surfaceScale="${p.strength * 4}" result="lit">
-      <feDistantLight azimuth="75" elevation="58"/>
-    </feDiffuseLighting>
-    <feBlend in="SourceGraphic" in2="lit" mode="multiply"/>
+    <feTurbulence type="fractalNoise" baseFrequency="${p.frequency}" numOctaves="${p.octaves}" seed="${p.seed}" result="noise"/>
+    <feColorMatrix in="noise" type="saturate" values="0"/>
+    <feComponentTransfer result="opaqueGrain">
+      <feFuncR type="linear" slope="${p.strength}" intercept="${1 - p.strength}"/>
+      <feFuncG type="linear" slope="${p.strength}" intercept="${1 - p.strength}"/>
+      <feFuncB type="linear" slope="${p.strength}" intercept="${1 - p.strength}"/>
+      <feFuncA type="table" tableValues="1 1"/>
+    </feComponentTransfer>
+    <feBlend in="SourceGraphic" in2="opaqueGrain" mode="multiply"/>
   </filter></defs>
   <rect width="${SIZE}" height="${SIZE}" fill="rgb(${BASE_RGB.join(",")})"${p.strength === 0 ? "" : ' filter="url(#grain)"'}/>
 </svg>`;
