@@ -5,7 +5,9 @@ Usage (run from the repo root):
   tools/render.py frames --w 1920 --h 1080 --aa 3 --fps 60 --out work/frames    # resumable PNG sequence (t = f/fps)
   tools/render.py video  --w 1280 --h 720 --aa 2 --fps 30 --out loop.mp4        # single pass to H.264, not resumable
 """
-import os, sys, time, argparse, subprocess
+import os, time, argparse, subprocess
+import hashlib, json
+from pathlib import Path
 os.environ.setdefault("EGL_PLATFORM", "surfaceless")
 os.environ.setdefault("LP_NUM_THREADS", str(os.cpu_count()))
 import numpy as np, moderngl
@@ -21,13 +23,17 @@ out vec4 outColor;
 FTR = "\nvoid main(){ vec4 c; mainImage(c, gl_FragCoord.xy); outColor = c; }\n"
 VS = "#version 330\nin vec2 p; void main(){ gl_Position = vec4(p,0,1); }"
 
+def shader_sources(defines):
+    shaders = Path(HERE).parent / "shaders"
+    return tuple(HDR.format(defs=defines[stage]) + (shaders / file).read_text() + FTR
+                 for stage, file in (("scene", "buffer_a.glsl"), ("post", "image.glsl")))
+
 class R:
-    def __init__(s, w, h, aa, tile=0):
+    def __init__(s, w, h, sources, tile=0):
         s.w, s.h = w, h
         s.ctx = moderngl.create_context(standalone=True, backend="egl")
-        src = lambda f: open(os.path.join(HERE, f)).read()
-        s.scene = s.ctx.program(vertex_shader=VS, fragment_shader=HDR.format(defs=f"#define AA {aa}\n" + os.environ.get("XDEFS","")) + src("../shaders/buffer_a.glsl") + FTR)
-        s.post = s.ctx.program(vertex_shader=VS, fragment_shader=HDR.format(defs=os.environ.get("XPOST","")) + src("../shaders/image.glsl") + FTR)
+        s.scene = s.ctx.program(vertex_shader=VS, fragment_shader=sources[0])
+        s.post = s.ctx.program(vertex_shader=VS, fragment_shader=sources[1])
         vb = s.ctx.buffer(np.array([-1,-1, 1,-1, -1,1, 1,1], dtype="f4").tobytes())
         s.va_s = s.ctx.vertex_array(s.scene, [(vb, "2f", "p")])
         s.va_p = s.ctx.vertex_array(s.post, [(vb, "2f", "p")])
@@ -65,7 +71,14 @@ def main():
     ap.add_argument("--start", type=int, default=0); ap.add_argument("--end", type=int, default=-1)
     ap.add_argument("--crf", type=int, default=14)
     a = ap.parse_args()
-    r = R(a.w, a.h, a.aa, tile=64)
+    defines = {"scene": f"#define AA {a.aa}\n" + os.environ.get("XDEFS", ""),
+               "post": os.environ.get("XPOST", "")}
+    sources = shader_sources(defines)
+    if a.mode == "frames":
+        render_frames(a, sources, defines)
+        return
+
+    r = R(a.w, a.h, sources, tile=64)
     if a.mode == "still":
         import cv2
         os.makedirs(os.path.dirname(a.out) or ".", exist_ok=True)
@@ -74,16 +87,48 @@ def main():
             fn = f"{a.out}_{t:06.2f}.png"; cv2.imwrite(fn, img[:, :, ::-1]); print(fn, f"{time.time()-t0:.2f}s", flush=True)
     elif a.mode == "video":
         video(a, r)
-    elif a.mode == "frames":   # raw png sequence (resumable): frames [start,end)
-        import cv2
+
+def check_frame_cache(out, manifest):
+    path = out / "manifest.json"
+    try:
+        cached = json.loads(path.read_text())
+    except FileNotFoundError:
+        if any(out.glob("f[0-9]*.png")):
+            raise SystemExit(f"Frame cache {out} has no manifest. Move it aside or use a new --out directory.")
+        tmp = path.with_suffix(".tmp")
+        tmp.write_text(json.dumps(manifest, indent=2) + "\n")
+        tmp.replace(path)
+        return
+    except (ValueError, OSError):
+        raise SystemExit(f"Cannot read frame cache manifest {path}. Move the cache aside or use a new --out directory.")
+    if cached != manifest:
+        raise SystemExit(f"Frame cache {out} does not match this render. Move it aside or use a new --out directory.")
+
+def render_frames(a, sources, defines):
+    import fcntl
+    import cv2
+
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    manifest = {
+        "width": a.w, "height": a.h, "fps": a.fps, "aa": a.aa, "loop_seconds": LOOP_T,
+        "defines": defines,
+        "shader_sha256": {stage: hashlib.sha256(src.encode()).hexdigest()
+                          for stage, src in zip(("vertex", "scene", "post"), (VS, *sources))},
+    }
+    # Hold the lock through PNG writes so concurrent renders cannot race cache setup or frame writes.
+    with (out / ".render.lock").open("a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        check_frame_cache(out, manifest)
+        r = R(a.w, a.h, sources, tile=64)
         n = int(round(LOOP_T * a.fps)); end = n if a.end < 0 else a.end
-        os.makedirs(a.out, exist_ok=True)
         t0 = time.time()
         for f in range(a.start, end):
-            fn = os.path.join(a.out, f"f{f:05d}.png")
-            if os.path.exists(fn): continue
+            fn = out / f"f{f:05d}.png"
+            if fn.exists(): continue
             img = r.frame(f / a.fps, a.fps, f)
-            cv2.imwrite(fn + ".tmp.png", img[:, :, ::-1]); os.replace(fn + ".tmp.png", fn)
+            tmp = fn.with_suffix(".tmp.png")
+            cv2.imwrite(str(tmp), img[:, :, ::-1]); tmp.replace(fn)
             if f % 10 == 0: print(f"frame {f}/{end}  {(time.time()-t0):.0f}s", flush=True)
 
 def video(a, r):

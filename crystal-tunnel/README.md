@@ -60,7 +60,7 @@ python3 tools/render.py still --w 854 --h 480 --aa 2 --t 0 10 20 --out work/st
 # full loop, resumable, detached (survives logout); log in render.log
 setsid nohup nice -n 5 tools/render_loop.sh 1920 1080 60 3 crf:16 > render.log 2>&1 < /dev/null &
 ```
-`render_loop.sh` takes the arguments W H FPS AA RATE. It renders a PNG sequence (finished frames are skipped on re-run), encodes H.264 tagged BT.709 with faststart, and runs `tools/seam_check.py`.
+`render_loop.sh` takes the arguments W H FPS AA RATE. It renders a PNG sequence (finished frames are skipped when the cache manifest matches the render settings and shaders), encodes H.264 tagged BT.709 with faststart, and runs `tools/seam_check.py`. If an existing cache has no manifest or does not match, move its directory aside before starting a fresh render.
 
 `tools/seam_check.py` compares the last→first frame step against the normal consecutive-frame steps and builds a 3 s clip around the wrap.
 

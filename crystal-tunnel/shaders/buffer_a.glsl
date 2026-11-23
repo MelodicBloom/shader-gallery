@@ -248,7 +248,7 @@ const vec3 KEYC = vec3(1.00, 0.86, 0.90);
 vec3 env(vec3 d, float blur){
     d.y = abs(d.y);
     float el = asin(clamp(d.z, -1., 1.));
-    float az = atan(d.y, d.x) + 0.30 * sin(TAU * gPhase) + 0.45 * gS;
+    float az = atan(d.y, d.x) + 0.30 * sin(TAU * gPhase) + 0.45 * (gS + gPhase * NZOOM * P);
     float aw = 0.008 + blur;
     vec3 c = mix(vec3(0.004, 0.002, 0.012), vec3(0.020, 0.012, 0.055), sat(d.z));
     c += vec3(0.30, 0.12, 0.75) * 0.12 * exp(-5.0 * abs(el - 0.20));
