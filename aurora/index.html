@@ -1,98 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aurora — Shader Gallery</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #000; }
-    canvas { display: block; width: 100vw; height: 100vh; }
-    a.back {
-      position: fixed; top: 1rem; left: 1rem; z-index: 2;
-      color: #d7efe4; font: 0.85rem/1 system-ui; text-decoration: none;
-      background: rgba(0,0,0,.45); padding: .45rem .7rem; border-radius: 999px;
-    }
-    a.back:focus-visible { outline: 3px solid #f9bd8e; outline-offset: 3px; }
-  </style>
-</head>
-<body>
-<a class="back" href="../docs/index.html">← gallery</a>
-<canvas id="c" aria-label="Aurora curtains"></canvas>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Aurora — Shader Gallery</title>
+<style>*{margin:0;padding:0}body{background:#000}canvas{display:block;width:100vw;height:100vh}</style></head>
+<body><canvas id="c"></canvas>
 <script>
-const c = document.getElementById('c');
-const dpr = window.devicePixelRatio || 1;
-c.width = Math.max(1, Math.floor(innerWidth * dpr));
-c.height = Math.max(1, Math.floor(innerHeight * dpr));
-const gl = c.getContext('webgl');
-gl.viewport(0, 0, c.width, c.height);
-const v = gl.createShader(gl.VERTEX_SHADER);
-gl.shaderSource(v, 'attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}');
-gl.compileShader(v);
-const f = gl.createShader(gl.FRAGMENT_SHADER);
-gl.shaderSource(f, `precision mediump float;
-uniform float u_time; uniform vec2 u_res;
-float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+const c=document.getElementById('c'),gl=c.getContext('webgl');
+c.width=innerWidth;c.height=innerHeight;gl.viewport(0,0,c.width,c.height);
+const v=gl.createShader(gl.VERTEX_SHADER);gl.shaderSource(v,'attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}');gl.compileShader(v);
+const f=gl.createShader(gl.FRAGMENT_SHADER);
+gl.shaderSource(f,`precision mediump float;uniform float u_time;uniform vec2 u_res;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5);}
 float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
-float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*noise(p);p*=2.05;a*=.5;}return v;}
-void main(){
-  vec2 uv=(gl_FragCoord.xy/u_res)*2.-1.; uv.x*=u_res.x/u_res.y;
-  float t=u_time*.12;
-  vec3 col=mix(vec3(.008,.012,.028), vec3(.03,.045,.08), smoothstep(.35,-.15,uv.y));
-  float star=step(.9978, hash(floor(gl_FragCoord.xy)));
-  col+=vec3(.9,.95,1.)*star*smoothstep(-.15,.35,uv.y);
-  float trees=-.58;
-  for(int k=0;k<2;k++){
-    float scale=k==0?14.:32.;
-    float x=uv.x*scale;
-    float tip=1.-abs(fract(x)-.5)*2.;
-    float h=pow(hash(vec2(floor(x),float(k)+1.)),.55);
-    trees=max(trees, -.58+tip*h*(k==0?.34:.16));
-  }
-  float curtain=0.;
-  for(int i=0;i<3;i++){
-    float fi=float(i);
-    float warp=fbm(vec2(uv.x*1.1+fi*3., uv.y*.22+t*(.35+fi*.12)));
-    float x=uv.x*(1.7+fi*.65)+warp*1.15+fi*.37;
-    float ray=smoothstep(.46,.02,abs(fract(x)-.5));
-    float lift=smoothstep(trees,trees+.16,uv.y)*smoothstep(.95,.2,uv.y);
-    float streak=.4+.6*fbm(vec2(uv.x*1.6+fi, uv.y*7.-t*(.8+fi)));
-    curtain+=ray*lift*streak*(.62-fi*.14);
-  }
-  float rise=clamp((uv.y-trees)/1.2,0.,1.);
-  vec3 rayCol=mix(vec3(.08,.78,.25), vec3(.82,.07,.58), smoothstep(.12,.82,rise));
-  col+=rayCol*curtain;
-  float ground=smoothstep(trees+.01, trees-.02, uv.y);
-  col=mix(col, vec3(0.), ground);
-  gl_FragColor=vec4(col,1.);
-}`);
-gl.compileShader(f);
-const p = gl.createProgram();
-gl.attachShader(p, v); gl.attachShader(p, f); gl.linkProgram(p); gl.useProgram(p);
-const b = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, b);
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
-const l = gl.getAttribLocation(p, 'p');
-gl.enableVertexAttribArray(l);
-gl.vertexAttribPointer(l, 2, gl.FLOAT, false, 0, 0);
-const uT = gl.getUniformLocation(p, 'u_time');
-const uR = gl.getUniformLocation(p, 'u_res');
-gl.uniform2f(uR, c.width, c.height);
-const motion = matchMedia('(prefers-reduced-motion: reduce)');
-let t = 0, frame = 0;
-function draw() {
-  frame = 0;
-  t += 0.016;
-  gl.uniform1f(uT, t);
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-  if (!motion.matches) frame = requestAnimationFrame(draw);
-}
-function sync() {
-  if (motion.matches) { if (frame) cancelAnimationFrame(frame); frame = 0; return; }
-  if (!frame) frame = requestAnimationFrame(draw);
-}
-motion.addEventListener('change', sync);
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<6;i++){v+=a*noise(p);p*=2.;a*=.5;}return v;}
+void main(){vec2 uv=(gl_FragCoord.xy/u_res)*2.-1.;uv.x*=u_res.x/u_res.y;float t=u_time*.3;vec2 q=vec2(fbm(uv+t),fbm(uv+vec2(1.7,9.2)+t*.8));float f=fbm(uv+3.*q);vec3 col=mix(vec3(0.,.02,.08),mix(vec3(.1,.8,.4),vec3(0.,.3,.9),f),f*1.2);col=mix(col,vec3(.8,.2,.9),clamp(f*f*2.-1.,0.,1.));gl_FragColor=vec4(col,1.);}`);
+gl.compileShader(f);const p=gl.createProgram();gl.attachShader(p,v);gl.attachShader(p,f);gl.linkProgram(p);gl.useProgram(p);
+const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+const l=gl.getAttribLocation(p,'p');gl.enableVertexAttribArray(l);gl.vertexAttribPointer(l,2,gl.FLOAT,false,0,0);
+const uT=gl.getUniformLocation(p,'u_time'),uR=gl.getUniformLocation(p,'u_res');gl.uniform2f(uR,c.width,c.height);
+const motion=matchMedia('(prefers-reduced-motion: reduce)');
+let t=0,frame=0;
+function draw(){frame=0;t+=.016;gl.uniform1f(uT,t);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);if(!motion.matches)frame=requestAnimationFrame(draw)}
+function sync(){if(motion.matches){if(frame)cancelAnimationFrame(frame);frame=0;return}if(!frame)frame=requestAnimationFrame(draw)}
+motion.addEventListener('change',sync);
 draw();
-</script>
-</body>
-</html>
+</script></body></html>
