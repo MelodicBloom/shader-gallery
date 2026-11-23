@@ -1,0 +1,7 @@
+work/
+frames/
+*.png.tmp.png
+__pycache__/
+# big renders: publish via GitHub Releases, not git
+*.mkv
+media/*_1080p60.mp4
