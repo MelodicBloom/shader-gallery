@@ -32,29 +32,38 @@ gl.compileShader(v);
 const f = gl.createShader(gl.FRAGMENT_SHADER);
 gl.shaderSource(f, `precision mediump float;
 uniform float u_time; uniform vec2 u_res;
-float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5);}
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
-float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*noise(p);p*=2.;a*=.5;}return v;}
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*noise(p);p*=2.05;a*=.5;}return v;}
 void main(){
   vec2 uv=(gl_FragCoord.xy/u_res)*2.-1.; uv.x*=u_res.x/u_res.y;
-  float t=u_time*.22;
-  vec3 sky=vec3(.012,.02,.055);
-  sky+=vec3(.03,.05,.1)*pow(clamp(1.-uv.y*.35,0.,1.),2.);
-  float star=pow(hash(floor(gl_FragCoord.xy*.42)),22.);
-  sky+=vec3(.7,.82,1.)*star;
-  vec2 q=vec2(fbm(uv*1.15+vec2(t*.35,0.)), fbm(uv*1.15+vec2(1.7,9.2)-t*.2));
-  float nearBand=abs(uv.y+.05+q.x*.62);
-  float curtain=smoothstep(.72,.02,nearBand)*fbm(vec2(uv.x*1.5+q.y*1.4, uv.y*2.4-t*.4));
-  float far=smoothstep(.85,.08,abs(uv.y-.42+q.y*.4))*fbm(uv*2.1+vec2(-t*.12,4.2));
-  vec3 farCol=mix(vec3(.02,.12,.28), vec3(.28,.08,.36), far);
-  vec3 nearCol=mix(vec3(.04,.48,.32), vec3(.04,.22,.72), curtain);
-  nearCol=mix(nearCol, vec3(.72,.22,.78), smoothstep(.42,.88,curtain));
-  vec3 col=sky;
-  col=mix(col, farCol, clamp(far*.9,0.,1.));
-  col=mix(col, nearCol, clamp(curtain*1.2,0.,1.));
-  float fold=smoothstep(.15,.55,curtain)*smoothstep(.95,.55,curtain);
-  col+=vec3(.55,.9,.7)*fold*.45;
-  col*=smoothstep(-1.15,-.15,uv.y);
+  float t=u_time*.12;
+  vec3 col=mix(vec3(.008,.012,.028), vec3(.03,.045,.08), smoothstep(.35,-.15,uv.y));
+  float star=step(.9978, hash(floor(gl_FragCoord.xy)));
+  col+=vec3(.9,.95,1.)*star*smoothstep(-.15,.35,uv.y);
+  float trees=-.58;
+  for(int k=0;k<2;k++){
+    float scale=k==0?14.:32.;
+    float x=uv.x*scale;
+    float tip=1.-abs(fract(x)-.5)*2.;
+    float h=pow(hash(vec2(floor(x),float(k)+1.)),.55);
+    trees=max(trees, -.58+tip*h*(k==0?.34:.16));
+  }
+  float curtain=0.;
+  for(int i=0;i<3;i++){
+    float fi=float(i);
+    float warp=fbm(vec2(uv.x*1.1+fi*3., uv.y*.22+t*(.35+fi*.12)));
+    float x=uv.x*(1.7+fi*.65)+warp*1.15+fi*.37;
+    float ray=smoothstep(.46,.02,abs(fract(x)-.5));
+    float lift=smoothstep(trees,trees+.16,uv.y)*smoothstep(.95,.2,uv.y);
+    float streak=.4+.6*fbm(vec2(uv.x*1.6+fi, uv.y*7.-t*(.8+fi)));
+    curtain+=ray*lift*streak*(.62-fi*.14);
+  }
+  float rise=clamp((uv.y-trees)/1.2,0.,1.);
+  vec3 rayCol=mix(vec3(.08,.78,.25), vec3(.82,.07,.58), smoothstep(.12,.82,rise));
+  col+=rayCol*curtain;
+  float ground=smoothstep(trees+.01, trees-.02, uv.y);
+  col=mix(col, vec3(0.), ground);
   gl_FragColor=vec4(col,1.);
 }`);
 gl.compileShader(f);
