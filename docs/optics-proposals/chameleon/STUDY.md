@@ -49,4 +49,4 @@ The volume average of n² is not Maxwell-Garnett and not their plane-wave solver
 
 ## Verdict
 
-The sweep follows the published tuning, from blue toward red/infrared. It does not look like the guanine-crystal filter, and it should not replace it. The filter is a turbulence facet. The paper is a lattice. Putting the paper's numbers into `facet-x` would not be the paper.
+The pinned frame sweeps from a black corner, where 750 nm falls outside the gaussian map, through saturated blue, green, and red bands. Those bands are the map's three peaks, not a computed CIE color and not chameleon skin. The guanine-crystal filter, rendered from the byte-exact definitions, is a pale turbulent facet card. The two pictures do not match, and the lattice should not replace the filter. `facet-x` stays a turbulence frequency.

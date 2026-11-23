@@ -57,4 +57,4 @@ The lossless matrix is brighter than a real scale before the 0.75 scale is appli
 
 ## Verdict
 
-This is a Morpho model. It is not a better nacre or Abalone model. Nacre tablets are hundreds of nanometres thick and shift across the visible spectrum. These lamellae are 55 nm and 150 nm and stay blue. Do not replace the live study with it.
+The pinned frame is a blue wash of the Abalone warp. The peak sits near 470 nm, and the carrier normal keeps `n.z` close to 1, so the angle term barely moves the hue. The gaussian map then paints that wavelength as pure blue. This is a Morpho peak on the wrong field. It is not a better nacre or Abalone model. Nacre tablets are hundreds of nanometres thick and shift across the visible spectrum. Do not replace the live study with it.

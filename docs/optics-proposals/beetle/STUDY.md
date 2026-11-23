@@ -35,4 +35,4 @@ Quarter-wave δ = π/2 is exact only at λ_0 and at the angle used to shorten th
 
 ## Verdict
 
-The stack is a legitimate thin-film beetle model and a poor Abalone model. Layer count does change brightness in the matrix, which is the part of the story this page can show. It does not show circular polarization or a 3D crystal. Leave the live study as it is.
+The pinned frame is saturated green on the face-on parts of the warp and blue where the normal tilts and `560 nm * cos θ` falls into the blue gaussian. That is the angle shift, drawn by a three-gaussian map, not a beetle spectrum and not gold. The stack is a legitimate thin-film model and a poor Abalone model. It does not show circular polarization or a 3D crystal. Leave the live study as it is.
