@@ -1,0 +1,1710 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#090a10" />
+  <title>SVG Filter Atelier — Material Families & Workbench</title>
+  <style>
+    :root {
+      --bg: #090a10;
+      --bg-elevated: #0d0f17;
+      --panel: rgba(18, 20, 31, 0.9);
+      --panel-strong: #151824;
+      --panel-hover: #1a1e2b;
+      --text: #eef0f7;
+      --text-soft: #a7adbf;
+      --text-dim: #747b92;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.15);
+      --cyan: #3de7ff;
+      --green: #8de99a;
+      --coral: #ff7d7d;
+      --gold: #f5df8d;
+      --violet: #dc8cff;
+      --blue: #8aa8ff;
+      --danger: #ff8d9c;
+      --shadow: 0 20px 70px rgba(0, 0, 0, 0.38);
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --content: 1680px;
+      --toolbar-h: 70px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% -10%, rgba(61, 231, 255, 0.07), transparent 32rem),
+        radial-gradient(circle at 88% 12%, rgba(220, 140, 255, 0.055), transparent 34rem),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.22;
+      z-index: 100;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+      mix-blend-mode: soft-light;
+    }
+
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+    a { color: inherit; }
+    code, pre, .mono { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+
+    .skip-link {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 1000;
+      transform: translateY(-160%);
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      background: var(--cyan);
+      color: #041014;
+      font-weight: 800;
+    }
+    .skip-link:focus { transform: translateY(0); }
+
+    .shell { width: min(100%, var(--content)); margin-inline: auto; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(2rem, 5vw, 5.5rem) clamp(1rem, 4vw, 4rem) clamp(2rem, 4vw, 4rem);
+      border-bottom: 1px solid var(--border);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -5rem;
+      top: -11rem;
+      width: min(45vw, 42rem);
+      aspect-ratio: 1;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 35% 35%, rgba(61, 231, 255, 0.18), transparent 28%),
+        radial-gradient(circle at 65% 60%, rgba(220, 140, 255, 0.14), transparent 35%);
+      filter: blur(16px);
+      pointer-events: none;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      color: var(--cyan);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 22px; height: 2px; background: currentColor; }
+    h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 1050px;
+      margin: 0.65rem 0 0;
+      font-size: clamp(2.2rem, 6vw, 5.5rem);
+      line-height: 0.94;
+      letter-spacing: -0.065em;
+      font-weight: 680;
+    }
+    h1 span {
+      display: block;
+      color: transparent;
+      background: linear-gradient(110deg, var(--cyan), var(--green) 42%, var(--violet));
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 1.4rem 0 0;
+      color: var(--text-soft);
+      font-size: clamp(0.98rem, 1.6vw, 1.18rem);
+    }
+    .hero-meta {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-top: 1.7rem;
+    }
+    .hero-meta span {
+      padding: 0.42rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.025);
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .hero-meta span:first-child { color: var(--green); border-color: rgba(141,233,154,0.25); }
+
+    .toolbar-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      border-bottom: 1px solid var(--border);
+      background: rgba(9, 10, 16, 0.8);
+      backdrop-filter: blur(18px) saturate(140%);
+    }
+    .toolbar {
+      min-height: var(--toolbar-h);
+      display: grid;
+      grid-template-columns: minmax(250px, 1.25fr) minmax(165px, .52fr) minmax(165px, .52fr) minmax(330px, auto) auto;
+      gap: 0.7rem;
+      align-items: center;
+      padding: 0.75rem clamp(1rem, 4vw, 4rem);
+    }
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      min-height: 44px;
+      padding: 0 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.025);
+      transition: border-color .2s, background .2s, box-shadow .2s;
+    }
+    .field:focus-within {
+      border-color: rgba(61,231,255,0.5);
+      box-shadow: 0 0 0 3px rgba(61,231,255,0.09);
+      background: rgba(255,255,255,0.04);
+    }
+    .field svg { width: 18px; height: 18px; color: var(--text-dim); flex: 0 0 auto; }
+    .field input,
+    .field select {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text);
+    }
+    .field select option { background: #11131d; }
+    .toolbar-actions { display: flex; align-items: center; gap: .45rem; min-width: 0; }
+    .toolbar-button {
+      min-height: 44px;
+      padding: 0 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.025);
+      cursor: pointer;
+      transition: transform .2s, border-color .2s, background .2s;
+      white-space: nowrap;
+    }
+    .toolbar-button:hover { border-color: var(--border-strong); background: rgba(255,255,255,0.05); transform: translateY(-1px); }
+    .toolbar-button[aria-pressed="true"] { color: var(--gold); border-color: rgba(245,223,141,0.35); background: rgba(245,223,141,0.08); }
+    .result-count { color: var(--text-dim); font-size: .8rem; text-align: right; white-space: nowrap; }
+
+    .decision-zone {
+      padding: clamp(1.5rem, 4vw, 3.5rem) clamp(1rem, 4vw, 4rem);
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
+    }
+    .section-kicker {
+      margin: 0 0 0.55rem;
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+    .decision-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+    .decision-heading h2 { margin: 0; font-size: clamp(1.25rem, 3vw, 2rem); letter-spacing: -0.035em; }
+    .decision-heading p { margin: 0; max-width: 550px; color: var(--text-dim); font-size: .9rem; }
+    .decision-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(145px, 1fr));
+      gap: 0.75rem;
+    }
+    .decision-card {
+      position: relative;
+      min-height: 142px;
+      padding: 1rem;
+      text-align: left;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: linear-gradient(145deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform .22s ease, border-color .22s ease, background .22s ease, box-shadow .22s ease;
+    }
+    .decision-card::after {
+      content: "↗";
+      position: absolute;
+      right: .9rem;
+      top: .75rem;
+      color: var(--text-dim);
+      transition: transform .2s, color .2s;
+    }
+    .decision-card:hover,
+    .decision-card:focus-visible {
+      transform: translateY(-3px);
+      border-color: rgba(61,231,255,.36);
+      background: linear-gradient(145deg, rgba(61,231,255,.075), rgba(255,255,255,.015));
+      box-shadow: 0 16px 40px rgba(0,0,0,.25);
+      outline: 0;
+    }
+    .decision-card:hover::after { transform: translate(2px,-2px); color: var(--cyan); }
+    .decision-card .need { color: var(--cyan); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 800; }
+    .decision-card strong { display: block; margin-top: .55rem; font-size: .98rem; }
+    .decision-card small { display: block; margin-top: .5rem; color: var(--text-dim); line-height: 1.45; }
+
+    main { padding-bottom: 5rem; }
+    .group { scroll-margin-top: calc(var(--toolbar-h) + 20px); }
+    .group-heading {
+      position: sticky;
+      top: var(--toolbar-h);
+      z-index: 45;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.95rem clamp(1rem, 4vw, 4rem);
+      border-bottom: 1px solid var(--border);
+      background: rgba(9,10,16,.84);
+      backdrop-filter: blur(14px);
+    }
+    .group-heading h2 {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin: 0;
+      font-size: .76rem;
+      color: var(--text-soft);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .group-heading h2::before { content: ""; width: 24px; height: 2px; background: var(--group-color, var(--cyan)); border-radius: 99px; }
+    .group-heading span { color: var(--text-dim); font-size: .75rem; }
+
+    .showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 410px), 1fr));
+      gap: clamp(1rem, 2vw, 1.6rem);
+      padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 4vw, 4rem) clamp(2rem, 5vw, 4rem);
+    }
+    .card {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--panel);
+      box-shadow: 0 1px 0 rgba(255,255,255,.025) inset;
+      transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease, opacity .28s ease;
+      content-visibility: auto;
+      contain-intrinsic-size: 720px;
+    }
+    .card:hover { transform: translateY(-3px); border-color: var(--border-strong); box-shadow: var(--shadow); }
+    .card.is-highlighted { border-color: rgba(61,231,255,.65); box-shadow: 0 0 0 2px rgba(61,231,255,.14), var(--shadow); }
+    .card[hidden] { display: none !important; }
+    .card.is-offscreen .animated-preview * { animation-play-state: paused !important; }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.15rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,.12);
+    }
+    .card-title-wrap { min-width: 0; }
+    .card-index { display: block; margin-bottom: .25rem; color: var(--text-dim); font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; }
+    .card-title { margin: 0; font-size: 1rem; letter-spacing: -.015em; }
+    .badges { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: .35rem; }
+    .badge {
+      padding: .25rem .55rem;
+      border: 1px solid color-mix(in srgb, var(--badge-color) 28%, transparent);
+      border-radius: 999px;
+      color: var(--badge-color);
+      background: color-mix(in srgb, var(--badge-color) 8%, transparent);
+      font-size: .61rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .preview {
+      position: relative;
+      height: 260px;
+      overflow: hidden;
+      background: #05060a;
+      isolation: isolate;
+    }
+    .preview::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 48%;
+      z-index: 2;
+      background: linear-gradient(transparent, rgba(4,5,9,.86));
+      pointer-events: none;
+    }
+    .preview svg { display: block; width: 100%; height: 100%; }
+    .preview-caption {
+      position: absolute;
+      z-index: 3;
+      left: 1.15rem;
+      right: 1.15rem;
+      bottom: .9rem;
+      margin: 0;
+      color: #b3b8c9;
+      font-size: .78rem;
+      line-height: 1.45;
+    }
+
+    .controls {
+      display: grid;
+      gap: .78rem;
+      padding: 1.15rem 1.2rem 1.25rem;
+      border-top: 1px solid rgba(255,255,255,.025);
+    }
+    .control {
+      display: grid;
+      grid-template-columns: minmax(102px, .8fr) minmax(120px, 1.5fr) 64px;
+      gap: .85rem;
+      align-items: center;
+    }
+    .control label { color: var(--text-soft); font-size: .76rem; }
+    .control output { color: var(--cyan); font-size: .75rem; text-align: right; }
+    .control input[type="range"] {
+      width: 100%;
+      appearance: none;
+      height: 5px;
+      border-radius: 99px;
+      background: linear-gradient(90deg, rgba(61,231,255,.45), var(--border-strong));
+      outline: none;
+      cursor: pointer;
+    }
+    .control input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 17px;
+      height: 17px;
+      border: 2px solid #0b1117;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px rgba(61,231,255,.13);
+    }
+    .control input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 6px rgba(61,231,255,.23); }
+    .control input[type="color"] {
+      width: 48px;
+      height: 32px;
+      padding: 2px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: transparent;
+      cursor: pointer;
+    }
+    .control select {
+      width: 100%;
+      min-height: 36px;
+      padding: 0 .65rem;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: var(--text);
+      background: var(--bg-elevated);
+    }
+    .control select option { background: #10121b; }
+
+    .static-note {
+      padding: 1rem 1.2rem;
+      color: var(--text-dim);
+      font-size: .82rem;
+      border-top: 1px solid var(--border);
+    }
+    .seed-row { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .7rem; }
+    .seed-row span { padding: .3rem .55rem; border: 1px solid var(--border); border-radius: 8px; background: #0a0b12; color: var(--text-soft); font-size: .72rem; }
+
+    details.pipeline { border-top: 1px solid var(--border); background: #08090e; }
+    details.pipeline summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      min-height: 48px;
+      padding: 0 1.2rem;
+      cursor: pointer;
+      color: var(--text-dim);
+      font-size: .73rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      list-style: none;
+    }
+    details.pipeline summary::-webkit-details-marker { display: none; }
+    details.pipeline summary::after { content: "+"; color: var(--cyan); font-size: 1rem; }
+    details.pipeline[open] summary::after { content: "−"; }
+    .pipeline-body { position: relative; border-top: 1px solid var(--border); }
+    pre {
+      max-height: 300px;
+      margin: 0;
+      overflow: auto;
+      padding: 1.1rem 1.2rem 1.3rem;
+      color: #8d94aa;
+      font-size: .7rem;
+      line-height: 1.65;
+      white-space: pre;
+      tab-size: 2;
+    }
+    .copy-button {
+      position: absolute;
+      top: .65rem;
+      right: .75rem;
+      z-index: 2;
+      padding: .35rem .55rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(10,11,18,.92);
+      color: var(--text-soft);
+      font-size: .67rem;
+      cursor: pointer;
+    }
+    .copy-button:hover { color: var(--cyan); border-color: rgba(61,231,255,.35); }
+
+
+    .card-header-right { display: grid; justify-items: end; gap: .55rem; min-width: 0; }
+    .card-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .35rem; }
+    .icon-button {
+      min-width: 32px;
+      min-height: 30px;
+      padding: .28rem .48rem;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: rgba(255,255,255,.025);
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: .72rem;
+      font-weight: 800;
+      transition: border-color .18s, color .18s, background .18s, transform .18s;
+    }
+    .icon-button:hover { color: var(--cyan); border-color: rgba(61,231,255,.3); transform: translateY(-1px); }
+    .icon-button[aria-pressed="true"] { color: var(--gold); border-color: rgba(245,223,141,.35); background: rgba(245,223,141,.08); }
+    .icon-button[data-compare][aria-pressed="true"] { color: var(--violet); border-color: rgba(220,140,255,.38); background: rgba(220,140,255,.08); }
+    .icon-button[data-chain][aria-pressed="true"] { color: var(--green); border-color: rgba(141,233,154,.35); background: rgba(141,233,154,.08); }
+    .family-label {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      margin-top: .35rem;
+      color: var(--text-dim);
+      font-size: .66rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .family-label::before { content:""; width: 7px; height: 7px; border-radius: 50%; background: var(--family-color, var(--cyan)); box-shadow: 0 0 14px color-mix(in srgb, var(--family-color) 45%, transparent); }
+    .preset-row {
+      display: grid;
+      grid-template-columns: minmax(102px,.8fr) minmax(120px,1.5fr) 64px;
+      gap: .85rem;
+      align-items: center;
+      padding: .9rem 1.2rem;
+      border-top: 1px solid var(--border);
+      background: rgba(255,255,255,.014);
+    }
+    .preset-row label { color: var(--gold); font-size: .72rem; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+    .preset-row select {
+      width: 100%; min-height: 36px; padding: 0 .65rem;
+      border: 1px solid rgba(245,223,141,.18); border-radius: 9px;
+      color: var(--text); background: var(--bg-elevated);
+    }
+    .preset-row small { color: var(--text-dim); text-align: right; font-size: .66rem; }
+
+    .workspace-dock {
+      position: fixed;
+      z-index: 150;
+      left: 50%;
+      bottom: 1rem;
+      width: min(980px, calc(100vw - 2rem));
+      transform: translate(-50%, 18px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .55rem;
+      padding: .55rem;
+      border: 1px solid var(--border-strong);
+      border-radius: 18px;
+      background: rgba(10,11,18,.92);
+      box-shadow: 0 24px 80px rgba(0,0,0,.5);
+      backdrop-filter: blur(20px) saturate(140%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s, transform .2s;
+    }
+    .workspace-dock.is-visible { opacity: 1; transform: translate(-50%,0); pointer-events: auto; }
+    .workspace-slot {
+      display: grid;
+      grid-template-columns: auto minmax(0,1fr) auto;
+      align-items: center;
+      gap: .65rem;
+      min-height: 54px;
+      padding: .45rem .55rem .45rem .7rem;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: rgba(255,255,255,.025);
+    }
+    .workspace-slot strong { display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.1em; }
+    .workspace-slot small { display:block; color:var(--text-dim); font-size:.65rem; margin-top:.15rem; }
+    .workspace-chips { display:flex; min-width:0; gap:.3rem; overflow:hidden; }
+    .workspace-chip { max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:.25rem .5rem; border:1px solid var(--border); border-radius:999px; color:var(--text-soft); font-size:.65rem; }
+    .workspace-open { min-height:36px; padding:0 .7rem; border:1px solid var(--border); border-radius:9px; background:var(--panel-strong); cursor:pointer; }
+    body.workspace-active main { padding-bottom: 10rem; }
+
+    dialog.workbench {
+      width: min(1200px, calc(100vw - 2rem));
+      max-height: calc(100vh - 2rem);
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid var(--border-strong);
+      border-radius: 24px;
+      color: var(--text);
+      background: #0d0f17;
+      box-shadow: 0 36px 120px rgba(0,0,0,.75);
+    }
+    dialog.workbench::backdrop { background: rgba(2,3,8,.78); backdrop-filter: blur(7px); }
+    .dialog-shell { display:grid; grid-template-rows:auto minmax(0,1fr); max-height:calc(100vh - 2rem); }
+    .dialog-header { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; padding:1.15rem 1.25rem; border-bottom:1px solid var(--border); background:rgba(255,255,255,.018); }
+    .dialog-header h2 { margin:0; font-size:1.15rem; }
+    .dialog-header p { margin:.35rem 0 0; color:var(--text-dim); font-size:.78rem; max-width:700px; }
+    .dialog-actions { display:flex; gap:.45rem; }
+    .dialog-button { min-height:38px; padding:0 .75rem; border:1px solid var(--border); border-radius:9px; background:var(--panel-strong); cursor:pointer; }
+    .dialog-content { overflow:auto; padding:1.2rem; }
+    .compare-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1rem; }
+    .compare-item { overflow:hidden; border:1px solid var(--border); border-radius:18px; background:var(--panel); }
+    .compare-item header { padding:.85rem 1rem; border-bottom:1px solid var(--border); }
+    .compare-item h3 { margin:0; font-size:.95rem; }
+    .compare-item p { margin:.3rem 0 0; color:var(--text-dim); font-size:.72rem; }
+    .compare-preview { height:230px; background:#05060a; }
+    .compare-preview svg { width:100%; height:100%; display:block; }
+    .compare-meta { padding:.8rem 1rem; display:grid; gap:.45rem; }
+    .compare-meta span { color:var(--text-soft); font-size:.72rem; }
+    .compare-item pre { border-top:1px solid var(--border); max-height:210px; }
+
+    .chain-layout { display:grid; grid-template-columns:minmax(260px,.7fr) minmax(360px,1.3fr); gap:1rem; }
+    .chain-list { display:grid; align-content:start; gap:.55rem; }
+    .chain-step { display:grid; grid-template-columns:34px minmax(0,1fr) auto; align-items:center; gap:.55rem; padding:.65rem; border:1px solid var(--border); border-radius:12px; background:rgba(255,255,255,.025); }
+    .chain-step-index { display:grid; place-items:center; width:30px; height:30px; border-radius:50%; background:rgba(141,233,154,.09); color:var(--green); font-size:.72rem; font-weight:900; }
+    .chain-step strong { font-size:.78rem; }
+    .chain-step small { display:block; margin-top:.15rem; color:var(--text-dim); font-size:.64rem; }
+    .chain-step-actions { display:flex; gap:.25rem; }
+    .chain-stage { display:grid; gap:.75rem; }
+    .chain-preview { height:360px; overflow:hidden; border:1px solid var(--border); border-radius:18px; background:#05060a; }
+    .chain-preview svg { width:100%; height:100%; display:block; }
+    .chain-code { border:1px solid var(--border); border-radius:14px; overflow:hidden; background:#08090e; }
+    .chain-code pre { max-height:230px; }
+    .chain-note { color:var(--text-dim); font-size:.72rem; line-height:1.5; }
+
+    @media (max-width: 1180px) {
+      .toolbar { grid-template-columns: minmax(220px,1fr) minmax(150px,.55fr) minmax(150px,.55fr); }
+      .toolbar-actions { grid-column:1 / 3; }
+      .result-count { grid-column:3; grid-row:2; }
+    }
+    @media (max-width: 760px) {
+      .toolbar { grid-template-columns:1fr 1fr; }
+      .toolbar .field:first-child { grid-column:1 / -1; }
+      .toolbar-actions { grid-column:1 / -1; overflow-x:auto; padding-bottom:.1rem; }
+      .workspace-dock { grid-template-columns:1fr; }
+      .chain-layout { grid-template-columns:1fr; }
+      .chain-preview { height:280px; }
+      .card-header-right { justify-items:start; }
+      .card-actions, .badges { justify-content:flex-start; }
+      .preset-row { grid-template-columns:minmax(92px,.75fr) minmax(100px,1.3fr) 54px; gap:.55rem; }
+    }
+    @media (max-width: 480px) {
+      .toolbar { grid-template-columns:1fr; }
+      .toolbar .field:first-child, .toolbar-actions { grid-column:auto; }
+      .toolbar-actions { display:grid; grid-template-columns:1fr 1fr; overflow:visible; }
+      .workspace-slot { grid-template-columns:auto minmax(0,1fr); }
+      .workspace-open { grid-column:1 / -1; }
+      .preset-row { grid-template-columns:1fr; }
+      .preset-row small { text-align:left; }
+      .dialog-header { flex-direction:column; }
+    }
+
+    .empty-state {
+      display: none;
+      margin: 2rem clamp(1rem,4vw,4rem);
+      padding: 2rem;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius-lg);
+      color: var(--text-dim);
+      text-align: center;
+    }
+    .empty-state.is-visible { display: block; }
+
+    .toast {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 200;
+      max-width: min(360px, calc(100vw - 2rem));
+      padding: .75rem 1rem;
+      border: 1px solid rgba(141,233,154,.28);
+      border-radius: 12px;
+      background: rgba(17,24,24,.94);
+      color: var(--green);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity .22s, transform .22s;
+    }
+    .toast.is-visible { opacity: 1; transform: translateY(0); }
+
+    .squiggly-text { animation: squiggle .48s steps(1, end) infinite; }
+    .water-animated { animation: waterAnim 2.4s steps(1, end) infinite; }
+    .fire-animated { animation: fireAnim .72s steps(1, end) infinite; }
+    .blob-a { animation: floatA 3.8s ease-in-out infinite; }
+    .blob-b { animation: floatB 4.4s ease-in-out infinite; }
+    .blob-c { animation: floatC 4.9s ease-in-out infinite; }
+
+    @keyframes squiggle {
+      0%,100% { filter: url(#squiggle1); }
+      33% { filter: url(#squiggle2); }
+      66% { filter: url(#squiggle3); }
+    }
+    @keyframes waterAnim {
+      0%,100% { filter: url(#waterAnim1); }
+      25% { filter: url(#waterAnim2); }
+      50% { filter: url(#waterAnim3); }
+      75% { filter: url(#waterAnim4); }
+    }
+    @keyframes fireAnim {
+      0%,100% { filter: url(#fire1); }
+      33% { filter: url(#fire2); }
+      66% { filter: url(#fire3); }
+    }
+    @keyframes floatA { 0%,100% { transform: translate(0,0); } 50% { transform: translate(25px,-28px); } }
+    @keyframes floatB { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-25px,22px); } }
+    @keyframes floatC { 0%,100% { transform: translate(0,0); } 50% { transform: translate(18px,24px); } }
+
+    body.motion-paused *, body.motion-paused-by-page * { animation-play-state: paused !important; }
+
+    :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+    @media (max-width: 1180px) {
+      :root { --toolbar-h: 112px; }
+      .decision-grid { grid-template-columns: repeat(3, minmax(160px, 1fr)); }
+      .toolbar { grid-template-columns: minmax(220px,1fr) minmax(150px,.55fr) minmax(150px,.55fr); }
+      .result-count { grid-column: 1 / -1; text-align: left; }
+    }
+    @media (max-width: 760px) {
+      :root { --toolbar-h: 124px; }
+      .toolbar { grid-template-columns: 1fr 1fr; }
+      .toolbar .field:first-child { grid-column: 1 / -1; }
+      .result-count { display: none; }
+      .decision-heading { align-items: start; flex-direction: column; }
+      .decision-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .decision-card { min-height: 128px; }
+      .group-heading { align-items: flex-start; }
+      .group-heading span { display: none; }
+      .preview { height: 230px; }
+      .control { grid-template-columns: minmax(92px, .75fr) minmax(100px, 1.3fr) 54px; gap: .55rem; }
+    }
+    @media (max-width: 480px) {
+      :root { --toolbar-h: 178px; }
+      .toolbar { grid-template-columns: 1fr; }
+      .toolbar .field:first-child { grid-column: auto; }
+      .decision-grid { grid-template-columns: 1fr; }
+      .card-header { flex-direction: column; }
+      .badges { justify-content: flex-start; }
+      .control { grid-template-columns: 1fr 58px; }
+      .control label { grid-column: 1 / -1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#filter-gallery">Skip to filter gallery</a>
+
+  <header class="hero shell">
+    <div class="eyebrow">Interactive material atelier · second pass</div>
+    <h1>SVG Filter Atelier <span>From Primitive to Material Language</span></h1>
+    <p class="hero-copy">A semantic workbench for building, comparing, favoriting, chaining, and exporting filter recipes—now extended into the tactile, optical, patterned, and living material families we return to most.</p>
+    <div class="hero-meta" aria-label="Project details">
+      <span>26 live recipes</span>
+      <span>single-file build</span>
+      <span>zero dependencies</span>
+      <span>compare + chain workbench</span>
+      <span>JSON recipe export</span>
+    </div>
+  </header>
+
+  <div class="toolbar-wrap">
+    <div class="toolbar shell" role="search" aria-label="Filter and manage SVG recipes">
+      <label class="field">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span class="sr-only" style="position:absolute;clip:rect(0 0 0 0);clip-path:inset(50%);width:1px;height:1px;overflow:hidden">Search recipes</span>
+        <input id="searchInput" type="search" placeholder="Search nacre, fiber, glow, water, edge…" autocomplete="off" />
+      </label>
+      <label class="field">
+        <span class="sr-only" style="position:absolute;clip:rect(0 0 0 0);clip-path:inset(50%);width:1px;height:1px;overflow:hidden">Filter by category</span>
+        <select id="categorySelect">
+          <option value="all">All categories</option>
+          <option value="material">Material atelier</option>
+          <option value="core">Core primitives</option>
+          <option value="advanced">Advanced effects</option>
+          <option value="animated">Animated & patterns</option>
+        </select>
+      </label>
+      <label class="field">
+        <span class="sr-only" style="position:absolute;clip:rect(0 0 0 0);clip-path:inset(50%);width:1px;height:1px;overflow:hidden">Filter by material family</span>
+        <select id="familySelect">
+          <option value="all">All material families</option>
+          <option value="tactile">Tactile & fibrous</option>
+          <option value="optical">Optical & luminous</option>
+          <option value="fluid">Fluid & atmospheric</option>
+          <option value="chromatic">Chromatic & signal</option>
+          <option value="structural">Structural & shape</option>
+          <option value="pattern">Pattern & print</option>
+          <option value="living">Living systems</option>
+          <option value="animated">Animated states</option>
+        </select>
+      </label>
+      <div class="toolbar-actions" aria-label="Laboratory actions">
+        <button id="favoritesToggle" class="toolbar-button" type="button" aria-pressed="false">Favorites</button>
+        <button id="motionToggle" class="toolbar-button" type="button" aria-pressed="false">Pause motion</button>
+        <button id="resetButton" class="toolbar-button" type="button">Reset</button>
+        <button id="exportVisibleButton" class="toolbar-button" type="button">Export visible</button>
+      </div>
+      <div id="resultCount" class="result-count" aria-live="polite">26 of 26 recipes</div>
+    </div>
+  </div>
+
+  <section class="decision-zone shell" aria-labelledby="decision-title">
+    <div class="decision-heading">
+      <div>
+        <p class="section-kicker">Decision framework</p>
+        <h2 id="decision-title">Start from the behavior you want</h2>
+      </div>
+      <p>These routes now act as real, keyboard-accessible shortcuts. Each selects the relevant recipe and moves focus to it.</p>
+    </div>
+    <div class="decision-grid">
+      <button class="decision-card" type="button" data-target="roughPaper"><span class="need">Need</span><strong>Tactile surface</strong><small>Paper, textile, stone, chalk, fiber</small></button>
+      <button class="decision-card" type="button" data-target="gooey"><span class="need">Need</span><strong>Merging forms</strong><small>Sticky boundaries, liquid groups, blobs</small></button>
+      <button class="decision-card" type="button" data-target="specular"><span class="need">Need</span><strong>Wet or metallic light</strong><small>Gloss, nacre, chrome, slick surfaces</small></button>
+      <button class="decision-card" type="button" data-target="chromatic"><span class="need">Need</span><strong>Channel separation</strong><small>Prismatic edges, lens error, RGB split</small></button>
+      <button class="decision-card" type="button" data-target="convolve"><span class="need">Need</span><strong>Pixel neighborhood logic</strong><small>Sharpen, emboss, blur, edge detect</small></button>
+      <button class="decision-card" type="button" data-target="waterAnim"><span class="need">Need</span><strong>Perceptual motion</strong><small>Flow, flicker, seed cycling, instability</small></button>
+      <button class="decision-card" type="button" data-target="nacreLaminate"><span class="need">Love</span><strong>Nacreous depth</strong><small>Thin layers, pearl light, soft spectral relief</small></button>
+      <button class="decision-card" type="button" data-target="washiFiber"><span class="need">Love</span><strong>Handmade fiber</strong><small>Washi, deckle, linen, directional pulp</small></button>
+    </div>
+  </section>
+
+  <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+    <defs>
+      <filter id="roughPaper" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feTurbulence id="rp-turb" type="fractalNoise" baseFrequency="0.04" numOctaves="5" seed="2" result="noise" />
+        <feDiffuseLighting id="rp-light" in="noise" lighting-color="#fff7e7" surfaceScale="2" result="light"><feDistantLight id="rp-dl" azimuth="45" elevation="60" /></feDiffuseLighting>
+        <feComposite in="light" in2="SourceGraphic" operator="in" />
+      </filter>
+      <filter id="woodGrain" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feTurbulence id="wg-turb" type="fractalNoise" baseFrequency="0.01 0.4" numOctaves="3" seed="4" result="noise" />
+        <feDiffuseLighting id="wg-light" in="noise" surfaceScale="1.5" lighting-color="#d5ad67" result="light"><feDistantLight id="wg-dl" azimuth="90" elevation="45" /></feDiffuseLighting>
+        <feComposite in="light" in2="SourceGraphic" operator="in" />
+      </filter>
+      <filter id="clouds" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feTurbulence id="cl-turb" type="fractalNoise" baseFrequency="0.015" numOctaves="4" seed="8" result="noise" />
+        <feColorMatrix id="cl-matrix" in="noise" type="matrix" values="1 0 0 0 .12  0 1 0 0 .16  0 0 1 0 .28  0 0 0 .6 -.1" result="colored" />
+        <feComposite in="colored" in2="SourceGraphic" operator="over" />
+      </filter>
+      <filter id="waterRipples" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feTurbulence id="wr-turb" type="turbulence" baseFrequency="0.05 0.1" numOctaves="2" seed="3" result="noise" />
+        <feDiffuseLighting id="wr-light" in="noise" surfaceScale="3" lighting-color="#4fc3f7" result="light"><feDistantLight id="wr-dl" azimuth="45" elevation="30" /></feDiffuseLighting>
+        <feComposite in="light" in2="SourceGraphic" operator="in" />
+      </filter>
+      <filter id="gooey" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
+        <feGaussianBlur id="goo-blur" in="SourceGraphic" stdDeviation="10" result="blur" />
+        <feColorMatrix id="goo-matrix" in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+        <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+      </filter>
+      <filter id="heatHaze" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+        <feTurbulence id="hh-turb" type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="6" result="noise" />
+        <feDisplacementMap id="hh-disp" in="SourceGraphic" in2="noise" scale="20" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+      <filter id="squiggle1" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="1" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="3"/></filter>
+      <filter id="squiggle2" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="2" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="3"/></filter>
+      <filter id="squiggle3" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="3" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="3"/></filter>
+      <filter id="specular" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feTurbulence id="sp-turb" type="fractalNoise" baseFrequency="0.03" numOctaves="4" seed="5" result="noise" />
+        <feSpecularLighting id="sp-light" in="noise" surfaceScale="3" specularConstant="1.5" specularExponent="20" lighting-color="#ffffff" result="specular"><fePointLight id="sp-pl" x="200" y="100" z="200" /></feSpecularLighting>
+        <feComposite in="specular" in2="SourceGraphic" operator="in" result="composite" />
+        <feBlend id="sp-blend" in="composite" in2="SourceGraphic" mode="screen" />
+      </filter>
+      <filter id="spotlight" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feTurbulence id="sl-turb" type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="7" result="noise" />
+        <feDiffuseLighting id="sl-light" in="noise" surfaceScale="4" lighting-color="#ffeb3b" result="light"><feSpotLight id="sl-spot" x="100" y="100" z="300" pointsAtX="200" pointsAtY="200" pointsAtZ="0" limitingConeAngle="30" /></feDiffuseLighting>
+        <feComposite in="light" in2="SourceGraphic" operator="in" />
+      </filter>
+      <filter id="morphology" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+        <feMorphology id="morph-op" in="SourceGraphic" operator="dilate" radius="3" result="morph" />
+        <feFlood id="morph-flood" flood-color="#3de7ff" result="color" />
+        <feComposite in="color" in2="morph" operator="in" result="outline" />
+        <feMerge><feMergeNode in="outline"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="chromatic" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+        <feOffset id="chr-r-off" in="SourceGraphic" dx="4" dy="2" result="red-offset" />
+        <feOffset id="chr-b-off" in="SourceGraphic" dx="-4" dy="-2" result="blue-offset" />
+        <feColorMatrix in="red-offset" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red" />
+        <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="green" />
+        <feColorMatrix in="blue-offset" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blue" />
+        <feBlend mode="screen" in="red" in2="green" result="rg" />
+        <feBlend mode="screen" in="rg" in2="blue" />
+      </filter>
+      <filter id="convolve" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feConvolveMatrix id="conv-matrix" order="3" kernelMatrix="0 -1 0  -1 5 -1  0 -1 0" divisor="1" bias="0" targetX="1" targetY="1" edgeMode="duplicate" preserveAlpha="true" />
+      </filter>
+      <filter id="crt" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+        <feTurbulence id="crt-turb" type="fractalNoise" baseFrequency="0.8 0.005" numOctaves="2" seed="9" result="noise" />
+        <feDisplacementMap id="crt-disp" in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+        <feColorMatrix id="crt-matrix" in="displaced" type="matrix" values="1.2 0 0 0 0  0 1.1 0 0 0  0 0 1.3 0 0  0 0 0 1 0" />
+      </filter>
+      <filter id="shadowGlow" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
+        <feGaussianBlur id="sg-blur" in="SourceAlpha" stdDeviation="4" result="blur" />
+        <feOffset id="sg-off" in="blur" dx="4" dy="4" result="offsetBlur" />
+        <feFlood flood-color="#000000" flood-opacity=".55" result="shadowColor" />
+        <feComposite in="shadowColor" in2="offsetBlur" operator="in" result="shadow" />
+        <feFlood id="sg-flood" flood-color="#3de7ff" flood-opacity=".65" result="glowColor" />
+        <feComposite in="glowColor" in2="blur" operator="in" result="glow" />
+        <feMerge><feMergeNode in="shadow"/><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="levels" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feComponentTransfer><feFuncR id="lvl-r" type="linear" slope="1" intercept="0"/><feFuncG id="lvl-g" type="linear" slope="1" intercept="0"/><feFuncB id="lvl-b" type="linear" slope="1" intercept="0"/><feFuncA id="lvl-a" type="linear" slope="1" intercept="0"/></feComponentTransfer>
+      </filter>
+      <filter id="waterAnim1"><feTurbulence type="fractalNoise" baseFrequency=".02 .05" numOctaves="2" seed="1" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="15"/></filter>
+      <filter id="waterAnim2"><feTurbulence type="fractalNoise" baseFrequency=".02 .05" numOctaves="2" seed="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="15"/></filter>
+      <filter id="waterAnim3"><feTurbulence type="fractalNoise" baseFrequency=".02 .05" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="15"/></filter>
+      <filter id="waterAnim4"><feTurbulence type="fractalNoise" baseFrequency=".02 .05" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="15"/></filter>
+      <filter id="fire1"><feTurbulence type="turbulence" baseFrequency=".045 .09" numOctaves="3" seed="1" result="n"/><feColorMatrix in="n" type="matrix" values="1 0 0 0 .2  0 .5 0 0 0  0 0 .12 0 0  0 0 0 .9 0"/></filter>
+      <filter id="fire2"><feTurbulence type="turbulence" baseFrequency=".05 .11" numOctaves="3" seed="2" result="n"/><feColorMatrix in="n" type="matrix" values="1 0 0 0 .2  0 .5 0 0 0  0 0 .12 0 0  0 0 0 .9 0"/></filter>
+      <filter id="fire3"><feTurbulence type="turbulence" baseFrequency=".06 .1" numOctaves="3" seed="3" result="n"/><feColorMatrix in="n" type="matrix" values="1 0 0 0 .2  0 .5 0 0 0  0 0 .12 0 0  0 0 0 .9 0"/></filter>
+      <filter id="patternTile" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feImage href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Crect width='24' height='24' fill='%233de7ff' opacity='.18'/%3E%3Cpath d='M0 12h24M12 0v24' stroke='%23dc8cff' stroke-width='1' opacity='.55'/%3E%3Ccircle cx='12' cy='12' r='3.5' fill='%23ff7d7d'/%3E%3C/svg%3E" x="0" y="0" width="24" height="24" result="tile" />
+        <feTile in="tile" result="tiled"/><feComposite in="tiled" in2="SourceGraphic" operator="in" result="patterned"/><feBlend in="patterned" in2="SourceGraphic" mode="screen"/>
+      </filter>
+
+
+      <!-- === MATERIAL ATELIER: CURATED FAMILIES === -->
+      <filter id="nacreLaminate" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+        <feTurbulence id="nacre-turb" type="fractalNoise" baseFrequency=".012 .08" numOctaves="4" seed="11" result="grain"/>
+        <feColorMatrix id="nacre-color" in="grain" type="matrix" values=".7 .1 .2 0 .12  .16 .72 .12 0 .14  .08 .2 .78 0 .24  0 0 0 .55 0" result="pearl"/>
+        <feSpecularLighting id="nacre-light" in="grain" surfaceScale="5" specularConstant="1.2" specularExponent="28" lighting-color="#e9fbff" result="shine"><feDistantLight id="nacre-dl" azimuth="225" elevation="55"/></feSpecularLighting>
+        <feComposite in="shine" in2="SourceGraphic" operator="in" result="shineMask"/>
+        <feBlend in="SourceGraphic" in2="pearl" mode="screen" result="base"/>
+        <feBlend id="nacre-blend" in="base" in2="shineMask" mode="screen"/>
+      </filter>
+      <filter id="washiFiber" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feTurbulence id="washi-turb" type="fractalNoise" baseFrequency=".006 .48" numOctaves="4" seed="19" result="fiber"/>
+        <feComponentTransfer in="fiber" result="softFiber"><feFuncA id="washi-alpha" type="linear" slope=".72" intercept="-.08"/></feComponentTransfer>
+        <feDiffuseLighting id="washi-light" in="fiber" surfaceScale="1.8" lighting-color="#fff4dc" result="relief"><feDistantLight id="washi-dl" azimuth="35" elevation="62"/></feDiffuseLighting>
+        <feBlend in="SourceGraphic" in2="softFiber" mode="multiply" result="inked"/>
+        <feBlend in="inked" in2="relief" mode="screen"/>
+      </filter>
+      <filter id="lithoGrain" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+        <feTurbulence id="litho-turb" type="fractalNoise" baseFrequency=".42" numOctaves="2" seed="31" result="grain"/>
+        <feColorMatrix id="litho-threshold" in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 16 -7.6" result="ink"/>
+        <feComposite in="ink" in2="SourceGraphic" operator="in" result="masked"/>
+        <feBlend id="litho-blend" in="SourceGraphic" in2="masked" mode="multiply"/>
+      </filter>
+      <filter id="stainedGlass" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+        <feTurbulence id="glass-turb" type="fractalNoise" baseFrequency=".018" numOctaves="3" seed="23" result="noise"/>
+        <feDisplacementMap id="glass-disp" in="SourceGraphic" in2="noise" scale="7" xChannelSelector="R" yChannelSelector="B" result="warped"/>
+        <feColorMatrix id="glass-color" in="noise" type="matrix" values="1.2 .15 0 0 .05  0 .85 .35 0 .02  .2 0 1.15 0 .12  0 0 0 .58 0" result="colorField"/>
+        <feBlend id="glass-blend" in="warped" in2="colorField" mode="overlay" result="colored"/>
+        <feSpecularLighting id="glass-light" in="noise" surfaceScale="3" specularConstant=".9" specularExponent="24" lighting-color="#ffffff" result="spark"><feDistantLight id="glass-dl" azimuth="310" elevation="48"/></feSpecularLighting>
+        <feBlend in="colored" in2="spark" mode="screen"/>
+      </filter>
+      <filter id="brassInlay" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+        <feMorphology id="brass-outer" in="SourceAlpha" operator="dilate" radius="3" result="outer"/>
+        <feMorphology id="brass-inner" in="SourceAlpha" operator="erode" radius="1" result="inner"/>
+        <feComposite in="outer" in2="inner" operator="xor" result="ring"/>
+        <feFlood id="brass-flood" flood-color="#d2a84a" result="gold"/>
+        <feComposite in="gold" in2="ring" operator="in" result="inlay"/>
+        <feGaussianBlur in="ring" stdDeviation="1.2" result="softRing"/>
+        <feSpecularLighting id="brass-light" in="softRing" surfaceScale="3" specularConstant="1.4" specularExponent="20" lighting-color="#fff2bd" result="shine"><feDistantLight id="brass-dl" azimuth="225" elevation="60"/></feSpecularLighting>
+        <feComposite in="shine" in2="ring" operator="in" result="shineRing"/>
+        <feMerge><feMergeNode in="inlay"/><feMergeNode in="shineRing"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="guanineCrystal" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+        <feTurbulence id="guanine-turb" type="turbulence" baseFrequency=".075 .18" numOctaves="2" seed="41" result="facets"/>
+        <feColorMatrix id="guanine-color" in="facets" type="matrix" values=".9 .2 .4 0 .05  .1 .95 .2 0 .08  .45 .12 1.1 0 .18  0 0 0 .72 0" result="iridescence"/>
+        <feSpecularLighting id="guanine-light" in="facets" surfaceScale="7" specularConstant="1.8" specularExponent="34" lighting-color="#e7fbff" result="flash"><fePointLight id="guanine-point" x="130" y="70" z="240"/></feSpecularLighting>
+        <feComposite in="flash" in2="SourceGraphic" operator="in" result="flashMask"/>
+        <feBlend in="SourceGraphic" in2="iridescence" mode="color-dodge" result="crystal"/>
+        <feBlend id="guanine-blend" in="crystal" in2="flashMask" mode="screen"/>
+      </filter>
+      <filter id="mycelialBloom" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+        <feTurbulence id="mycelium-turb" type="fractalNoise" baseFrequency=".027" numOctaves="5" seed="29" result="field"/>
+        <feColorMatrix id="mycelium-threshold" in="field" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 22 -10.2" result="veins"/>
+        <feMorphology id="mycelium-morph" in="veins" operator="dilate" radius=".65" result="network"/>
+        <feFlood id="mycelium-flood" flood-color="#9bffb1" flood-opacity=".88" result="life"/>
+        <feComposite in="life" in2="network" operator="in" result="threads"/>
+        <feGaussianBlur id="mycelium-glow" in="threads" stdDeviation="2.2" result="halo"/>
+        <feMerge><feMergeNode in="halo"/><feMergeNode in="threads"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="marbleVein" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB">
+        <feTurbulence id="marble-turb" type="fractalNoise" baseFrequency=".012 .07" numOctaves="4" seed="37" result="stone"/>
+        <feColorMatrix id="marble-threshold" in="stone" type="matrix" values="0 0 0 0 .08  0 0 0 0 .1  0 0 0 0 .14  0 0 0 13 -6.3" result="veins"/>
+        <feDisplacementMap id="marble-disp" in="veins" in2="stone" scale="14" xChannelSelector="R" yChannelSelector="G" result="warpedVeins"/>
+        <feBlend id="marble-blend" in="SourceGraphic" in2="warpedVeins" mode="multiply"/>
+      </filter>
+
+      <linearGradient id="metalGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#151824"/><stop offset=".48" stop-color="#5c6476"/><stop offset=".54" stop-color="#161925"/><stop offset="1" stop-color="#2b3040"/></linearGradient>
+      <linearGradient id="heatGrad" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff7d7d"/><stop offset=".5" stop-color="#8aa8ff"/><stop offset="1" stop-color="#3de7ff"/></linearGradient>
+      <linearGradient id="fireGrad" x1="0" y1="1" x2="0" y2="0"><stop stop-color="#ff3d00"/><stop offset=".58" stop-color="#ff9800"/><stop offset="1" stop-color="#ffe65b"/></linearGradient>
+      <radialGradient id="blobRed"><stop stop-color="#ff9a9a"/><stop offset="1" stop-color="#ff5f6d"/></radialGradient>
+      <radialGradient id="blobBlue"><stop stop-color="#7ff7ed"/><stop offset="1" stop-color="#29b9c8"/></radialGradient>
+      <radialGradient id="blobGold"><stop stop-color="#fff2a4"/><stop offset="1" stop-color="#f2c94c"/></radialGradient>
+      <linearGradient id="nacreBase" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#17213a"/><stop offset=".28" stop-color="#b6f0ed"/><stop offset=".52" stop-color="#e0b8ff"/><stop offset=".72" stop-color="#ffe4b0"/><stop offset="1" stop-color="#21304a"/></linearGradient>
+      <linearGradient id="glassBase" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#2d1950"/><stop offset=".3" stop-color="#ef526f"/><stop offset=".55" stop-color="#22c5c3"/><stop offset=".8" stop-color="#f1c75b"/><stop offset="1" stop-color="#243d8e"/></linearGradient>
+      <linearGradient id="guanineBase" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#10152c"/><stop offset=".35" stop-color="#56e4dc"/><stop offset=".58" stop-color="#cf9cff"/><stop offset=".78" stop-color="#f8f4bf"/><stop offset="1" stop-color="#182547"/></linearGradient>
+    </defs>
+  </svg>
+
+  <main id="filter-gallery" class="shell" tabindex="-1">
+    <div id="groups"></div>
+    <div id="emptyState" class="empty-state">No recipes match this view. Try “nacre,” “fiber,” “living,” “light,” “water,” or clear the favorite filter.</div>
+  </main>
+
+
+  <div id="workspaceDock" class="workspace-dock" aria-label="Selected workbench items">
+    <section class="workspace-slot" id="compareSlot">
+      <div><strong>Compare</strong><small id="compareCount">0 of 3</small></div>
+      <div id="compareChips" class="workspace-chips"></div>
+      <button id="openCompareButton" class="workspace-open" type="button">Open compare</button>
+    </section>
+    <section class="workspace-slot" id="chainSlot">
+      <div><strong>Chain</strong><small id="chainCount">0 of 4</small></div>
+      <div id="chainChips" class="workspace-chips"></div>
+      <button id="openChainButton" class="workspace-open" type="button">Compose chain</button>
+    </section>
+  </div>
+
+  <dialog id="compareDialog" class="workbench" aria-labelledby="compareDialogTitle">
+    <div class="dialog-shell">
+      <header class="dialog-header">
+        <div><h2 id="compareDialogTitle">Recipe comparison</h2><p>Compare the visual behavior, live parameter state, semantic family, and pipeline logic of up to three recipes.</p></div>
+        <div class="dialog-actions"><button id="exportCompareButton" class="dialog-button" type="button">Export JSON</button><button class="dialog-button" type="button" data-close-dialog="compareDialog">Close</button></div>
+      </header>
+      <div class="dialog-content"><div id="compareGrid" class="compare-grid"></div></div>
+    </div>
+  </dialog>
+
+  <dialog id="chainDialog" class="workbench" aria-labelledby="chainDialogTitle">
+    <div class="dialog-shell">
+      <header class="dialog-header">
+        <div><h2 id="chainDialogTitle">Nested filter chain</h2><p>Each stage wraps the previous result in a new filtered SVG group. Reorder the stages, inspect the live composite, and export a browser-ready chain manifest.</p></div>
+        <div class="dialog-actions"><button id="copyChainButton" class="dialog-button" type="button">Copy SVG nesting</button><button id="exportChainButton" class="dialog-button" type="button">Export JSON</button><button class="dialog-button" type="button" data-close-dialog="chainDialog">Close</button></div>
+      </header>
+      <div class="dialog-content chain-layout">
+        <div><div id="chainList" class="chain-list"></div><p class="chain-note">Nested groups preserve the independent filters for live experimentation. A production compiler should still normalize filter regions, intermediate result names, and performance budgets.</p></div>
+        <div class="chain-stage"><div id="chainPreview" class="chain-preview"></div><div class="chain-code"><pre><code id="chainCode"></code></pre></div></div>
+      </div>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite">Copied.</div>
+
+  <script>
+    const FILTERS = [
+      {
+        id: 'roughPaper', category: 'core', title: 'Rough Paper', tags: ['fractalNoise','diffuse'],
+        search: 'paper textile chalk tactile stone grain organic surface',
+        caption: 'Soft overlapping noise translated into relief: a dependable starting point for paper, cloth, chalk, and matte mineral surfaces.',
+        preview: `<rect width="100%" height="100%" fill="#f5f0e8"/><rect width="100%" height="100%" filter="url(#roughPaper)" opacity=".92"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#554d42" font-family="Georgia,serif" font-size="25" font-weight="700" opacity=".68">ROUGH PAPER</text>`,
+        controls: [
+          {label:'baseFrequency', type:'range', min:.005, max:.2, step:.005, value:.04, target:'rp-turb', attr:'baseFrequency'},
+          {label:'numOctaves', type:'range', min:1, max:7, step:1, value:5, target:'rp-turb', attr:'numOctaves'},
+          {label:'surfaceScale', type:'range', min:.5, max:8, step:.5, value:2, target:'rp-light', attr:'surfaceScale'},
+          {label:'elevation', type:'range', min:0, max:90, step:5, value:60, target:'rp-dl', attr:'elevation', suffix:'°'}
+        ],
+        code:`<filter id="roughPaper">\n  <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise"/>\n  <feDiffuseLighting in="noise" surfaceScale="2" lighting-color="#fff7e7">\n    <feDistantLight azimuth="45" elevation="60"/>\n  </feDiffuseLighting>\n</filter>`
+      },
+      {
+        id:'woodGrain', category:'core', title:'Wood Grain / Brushed Metal', tags:['fractalNoise','anisotropic'],
+        search:'wood metal brushed fiber directional stretched grain',
+        caption:'Separate X and Y frequency to stretch noise into fibers, machining marks, grain, or brushed-metal striations.',
+        preview:`<rect width="100%" height="100%" fill="#87641f"/><rect width="100%" height="100%" filter="url(#woodGrain)" opacity=".88"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#fff6dc" font-size="24" font-weight="800" opacity=".75">DIRECTIONAL GRAIN</text>`,
+        controls:[
+          {label:'baseFreq X', type:'range', min:.001, max:.1, step:.001, value:.01, custom:'woodX'},
+          {label:'baseFreq Y', type:'range', min:.1, max:1, step:.05, value:.4, custom:'woodY'},
+          {label:'numOctaves', type:'range', min:1, max:6, step:1, value:3, target:'wg-turb', attr:'numOctaves'},
+          {label:'azimuth', type:'range', min:0, max:360, step:15, value:90, target:'wg-dl', attr:'azimuth', suffix:'°'}
+        ],
+        code:`<feTurbulence type="fractalNoise" baseFrequency="0.01 0.4" numOctaves="3" result="noise"/>\n<feDiffuseLighting in="noise" surfaceScale="1.5">\n  <feDistantLight azimuth="90" elevation="45"/>\n</feDiffuseLighting>`
+      },
+      {
+        id:'clouds', category:'core', title:'Clouds / Steam / Gas', tags:['fractalNoise','alpha'],
+        search:'cloud steam fog gas mist atmosphere ethereal transparency',
+        caption:'Low-frequency fractal noise plus an alpha-row remap creates semi-transparent atmospheric mass without raster assets.',
+        preview:`<rect width="100%" height="100%" fill="#151a49"/><rect width="100%" height="100%" fill="#3546a4" filter="url(#clouds)"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="26" font-weight="800" opacity=".78">CLOUD FIELD</text>`,
+        controls:[
+          {label:'baseFrequency', type:'range', min:.005, max:.05, step:.001, value:.015, target:'cl-turb', attr:'baseFrequency'},
+          {label:'numOctaves', type:'range', min:1, max:6, step:1, value:4, target:'cl-turb', attr:'numOctaves'},
+          {label:'alpha gain', type:'range', min:.1, max:1, step:.05, value:.6, custom:'cloudAlpha'}
+        ],
+        code:`<feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="4" result="noise"/>\n<feColorMatrix in="noise" type="matrix"\n  values="1 0 0 0 .12  0 1 0 0 .16  0 0 1 0 .28  0 0 0 .6 -.1"/>`
+      },
+      {
+        id:'waterRipples', category:'core', title:'Water Ripples / Liquid Light', tags:['turbulence','diffuse'],
+        search:'water ripple liquid caustic pool ocean energy lighting',
+        caption:'Sharper turbulence becomes a height field for diffuse light, producing an inexpensive suggestion of liquid caustics.',
+        preview:`<rect width="100%" height="100%" fill="#014d88"/><rect width="100%" height="100%" filter="url(#waterRipples)" opacity=".94"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="27" font-weight="850" opacity=".75">LIQUID LIGHT</text>`,
+        controls:[
+          {label:'baseFreq X', type:'range', min:.01, max:.2, step:.01, value:.05, custom:'waterX'},
+          {label:'baseFreq Y', type:'range', min:.01, max:.3, step:.01, value:.1, custom:'waterY'},
+          {label:'surfaceScale', type:'range', min:.5, max:10, step:.5, value:3, target:'wr-light', attr:'surfaceScale'},
+          {label:'light color', type:'color', value:'#4fc3f7', target:'wr-light', attr:'lighting-color'}
+        ],
+        code:`<feTurbulence type="turbulence" baseFrequency="0.05 0.1" numOctaves="2" result="noise"/>\n<feDiffuseLighting in="noise" surfaceScale="3" lighting-color="#4fc3f7">\n  <feDistantLight azimuth="45" elevation="30"/>\n</feDiffuseLighting>`
+      },
+      {
+        id:'gooey', category:'core', title:'The Gooey Effect', tags:['blur','alpha contrast'],
+        search:'gooey blob liquid merge sticky metaball shape morph',
+        caption:'Blur softens neighboring alpha fields; a steep alpha transfer snaps the merged edge back into a coherent silhouette.',
+        preview:`<rect width="100%" height="100%" fill="#080910"/><g filter="url(#gooey)" class="animated-preview"><circle class="blob-a" cx="170" cy="112" r="40" fill="url(#blobRed)"/><circle class="blob-b" cx="232" cy="132" r="34" fill="url(#blobBlue)"/><circle class="blob-c" cx="205" cy="84" r="31" fill="url(#blobGold)"/></g>`,
+        controls:[
+          {label:'stdDeviation', type:'range', min:1, max:20, step:1, value:10, target:'goo-blur', attr:'stdDeviation'},
+          {label:'alphaMult', type:'range', min:5, max:30, step:1, value:18, custom:'gooMult'},
+          {label:'alphaSub', type:'range', min:-15, max:0, step:1, value:-7, custom:'gooSub'}
+        ],
+        code:`<feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>\n<feColorMatrix in="blur" type="matrix"\n  values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo"/>\n<feComposite in="SourceGraphic" in2="goo" operator="atop"/>`
+      },
+      {
+        id:'heatHaze', category:'core', title:'Heat Haze / Frosted Glass', tags:['displacement','distortion'],
+        search:'heat haze frost glass displacement warp distortion refraction',
+        caption:'A noise field becomes a vector map. Red and green channels independently perturb horizontal and vertical position.',
+        preview:`<rect width="100%" height="100%" fill="url(#heatGrad)"/><g filter="url(#heatHaze)"><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="34" font-weight="900">DISTORT</text></g>`,
+        controls:[
+          {label:'baseFrequency', type:'range', min:.005, max:.1, step:.005, value:.02, target:'hh-turb', attr:'baseFrequency'},
+          {label:'scale', type:'range', min:1, max:50, step:1, value:20, target:'hh-disp', attr:'scale'},
+          {label:'numOctaves', type:'range', min:1, max:5, step:1, value:2, target:'hh-turb', attr:'numOctaves'}
+        ],
+        code:`<feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" result="noise"/>\n<feDisplacementMap in="SourceGraphic" in2="noise" scale="20"\n  xChannelSelector="R" yChannelSelector="G"/>`
+      },
+      {
+        id:'squiggle', category:'core', title:'Squiggly / Hand-Drawn Text', tags:['seed cycle','displace'],
+        search:'squiggle hand drawn jitter text rough animated wobble',
+        caption:'Three seeded displacement fields cycle discretely, creating a handmade line wobble while the text remains real SVG text.',
+        preview:`<rect width="100%" height="100%" fill="#080910"/><text class="squiggly-text animated-preview" x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#3de7ff" font-size="38" font-weight="900">SQUIGGLE</text>`,
+        static:'Three filter instances use the same pipeline and different seeds.', seeds:['seed = 1','seed = 2','seed = 3'],
+        code:`@keyframes squiggle {\n  0%,100% { filter: url(#squiggle1); }\n  33% { filter: url(#squiggle2); }\n  66% { filter: url(#squiggle3); }\n}`
+      },
+      {
+        id:'specular', category:'advanced', title:'Specular Lighting — Metallic / Wet', tags:['specular','screen'],
+        search:'metal wet gloss shine nacre chrome specular lighting reflective',
+        caption:'Specular lighting generates narrow or broad highlights from a noise height field; screen blending returns them to the base material.',
+        preview:`<rect width="100%" height="100%" fill="url(#metalGrad)"/><rect width="100%" height="100%" filter="url(#specular)" opacity=".96"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="28" font-weight="900" letter-spacing="4">METAL</text>`,
+        controls:[
+          {label:'baseFrequency', type:'range', min:.005, max:.1, step:.005, value:.03, target:'sp-turb', attr:'baseFrequency'},
+          {label:'surfaceScale', type:'range', min:.5, max:10, step:.5, value:3, target:'sp-light', attr:'surfaceScale'},
+          {label:'specularConst', type:'range', min:.1, max:5, step:.1, value:1.5, target:'sp-light', attr:'specularConstant'},
+          {label:'specularExp', type:'range', min:1, max:60, step:1, value:20, target:'sp-light', attr:'specularExponent'},
+          {label:'light Z', type:'range', min:50, max:400, step:10, value:200, target:'sp-pl', attr:'z'},
+          {label:'blend mode', type:'select', value:'screen', options:['screen','multiply','overlay','lighten','darken'], target:'sp-blend', attr:'mode'}
+        ],
+        code:`<feSpecularLighting in="noise" surfaceScale="3"\n  specularConstant="1.5" specularExponent="20" result="specular">\n  <fePointLight x="200" y="100" z="200"/>\n</feSpecularLighting>\n<feBlend in="composite" in2="SourceGraphic" mode="screen"/>`
+      },
+      {
+        id:'spotlight', category:'advanced', title:'Spotlight — Focused Cone', tags:['spotLight','directional'],
+        search:'spotlight stage cone focused beam theatre lighting aim',
+        caption:'A three-dimensional light position and target define a cone. The limiting angle controls whether it reads as a pin spot or broad wash.',
+        preview:`<rect width="100%" height="100%" fill="#0f1120"/><g filter="url(#spotlight)"><rect width="100%" height="100%" fill="#181c34"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#ffeb3b" font-size="27" font-weight="900">SPOTLIGHT</text></g>`,
+        controls:[
+          {label:'coneAngle', type:'range', min:5, max:90, step:5, value:30, target:'sl-spot', attr:'limitingConeAngle', suffix:'°'},
+          {label:'light X', type:'range', min:0, max:400, step:10, value:100, target:'sl-spot', attr:'x'},
+          {label:'light Y', type:'range', min:0, max:400, step:10, value:100, target:'sl-spot', attr:'y'},
+          {label:'light Z', type:'range', min:50, max:500, step:10, value:300, target:'sl-spot', attr:'z'},
+          {label:'pointsAt X', type:'range', min:0, max:400, step:10, value:200, target:'sl-spot', attr:'pointsAtX'},
+          {label:'pointsAt Y', type:'range', min:0, max:400, step:10, value:200, target:'sl-spot', attr:'pointsAtY'}
+        ],
+        code:`<feSpotLight x="100" y="100" z="300"\n  pointsAtX="200" pointsAtY="200" pointsAtZ="0"\n  limitingConeAngle="30"/>`
+      },
+      {
+        id:'morphology', category:'advanced', title:'Morphology — Dilate / Erode', tags:['morphology','outline'],
+        search:'morphology dilate erode thick thin outline alpha shape',
+        caption:'Morphology operates on silhouette thickness. This version fixes outline coloring by flooding a real color and masking it with the expanded alpha.',
+        preview:`<rect width="100%" height="100%" fill="#080910"/><g filter="url(#morphology)"><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#10131e" font-size="46" font-weight="950">THICK</text></g>`,
+        controls:[
+          {label:'operator', type:'select', value:'dilate', options:['dilate','erode'], target:'morph-op', attr:'operator'},
+          {label:'radius', type:'range', min:0, max:10, step:.5, value:3, target:'morph-op', attr:'radius'},
+          {label:'outline color', type:'color', value:'#3de7ff', target:'morph-flood', attr:'flood-color'}
+        ],
+        code:`<feMorphology in="SourceGraphic" operator="dilate" radius="3" result="morph"/>\n<feFlood flood-color="#3de7ff" result="color"/>\n<feComposite in="color" in2="morph" operator="in" result="outline"/>\n<feMerge>…</feMerge>`
+      },
+      {
+        id:'chromatic', category:'advanced', title:'Chromatic Aberration', tags:['offset','RGB split'],
+        search:'chromatic aberration rgb split lens prism color separation offset',
+        caption:'Independent channel offsets create a controllable prismatic edge. The clean source remains available rather than being re-composited over the result.',
+        preview:`<rect width="100%" height="100%" fill="#080910"/><g filter="url(#chromatic)"><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="34" font-weight="900">CHROMA</text></g>`,
+        controls:[
+          {label:'red offset X', type:'range', min:-15, max:15, step:1, value:4, target:'chr-r-off', attr:'dx'},
+          {label:'red offset Y', type:'range', min:-15, max:15, step:1, value:2, target:'chr-r-off', attr:'dy'},
+          {label:'blue offset X', type:'range', min:-15, max:15, step:1, value:-4, target:'chr-b-off', attr:'dx'},
+          {label:'blue offset Y', type:'range', min:-15, max:15, step:1, value:-2, target:'chr-b-off', attr:'dy'}
+        ],
+        code:`<feOffset in="SourceGraphic" dx="4" dy="2" result="red-offset"/>\n<feOffset in="SourceGraphic" dx="-4" dy="-2" result="blue-offset"/>\n<!-- isolate R/G/B with feColorMatrix, then screen blend -->`
+      },
+      {
+        id:'convolve', category:'advanced', title:'Convolution Matrix', tags:['kernel','image processing'],
+        search:'convolution sharpen emboss edge detect blur kernel pixels',
+        caption:'A 3×3 kernel weighs each pixel against its neighbors. Presets now also synchronize the visible divisor and bias controls.',
+        preview:`<defs><radialGradient id="convG"><stop stop-color="#ff7d7d"/><stop offset=".55" stop-color="#8de99a"/><stop offset="1" stop-color="#3de7ff"/></radialGradient></defs><rect width="100%" height="100%" fill="#080910"/><g filter="url(#convolve)"><circle cx="200" cy="128" r="78" fill="url(#convG)"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="25" font-weight="900">KERNEL</text></g>`,
+        controls:[
+          {label:'preset', type:'select', value:'sharpen', options:['sharpen','emboss','edge','blur','identity'], custom:'convolvePreset'},
+          {label:'divisor', type:'range', min:.5, max:20, step:.5, value:1, target:'conv-matrix', attr:'divisor', id:'convDiv'},
+          {label:'bias', type:'range', min:-1, max:1, step:.1, value:0, target:'conv-matrix', attr:'bias', id:'convBias'}
+        ],
+        code:`<feConvolveMatrix order="3"\n  kernelMatrix="0 -1 0  -1 5 -1  0 -1 0"\n  divisor="1" bias="0" edgeMode="duplicate" preserveAlpha="true"/>`
+      },
+      {
+        id:'crt', category:'advanced', title:'CRT / Signal Distortion', tags:['anisotropic','displace'],
+        search:'crt glitch signal scanline distortion television analog',
+        caption:'Very different horizontal and vertical frequencies create a directional signal wobble without requiring random DOM slicing.',
+        preview:`<rect width="100%" height="100%" fill="#050906"/><g filter="url(#crt)"><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#72ff8b" font-family="monospace" font-size="34" font-weight="900">SIGNAL</text></g>`,
+        controls:[
+          {label:'baseFreq X', type:'range', min:.1, max:2, step:.1, value:.8, custom:'crtX'},
+          {label:'baseFreq Y', type:'range', min:.001, max:.05, step:.001, value:.005, custom:'crtY'},
+          {label:'scale', type:'range', min:1, max:30, step:1, value:8, target:'crt-disp', attr:'scale'},
+          {label:'red boost', type:'range', min:.5, max:2, step:.1, value:1.2, custom:'crtR'}
+        ],
+        code:`<feTurbulence type="fractalNoise" baseFrequency="0.8 0.005" numOctaves="2" result="noise"/>\n<feDisplacementMap in="SourceGraphic" in2="noise" scale="8"/>\n<feColorMatrix values="1.2 0 0 0 0 …"/>`
+      },
+      {
+        id:'shadowGlow', category:'advanced', title:'Drop Shadow + Glow', tags:['flood','merge'],
+        search:'shadow glow neon halo flood blur merge light',
+        caption:'Shadow and glow are now separately colored before being merged, avoiding the original gray offset blur masquerading as a finished shadow.',
+        preview:`<rect width="100%" height="100%" fill="#080910"/><g filter="url(#shadowGlow)"><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="31" font-weight="900">GLOW</text></g>`,
+        controls:[
+          {label:'stdDeviation', type:'range', min:1, max:15, step:.5, value:4, target:'sg-blur', attr:'stdDeviation'},
+          {label:'offset X', type:'range', min:-10, max:10, step:1, value:4, target:'sg-off', attr:'dx'},
+          {label:'offset Y', type:'range', min:-10, max:10, step:1, value:4, target:'sg-off', attr:'dy'},
+          {label:'glow color', type:'color', value:'#3de7ff', target:'sg-flood', attr:'flood-color'},
+          {label:'glow opacity', type:'range', min:.1, max:1, step:.05, value:.65, target:'sg-flood', attr:'flood-opacity'}
+        ],
+        code:`<feFlood flood-color="#000" flood-opacity=".55" result="shadowColor"/>\n<feComposite in="shadowColor" in2="offsetBlur" operator="in" result="shadow"/>\n<feFlood flood-color="#3de7ff" result="glowColor"/>\n<feMerge>…</feMerge>`
+      },
+      {
+        id:'levels', category:'advanced', title:'Component Transfer — Levels', tags:['transfer','channels'],
+        search:'component transfer levels contrast brightness channels color grade',
+        caption:'Per-channel linear functions expose a compact color-grading model: slope changes contrast; intercept shifts channel brightness.',
+        preview:`<defs><linearGradient id="levelsG"><stop stop-color="#ff7d7d"/><stop offset=".5" stop-color="#8de99a"/><stop offset="1" stop-color="#8aa8ff"/></linearGradient></defs><rect width="100%" height="100%" fill="#080910"/><g filter="url(#levels)"><rect x="45" y="62" width="310" height="126" rx="18" fill="url(#levelsG)"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="24" font-weight="900">LEVELS</text></g>`,
+        controls:[
+          {label:'red slope', type:'range', min:0, max:3, step:.1, value:1, target:'lvl-r', attr:'slope'},
+          {label:'red intercept', type:'range', min:-.5, max:.5, step:.05, value:0, target:'lvl-r', attr:'intercept'},
+          {label:'green slope', type:'range', min:0, max:3, step:.1, value:1, target:'lvl-g', attr:'slope'},
+          {label:'blue slope', type:'range', min:0, max:3, step:.1, value:1, target:'lvl-b', attr:'slope'},
+          {label:'alpha slope', type:'range', min:0, max:3, step:.1, value:1, target:'lvl-a', attr:'slope'}
+        ],
+        code:`<feComponentTransfer>\n  <feFuncR type="linear" slope="1" intercept="0"/>\n  <feFuncG type="linear" slope="1" intercept="0"/>\n  <feFuncB type="linear" slope="1" intercept="0"/>\n</feComponentTransfer>`
+      },
+      {
+        id:'waterAnim', category:'animated', title:'Animated Water — Seed Cycling', tags:['seed cycle','flow'],
+        search:'animated water flow seed cycle motion ripple',
+        caption:'Discrete seeded states create low-cost perceived flow. Motion can be paused globally and is suppressed while the card is offscreen.',
+        preview:`<rect width="100%" height="100%" fill="#064e78"/><g class="water-animated animated-preview"><rect width="100%" height="100%" fill="#42c7ec" opacity=".52"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="31" font-weight="900">FLOW</text></g>`,
+        static:'Four seeded displacement filters cycle with step timing.', seeds:['seed = 1','seed = 2','seed = 3','seed = 4'],
+        code:`@keyframes waterAnim {\n  0%,100% { filter: url(#waterAnim1); }\n  25% { filter: url(#waterAnim2); }\n  50% { filter: url(#waterAnim3); }\n  75% { filter: url(#waterAnim4); }\n}`
+      },
+      {
+        id:'fireAnim', category:'animated', title:'Animated Fire — Turbulence Palette', tags:['seed cycle','color matrix'],
+        search:'animated fire flame flicker turbulence orange heat',
+        caption:'A seeded turbulence field is remapped toward warm channels. The result is intentionally illustrative rather than physically simulated flame.',
+        preview:`<rect width="100%" height="100%" fill="#210802"/><g class="fire-animated animated-preview"><rect width="100%" height="100%" fill="url(#fireGrad)" opacity=".72"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="31" font-weight="900">FIRE</text></g>`,
+        static:'Three turbulence seeds shift at a faster cadence than the water recipe.', seeds:['seed = 1','seed = 2','seed = 3'],
+        code:`@keyframes fireAnim {\n  0%,100% { filter: url(#fire1); }\n  33% { filter: url(#fire2); }\n  66% { filter: url(#fire3); }\n}`
+      },
+      {
+        id:'patternTile', category:'animated', title:'feImage + feTile — Pattern Mask', tags:['image','tile'],
+        search:'pattern tile image repeat mask texture motif fill',
+        caption:'A tiny inline SVG becomes a repeatable image source, tiles across the region, and is clipped to the source silhouette.',
+        preview:`<rect width="100%" height="100%" fill="#080910"/><g filter="url(#patternTile)"><rect x="74" y="48" width="252" height="156" rx="20" fill="#292d3d"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="24" font-weight="900">PATTERN</text></g>`,
+        static:'The source tile is an inline data URI, so the entire lab remains portable.', seeds:['24 × 24 tile','feTile repeat','SourceGraphic mask'],
+        code:`<feImage href="data:image/svg+xml,…" width="24" height="24" result="tile"/>\n<feTile in="tile" result="tiled"/>\n<feComposite in="tiled" in2="SourceGraphic" operator="in" result="patterned"/>`
+      },
+
+      {
+        id:'nacreLaminate', category:'material', family:'optical', title:'Nacre Laminate', tags:['pearl','specular','layered light'],
+        search:'nacre pearl abalone iridescent laminate thin film optical shell spectral',
+        caption:'Directional grain, softly colorized noise, and a narrow specular response produce layered pearl depth without pretending to be a full thin-film shader.',
+        preview:`<rect width="100%" height="100%" fill="url(#nacreBase)"/><rect x="36" y="36" width="328" height="188" rx="44" fill="#dff8f2" opacity=".72" filter="url(#nacreLaminate)"/><path d="M55 176C122 98 182 210 346 78" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="18" filter="url(#nacreLaminate)"/><text x="50%" y="51%" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="25" font-weight="900" letter-spacing="3">NACRE</text>`,
+        controls:[
+          {label:'grain X',type:'range',min:.004,max:.05,step:.002,value:.012,custom:'nacreX'},
+          {label:'grain Y',type:'range',min:.02,max:.2,step:.01,value:.08,custom:'nacreY'},
+          {label:'surfaceScale',type:'range',min:1,max:10,step:.5,value:5,target:'nacre-light',attr:'surfaceScale'},
+          {label:'specularExp',type:'range',min:4,max:60,step:2,value:28,target:'nacre-light',attr:'specularExponent'},
+          {label:'azimuth',type:'range',min:0,max:360,step:15,value:225,target:'nacre-dl',attr:'azimuth',suffix:'°'}
+        ],
+        code:`<feTurbulence type="fractalNoise" baseFrequency=".012 .08" numOctaves="4" result="grain"/>\n<feColorMatrix in="grain" values="…pearl color field…" result="pearl"/>\n<feSpecularLighting in="grain" surfaceScale="5" specularExponent="28" result="shine">…</feSpecularLighting>\n<feBlend in="SourceGraphic" in2="pearl" mode="screen"/>`
+      },
+      {
+        id:'washiFiber', category:'material', family:'tactile', title:'Washi Fiber Field', tags:['fiber','paper','directional noise'],
+        search:'washi japanese paper fiber deckle linen pulp handmade tactile',
+        caption:'Anisotropic noise stretches into visible pulp fibers; diffuse relief keeps it handmade rather than reading as a flat texture overlay.',
+        preview:`<rect width="100%" height="100%" fill="#f2e8d4"/><rect width="100%" height="100%" fill="#f8f0df" filter="url(#washiFiber)"/><path d="M56 64H344M56 100H344M56 136H344M56 172H344" stroke="#6b5947" stroke-opacity=".14"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#5b4b3d" font-family="Georgia,serif" font-size="28" font-weight="700">WASHI</text>`,
+        controls:[
+          {label:'fiber X',type:'range',min:.002,max:.03,step:.001,value:.006,custom:'washiX'},
+          {label:'fiber Y',type:'range',min:.1,max:.9,step:.02,value:.48,custom:'washiY'},
+          {label:'alpha slope',type:'range',min:.2,max:1.5,step:.05,value:.72,target:'washi-alpha',attr:'slope'},
+          {label:'surfaceScale',type:'range',min:.5,max:5,step:.25,value:1.8,target:'washi-light',attr:'surfaceScale'}
+        ],
+        code:`<feTurbulence type="fractalNoise" baseFrequency=".006 .48" numOctaves="4" result="fiber"/>\n<feComponentTransfer in="fiber"><feFuncA type="linear" slope=".72" intercept="-.08"/></feComponentTransfer>\n<feDiffuseLighting in="fiber" surfaceScale="1.8">…</feDiffuseLighting>`
+      },
+      {
+        id:'lithoGrain', category:'material', family:'pattern', title:'Lithographic Grain', tags:['threshold','ink','print'],
+        search:'lithographic halftone stipple ink print grain editorial black ivory',
+        caption:'Thresholded high-frequency noise creates irregular ink deposition: closer to worn lithographic grain than a mathematically perfect dot screen.',
+        preview:`<rect width="100%" height="100%" fill="#f4efdf"/><g filter="url(#lithoGrain)"><circle cx="115" cy="130" r="72" fill="#181818"/><rect x="187" y="60" width="150" height="140" rx="6" fill="#e65353"/><text x="262" y="133" text-anchor="middle" dominant-baseline="middle" fill="#f4efdf" font-size="27" font-weight="950">LITHO</text></g>`,
+        controls:[
+          {label:'grain scale',type:'range',min:.08,max:.9,step:.02,value:.42,target:'litho-turb',attr:'baseFrequency'},
+          {label:'octaves',type:'range',min:1,max:4,step:1,value:2,target:'litho-turb',attr:'numOctaves'},
+          {label:'threshold mult',type:'range',min:5,max:30,step:1,value:16,custom:'lithoMult'},
+          {label:'threshold sub',type:'range',min:-15,max:-1,step:.2,value:-7.6,custom:'lithoSub'}
+        ],
+        code:`<feTurbulence type="fractalNoise" baseFrequency=".42" numOctaves="2" result="grain"/>\n<feColorMatrix in="grain" values="0 … 0 0 0 16 -7.6" result="ink"/>\n<feComposite in="ink" in2="SourceGraphic" operator="in"/>`
+      },
+      {
+        id:'stainedGlass', category:'material', family:'optical', title:'Stained-Glass Light', tags:['prismatic','displacement','specular'],
+        search:'stained glass mosaic cathedral prismatic panes lead light jewel',
+        caption:'A colorized turbulence field, restrained displacement, and a hard highlight create luminous pane variation for geometric artwork and masks.',
+        preview:`<rect width="100%" height="100%" fill="#090a12"/><g filter="url(#stainedGlass)"><path d="M40 220 115 34l58 92 54-88 133 182Z" fill="url(#glassBase)" stroke="#10121a" stroke-width="11"/><circle cx="200" cy="125" r="62" fill="#f5cd60" stroke="#10121a" stroke-width="9"/><path d="M200 63v124M138 125h124" stroke="#10121a" stroke-width="8"/></g>`,
+        controls:[
+          {label:'cell scale',type:'range',min:.005,max:.08,step:.003,value:.018,target:'glass-turb',attr:'baseFrequency'},
+          {label:'displacement',type:'range',min:0,max:24,step:1,value:7,target:'glass-disp',attr:'scale'},
+          {label:'surfaceScale',type:'range',min:.5,max:8,step:.5,value:3,target:'glass-light',attr:'surfaceScale'},
+          {label:'highlight',type:'range',min:.1,max:2.5,step:.1,value:.9,target:'glass-light',attr:'specularConstant'}
+        ],
+        code:`<feTurbulence type="fractalNoise" baseFrequency=".018" result="noise"/>\n<feDisplacementMap in="SourceGraphic" in2="noise" scale="7" result="warped"/>\n<feColorMatrix in="noise" values="…jewel field…"/>\n<feSpecularLighting in="noise" specularExponent="24">…</feSpecularLighting>`
+      },
+      {
+        id:'brassInlay', category:'material', family:'structural', title:'Brass Inlay Edge', tags:['morphology','metal','outline'],
+        search:'brass inlay gold edge carved relief ornament metallic outline',
+        caption:'Two morphology passes isolate a true border ring, which is flooded with brass and given a separate specular highlight before merging with the source.',
+        preview:`<rect width="100%" height="100%" fill="#11131b"/><g filter="url(#brassInlay)"><path d="M84 180V78l116-38 116 38v102l-116 40Z" fill="#242a35"/><path d="m150 145 50-82 50 82-50 42Z" fill="#663d58"/></g><text x="50%" y="54%" text-anchor="middle" fill="#f6e7b7" font-size="19" font-weight="850">INLAY</text>`,
+        controls:[
+          {label:'outer radius',type:'range',min:.5,max:9,step:.5,value:3,target:'brass-outer',attr:'radius'},
+          {label:'inner radius',type:'range',min:0,max:5,step:.5,value:1,target:'brass-inner',attr:'radius'},
+          {label:'brass color',type:'color',value:'#d2a84a',target:'brass-flood',attr:'flood-color'},
+          {label:'specularConst',type:'range',min:.1,max:3,step:.1,value:1.4,target:'brass-light',attr:'specularConstant'}
+        ],
+        code:`<feMorphology in="SourceAlpha" operator="dilate" radius="3" result="outer"/>\n<feMorphology in="SourceAlpha" operator="erode" radius="1" result="inner"/>\n<feComposite in="outer" in2="inner" operator="xor" result="ring"/>\n<feFlood flood-color="#d2a84a"/>`
+      },
+      {
+        id:'guanineCrystal', category:'material', family:'optical', title:'Guanine Crystal Facets', tags:['facets','iridescence','flash'],
+        search:'guanine crystal chameleon iridophore lattice facet structural color prism',
+        caption:'An anisotropic turbulent height field becomes sharp optical facets with a mobile point-light flash—an artistic analogue for crystalline structural color.',
+        preview:`<rect width="100%" height="100%" fill="#090b18"/><g filter="url(#guanineCrystal)"><path d="M45 175 112 44l64 46 49-54 133 137-96 54-94-24-78 30Z" fill="url(#guanineBase)"/><circle cx="286" cy="84" r="42" fill="#c9fff5" opacity=".72"/></g><text x="50%" y="53%" text-anchor="middle" fill="#fff" font-size="21" font-weight="900" letter-spacing="2">CRYSTAL</text>`,
+        controls:[
+          {label:'facet X',type:'range',min:.01,max:.25,step:.005,value:.075,custom:'guanineX'},
+          {label:'facet Y',type:'range',min:.03,max:.45,step:.01,value:.18,custom:'guanineY'},
+          {label:'surfaceScale',type:'range',min:1,max:14,step:.5,value:7,target:'guanine-light',attr:'surfaceScale'},
+          {label:'specularExp',type:'range',min:4,max:70,step:2,value:34,target:'guanine-light',attr:'specularExponent'},
+          {label:'light X',type:'range',min:0,max:400,step:10,value:130,target:'guanine-point',attr:'x'}
+        ],
+        code:`<feTurbulence type="turbulence" baseFrequency=".075 .18" result="facets"/>\n<feColorMatrix in="facets" values="…iridescent field…"/>\n<feSpecularLighting in="facets" surfaceScale="7" specularExponent="34">\n  <fePointLight x="130" y="70" z="240"/>\n</feSpecularLighting>`
+      },
+      {
+        id:'mycelialBloom', category:'material', family:'living', title:'Mycelial Bloom Network', tags:['living system','threshold','glow'],
+        search:'mycelium fungal network roots veins branching living bioluminescent',
+        caption:'A narrow threshold extracts branching paths from fractal noise; morphology gives them body and a second blurred pass creates restrained bioluminescence.',
+        preview:`<rect width="100%" height="100%" fill="#06100b"/><g filter="url(#mycelialBloom)"><circle cx="112" cy="128" r="68" fill="#183527"/><circle cx="254" cy="104" r="82" fill="#234a36"/><circle cx="302" cy="184" r="48" fill="#102b20"/></g><text x="50%" y="51%" text-anchor="middle" fill="#e8fff0" font-size="23" font-weight="900">MYCELIUM</text>`,
+        controls:[
+          {label:'network scale',type:'range',min:.005,max:.09,step:.002,value:.027,target:'mycelium-turb',attr:'baseFrequency'},
+          {label:'threshold mult',type:'range',min:8,max:35,step:1,value:22,custom:'myceliumMult'},
+          {label:'threshold sub',type:'range',min:-18,max:-2,step:.2,value:-10.2,custom:'myceliumSub'},
+          {label:'thread radius',type:'range',min:0,max:3,step:.1,value:.65,target:'mycelium-morph',attr:'radius'},
+          {label:'glow',type:'range',min:0,max:7,step:.2,value:2.2,target:'mycelium-glow',attr:'stdDeviation'}
+        ],
+        code:`<feTurbulence type="fractalNoise" baseFrequency=".027" numOctaves="5" result="field"/>\n<feColorMatrix in="field" values="0 … 0 0 0 22 -10.2" result="veins"/>\n<feMorphology in="veins" operator="dilate" radius=".65"/>\n<feFlood flood-color="#9bffb1"/>`
+      },
+      {
+        id:'marbleVein', category:'material', family:'tactile', title:'Carved Marble Vein', tags:['stone','vein','displacement'],
+        search:'marble stone onyx carved vein mineral geological white black tactile',
+        caption:'Stretched fractal noise is thresholded into mineral veins, then displaced by its own underlying stone field for less procedural regularity.',
+        preview:`<rect width="100%" height="100%" fill="#e7e3dc"/><rect x="30" y="28" width="340" height="204" rx="32" fill="#f6f3ec" filter="url(#marbleVein)"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#30313a" font-family="Georgia,serif" font-size="27" font-weight="800">MARBLE</text>`,
+        controls:[
+          {label:'vein X',type:'range',min:.003,max:.05,step:.002,value:.012,custom:'marbleX'},
+          {label:'vein Y',type:'range',min:.01,max:.2,step:.005,value:.07,custom:'marbleY'},
+          {label:'threshold mult',type:'range',min:5,max:24,step:1,value:13,custom:'marbleMult'},
+          {label:'threshold sub',type:'range',min:-12,max:-1,step:.1,value:-6.3,custom:'marbleSub'},
+          {label:'vein warp',type:'range',min:0,max:35,step:1,value:14,target:'marble-disp',attr:'scale'}
+        ],
+        code:`<feTurbulence type="fractalNoise" baseFrequency=".012 .07" numOctaves="4" result="stone"/>\n<feColorMatrix in="stone" values="…threshold veins…" result="veins"/>\n<feDisplacementMap in="veins" in2="stone" scale="14"/>`
+      }
+
+    ];
+
+    const GROUPS = {
+      material: { title:'Material atelier — curated tactile, optical & living families', note:'8 recipes', color:'var(--green)' },
+      core: { title:'Core primitives — noise, light & displacement', note:'7 recipes', color:'var(--cyan)' },
+      advanced: { title:'Advanced effects — lighting, morphology & image processing', note:'8 recipes', color:'var(--violet)' },
+      animated: { title:'Animated & pattern-based filters', note:'3 recipes', color:'var(--gold)' }
+    };
+
+    const FAMILY_BY_ID = {
+      roughPaper:'tactile', woodGrain:'tactile', clouds:'fluid', waterRipples:'fluid', gooey:'fluid', heatHaze:'optical', squiggle:'tactile',
+      specular:'optical', spotlight:'optical', morphology:'structural', chromatic:'chromatic', convolve:'structural', crt:'chromatic', shadowGlow:'optical', levels:'chromatic',
+      waterAnim:'animated', fireAnim:'animated', patternTile:'pattern'
+    };
+    const FAMILY_LABELS = {
+      tactile:'Tactile & fibrous', optical:'Optical & luminous', fluid:'Fluid & atmospheric', chromatic:'Chromatic & signal',
+      structural:'Structural & shape', pattern:'Pattern & print', living:'Living systems', animated:'Animated states'
+    };
+    const FAMILY_COLORS = {tactile:'var(--gold)',optical:'var(--cyan)',fluid:'var(--blue)',chromatic:'var(--violet)',structural:'var(--coral)',pattern:'var(--text-soft)',living:'var(--green)',animated:'var(--gold)'};
+    const FILTER_REF_OVERRIDES = {squiggle:'squiggle1',waterAnim:'waterAnim1',fireAnim:'fire1'};
+
+    const NAMED_PRESETS = {
+      roughPaper: {
+        'Deckle soft': {'baseFrequency':'.025','numOctaves':'6','surfaceScale':'1.25','elevation':'72'},
+        'Pressed cotton': {'baseFrequency':'.065','numOctaves':'4','surfaceScale':'3.5','elevation':'48'},
+        'Chalk mineral': {'baseFrequency':'.11','numOctaves':'3','surfaceScale':'5','elevation':'34'}
+      },
+      woodGrain: {
+        'Quarter-sawn': {'baseFreq X':'.008','baseFreq Y':'.52','numOctaves':'4','azimuth':'90'},
+        'Brushed brass': {'baseFreq X':'.022','baseFreq Y':'.72','numOctaves':'2','azimuth':'18'},
+        'Soft cedar': {'baseFreq X':'.014','baseFreq Y':'.28','numOctaves':'5','azimuth':'120'}
+      },
+      heatHaze: {
+        'Breath glass': {'baseFrequency':'.012','scale':'9','numOctaves':'3'},
+        'Summer asphalt': {'baseFrequency':'.028','scale':'28','numOctaves':'2'},
+        'Liquid lens': {'baseFrequency':'.055','scale':'40','numOctaves':'4'}
+      },
+      specular: {
+        'Wet lacquer': {'baseFrequency':'.018','surfaceScale':'2.5','specularConst':'2.1','specularExp':'42','light Z':'180','blend mode':'screen'},
+        'Hammered metal': {'baseFrequency':'.075','surfaceScale':'7','specularConst':'1.2','specularExp':'12','light Z':'280','blend mode':'overlay'},
+        'Pearl satin': {'baseFrequency':'.026','surfaceScale':'3.5','specularConst':'.8','specularExp':'24','light Z':'230','blend mode':'screen'}
+      },
+      chromatic: {
+        'Prism whisper': {'red offset X':'2','red offset Y':'0','blue offset X':'-2','blue offset Y':'0'},
+        'Lens fracture': {'red offset X':'9','red offset Y':'4','blue offset X':'-9','blue offset Y':'-4'},
+        'Vertical spectrum': {'red offset X':'0','red offset Y':'7','blue offset X':'0','blue offset Y':'-7'}
+      },
+      shadowGlow: {
+        'Pearl halo': {'stdDeviation':'6','offset X':'1','offset Y':'3','glow color':'#baf7ff','glow opacity':'.48'},
+        'Neon seam': {'stdDeviation':'3','offset X':'5','offset Y':'5','glow color':'#dc8cff','glow opacity':'.85'},
+        'Soft ember': {'stdDeviation':'9','offset X':'2','offset Y':'6','glow color':'#ff9a72','glow opacity':'.44'}
+      },
+      nacreLaminate: {
+        'Abalone ridge': {'grain X':'.009','grain Y':'.11','surfaceScale':'7','specularExp':'38','azimuth':'225'},
+        'Pearl veil': {'grain X':'.018','grain Y':'.055','surfaceScale':'2.5','specularExp':'18','azimuth':'300'},
+        'Shell fracture': {'grain X':'.026','grain Y':'.16','surfaceScale':'8.5','specularExp':'52','azimuth':'145'}
+      },
+      washiFiber: {
+        'Kozo fine': {'fiber X':'.004','fiber Y':'.62','alpha slope':'.56','surfaceScale':'1.2'},
+        'Deckle coarse': {'fiber X':'.013','fiber Y':'.31','alpha slope':'1.1','surfaceScale':'3.2'},
+        'Pressed linen': {'fiber X':'.021','fiber Y':'.78','alpha slope':'.42','surfaceScale':'2.1'}
+      },
+      lithoGrain: {
+        'Fine stipple': {'grain scale':'.62','octaves':'1','threshold mult':'20','threshold sub':'-9.2'},
+        'Worn plate': {'grain scale':'.26','octaves':'3','threshold mult':'12','threshold sub':'-5.4'},
+        'Heavy ink': {'grain scale':'.44','octaves':'2','threshold mult':'25','threshold sub':'-10.6'}
+      },
+      stainedGlass: {
+        'Cathedral calm': {'cell scale':'.012','displacement':'3','surfaceScale':'2','highlight':'.55'},
+        'Jewel fracture': {'cell scale':'.036','displacement':'15','surfaceScale':'5.5','highlight':'1.6'},
+        'Mosaic shimmer': {'cell scale':'.055','displacement':'6','surfaceScale':'4','highlight':'1.15'}
+      },
+      guanineCrystal: {
+        'Relaxed blue': {'facet X':'.055','facet Y':'.14','surfaceScale':'5','specularExp':'28','light X':'105'},
+        'Excited spectrum': {'facet X':'.11','facet Y':'.26','surfaceScale':'9','specularExp':'46','light X':'260'},
+        'Platelet flash': {'facet X':'.16','facet Y':'.34','surfaceScale':'12','specularExp':'62','light X':'185'}
+      },
+      mycelialBloom: {
+        'Fine hyphae': {'network scale':'.041','threshold mult':'27','threshold sub':'-12.8','thread radius':'.35','glow':'1.1'},
+        'Fruit network': {'network scale':'.018','threshold mult':'17','threshold sub':'-7.8','thread radius':'1.1','glow':'3.6'},
+        'Biolume web': {'network scale':'.029','threshold mult':'24','threshold sub':'-10.8','thread radius':'.8','glow':'5.4'}
+      },
+      marbleVein: {
+        'Carrara fine': {'vein X':'.008','vein Y':'.09','threshold mult':'16','threshold sub':'-7.8','vein warp':'8'},
+        'Onyx storm': {'vein X':'.024','vein Y':'.045','threshold mult':'10','threshold sub':'-4.6','vein warp':'28'},
+        'Calacatta bold': {'vein X':'.013','vein Y':'.13','threshold mult':'20','threshold sub':'-9.1','vein warp':'18'}
+      }
+    };
+
+    const state = {
+      woodX:'.01', woodY:'.4', waterX:'.05', waterY:'.1', gooMult:'18', gooSub:'-7', crtX:'.8', crtY:'.005', crtR:'1.2', crtG:'1.1', crtB:'1.3',
+      nacreX:'.012', nacreY:'.08', washiX:'.006', washiY:'.48', lithoMult:'16', lithoSub:'-7.6', guanineX:'.075', guanineY:'.18',
+      myceliumMult:'22', myceliumSub:'-10.2', marbleX:'.012', marbleY:'.07', marbleMult:'13', marbleSub:'-6.3'
+    };
+    const defaultState = {...state};
+    const convPresets = {
+      sharpen:{matrix:'0 -1 0  -1 5 -1  0 -1 0',divisor:'1',bias:'0'}, emboss:{matrix:'3 0 0  0 0 0  0 0 -3',divisor:'1',bias:'.5'},
+      edge:{matrix:'-1 -1 -1  -1 8 -1  -1 -1 -1',divisor:'1',bias:'0'}, blur:{matrix:'1 2 1  2 4 2  1 2 1',divisor:'16',bias:'0'}, identity:{matrix:'0 0 0  0 1 0  0 0 0',divisor:'1',bias:'0'}
+    };
+
+    const badgeColors = ['var(--green)','var(--coral)','var(--cyan)','var(--gold)','var(--violet)','var(--blue)'];
+    const groupsRoot = document.getElementById('groups');
+    const searchInput = document.getElementById('searchInput');
+    const categorySelect = document.getElementById('categorySelect');
+    const familySelect = document.getElementById('familySelect');
+    const resultCount = document.getElementById('resultCount');
+    const emptyState = document.getElementById('emptyState');
+    const toast = document.getElementById('toast');
+    const workspaceDock = document.getElementById('workspaceDock');
+    const compareDialog = document.getElementById('compareDialog');
+    const chainDialog = document.getElementById('chainDialog');
+
+    const safeStorage = {
+      get(key, fallback) { try { const value = localStorage.getItem(key); return value ? JSON.parse(value) : fallback; } catch { return fallback; } },
+      set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} }
+    };
+    const storedFavorites = safeStorage.get('svg-filter-atelier:favorites', []);
+    const storedChain = safeStorage.get('svg-filter-atelier:chain', []);
+    const favorites = new Set(Array.isArray(storedFavorites) ? storedFavorites : []);
+    let compareSelection = [];
+    let chainSelection = (Array.isArray(storedChain) ? storedChain : []).filter(id => FILTERS.some(filter => filter.id === id)).slice(0,4);
+    let favoritesOnly = false;
+    let applyingPreset = false;
+
+    function escapeHTML(value) { return String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char])); }
+    function familyOf(filter) { return filter.family || FAMILY_BY_ID[filter.id] || 'structural'; }
+    function filterRef(filter) { return FILTER_REF_OVERRIDES[filter.id] || filter.id; }
+
+    function controlHTML(filter, control, index) {
+      const id = `${filter.id}-control-${index}`;
+      const common = `id="${id}" data-filter="${filter.id}" data-index="${index}" data-label="${escapeHTML(control.label)}" data-default="${control.value}" data-target="${control.target || ''}" data-attr="${control.attr || ''}" data-custom="${control.custom || ''}"`;
+      if (control.type === 'select') {
+        const options = control.options.map(option => `<option value="${option}" ${option === control.value ? 'selected' : ''}>${option}</option>`).join('');
+        return `<div class="control"><label for="${id}">${control.label}</label><select ${common}>${options}</select><output for="${id}">${control.value}</output></div>`;
+      }
+      if (control.type === 'color') return `<div class="control"><label for="${id}">${control.label}</label><input type="color" value="${control.value}" ${common}/><output for="${id}">${control.value}</output></div>`;
+      return `<div class="control"><label for="${id}">${control.label}</label><input type="range" min="${control.min}" max="${control.max}" step="${control.step}" value="${control.value}" ${common}/><output for="${id}">${control.value}${control.suffix || ''}</output></div>`;
+    }
+
+    function presetHTML(filter) {
+      const presets = NAMED_PRESETS[filter.id];
+      if (!presets) return '';
+      return `<div class="preset-row"><label for="preset-${filter.id}">Material state</label><select id="preset-${filter.id}" data-preset-filter="${filter.id}"><option value="">Base defaults</option>${Object.keys(presets).map(name => `<option value="${escapeHTML(name)}">${name}</option>`).join('')}</select><small>${Object.keys(presets).length} presets</small></div>`;
+    }
+
+    function cardHTML(filter, index) {
+      const controls = filter.controls?.length ? `${presetHTML(filter)}<div class="controls">${filter.controls.map((control, i) => controlHTML(filter, control, i)).join('')}</div>` : `<div class="static-note">${filter.static || ''}${filter.seeds ? `<div class="seed-row">${filter.seeds.map(seed => `<span>${seed}</span>`).join('')}</div>` : ''}</div>`;
+      const family = familyOf(filter);
+      return `<article class="card" id="card-${filter.id}" data-id="${filter.id}" data-category="${filter.category}" data-family="${family}" data-search="${escapeHTML(`${filter.title} ${filter.tags.join(' ')} ${filter.search} ${FAMILY_LABELS[family]}`.toLowerCase())}" tabindex="-1">
+        <div class="card-header">
+          <div class="card-title-wrap"><span class="card-index">Recipe ${String(index + 1).padStart(2,'0')}</span><h3 class="card-title">${filter.title}</h3><span class="family-label" style="--family-color:${FAMILY_COLORS[family]}">${FAMILY_LABELS[family]}</span></div>
+          <div class="card-header-right"><div class="badges">${filter.tags.map((tag, i) => `<span class="badge" style="--badge-color:${badgeColors[i % badgeColors.length]}">${tag}</span>`).join('')}</div>
+            <div class="card-actions">
+              <button class="icon-button" type="button" data-favorite="${filter.id}" aria-pressed="${favorites.has(filter.id)}" aria-label="Favorite ${filter.title}" title="Favorite">${favorites.has(filter.id) ? '★' : '☆'}</button>
+              <button class="icon-button" type="button" data-compare="${filter.id}" aria-pressed="false" aria-label="Add ${filter.title} to comparison" title="Compare">◫</button>
+              <button class="icon-button" type="button" data-chain="${filter.id}" aria-pressed="${chainSelection.includes(filter.id)}" aria-label="Add ${filter.title} to filter chain" title="Add to chain">⛓</button>
+              <button class="icon-button" type="button" data-export-recipe="${filter.id}" aria-label="Export ${filter.title} as JSON" title="Export recipe JSON">JSON</button>
+            </div>
+          </div>
+        </div>
+        <div class="preview"><svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Live preview of ${filter.title}">${filter.preview}</svg><p class="preview-caption">${filter.caption}</p></div>
+        ${controls}
+        <details class="pipeline"><summary>View pipeline</summary><div class="pipeline-body"><button class="copy-button" type="button" data-copy="${filter.id}">Copy</button><pre id="code-${filter.id}"><code>${escapeHTML(filter.code)}</code></pre></div></details>
+      </article>`;
+    }
+
+    function render() {
+      let globalIndex = 0;
+      groupsRoot.innerHTML = Object.entries(GROUPS).map(([key, group]) => {
+        const filters = FILTERS.filter(item => item.category === key);
+        return `<section class="group" id="group-${key}" data-group="${key}" style="--group-color:${group.color}"><div class="group-heading"><h2>${group.title}</h2><span>${group.note}</span></div><div class="showcase">${filters.map(filter => cardHTML(filter, globalIndex++)).join('')}</div></section>`;
+      }).join('');
+      bindControls();
+      setupVisibilityObserver();
+      syncActionButtons();
+      applyFilters();
+      updateWorkspace();
+    }
+
+    function setAttribute(targetId, attr, value) { const target = document.getElementById(targetId); if (target) target.setAttribute(attr, value); }
+    function updatePair(targetId, a, b) { setAttribute(targetId, 'baseFrequency', `${a} ${b}`); }
+    function updateThreshold(targetId, mult, sub, rgb='0 0 0') {
+      const [r,g,b] = rgb.split(' ');
+      setAttribute(targetId,'values',`0 0 0 0 ${r}  0 0 0 0 ${g}  0 0 0 0 ${b}  0 0 0 ${mult} ${sub}`);
+    }
+
+    function applyCustom(name, value) {
+      switch (name) {
+        case 'woodX': state.woodX=value; updatePair('wg-turb',state.woodX,state.woodY); break;
+        case 'woodY': state.woodY=value; updatePair('wg-turb',state.woodX,state.woodY); break;
+        case 'waterX': state.waterX=value; updatePair('wr-turb',state.waterX,state.waterY); break;
+        case 'waterY': state.waterY=value; updatePair('wr-turb',state.waterX,state.waterY); break;
+        case 'cloudAlpha': setAttribute('cl-matrix','values',`1 0 0 0 .12  0 1 0 0 .16  0 0 1 0 .28  0 0 0 ${value} -.1`); break;
+        case 'gooMult': state.gooMult=value; updateGoo(); break;
+        case 'gooSub': state.gooSub=value; updateGoo(); break;
+        case 'crtX': state.crtX=value; updatePair('crt-turb',state.crtX,state.crtY); break;
+        case 'crtY': state.crtY=value; updatePair('crt-turb',state.crtX,state.crtY); break;
+        case 'crtR': state.crtR=value; setAttribute('crt-matrix','values',`${state.crtR} 0 0 0 0  0 ${state.crtG} 0 0 0  0 0 ${state.crtB} 0 0  0 0 0 1 0`); break;
+        case 'convolvePreset': setConvolvePreset(value); break;
+        case 'nacreX': state.nacreX=value; updatePair('nacre-turb',state.nacreX,state.nacreY); break;
+        case 'nacreY': state.nacreY=value; updatePair('nacre-turb',state.nacreX,state.nacreY); break;
+        case 'washiX': state.washiX=value; updatePair('washi-turb',state.washiX,state.washiY); break;
+        case 'washiY': state.washiY=value; updatePair('washi-turb',state.washiX,state.washiY); break;
+        case 'lithoMult': state.lithoMult=value; updateThreshold('litho-threshold',state.lithoMult,state.lithoSub); break;
+        case 'lithoSub': state.lithoSub=value; updateThreshold('litho-threshold',state.lithoMult,state.lithoSub); break;
+        case 'guanineX': state.guanineX=value; updatePair('guanine-turb',state.guanineX,state.guanineY); break;
+        case 'guanineY': state.guanineY=value; updatePair('guanine-turb',state.guanineX,state.guanineY); break;
+        case 'myceliumMult': state.myceliumMult=value; updateThreshold('mycelium-threshold',state.myceliumMult,state.myceliumSub); break;
+        case 'myceliumSub': state.myceliumSub=value; updateThreshold('mycelium-threshold',state.myceliumMult,state.myceliumSub); break;
+        case 'marbleX': state.marbleX=value; updatePair('marble-turb',state.marbleX,state.marbleY); break;
+        case 'marbleY': state.marbleY=value; updatePair('marble-turb',state.marbleX,state.marbleY); break;
+        case 'marbleMult': state.marbleMult=value; updateThreshold('marble-threshold',state.marbleMult,state.marbleSub,'.08 .1 .14'); break;
+        case 'marbleSub': state.marbleSub=value; updateThreshold('marble-threshold',state.marbleMult,state.marbleSub,'.08 .1 .14'); break;
+      }
+    }
+    function updateGoo() { setAttribute('goo-matrix','values',`1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 ${state.gooMult} ${state.gooSub}`); }
+    function setConvolvePreset(name) {
+      const preset=convPresets[name]; if(!preset) return;
+      setAttribute('conv-matrix','kernelMatrix',preset.matrix); setAttribute('conv-matrix','divisor',preset.divisor); setAttribute('conv-matrix','bias',preset.bias);
+      [['divisor',preset.divisor],['bias',preset.bias]].forEach(([attr,value]) => { const input=document.querySelector(`[data-filter="convolve"][data-target="conv-matrix"][data-attr="${attr}"]`); if(input){input.value=value; input.nextElementSibling.textContent=value;} });
+    }
+
+    function bindControls() {
+      groupsRoot.querySelectorAll('.control input, .control select').forEach(input => {
+        const handler = () => {
+          const value=input.value; const output=input.nextElementSibling; const filter=FILTERS.find(item=>item.id===input.dataset.filter); const config=filter?.controls?.[Number(input.dataset.index)];
+          if(input.dataset.custom) applyCustom(input.dataset.custom,value); else setAttribute(input.dataset.target,input.dataset.attr,value);
+          if(output) output.textContent=`${value}${config?.suffix || ''}`;
+          if(!applyingPreset){ const preset=document.querySelector(`[data-preset-filter="${input.dataset.filter}"]`); if(preset) preset.value=''; }
+          if(chainSelection.length && chainDialog.open) renderChainWorkbench();
+        };
+        input.addEventListener('input',handler); input.addEventListener('change',handler);
+      });
+    }
+
+    function applyNamedPreset(filterId, presetName) {
+      const values=NAMED_PRESETS[filterId]?.[presetName]; if(!values) return;
+      applyingPreset=true;
+      Object.entries(values).forEach(([label,value]) => {
+        const input=[...document.querySelectorAll(`[data-filter="${filterId}"]`)].find(node=>node.dataset.label===label);
+        if(input){ input.value=value; input.dispatchEvent(new Event(input.tagName==='SELECT'?'change':'input',{bubbles:true})); }
+      });
+      applyingPreset=false;
+      const select=document.querySelector(`[data-preset-filter="${filterId}"]`); if(select) select.value=presetName;
+      showToast(`${presetName} applied.`);
+    }
+
+    function resetControls() {
+      Object.assign(state,defaultState);
+      groupsRoot.querySelectorAll('.control input, .control select').forEach(input => { input.value=input.dataset.default; input.dispatchEvent(new Event(input.tagName==='SELECT'?'change':'input',{bubbles:true})); });
+      groupsRoot.querySelectorAll('[data-preset-filter]').forEach(select=>select.value='');
+      showToast('All live parameters returned to base defaults.');
+    }
+
+    function applyFilters() {
+      const query=searchInput.value.trim().toLowerCase(); const category=categorySelect.value; const family=familySelect.value; let visible=0;
+      document.querySelectorAll('.card').forEach(card => {
+        const matchText=!query || card.dataset.search.includes(query); const matchCategory=category==='all' || card.dataset.category===category; const matchFamily=family==='all' || card.dataset.family===family; const matchFavorite=!favoritesOnly || favorites.has(card.dataset.id);
+        card.hidden=!(matchText && matchCategory && matchFamily && matchFavorite); if(!card.hidden) visible++;
+      });
+      document.querySelectorAll('.group').forEach(group => { group.hidden=![...group.querySelectorAll('.card')].some(card=>!card.hidden); });
+      resultCount.textContent=`${visible} of ${FILTERS.length} recipes${favoritesOnly ? ' · favorites' : ''}`; emptyState.classList.toggle('is-visible',visible===0);
+    }
+
+    function currentParameters(filter) {
+      return (filter.controls || []).map((control,index) => {
+        const input=document.querySelector(`[data-filter="${filter.id}"][data-index="${index}"]`);
+        return {name:control.label,value:input?.value ?? String(control.value),type:control.type,target:control.target || null,attribute:control.attr || null,customBinding:control.custom || null};
+      });
+    }
+    function recipeSnapshot(filter) {
+      return {schema:'melodicbloom.svg-filter-recipe/2.0',id:filter.id,title:filter.title,category:filter.category,family:familyOf(filter),tags:filter.tags,caption:filter.caption,filterReference:filterRef(filter),parameters:currentParameters(filter),pipeline:filter.code,favorite:favorites.has(filter.id),exportedAt:new Date().toISOString()};
+    }
+    function downloadJSON(filename,data) {
+      const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const link=document.createElement('a'); link.href=url; link.download=filename; document.body.appendChild(link); link.click(); link.remove(); setTimeout(()=>URL.revokeObjectURL(url),500);
+    }
+
+    function toggleFavorite(id) { favorites.has(id) ? favorites.delete(id) : favorites.add(id); safeStorage.set('svg-filter-atelier:favorites',[...favorites]); syncActionButtons(); applyFilters(); showToast(favorites.has(id)?'Added to favorites.':'Removed from favorites.'); }
+    function toggleCompare(id) { const index=compareSelection.indexOf(id); if(index>=0) compareSelection.splice(index,1); else if(compareSelection.length>=3){showToast('Compare supports up to three recipes.');return;} else compareSelection.push(id); syncActionButtons(); updateWorkspace(); }
+    function toggleChain(id) { const index=chainSelection.indexOf(id); if(index>=0) chainSelection.splice(index,1); else if(chainSelection.length>=4){showToast('The live chain supports up to four stages.');return;} else chainSelection.push(id); safeStorage.set('svg-filter-atelier:chain',chainSelection); syncActionButtons(); updateWorkspace(); if(chainDialog.open) renderChainWorkbench(); }
+    function syncActionButtons() {
+      document.querySelectorAll('[data-favorite]').forEach(button=>{const active=favorites.has(button.dataset.favorite);button.setAttribute('aria-pressed',String(active));button.textContent=active?'★':'☆';});
+      document.querySelectorAll('[data-compare]').forEach(button=>button.setAttribute('aria-pressed',String(compareSelection.includes(button.dataset.compare))));
+      document.querySelectorAll('[data-chain]').forEach(button=>button.setAttribute('aria-pressed',String(chainSelection.includes(button.dataset.chain))));
+      document.getElementById('favoritesToggle').textContent=`Favorites${favorites.size ? ` (${favorites.size})` : ''}`;
+    }
+
+    function updateWorkspace() {
+      const compareFilters=compareSelection.map(id=>FILTERS.find(f=>f.id===id)).filter(Boolean); const chainFilters=chainSelection.map(id=>FILTERS.find(f=>f.id===id)).filter(Boolean);
+      document.getElementById('compareCount').textContent=`${compareFilters.length} of 3`; document.getElementById('chainCount').textContent=`${chainFilters.length} of 4`;
+      document.getElementById('compareChips').innerHTML=compareFilters.map(f=>`<span class="workspace-chip">${f.title}</span>`).join(''); document.getElementById('chainChips').innerHTML=chainFilters.map(f=>`<span class="workspace-chip">${f.title}</span>`).join('');
+      document.getElementById('compareSlot').hidden=!compareFilters.length; document.getElementById('chainSlot').hidden=!chainFilters.length;
+      const active=compareFilters.length || chainFilters.length; workspaceDock.classList.toggle('is-visible',Boolean(active)); document.body.classList.toggle('workspace-active',Boolean(active));
+    }
+
+    function renderCompareWorkbench() {
+      const selected=compareSelection.map(id=>FILTERS.find(f=>f.id===id)).filter(Boolean);
+      document.getElementById('compareGrid').innerHTML=selected.map(filter=>`<article class="compare-item"><header><h3>${filter.title}</h3><p>${FAMILY_LABELS[familyOf(filter)]} · ${filter.tags.join(' · ')}</p></header><div class="compare-preview"><svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice">${filter.preview}</svg></div><div class="compare-meta">${currentParameters(filter).map(p=>`<span><strong>${escapeHTML(p.name)}:</strong> ${escapeHTML(p.value)}</span>`).join('') || '<span>No live parameters.</span>'}</div><pre><code>${escapeHTML(filter.code)}</code></pre></article>`).join('') || '<p>No recipes selected.</p>';
+    }
+    function openDialog(dialog) { if(typeof dialog.showModal==='function') dialog.showModal(); else dialog.setAttribute('open',''); }
+    function closeDialog(dialog) { if(typeof dialog.close==='function') dialog.close(); else dialog.removeAttribute('open'); }
+
+    function nestedChainMarkup(ids, includeScene=true) {
+      let content=includeScene ? `<g id="source-artwork">\n  <rect x="45" y="42" width="310" height="176" rx="42" fill="url(#chainSceneGradient)"/>\n  <circle cx="132" cy="126" r="48" fill="#f1d37a" opacity=".76"/>\n  <path d="M210 62 327 196H168Z" fill="#9ce7da" opacity=".78"/>\n  <text x="200" y="139" text-anchor="middle" fill="#fff" font-size="25" font-weight="900">CHAIN</text>\n</g>` : '<g id="source-artwork">…</g>';
+      ids.forEach(id=>{const filter=FILTERS.find(f=>f.id===id);if(filter) content=`<g filter="url(#${filterRef(filter)})">\n${content.split('\n').map(line=>'  '+line).join('\n')}\n</g>`;});
+      return content;
+    }
+    function renderChainWorkbench() {
+      const selected=chainSelection.map(id=>FILTERS.find(f=>f.id===id)).filter(Boolean);
+      document.getElementById('chainList').innerHTML=selected.map((filter,index)=>`<div class="chain-step"><span class="chain-step-index">${index+1}</span><div><strong>${filter.title}</strong><small>${FAMILY_LABELS[familyOf(filter)]} · #${filterRef(filter)}</small></div><div class="chain-step-actions"><button class="icon-button" type="button" data-chain-move="up" data-chain-index="${index}" aria-label="Move ${filter.title} earlier">↑</button><button class="icon-button" type="button" data-chain-move="down" data-chain-index="${index}" aria-label="Move ${filter.title} later">↓</button><button class="icon-button" type="button" data-chain-remove="${filter.id}" aria-label="Remove ${filter.title}">×</button></div></div>`).join('') || '<p class="chain-note">Add recipes from the gallery to begin a chain.</p>';
+      const nested=nestedChainMarkup(chainSelection,true); const code=nestedChainMarkup(chainSelection,false);
+      document.getElementById('chainPreview').innerHTML=`<svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="chainSceneGradient" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#203256"/><stop offset=".48" stop-color="#965d8a"/><stop offset="1" stop-color="#1a6170"/></linearGradient></defs><rect width="400" height="260" fill="#060810"/>${nested}</svg>`;
+      document.getElementById('chainCode').textContent=code;
+    }
+    function chainManifest() { return {schema:'melodicbloom.svg-filter-chain/2.0',execution:'nested-svg-groups-inner-to-outer',stages:chainSelection.map((id,index)=>({order:index+1,...recipeSnapshot(FILTERS.find(f=>f.id===id))})),nesting:nestedChainMarkup(chainSelection,false),exportedAt:new Date().toISOString()}; }
+
+    function jumpToCard(id) { searchInput.value='';categorySelect.value='all';familySelect.value='all';favoritesOnly=false;document.getElementById('favoritesToggle').setAttribute('aria-pressed','false');applyFilters();const card=document.getElementById(`card-${id}`);if(!card)return;document.querySelectorAll('.card.is-highlighted').forEach(item=>item.classList.remove('is-highlighted'));card.classList.add('is-highlighted');card.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});setTimeout(()=>card.focus({preventScroll:true}),500);setTimeout(()=>card.classList.remove('is-highlighted'),2600);}
+
+    let observer;
+    function setupVisibilityObserver(){observer?.disconnect();observer=new IntersectionObserver(entries=>entries.forEach(entry=>entry.target.classList.toggle('is-offscreen',!entry.isIntersecting)),{rootMargin:'220px 0px'});document.querySelectorAll('.card').forEach(card=>observer.observe(card));}
+    let toastTimer;
+    function showToast(message){toast.textContent=message;toast.classList.add('is-visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('is-visible'),1900);}
+
+    groupsRoot.addEventListener('click',async event=>{
+      const favorite=event.target.closest('[data-favorite]'); if(favorite){toggleFavorite(favorite.dataset.favorite);return;}
+      const compare=event.target.closest('[data-compare]'); if(compare){toggleCompare(compare.dataset.compare);return;}
+      const chain=event.target.closest('[data-chain]'); if(chain){toggleChain(chain.dataset.chain);return;}
+      const exportButton=event.target.closest('[data-export-recipe]'); if(exportButton){const filter=FILTERS.find(f=>f.id===exportButton.dataset.exportRecipe);if(filter){downloadJSON(`${filter.id}.filter-recipe.json`,recipeSnapshot(filter));showToast('Recipe JSON exported.');}return;}
+      const copy=event.target.closest('[data-copy]'); if(copy){const code=document.querySelector(`#code-${copy.dataset.copy} code`)?.textContent||'';try{await navigator.clipboard.writeText(code);}catch{const area=document.createElement('textarea');area.value=code;document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();}showToast('Pipeline copied to clipboard.');}
+    });
+    groupsRoot.addEventListener('change',event=>{const preset=event.target.closest('[data-preset-filter]');if(preset&&preset.value)applyNamedPreset(preset.dataset.presetFilter,preset.value);else if(preset&&!preset.value){const filter=FILTERS.find(f=>f.id===preset.dataset.presetFilter);filter?.controls?.forEach((control,index)=>{const input=document.querySelector(`[data-filter="${filter.id}"][data-index="${index}"]`);if(input){input.value=control.value;input.dispatchEvent(new Event(input.tagName==='SELECT'?'change':'input',{bubbles:true}));}});}});
+
+    document.querySelectorAll('.decision-card').forEach(button=>button.addEventListener('click',()=>jumpToCard(button.dataset.target)));
+    searchInput.addEventListener('input',applyFilters); categorySelect.addEventListener('change',applyFilters); familySelect.addEventListener('change',applyFilters);
+    document.getElementById('favoritesToggle').addEventListener('click',event=>{favoritesOnly=!favoritesOnly;event.currentTarget.setAttribute('aria-pressed',String(favoritesOnly));applyFilters();});
+    document.getElementById('resetButton').addEventListener('click',resetControls);
+    document.getElementById('exportVisibleButton').addEventListener('click',()=>{const visible=[...document.querySelectorAll('.card:not([hidden])')].map(card=>FILTERS.find(f=>f.id===card.dataset.id)).filter(Boolean);downloadJSON('svg-filter-atelier-visible-recipes.json',{schema:'melodicbloom.svg-filter-collection/2.0',count:visible.length,recipes:visible.map(recipeSnapshot),exportedAt:new Date().toISOString()});showToast(`${visible.length} visible recipes exported.`);});
+    document.getElementById('motionToggle').addEventListener('click',event=>{const paused=!document.body.classList.contains('motion-paused');document.body.classList.toggle('motion-paused',paused);event.currentTarget.setAttribute('aria-pressed',String(paused));event.currentTarget.textContent=paused?'Resume motion':'Pause motion';showToast(paused?'Motion paused.':'Motion resumed.');});
+    document.getElementById('openCompareButton').addEventListener('click',()=>{renderCompareWorkbench();openDialog(compareDialog);});
+    document.getElementById('openChainButton').addEventListener('click',()=>{renderChainWorkbench();openDialog(chainDialog);});
+    document.getElementById('exportCompareButton').addEventListener('click',()=>downloadJSON('svg-filter-comparison.json',{schema:'melodicbloom.svg-filter-comparison/2.0',recipes:compareSelection.map(id=>recipeSnapshot(FILTERS.find(f=>f.id===id))),exportedAt:new Date().toISOString()}));
+    document.getElementById('exportChainButton').addEventListener('click',()=>downloadJSON('svg-filter-chain.json',chainManifest()));
+    document.getElementById('copyChainButton').addEventListener('click',async()=>{const code=nestedChainMarkup(chainSelection,false);try{await navigator.clipboard.writeText(code);}catch{}showToast('Nested SVG chain copied.');});
+    document.querySelectorAll('[data-close-dialog]').forEach(button=>button.addEventListener('click',()=>closeDialog(document.getElementById(button.dataset.closeDialog))));
+    document.getElementById('chainList').addEventListener('click',event=>{const remove=event.target.closest('[data-chain-remove]');if(remove){toggleChain(remove.dataset.chainRemove);return;}const move=event.target.closest('[data-chain-move]');if(!move)return;const index=Number(move.dataset.chainIndex);const next=move.dataset.chainMove==='up'?index-1:index+1;if(next<0||next>=chainSelection.length)return;[chainSelection[index],chainSelection[next]]=[chainSelection[next],chainSelection[index]];safeStorage.set('svg-filter-atelier:chain',chainSelection);renderChainWorkbench();updateWorkspace();});
+    document.addEventListener('visibilitychange',()=>document.body.classList.toggle('motion-paused-by-page',document.hidden));
+
+    render();
+  </script>
+</body>
+</html>

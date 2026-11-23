@@ -1,0 +1,64 @@
+{
+  "name": "@melodicbloom/svg-filter-atlas",
+  "version": "0.1.0",
+  "description": "Canonical SVG material recipe registry and compiler for MelodicBloom projects.",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "generated",
+    "schema",
+    "recipes",
+    "adapters",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js"
+    },
+    "./astro": "./dist/astro/FilterDefinitions.astro",
+    "./generated/definitions.svg": "./generated/definitions.svg",
+    "./generated/registry.json": "./generated/registry.json",
+    "./generated/presets.css": "./generated/presets.css"
+  },
+  "scripts": {
+    "clean": "node scripts/clean.mjs",
+    "catalog": "node scripts/generate-catalog.mjs",
+    "validate": "node scripts/validate-recipes.mjs",
+    "build": "npm run clean && npm run catalog && npm run validate && node scripts/run-tsc.mjs -p tsconfig.json && node scripts/copy-assets.mjs && node scripts/generate-assets.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "npm run build && npm test",
+    "prepack": "npm run check"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "svg",
+    "filters",
+    "design-system",
+    "materials",
+    "react",
+    "astro",
+    "melodicbloom"
+  ],
+  "license": "MIT"
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chromatic Aberration — SVG Filter Lab</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    body { background: #0f0f1a; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: system-ui, sans-serif; padding: 40px 24px; }
+    nav { position: fixed; top: 20px; left: 24px; }
+    nav a { color: #f472b6; text-decoration: none; font-size: 0.85rem; }
+    .rgb-card { width: 400px; padding: 36px; background: rgba(20,10,30,0.8); border: 1px solid rgba(244,114,182,0.2); border-radius: 8px; color: #f8fafc; }
+    h1 { font-size: 2rem; font-weight: 900; margin-bottom: 12px; }
+    p { font-size: 0.95rem; line-height: 1.6; color: #cbd5e1; }
+  </style>
+</head>
+<body>
+
+  <nav><a href="../index.html">← Filter Lab</a></nav>
+
+  <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+    <defs>
+      <filter id="chromatic-aberration">
+        <feColorMatrix type="matrix" values="
+          1 0 0 0 0
+          0 0 0 0 0
+          0 0 0 0 0
+          0 0 0 1 0" in="SourceGraphic" result="red" />
+        <feOffset in="red" dx="-3" dy="0" result="redShifted" />
+        <feColorMatrix type="matrix" values="
+          0 0 0 0 0
+          0 1 0 0 0
+          0 0 0 0 0
+          0 0 0 1 0" in="SourceGraphic" result="green" />
+        <feColorMatrix type="matrix" values="
+          0 0 0 0 0
+          0 0 0 0 0
+          0 0 1 0 0
+          0 0 0 1 0" in="SourceGraphic" result="blue" />
+        <feOffset in="blue" dx="3" dy="0" result="blueShifted" />
+        <feBlend mode="screen" in="redShifted" in2="green" result="rg" />
+        <feBlend mode="screen" in="rg" in2="blueShifted" />
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="rgb-card filter-chromatic">
+    <h1>Chromatic Aberration</h1>
+    <p>Red channel shifted -3px left. Blue channel shifted +3px right. Green stays centered. All three recombined via screen blend mode — producing the characteristic lens split seen in analog photography and VHS capture.</p>
+  </div>
+
+</body>
+</html>

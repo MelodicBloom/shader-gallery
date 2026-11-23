@@ -1,0 +1,217 @@
+{
+  "$schema": "../../schema/svg-filter-recipe.schema.json",
+  "id": "stained-glass-light",
+  "name": "Stained-Glass Light",
+  "version": "0.1.0",
+  "status": "approved",
+  "family": "optical",
+  "intent": [
+    "prismatic translucent distortion",
+    "jewel color field",
+    "glass highlight"
+  ],
+  "tags": [
+    "stained-glass",
+    "prismatic",
+    "displacement",
+    "specular",
+    "jewel"
+  ],
+  "filterRegion": {
+    "x": "-10%",
+    "y": "-10%",
+    "width": "120%",
+    "height": "120%"
+  },
+  "colorInterpolation": "sRGB",
+  "primitives": [
+    {
+      "id": "glass-turb",
+      "type": "feTurbulence",
+      "attributes": {
+        "type": "fractalNoise",
+        "baseFrequency": 0.018,
+        "numOctaves": 3,
+        "seed": 23,
+        "result": "noise"
+      }
+    },
+    {
+      "id": "glass-disp",
+      "type": "feDisplacementMap",
+      "attributes": {
+        "in": "SourceGraphic",
+        "in2": "noise",
+        "scale": 7,
+        "xChannelSelector": "R",
+        "yChannelSelector": "B",
+        "result": "warped"
+      }
+    },
+    {
+      "id": "glass-color",
+      "type": "feColorMatrix",
+      "attributes": {
+        "in": "noise",
+        "type": "matrix",
+        "values": "1.2 0.15 0 0 0.05  0 0.85 0.35 0 0.02  0.2 0 1.15 0 0.12  0 0 0 0.58 0",
+        "result": "colorField"
+      }
+    },
+    {
+      "id": "glass-blend",
+      "type": "feBlend",
+      "attributes": {
+        "in": "warped",
+        "in2": "colorField",
+        "mode": "overlay",
+        "result": "colored"
+      }
+    },
+    {
+      "id": "glass-light",
+      "type": "feSpecularLighting",
+      "attributes": {
+        "in": "noise",
+        "surfaceScale": 3,
+        "specularConstant": 0.9,
+        "specularExponent": 24,
+        "lighting-color": "#ffffff",
+        "result": "spark"
+      },
+      "children": [
+        {
+          "id": "glass-dl",
+          "type": "feDistantLight",
+          "attributes": {
+            "azimuth": 310,
+            "elevation": 48
+          }
+        }
+      ]
+    },
+    {
+      "id": "glass-finish",
+      "type": "feBlend",
+      "attributes": {
+        "in": "colored",
+        "in2": "spark",
+        "mode": "screen"
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "key": "cell-scale",
+      "label": "Cell Scale",
+      "type": "number",
+      "default": 0.018,
+      "binding": {
+        "primitiveId": "glass-turb",
+        "attribute": "baseFrequency"
+      },
+      "min": 0.005,
+      "max": 0.08,
+      "step": 0.001
+    },
+    {
+      "key": "displacement",
+      "label": "Displacement",
+      "type": "number",
+      "default": 7,
+      "binding": {
+        "primitiveId": "glass-disp",
+        "attribute": "scale"
+      },
+      "min": 0,
+      "max": 24,
+      "step": 1
+    },
+    {
+      "key": "surface-scale",
+      "label": "Surface Scale",
+      "type": "number",
+      "default": 3,
+      "binding": {
+        "primitiveId": "glass-light",
+        "attribute": "surfaceScale"
+      },
+      "min": 0.5,
+      "max": 8,
+      "step": 0.5
+    },
+    {
+      "key": "highlight",
+      "label": "Highlight",
+      "type": "number",
+      "default": 0.9,
+      "binding": {
+        "primitiveId": "glass-light",
+        "attribute": "specularConstant"
+      },
+      "min": 0.1,
+      "max": 2.5,
+      "step": 0.05
+    }
+  ],
+  "presets": {
+    "cathedral-calm": {
+      "name": "Cathedral Calm",
+      "description": "Broad quiet cells and low highlight intensity.",
+      "values": {
+        "cell-scale": 0.012,
+        "displacement": 4,
+        "surface-scale": 2,
+        "highlight": 0.55
+      }
+    },
+    "jewel-shift": {
+      "name": "Jewel Shift",
+      "description": "Dense prismatic facets for decorative artwork.",
+      "values": {
+        "cell-scale": 0.028,
+        "displacement": 11,
+        "surface-scale": 4.5,
+        "highlight": 1.4
+      }
+    },
+    "fractured-light": {
+      "name": "Fractured Light",
+      "description": "Sharper displacement and bright broken highlights.",
+      "values": {
+        "cell-scale": 0.052,
+        "displacement": 18,
+        "surface-scale": 6.5,
+        "highlight": 2.0
+      }
+    }
+  },
+  "performance": {
+    "tier": "heavy",
+    "animated": false,
+    "primitiveCount": 6,
+    "recommendedMaxInstances": 4,
+    "recommendedMaxAreaPx": 650000
+  },
+  "accessibility": {
+    "decorative": true,
+    "reducedMotionFallback": null,
+    "notes": "Do not apply to essential body text without an unfiltered semantic duplicate."
+  },
+  "governance": {
+    "recommendedUses": [
+      "hero artwork",
+      "decorative window panels",
+      "featured commerce imagery"
+    ],
+    "avoid": [
+      "body text",
+      "repeating card grids above six instances",
+      "stacking with nacre on the same element"
+    ]
+  },
+  "source": {
+    "origin": "SVG Filter Atelier v2",
+    "migration": "v0.1 signature material migration"
+  }
+}

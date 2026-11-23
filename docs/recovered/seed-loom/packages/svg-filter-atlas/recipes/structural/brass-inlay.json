@@ -1,0 +1,257 @@
+{
+  "$schema": "../../schema/svg-filter-recipe.schema.json",
+  "id": "brass-inlay",
+  "name": "Brass Inlay Edge",
+  "version": "0.1.0",
+  "status": "approved",
+  "family": "structural",
+  "intent": [
+    "metallic inset outline",
+    "carved border",
+    "polished edge"
+  ],
+  "tags": [
+    "brass",
+    "morphology",
+    "metal",
+    "outline",
+    "inlay"
+  ],
+  "filterRegion": {
+    "x": "-20%",
+    "y": "-20%",
+    "width": "140%",
+    "height": "140%"
+  },
+  "colorInterpolation": "sRGB",
+  "primitives": [
+    {
+      "id": "brass-outer",
+      "type": "feMorphology",
+      "attributes": {
+        "in": "SourceAlpha",
+        "operator": "dilate",
+        "radius": 3,
+        "result": "outer"
+      }
+    },
+    {
+      "id": "brass-inner",
+      "type": "feMorphology",
+      "attributes": {
+        "in": "SourceAlpha",
+        "operator": "erode",
+        "radius": 1,
+        "result": "inner"
+      }
+    },
+    {
+      "id": "brass-ring",
+      "type": "feComposite",
+      "attributes": {
+        "in": "outer",
+        "in2": "inner",
+        "operator": "xor",
+        "result": "ring"
+      }
+    },
+    {
+      "id": "brass-flood",
+      "type": "feFlood",
+      "attributes": {
+        "flood-color": "#d2a84a",
+        "result": "gold"
+      }
+    },
+    {
+      "id": "brass-inlay",
+      "type": "feComposite",
+      "attributes": {
+        "in": "gold",
+        "in2": "ring",
+        "operator": "in",
+        "result": "inlay"
+      }
+    },
+    {
+      "id": "brass-soft",
+      "type": "feGaussianBlur",
+      "attributes": {
+        "in": "ring",
+        "stdDeviation": 1.2,
+        "result": "softRing"
+      }
+    },
+    {
+      "id": "brass-light",
+      "type": "feSpecularLighting",
+      "attributes": {
+        "in": "softRing",
+        "surfaceScale": 3,
+        "specularConstant": 1.4,
+        "specularExponent": 20,
+        "lighting-color": "#fff2bd",
+        "result": "shine"
+      },
+      "children": [
+        {
+          "id": "brass-dl",
+          "type": "feDistantLight",
+          "attributes": {
+            "azimuth": 225,
+            "elevation": 60
+          }
+        }
+      ]
+    },
+    {
+      "id": "brass-shine-ring",
+      "type": "feComposite",
+      "attributes": {
+        "in": "shine",
+        "in2": "ring",
+        "operator": "in",
+        "result": "shineRing"
+      }
+    },
+    {
+      "id": "brass-merge",
+      "type": "feMerge",
+      "attributes": {},
+      "children": [
+        {
+          "id": "brass-node-inlay",
+          "type": "feMergeNode",
+          "attributes": {
+            "in": "inlay"
+          }
+        },
+        {
+          "id": "brass-node-shine",
+          "type": "feMergeNode",
+          "attributes": {
+            "in": "shineRing"
+          }
+        },
+        {
+          "id": "brass-node-source",
+          "type": "feMergeNode",
+          "attributes": {
+            "in": "SourceGraphic"
+          }
+        }
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "key": "outer-radius",
+      "label": "Outer Radius",
+      "type": "number",
+      "default": 3,
+      "binding": {
+        "primitiveId": "brass-outer",
+        "attribute": "radius"
+      },
+      "min": 0.5,
+      "max": 9,
+      "step": 0.5
+    },
+    {
+      "key": "inner-radius",
+      "label": "Inner Radius",
+      "type": "number",
+      "default": 1,
+      "binding": {
+        "primitiveId": "brass-inner",
+        "attribute": "radius"
+      },
+      "min": 0,
+      "max": 5,
+      "step": 0.5
+    },
+    {
+      "key": "brass-color",
+      "label": "Brass Color",
+      "type": "color",
+      "default": "#d2a84a",
+      "binding": {
+        "primitiveId": "brass-flood",
+        "attribute": "flood-color"
+      }
+    },
+    {
+      "key": "specular-constant",
+      "label": "Specular Constant",
+      "type": "number",
+      "default": 1.4,
+      "binding": {
+        "primitiveId": "brass-light",
+        "attribute": "specularConstant"
+      },
+      "min": 0.1,
+      "max": 3,
+      "step": 0.1
+    }
+  ],
+  "presets": {
+    "soft-patina": {
+      "name": "Soft Patina",
+      "description": "Muted warm outline with restrained highlight.",
+      "values": {
+        "outer-radius": 2.5,
+        "inner-radius": 1.5,
+        "brass-color": "#a88752",
+        "specular-constant": 0.7
+      }
+    },
+    "polished-inlay": {
+      "name": "Polished Inlay",
+      "description": "Bright precise metallic edge for premium controls.",
+      "values": {
+        "outer-radius": 3,
+        "inner-radius": 0.5,
+        "brass-color": "#e1bd66",
+        "specular-constant": 2.2
+      }
+    },
+    "aged-edge": {
+      "name": "Aged Edge",
+      "description": "Thicker darker architectural inlay.",
+      "values": {
+        "outer-radius": 5,
+        "inner-radius": 2,
+        "brass-color": "#8b6a2f",
+        "specular-constant": 1.1
+      }
+    }
+  },
+  "performance": {
+    "tier": "heavy",
+    "animated": false,
+    "primitiveCount": 9,
+    "recommendedMaxInstances": 8,
+    "recommendedMaxAreaPx": 500000
+  },
+  "accessibility": {
+    "decorative": true,
+    "reducedMotionFallback": null,
+    "notes": "Do not apply to essential body text without an unfiltered semantic duplicate."
+  },
+  "governance": {
+    "recommendedUses": [
+      "selected controls",
+      "artwork frames",
+      "premium card borders"
+    ],
+    "avoid": [
+      "dense text",
+      "hairline icons",
+      "more than one metallic border layer"
+    ]
+  },
+  "source": {
+    "origin": "SVG Filter Atelier v2",
+    "migration": "v0.1 signature material migration"
+  }
+}

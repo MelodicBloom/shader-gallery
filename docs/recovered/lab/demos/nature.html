@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG Filters — Natural Phenomena</title>
+<style>
+:root{--bg:#050508;--panel:#0e0e16;--accent:#00e5ff;--accent2:#ff6b6b;--accent3:#7ee787;--accent4:#f0e68c;--accent5:#da70d6;--accent6:#ff9f43;--text:#e0e0e8;--text-dim:#6a6a80;--border:#1a1a28;}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+header{padding:2.5rem 3rem 2rem;border-bottom:1px solid var(--border);background:linear-gradient(135deg,#050508,#0d0d18)}
+h1{font-size:2.2rem;font-weight:300;letter-spacing:-0.03em}h1 span{background:linear-gradient(135deg,#7ee787,#da70d6,#00e5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700}
+.subtitle{color:var(--text-dim);margin-top:.5rem;font-size:.95rem}
+.nav{padding:.9rem 3rem;border-bottom:1px solid var(--border);font-size:.8rem;color:var(--text-dim)}.nav a{color:var(--accent);text-decoration:none}.nav a:hover{text-decoration:underline}
+.showcase{padding:2rem 3rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:2rem}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:20px;overflow:hidden;transition:all .4s cubic-bezier(.4,0,.2,1)}.card:hover{border-color:#2a2a40;box-shadow:0 20px 60px rgba(0,0,0,.5);transform:translateY(-2px)}
+.card-header{padding:1.3rem 1.8rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.25)}.card-title{font-size:1rem;font-weight:600}.card-badges{display:flex;gap:.4rem;flex-wrap:wrap}.badge{font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;padding:.22rem .65rem;border-radius:20px;border:1px solid;font-weight:600}
+.preview-area{height:220px;position:relative;overflow:hidden;background:#030306}.preview-area svg{width:100%;height:100%}
+.overlay{position:absolute;bottom:0;left:0;right:0;padding:.9rem 1.4rem;background:linear-gradient(transparent,rgba(0,0,0,.88));font-size:.78rem;color:var(--text-dim)}
+.tech{padding:1.1rem 1.8rem;font-size:.76rem;color:var(--text-dim);border-top:1px solid var(--border);font-family:'SF Mono','Fira Code',monospace;line-height:1.8;background:rgba(0,0,0,.15)}
+@keyframes shimmer{0%,100%{opacity:.7}50%{opacity:1}}@keyframes ripple{0%{baseFrequency:.03 .06}100%{baseFrequency:.04 .08}}@keyframes wingbeat{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.92)}}
+@media(max-width:768px){.showcase{grid-template-columns:1fr;padding:1rem}header,.nav{padding:1.5rem}h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<header>
+<h1>SVG Filters: <span>Natural Phenomena</span></h1>
+<p class="subtitle">Iridescence, structural color, organic texture — recreated with pure SVG filter primitives</p>
+</header>
+<nav class="nav"><a href="../index.html">← Back to main showcase</a></nav>
+
+<svg style="position:absolute;width:0;height:0" aria-hidden="true"><defs>
+
+<!-- Hummingbird Wing Iridescence -->
+<filter id="hummingbird" x="-10%" y="-10%" width="120%" height="120%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.15 0.4" numOctaves="3" seed="7" result="noise"/>
+  <feColorMatrix type="matrix" values="0 0 0 0 0.2  0 0 0 0 0.8  0 0 0 0 0.9  0 0 0 1 0" in="noise" result="teal"/>
+  <feColorMatrix type="matrix" values="0 0 0 0 0.6  0 0 0 0 0.1  0 0 0 0 0.8  0 0 0 1 0" in="noise" result="violet"/>
+  <feTurbulence type="fractalNoise" baseFrequency="0.3 0.8" numOctaves="2" seed="12" result="noise2"/>
+  <feColorMatrix type="matrix" values="0 0 0 0 0.1  0 0 0 0 0.9  0 0 0 0 0.3  0 0 0 1 0" in="noise2" result="green"/>
+  <feBlend in="teal" in2="violet" mode="screen" result="blend1"/>
+  <feBlend in="blend1" in2="green" mode="screen" result="iridescent"/>
+  <feComposite in="iridescent" in2="SourceGraphic" operator="in" result="masked"/>
+  <feBlend in="masked" in2="SourceGraphic" mode="screen"/>
+</filter>
+
+<!-- Butterfly Wing Scales -->
+<filter id="butterfly" x="-5%" y="-5%" width="110%" height="110%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.08 0.15" numOctaves="4" seed="3" result="scale-noise"/>
+  <feColorMatrix type="matrix" values="3 0 0 0 -0.8  0 1 0 0 0  0 0 3 0 -0.6  0 0 0 1 0" in="scale-noise" result="pattern"/>
+  <feTurbulence type="fractalNoise" baseFrequency="0.4" numOctaves="2" seed="9" result="shimmer-noise"/>
+  <feColorMatrix type="matrix" values="0 0 0 0 0.9  0 0 0 0 0.4  0 0 0 0 0.05  0 0 0 1 0" in="shimmer-noise" result="orange"/>
+  <feColorMatrix type="matrix" values="0 0 0 0 0.05  0 0 0 0 0.02  0 0 0 0 0.08  0 0 0 1 0" in="scale-noise" result="dark"/>
+  <feBlend in="orange" in2="dark" mode="overlay" result="wing"/>
+  <feComposite in="wing" in2="SourceGraphic" operator="in" result="masked"/>
+  <feBlend in="masked" in2="SourceGraphic" mode="multiply"/>
+</filter>
+
+<!-- Dragonfly Wing Venation -->
+<filter id="dragonfly" x="-10%" y="-10%" width="120%" height="120%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.06 0.18" numOctaves="5" seed="21" result="vein-noise"/>
+  <feColorMatrix type="matrix" values="5 0 0 0 -1.5  0 5 0 0 -1.5  0 0 5 0 -1.5  0 0 0 1 0" in="vein-noise" result="veins"/>
+  <feTurbulence type="fractalNoise" baseFrequency="0.25" numOctaves="2" seed="5" result="glint-noise"/>
+  <feColorMatrix type="matrix" values="0 0 0 0 0.7  0 0 0 0 0.95  0 0 0 0 1  0 0 0 0.8 0" in="glint-noise" result="glint"/>
+  <feBlend in="veins" in2="glint" mode="screen" result="wing"/>
+  <feComposite in="wing" in2="SourceGraphic" operator="in"/>
+</filter>
+
+<!-- Fish Scales -->
+<filter id="fishscales" x="-5%" y="-5%" width="110%" height="110%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.1 0.05" numOctaves="3" seed="14" result="scale-base"/>
+  <feColorMatrix type="matrix" values="2 0 0 0 -0.3  0 2 0 0 -0.3  0 0 2 0 -0.3  0 0 0 1 0" in="scale-base" result="emboss"/>
+  <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="1" seed="2" result="sheen-noise"/>
+  <feColorMatrix type="matrix" values="0 0 0 0 0.1  0 0 0 0 0.6  0 0 0 0 0.8  0 0 0 1 0" in="sheen-noise" result="blue-sheen"/>
+  <feColorMatrix type="matrix" values="0 0 0 0 0.2  0 0 0 0 0.8  0 0 0 0 0.4  0 0 0 1 0" in="scale-base" result="green-sheen"/>
+  <feBlend in="blue-sheen" in2="green-sheen" mode="screen" result="iridescence"/>
+  <feBlend in="emboss" in2="iridescence" mode="overlay" result="scales"/>
+  <feComposite in="scales" in2="SourceGraphic" operator="in"/>
+</filter>
+
+<!-- Chameleon / Snake Skin -->
+<filter id="chameleon" x="-5%" y="-5%" width="110%" height="110%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.07" numOctaves="4" seed="33" result="skin-noise"/>
+  <feColorMatrix type="matrix" values="3 0 0 0 -0.5  0 3 0 0 -0.5  0 0 3 0 -0.5  0 0 0 1 0" in="skin-noise" result="cell-walls"/>
+  <feColorMatrix type="matrix" values="0 0 0 0 0.05  0 0 0 0 0.5  0 0 0 0 0.15  0 0 0 1 0" in="skin-noise" result="green-base"/>
+  <feTurbulence type="fractalNoise" baseFrequency="0.3" numOctaves="2" seed="7" result="highlight-noise"/>
+  <feColorMatrix type="matrix" values="0 0 0 0 0.8  0 0 0 0 0.9  0 0 0 0 0.1  0 0 0 0.6 0" in="highlight-noise" result="highlight"/>
+  <feBlend in="green-base" in2="highlight" mode="screen" result="colored"/>
+  <feBlend in="colored" in2="cell-walls" mode="multiply" result="skin"/>
+  <feComposite in="skin" in2="SourceGraphic" operator="in"/>
+</filter>
+
+<!-- Bird Feather Microstructure -->
+<filter id="feather" x="-10%" y="-10%" width="120%" height="120%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.02 0.6" numOctaves="5" seed="17" result="barb-noise"/>
+  <feColorMatrix type="matrix" values="2 0 0 0 -0.2  0 2 0 0 -0.2  0 0 2 0 -0.2  0 0 0 1 0" in="barb-noise" result="barbs"/>
+  <feTurbulence type="fractalNoise" baseFrequency="0.1" numOctaves="2" seed="4" result="sheen-noise"/>
+  <feColorMatrix type="matrix" values="0 0 0 0 0.05  0 0 0 0 0.15  0 0 0 0 0.7  0 0 0 1 0" in="sheen-noise" result="blue-sheen"/>
+  <feColorMatrix type="matrix" values="0 0 0 0 0.6  0 0 0 0 0.05  0 0 0 0 0.5  0 0 0 1 0" in="barb-noise" result="magenta-sheen"/>
+  <feBlend in="blue-sheen" in2="magenta-sheen" mode="screen" result="iridescence"/>
+  <feBlend in="barbs" in2="iridescence" mode="overlay" result="feather"/>
+  <feComposite in="feather" in2="SourceGraphic" operator="in"/>
+</filter>
+
+</defs></svg>
+
+<section class="showcase">
+
+<!-- Hummingbird Wing -->
+<div class="card">
+<div class="card-header"><span class="card-title">Hummingbird Wing Iridescence</span><div class="card-badges"><span class="badge" style="background:rgba(0,229,255,.08);color:#00e5ff;border-color:rgba(0,229,255,.2)">fractalNoise</span><span class="badge" style="background:rgba(126,231,135,.08);color:#7ee787;border-color:rgba(126,231,135,.2)">screen blend</span></div></div>
+<div class="preview-area">
+<svg viewBox="0 0 420 220">
+  <defs><radialGradient id="hbg"><stop offset="0%" stop-color="#0a1a20"/><stop offset="100%" stop-color="#020408"/></radialGradient></defs>
+  <rect width="100%" height="100%" fill="url(#hbg)"/>
+  <ellipse cx="150" cy="100" rx="110" ry="55" fill="rgba(100,200,180,0.08)" filter="url(#hummingbird)" style="animation:shimmer 2.8s ease-in-out infinite"/>
+  <ellipse cx="280" cy="115" rx="90" ry="45" fill="rgba(150,100,200,0.08)" filter="url(#hummingbird)" style="animation:shimmer 3.2s ease-in-out infinite .4s"/>
+  <text x="50%" y="88%" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.3)" font-family="monospace">structural color — no pigment, only light interference</text>
+</svg>
+<div class="overlay">Layered fractalNoise at different X/Y frequencies creates the angle-dependent shimmer of real iridescence</div>
+</div>
+<div class="tech">baseFrequency: 0.15 0.4 &nbsp;│&nbsp; 3× feColorMatrix → screen blend &nbsp;│&nbsp; seed: 7, 12</div>
+</div>
+
+<!-- Butterfly Wing -->
+<div class="card">
+<div class="card-header"><span class="card-title">Butterfly Wing Scales</span><div class="card-badges"><span class="badge" style="background:rgba(255,107,107,.08);color:#ff6b6b;border-color:rgba(255,107,107,.2)">fractalNoise</span><span class="badge" style="background:rgba(255,159,67,.08);color:#ff9f43;border-color:rgba(255,159,67,.2)">overlay</span></div></div>
+<div class="preview-area">
+<svg viewBox="0 0 420 220">
+  <defs><radialGradient id="wbg"><stop offset="0%" stop-color="#1a0a00"/><stop offset="100%" stop-color="#080304"/></radialGradient></defs>
+  <rect width="100%" height="100%" fill="url(#wbg)"/>
+  <ellipse cx="130" cy="95" rx="105" ry="65" fill="#ff6b00" opacity="0.6" filter="url(#butterfly)"/>
+  <ellipse cx="290" cy="100" rx="85" ry="55" fill="#cc4400" opacity="0.5" filter="url(#butterfly)"/>
+  <ellipse cx="160" cy="155" rx="70" ry="40" fill="#ff8800" opacity="0.4" filter="url(#butterfly)"/>
+  <ellipse cx="265" cy="155" rx="65" ry="38" fill="#dd5500" opacity="0.4" filter="url(#butterfly)"/>
+  <text x="50%" y="90%" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.3)" font-family="monospace">Morpho butterfly — photonic crystal nanostructure</text>
+</svg>
+<div class="overlay">Anisotropic baseFrequency (0.08 x / 0.15 y) mimics the elongated scale cells of Lepidoptera wings</div>
+</div>
+<div class="tech">baseFrequency: 0.08 0.15 &nbsp;│&nbsp; numOctaves: 4 &nbsp;│&nbsp; overlay + multiply blend chain</div>
+</div>
+
+<!-- Dragonfly Wing -->
+<div class="card">
+<div class="card-header"><span class="card-title">Dragonfly Wing Venation</span><div class="card-badges"><span class="badge" style="background:rgba(0,229,255,.08);color:#00e5ff;border-color:rgba(0,229,255,.2)">fractalNoise</span><span class="badge" style="background:rgba(240,230,140,.08);color:#f0e68c;border-color:rgba(240,230,140,.2)">high contrast</span></div></div>
+<div class="preview-area">
+<svg viewBox="0 0 420 220">
+  <defs><linearGradient id="dbg" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#001a10"/><stop offset="100%" stop-color="#00080a"/></linearGradient></defs>
+  <rect width="100%" height="100%" fill="url(#dbg)"/>
+  <ellipse cx="145" cy="90" rx="120" ry="50" fill="rgba(180,240,220,0.06)" filter="url(#dragonfly)"/>
+  <ellipse cx="275" cy="110" rx="100" ry="42" fill="rgba(160,230,200,0.05)" filter="url(#dragonfly)"/>
+  <text x="50%" y="90%" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.3)" font-family="monospace">wing venation + thin-film interference glint</text>
+</svg>
+<div class="overlay">High-contrast feColorMatrix (5x amplification) reveals the delicate vein network from fractalNoise</div>
+</div>
+<div class="tech">baseFrequency: 0.06 0.18 &nbsp;│&nbsp; numOctaves: 5 &nbsp;│&nbsp; matrix amplify 5× → screen glint</div>
+</div>
+
+<!-- Fish Scales -->
+<div class="card">
+<div class="card-header"><span class="card-title">Fish Scale Iridescence</span><div class="card-badges"><span class="badge" style="background:rgba(100,149,237,.08);color:#6495ed;border-color:rgba(100,149,237,.2)">fractalNoise</span><span class="badge" style="background:rgba(126,231,135,.08);color:#7ee787;border-color:rgba(126,231,135,.2)">overlay blend</span></div></div>
+<div class="preview-area">
+<svg viewBox="0 0 420 220">
+  <defs><linearGradient id="fbg" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#001020"/><stop offset="100%" stop-color="#000810"/></linearGradient></defs>
+  <rect width="100%" height="100%" fill="url(#fbg)"/>
+  <ellipse cx="210" cy="110" rx="170" ry="80" fill="rgba(30,100,160,0.5)" filter="url(#fishscales)"/>
+  <text x="50%" y="90%" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.3)" font-family="monospace">guanine crystal platelets — thin-film stack reflection</text>
+</svg>
+<div class="overlay">Anisotropic X/Y frequencies (0.1 / 0.05) produce the overlapping arc pattern of real scale geometry</div>
+</div>
+<div class="tech">baseFrequency: 0.1 0.05 &nbsp;│&nbsp; emboss + dual sheen → overlay &nbsp;│&nbsp; numOctaves: 3</div>
+</div>
+
+<!-- Chameleon Skin -->
+<div class="card">
+<div class="card-header"><span class="card-title">Chameleon / Snake Skin</span><div class="card-badges"><span class="badge" style="background:rgba(126,231,135,.08);color:#7ee787;border-color:rgba(126,231,135,.2)">fractalNoise</span><span class="badge" style="background:rgba(218,112,214,.08);color:#da70d6;border-color:rgba(218,112,214,.2)">cell pattern</span></div></div>
+<div class="preview-area">
+<svg viewBox="0 0 420 220">
+  <defs><radialGradient id="cbg"><stop offset="0%" stop-color="#051a08"/><stop offset="100%" stop-color="#020805"/></radialGradient></defs>
+  <rect width="100%" height="100%" fill="url(#cbg)"/>
+  <ellipse cx="210" cy="110" rx="175" ry="82" fill="rgba(20,140,50,0.7)" filter="url(#chameleon)"/>
+  <text x="50%" y="90%" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.3)" font-family="monospace">iridophore nanocrystal lattice — active color tuning</text>
+</svg>
+<div class="overlay">High-amplitude feColorMatrix on fractalNoise creates discrete Voronoi-like cell boundaries</div>
+</div>
+<div class="tech">baseFrequency: 0.07 &nbsp;│&nbsp; numOctaves: 4 &nbsp;│&nbsp; cell-wall amplify 3× → multiply skin</div>
+</div>
+
+<!-- Bird Feather -->
+<div class="card">
+<div class="card-header"><span class="card-title">Bird Feather Microstructure</span><div class="card-badges"><span class="badge" style="background:rgba(218,112,214,.08);color:#da70d6;border-color:rgba(218,112,214,.2)">fractalNoise</span><span class="badge" style="background:rgba(100,149,237,.08);color:#6495ed;border-color:rgba(100,149,237,.2)">overlay</span></div></div>
+<div class="preview-area">
+<svg viewBox="0 0 420 220">
+  <defs><linearGradient id="bbg" x1="0" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="#050010"/><stop offset="100%" stop-color="#020008"/></linearGradient></defs>
+  <rect width="100%" height="100%" fill="url(#bbg)"/>
+  <ellipse cx="210" cy="105" rx="160" ry="70" fill="rgba(20,10,80,0.7)" filter="url(#feather)"/>
+  <ellipse cx="210" cy="115" rx="120" ry="50" fill="rgba(60,0,100,0.4)" filter="url(#feather)"/>
+  <text x="50%" y="90%" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.3)" font-family="monospace">barbule nanostructure — peacock / kingfisher iridescence</text>
+</svg>
+<div class="overlay">Extreme anisotropy (0.02 x / 0.6 y) models the directional barb-and-barbule microstructure of feathers</div>
+</div>
+<div class="tech">baseFrequency: 0.02 0.6 &nbsp;│&nbsp; numOctaves: 5 &nbsp;│&nbsp; dual sheen screen → overlay barbs</div>
+</div>
+
+</section>
+<script>
+document.querySelectorAll('.card').forEach(card=>{
+  card.addEventListener('mouseenter',()=>card.style.willChange='transform,filter');
+  card.addEventListener('mouseleave',()=>card.style.willChange='');
+});
+</script>
+</body>
+</html>

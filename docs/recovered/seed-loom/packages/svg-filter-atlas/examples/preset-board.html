@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Atlas preset board — render harness, not a source file</title>
+  <style>
+    body{margin:0;background:#0b0b10;color:#f4efe6;font:15px/1.4 system-ui}
+    main{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px}
+    article{min-height:220px;border-radius:16px;padding:16px;background:linear-gradient(135deg,#40536e,#d5b7c8,#d6eadf)}
+    h2{margin:0 0 8px;font-size:16px}
+  </style>
+</head>
+<body>
+<main id="board"></main>
+<script type="module">
+const ids = [
+  ['nacre-laminate','pearl-calm'],['nacre-laminate','abalone-ridge'],['nacre-laminate','moon-shell'],
+  ['guanine-crystal','relaxed-blue'],['guanine-crystal','excited-spectrum'],['guanine-crystal','silver-flash'],
+  ['mycelial-bloom','biolume-web'],['mycelial-bloom','fine-hyphae'],['mycelial-bloom','dense-colony']
+];
+const definitions = await fetch('../generated/definitions.svg').then((response) => response.text());
+document.body.insertAdjacentHTML('afterbegin', definitions);
+const board = document.querySelector('#board');
+for (const [recipe, preset] of ids) {
+  const article = document.createElement('article');
+  article.style.filter = `url("#mb--${recipe}--${preset}")`;
+  article.innerHTML = `<h2>${recipe}<br>${preset}</h2><p>Byte-exact filter from the generated registry. This page is only a harness.</p>`;
+  board.append(article);
+}
+document.documentElement.dataset.ready = '1';
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+---
+import FilterDefinitions from "@melodicbloom/svg-filter-atlas/astro";
+import { filterUrl } from "@melodicbloom/svg-filter-atlas";
+---
+
+<FilterDefinitions include={[{ recipe: "washi-fiber", preset: "kozo-fine" }]} />
+<section style={`filter:${filterUrl("washi-fiber", "kozo-fine")}`}>
+  Kozo surface
+</section>

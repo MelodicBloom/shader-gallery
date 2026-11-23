@@ -1,0 +1,511 @@
+{
+  "ionBloomFound": false,
+  "note": "Restored bytes match the named commits. The SVG filter atlas on seed-loom main is the registry the owner described: schema melodicbloom.svg-filter-registry/0.1, generatedAt 2026-07-22T23:17:29.204Z, 8 recipes, 24 presets. The atelier manifest is melodicbloom.svg-filter-atelier/2.0 with 26 recipes and 8 material recipes. ion-bloom, ionBloom, and the Termux slice require_atelier_branch were not in any branch tip searched. The remembered rainbow, rosette, tile, and pillow images were not found as files.",
+  "items": [
+    {
+      "restoredPath": "docs/recovered/lab/index.html",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceCommit": "b5d0169a769f92dfe920eb5a0066b1ec04164c60",
+      "sourcePath": "index.html"
+    },
+    {
+      "restoredPath": "docs/recovered/lab/demos/nature.html",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceCommit": "61aefcbb8741abbda12f53f2d454b84e71a1e837",
+      "sourcePath": "demos/nature.html"
+    },
+    {
+      "restoredPath": "docs/recovered/lab/demos/glass.html",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceCommit": "057f266fedacf23fd825077713d37c974763ccd5",
+      "sourcePath": "demos/glass.html"
+    },
+    {
+      "restoredPath": "docs/recovered/lab/demos/memphis.html",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceCommit": "057f266fedacf23fd825077713d37c974763ccd5",
+      "sourcePath": "demos/memphis.html"
+    },
+    {
+      "restoredPath": "docs/recovered/lab/demos/chromatic.html",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceCommit": "057f266fedacf23fd825077713d37c974763ccd5",
+      "sourcePath": "demos/chromatic.html"
+    },
+    {
+      "restoredPath": "docs/recovered/lab/demos/posterize.html",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceCommit": "057f266fedacf23fd825077713d37c974763ccd5",
+      "sourcePath": "demos/posterize.html"
+    },
+    {
+      "restoredPath": "docs/recovered/lab/demos/crt.html",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceCommit": "057f266fedacf23fd825077713d37c974763ccd5",
+      "sourcePath": "demos/crt.html"
+    },
+    {
+      "restoredPath": "docs/recovered/lab/css/styles.css",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceCommit": "057f266fedacf23fd825077713d37c974763ccd5",
+      "sourcePath": "css/styles.css"
+    },
+    {
+      "restoredPath": "docs/recovered/lab/js/animations.js",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceCommit": "057f266fedacf23fd825077713d37c974763ccd5",
+      "sourcePath": "js/animations.js"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/src/filter-atelier/controls.ts",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "src/filter-atelier/controls.ts"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/src/filter-atelier/export.ts",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "src/filter-atelier/export.ts"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/src/filter-atelier/index.ts",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "src/filter-atelier/index.ts"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/src/filter-atelier/isolation.css",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "src/filter-atelier/isolation.css"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/src/filter-atelier/model.ts",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "src/filter-atelier/model.ts"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/src/filter-atelier/preview.ts",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "src/filter-atelier/preview.ts"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/src/filter-atelier/state.ts",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "src/filter-atelier/state.ts"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/src/filter-atelier/styles.css",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "src/filter-atelier/styles.css"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/src/filter-atelier/validation.ts",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "src/filter-atelier/validation.ts"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/.gitignore",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/.gitignore"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/BUILD_REPORT.md",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/BUILD_REPORT.md"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/CHANGELOG.md",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/CHANGELOG.md"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/LICENSE",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/LICENSE"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/README.md",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/README.md"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/package-lock.json",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/package-lock.json"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/package.json",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/package.json"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/tsconfig.json",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/tsconfig.json"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/src/catalog.ts",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/src/catalog.ts"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/src/compiler.ts",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/src/compiler.ts"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/src/index.ts",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/src/index.ts"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/src/react.ts",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/src/react.ts"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/src/runtime.ts",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/src/runtime.ts"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/src/types.ts",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/src/types.ts"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/src/validation.ts",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/src/validation.ts"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/src/generated/catalog.ts",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/src/generated/catalog.ts"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/src/types/react-shim.d.ts",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/src/types/react-shim.d.ts"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/docs/architecture.md",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/docs/architecture.md"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/docs/governance.md",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/docs/governance.md"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/docs/migration-notes.md",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/docs/migration-notes.md"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/docs/qa-checklist.md",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/docs/qa-checklist.md"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/tests/compiler.test.mjs",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/tests/compiler.test.mjs"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/reference/svg-filter-atelier-v2-manifest.json",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/reference/svg-filter-atelier-v2-manifest.json"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/reference/svg-filter-atelier-v2.html",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/reference/svg-filter-atelier-v2.html"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/recipes/structural/brass-inlay.json",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/recipes/structural/brass-inlay.json"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/recipes/living/mycelial-bloom.json",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/recipes/living/mycelial-bloom.json"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/recipes/pattern/lithographic-grain.json",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/recipes/pattern/lithographic-grain.json"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/recipes/tactile/marble-vein.json",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/recipes/tactile/marble-vein.json"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/recipes/tactile/washi-fiber.json",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/recipes/tactile/washi-fiber.json"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/recipes/optical/guanine-crystal.json",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/recipes/optical/guanine-crystal.json"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/recipes/optical/nacre-laminate.json",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/recipes/optical/nacre-laminate.json"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/recipes/optical/stained-glass-light.json",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/recipes/optical/stained-glass-light.json"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/scripts/clean.mjs",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/scripts/clean.mjs"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/scripts/copy-assets.mjs",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/scripts/copy-assets.mjs"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/scripts/generate-assets.mjs",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/scripts/generate-assets.mjs"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/scripts/generate-catalog.mjs",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/scripts/generate-catalog.mjs"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/scripts/reproducible-time.mjs",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/scripts/reproducible-time.mjs"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/scripts/run-tsc.mjs",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/scripts/run-tsc.mjs"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/scripts/validate-recipes.mjs",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/scripts/validate-recipes.mjs"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/adapters/astro/FilterDefinitions.astro",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/adapters/astro/FilterDefinitions.astro"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/generated/definitions.svg",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/generated/definitions.svg"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/generated/presets.css",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/generated/presets.css"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/generated/registry.json",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/generated/registry.json"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/storybook/FilterAtlas.stories.tsx",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/storybook/FilterAtlas.stories.tsx"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/storybook/README.md",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/storybook/README.md"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/schema/svg-filter-recipe.schema.json",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/schema/svg-filter-recipe.schema.json"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/schema/svg-filter-registry.schema.json",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/schema/svg-filter-registry.schema.json"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/examples/react/ArtworkCard.tsx",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/examples/react/ArtworkCard.tsx"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/examples/astro/MaterialPanel.astro",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/examples/astro/MaterialPanel.astro"
+    },
+    {
+      "restoredPath": "docs/recovered/seed-loom/packages/svg-filter-atlas/examples/vanilla/index.html",
+      "sourceRepo": "MelodicBloom/seed-loom",
+      "sourceCommit": "330d23789568e1f89ae57f230bd9707d95c6af06",
+      "sourceBranch": "main",
+      "sourcePath": "packages/svg-filter-atlas/examples/vanilla/index.html"
+    },
+    {
+      "restoredPath": "docs/recovered/svg-filter-lab-truchet/tests/truchet-specimen.test.mjs",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceCommit": "f35ec6414715e3c8a84fabdb51e525377b7ac8bc",
+      "sourceBranch": "feat/seed-loom-truchet-specimen-v0",
+      "sourcePath": "tests/truchet-specimen.test.mjs"
+    },
+    {
+      "restoredPath": "docs/recovered/svg-filter-lab-truchet/demos/truchet-seed35.html",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceCommit": "f35ec6414715e3c8a84fabdb51e525377b7ac8bc",
+      "sourceBranch": "feat/seed-loom-truchet-specimen-v0",
+      "sourcePath": "demos/truchet-seed35.html"
+    },
+    {
+      "restoredPath": "docs/recovered/svg-filter-lab-truchet/examples/truchet-seed35.receipt.json",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceCommit": "f35ec6414715e3c8a84fabdb51e525377b7ac8bc",
+      "sourceBranch": "feat/seed-loom-truchet-specimen-v0",
+      "sourcePath": "examples/truchet-seed35.receipt.json"
+    },
+    {
+      "restoredPath": "docs/recovered/svg-filter-lab-truchet/examples/truchet-seed35.svg",
+      "sourceRepo": "MelodicBloom/svg-filter-lab",
+      "sourceCommit": "f35ec6414715e3c8a84fabdb51e525377b7ac8bc",
+      "sourceBranch": "feat/seed-loom-truchet-specimen-v0",
+      "sourcePath": "examples/truchet-seed35.svg"
+    }
+  ],
+  "searchedAndNotFound": [
+    "ion-bloom",
+    "ionBloom",
+    "require_atelier_branch",
+    "03-*.sh atelier slice",
+    "7-fold rosette image",
+    "rainbow band image",
+    "pillow-cell image",
+    "ion-bloom contour image"
+  ]
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRT Scanlines — SVG Filter Lab</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    body { background: #030712; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Courier New', monospace; padding: 40px 24px; }
+    nav { position: fixed; top: 20px; left: 24px; }
+    nav a { color: #4ade80; text-decoration: none; font-size: 0.85rem; }
+    .crt-card { width: 420px; padding: 32px; background: rgba(0,20,0,0.85); border: 1px solid rgba(74,222,128,0.3); border-radius: 4px; color: #4ade80; }
+    h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.1em; }
+    p { font-size: 0.9rem; line-height: 1.7; color: #86efac; margin-bottom: 20px; }
+    .cursor { display: inline-block; width: 10px; height: 1.1em; background: #4ade80; animation: blink 1s step-end infinite; vertical-align: text-bottom; }
+    @keyframes blink { 50% { opacity: 0; } }
+  </style>
+</head>
+<body>
+
+  <nav><a href="../index.html">← Filter Lab</a></nav>
+
+  <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+    <defs>
+      <filter id="crt-scanlines">
+        <feTurbulence type="fractalNoise" baseFrequency="0 0.8" numOctaves="1" result="scanNoise" />
+        <feColorMatrix type="saturate" values="0" in="scanNoise" result="grayNoise" />
+        <feBlend mode="multiply" in="SourceGraphic" in2="grayNoise" result="scanlined" />
+        <feComponentTransfer in="scanlined">
+          <feFuncR type="gamma" amplitude="1.2" exponent="1.5" offset="-0.1" />
+          <feFuncG type="gamma" amplitude="1.2" exponent="1.5" offset="-0.1" />
+          <feFuncB type="gamma" amplitude="1.2" exponent="1.5" offset="-0.1" />
+        </feComponentTransfer>
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="crt-card filter-crt">
+    <h1>System Terminal</h1>
+    <p>CRT scanlines rendered via fractalNoise desaturation and multiply blend. Horizontal baseFrequency set to 0 — vertical to 0.8 — producing tight horizontal bands that emulate phosphor screen structure.</p>
+    <p>AWAITING INPUT<span class="cursor"></span></p>
+  </div>
+
+</body>
+</html>

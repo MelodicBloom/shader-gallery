@@ -1,0 +1,214 @@
+{
+  "$schema": "../../schema/svg-filter-recipe.schema.json",
+  "id": "washi-fiber",
+  "name": "Washi Fiber Field",
+  "version": "0.1.0",
+  "status": "approved",
+  "family": "tactile",
+  "intent": [
+    "directional paper fiber",
+    "kozo texture",
+    "soft handmade relief"
+  ],
+  "tags": [
+    "washi",
+    "kozo",
+    "fiber",
+    "paper",
+    "directional-noise"
+  ],
+  "filterRegion": {
+    "x": "0%",
+    "y": "0%",
+    "width": "100%",
+    "height": "100%"
+  },
+  "colorInterpolation": "sRGB",
+  "primitives": [
+    {
+      "id": "washi-turb",
+      "type": "feTurbulence",
+      "attributes": {
+        "type": "fractalNoise",
+        "baseFrequency": "0.006 0.48",
+        "numOctaves": 4,
+        "seed": 19,
+        "result": "fiber"
+      }
+    },
+    {
+      "id": "washi-transfer",
+      "type": "feComponentTransfer",
+      "attributes": {
+        "in": "fiber",
+        "result": "softFiber"
+      },
+      "children": [
+        {
+          "id": "washi-alpha",
+          "type": "feFuncA",
+          "attributes": {
+            "type": "linear",
+            "slope": 0.72,
+            "intercept": -0.08
+          }
+        }
+      ]
+    },
+    {
+      "id": "washi-light",
+      "type": "feDiffuseLighting",
+      "attributes": {
+        "in": "fiber",
+        "surfaceScale": 1.8,
+        "lighting-color": "#fff4dc",
+        "result": "relief"
+      },
+      "children": [
+        {
+          "id": "washi-dl",
+          "type": "feDistantLight",
+          "attributes": {
+            "azimuth": 35,
+            "elevation": 62
+          }
+        }
+      ]
+    },
+    {
+      "id": "washi-ink",
+      "type": "feBlend",
+      "attributes": {
+        "in": "SourceGraphic",
+        "in2": "softFiber",
+        "mode": "multiply",
+        "result": "inked"
+      }
+    },
+    {
+      "id": "washi-finish",
+      "type": "feBlend",
+      "attributes": {
+        "in": "inked",
+        "in2": "relief",
+        "mode": "screen"
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "key": "fiber-x",
+      "label": "Fiber X",
+      "type": "number",
+      "default": 0.006,
+      "binding": {
+        "primitiveId": "washi-turb",
+        "attribute": "baseFrequency",
+        "component": 0
+      },
+      "min": 0.002,
+      "max": 0.03,
+      "step": 0.001
+    },
+    {
+      "key": "fiber-y",
+      "label": "Fiber Y",
+      "type": "number",
+      "default": 0.48,
+      "binding": {
+        "primitiveId": "washi-turb",
+        "attribute": "baseFrequency",
+        "component": 1
+      },
+      "min": 0.1,
+      "max": 0.9,
+      "step": 0.02
+    },
+    {
+      "key": "alpha-slope",
+      "label": "Fiber Opacity",
+      "type": "number",
+      "default": 0.72,
+      "binding": {
+        "primitiveId": "washi-alpha",
+        "attribute": "slope"
+      },
+      "min": 0.2,
+      "max": 1.5,
+      "step": 0.01
+    },
+    {
+      "key": "surface-scale",
+      "label": "Relief",
+      "type": "number",
+      "default": 1.8,
+      "binding": {
+        "primitiveId": "washi-light",
+        "attribute": "surfaceScale"
+      },
+      "min": 0.5,
+      "max": 5,
+      "step": 0.05
+    }
+  ],
+  "presets": {
+    "kozo-fine": {
+      "name": "Kozo Fine",
+      "description": "Quiet long fibers for premium paper surfaces.",
+      "values": {
+        "fiber-x": 0.004,
+        "fiber-y": 0.56,
+        "alpha-slope": 0.55,
+        "surface-scale": 1.25
+      }
+    },
+    "deckle-rough": {
+      "name": "Deckle Rough",
+      "description": "Visible rough fibers and deeper directional relief.",
+      "values": {
+        "fiber-x": 0.011,
+        "fiber-y": 0.34,
+        "alpha-slope": 0.92,
+        "surface-scale": 2.8
+      }
+    },
+    "sumi-worn": {
+      "name": "Sumi Worn",
+      "description": "Dense fiber field suited to inked or archival treatments.",
+      "values": {
+        "fiber-x": 0.007,
+        "fiber-y": 0.68,
+        "alpha-slope": 1.08,
+        "surface-scale": 1.7
+      }
+    }
+  },
+  "performance": {
+    "tier": "moderate",
+    "animated": false,
+    "primitiveCount": 5,
+    "recommendedMaxInstances": 10,
+    "recommendedMaxAreaPx": 1200000
+  },
+  "accessibility": {
+    "decorative": true,
+    "reducedMotionFallback": null,
+    "notes": "Do not apply to essential body text without an unfiltered semantic duplicate."
+  },
+  "governance": {
+    "recommendedUses": [
+      "paper panels",
+      "editorial cards",
+      "quiet page backgrounds"
+    ],
+    "avoid": [
+      "small type below 16px",
+      "stacking with dense lithographic grain",
+      "high-contrast accessibility surfaces"
+    ]
+  },
+  "source": {
+    "origin": "SVG Filter Atelier v2",
+    "migration": "v0.1 signature material migration"
+  }
+}

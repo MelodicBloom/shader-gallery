@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SVG Filter Atlas — Vanilla Example</title>
+  <style>
+    body{background:#0b0b10;color:#f7f2e8;font:16px/1.5 system-ui;padding:3rem}
+    .surface{max-width:42rem;padding:4rem;border-radius:2rem;background:linear-gradient(135deg,#40536e,#d5b7c8,#d6eadf);filter:url("#mb--nacre-laminate--abalone-ridge")}
+  </style>
+</head>
+<body>
+  <main class="surface"><h1>Nacre Laminate</h1><p>Static preset class or filter URL.</p></main>
+  <script type="module">
+    const definitions = await fetch("../../generated/definitions.svg").then((response) => response.text());
+    document.body.insertAdjacentHTML("afterbegin", definitions);
+  </script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+{
+  "$schema": "../../schema/svg-filter-recipe.schema.json",
+  "id": "mycelial-bloom",
+  "name": "Mycelial Bloom Network",
+  "version": "0.1.0",
+  "status": "approved",
+  "family": "living",
+  "intent": [
+    "branching luminous network",
+    "biological threshold field",
+    "soft hyphal glow"
+  ],
+  "tags": [
+    "mycelial",
+    "living-system",
+    "threshold",
+    "network",
+    "glow"
+  ],
+  "filterRegion": {
+    "x": "-12%",
+    "y": "-12%",
+    "width": "124%",
+    "height": "124%"
+  },
+  "colorInterpolation": "sRGB",
+  "primitives": [
+    {
+      "id": "mycelium-turb",
+      "type": "feTurbulence",
+      "attributes": {
+        "type": "fractalNoise",
+        "baseFrequency": 0.027,
+        "numOctaves": 5,
+        "seed": 29,
+        "result": "field"
+      }
+    },
+    {
+      "id": "mycelium-threshold",
+      "type": "feColorMatrix",
+      "attributes": {
+        "in": "field",
+        "type": "matrix",
+        "values": "0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 22 -10.2",
+        "result": "veins"
+      }
+    },
+    {
+      "id": "mycelium-morph",
+      "type": "feMorphology",
+      "attributes": {
+        "in": "veins",
+        "operator": "dilate",
+        "radius": 0.65,
+        "result": "network"
+      }
+    },
+    {
+      "id": "mycelium-flood",
+      "type": "feFlood",
+      "attributes": {
+        "flood-color": "#9bffb1",
+        "flood-opacity": 0.88,
+        "result": "life"
+      }
+    },
+    {
+      "id": "mycelium-threads",
+      "type": "feComposite",
+      "attributes": {
+        "in": "life",
+        "in2": "network",
+        "operator": "in",
+        "result": "threads"
+      }
+    },
+    {
+      "id": "mycelium-glow",
+      "type": "feGaussianBlur",
+      "attributes": {
+        "in": "threads",
+        "stdDeviation": 2.2,
+        "result": "halo"
+      }
+    },
+    {
+      "id": "mycelium-merge",
+      "type": "feMerge",
+      "attributes": {},
+      "children": [
+        {
+          "id": "mycelium-node-halo",
+          "type": "feMergeNode",
+          "attributes": {
+            "in": "halo"
+          }
+        },
+        {
+          "id": "mycelium-node-thread",
+          "type": "feMergeNode",
+          "attributes": {
+            "in": "threads"
+          }
+        },
+        {
+          "id": "mycelium-node-source",
+          "type": "feMergeNode",
+          "attributes": {
+            "in": "SourceGraphic"
+          }
+        }
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "key": "network-scale",
+      "label": "Network Scale",
+      "type": "number",
+      "default": 0.027,
+      "binding": {
+        "primitiveId": "mycelium-turb",
+        "attribute": "baseFrequency"
+      },
+      "min": 0.005,
+      "max": 0.09,
+      "step": 0.001
+    },
+    {
+      "key": "threshold-mult",
+      "label": "Threshold Multiplier",
+      "type": "number",
+      "default": 22,
+      "binding": {
+        "primitiveId": "mycelium-threshold",
+        "attribute": "values",
+        "component": 18
+      },
+      "min": 8,
+      "max": 35,
+      "step": 1
+    },
+    {
+      "key": "threshold-sub",
+      "label": "Threshold Offset",
+      "type": "number",
+      "default": -10.2,
+      "binding": {
+        "primitiveId": "mycelium-threshold",
+        "attribute": "values",
+        "component": 19
+      },
+      "min": -18,
+      "max": -2,
+      "step": 0.2
+    },
+    {
+      "key": "thread-radius",
+      "label": "Thread Radius",
+      "type": "number",
+      "default": 0.65,
+      "binding": {
+        "primitiveId": "mycelium-morph",
+        "attribute": "radius"
+      },
+      "min": 0,
+      "max": 3,
+      "step": 0.05
+    },
+    {
+      "key": "glow",
+      "label": "Glow",
+      "type": "number",
+      "default": 2.2,
+      "binding": {
+        "primitiveId": "mycelium-glow",
+        "attribute": "stdDeviation"
+      },
+      "min": 0,
+      "max": 7,
+      "step": 0.2
+    }
+  ],
+  "presets": {
+    "biolume-web": {
+      "name": "Biolume Web",
+      "description": "Balanced luminous network for feature surfaces.",
+      "values": {
+        "network-scale": 0.027,
+        "threshold-mult": 22,
+        "threshold-sub": -10.2,
+        "thread-radius": 0.65,
+        "glow": 2.2
+      }
+    },
+    "fine-hyphae": {
+      "name": "Fine Hyphae",
+      "description": "Thin detailed threads with restrained glow.",
+      "values": {
+        "network-scale": 0.048,
+        "threshold-mult": 18,
+        "threshold-sub": -8.8,
+        "thread-radius": 0.25,
+        "glow": 1.0
+      }
+    },
+    "dense-colony": {
+      "name": "Dense Colony",
+      "description": "Broader interconnected growth and atmospheric bloom.",
+      "values": {
+        "network-scale": 0.015,
+        "threshold-mult": 28,
+        "threshold-sub": -12.4,
+        "thread-radius": 1.4,
+        "glow": 4.2
+      }
+    }
+  },
+  "performance": {
+    "tier": "heavy",
+    "animated": false,
+    "primitiveCount": 7,
+    "recommendedMaxInstances": 4,
+    "recommendedMaxAreaPx": 650000
+  },
+  "accessibility": {
+    "decorative": true,
+    "reducedMotionFallback": null,
+    "notes": "Do not apply to essential body text without an unfiltered semantic duplicate."
+  },
+  "governance": {
+    "recommendedUses": [
+      "ambient hero panels",
+      "living-system diagrams",
+      "progress or network metaphors"
+    ],
+    "avoid": [
+      "small text",
+      "dense data tables",
+      "continuous animation without reduced-motion fallback"
+    ]
+  },
+  "source": {
+    "origin": "SVG Filter Atelier v2",
+    "migration": "v0.1 signature material migration"
+  }
+}

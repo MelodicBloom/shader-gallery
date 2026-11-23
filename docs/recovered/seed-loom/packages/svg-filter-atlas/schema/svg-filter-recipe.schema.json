@@ -1,0 +1,378 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://melodicbloom.dev/schema/svg-filter-recipe.schema.json",
+  "title": "MelodicBloom SVG Filter Recipe",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "version",
+    "status",
+    "family",
+    "intent",
+    "tags",
+    "filterRegion",
+    "colorInterpolation",
+    "primitives",
+    "parameters",
+    "presets",
+    "performance",
+    "accessibility",
+    "governance"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "approved",
+        "deprecated",
+        "experimental"
+      ]
+    },
+    "family": {
+      "enum": [
+        "optical",
+        "tactile",
+        "pattern",
+        "structural",
+        "living",
+        "fluid",
+        "chromatic",
+        "animated"
+      ]
+    },
+    "intent": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "filterRegion": {
+      "$ref": "#/$defs/filterRegion"
+    },
+    "colorInterpolation": {
+      "enum": [
+        "sRGB",
+        "linearRGB"
+      ]
+    },
+    "primitives": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/primitive"
+      }
+    },
+    "parameters": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/parameter"
+      }
+    },
+    "presets": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/preset"
+      }
+    },
+    "performance": {
+      "$ref": "#/$defs/performance"
+    },
+    "accessibility": {
+      "$ref": "#/$defs/accessibility"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "filterRegion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "properties": {
+        "x": {
+          "type": "string"
+        },
+        "y": {
+          "type": "string"
+        },
+        "width": {
+          "type": "string"
+        },
+        "height": {
+          "type": "string"
+        }
+      }
+    },
+    "primitive": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "attributes"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "type": {
+          "enum": [
+            "feTurbulence",
+            "feColorMatrix",
+            "feSpecularLighting",
+            "feDiffuseLighting",
+            "feDistantLight",
+            "fePointLight",
+            "feComposite",
+            "feBlend",
+            "feComponentTransfer",
+            "feFuncA",
+            "feDisplacementMap",
+            "feMorphology",
+            "feFlood",
+            "feGaussianBlur",
+            "feMerge",
+            "feMergeNode"
+          ]
+        },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "boolean"
+            ]
+          }
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/primitive"
+          }
+        }
+      }
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primitiveId",
+        "attribute"
+      ],
+      "properties": {
+        "primitiveId": {
+          "type": "string"
+        },
+        "attribute": {
+          "type": "string"
+        },
+        "component": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "label",
+        "type",
+        "default",
+        "binding"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "label": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "number",
+            "integer",
+            "color",
+            "select",
+            "boolean"
+          ]
+        },
+        "default": {
+          "type": [
+            "string",
+            "number",
+            "boolean"
+          ]
+        },
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
+        "step": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "binding": {
+          "$ref": "#/$defs/binding"
+        }
+      }
+    },
+    "preset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "description",
+        "values"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "values": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "boolean"
+            ]
+          }
+        }
+      }
+    },
+    "performance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tier",
+        "animated",
+        "primitiveCount",
+        "recommendedMaxInstances",
+        "recommendedMaxAreaPx"
+      ],
+      "properties": {
+        "tier": {
+          "enum": [
+            "light",
+            "moderate",
+            "heavy",
+            "experimental"
+          ]
+        },
+        "animated": {
+          "type": "boolean"
+        },
+        "primitiveCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "recommendedMaxInstances": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "recommendedMaxAreaPx": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "accessibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decorative",
+        "reducedMotionFallback",
+        "notes"
+      ],
+      "properties": {
+        "decorative": {
+          "type": "boolean"
+        },
+        "reducedMotionFallback": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recommendedUses",
+        "avoid"
+      ],
+      "properties": {
+        "recommendedUses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "avoid": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
