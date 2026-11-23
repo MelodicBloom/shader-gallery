@@ -7,6 +7,8 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
+import filmPars from './shaders/thinFilm.pars.glsl?raw';
+import filmApply from './shaders/thinFilm.apply.glsl?raw';
 
 const TAU = Math.PI * 2;
 const qs = new URLSearchParams(location.search);
@@ -29,7 +31,7 @@ const rand = mulberry32(Number(qs.get('seed') ?? 1708));
 // ---------- state ----------
 const state = {
   hueSpeed: reducedMotion ? 0.3 : 1,
-  dispersion: 0.6,
+  dispersion: 0.35, // slider 0..1 → three dispersion 0..5 + thin-film strength
   open: 0.55,
   autoRotate: !reducedMotion,
   material: 'glass', // 'glass' | 'gem'
@@ -123,14 +125,23 @@ function boot() {
 
   // ---------- materials ----------
   const glassMats = []; // all transmissive materials that respond to dispersion / material toggle
+  // shared uniforms for the hand-written thin-film GLSL layer (src/shaders/thinFilm.*.glsl)
+  const film = { uFilm: { value: 0 }, uHue: { value: 0 }, uSpread: { value: 1.2 } };
+  function injectFilm(shader) {
+    Object.assign(shader.uniforms, film);
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', '#include <common>\n' + filmPars)
+      .replace('#include <opaque_fragment>', filmApply + '\n#include <opaque_fragment>');
+  }
   function glass(tint, opts = {}) {
     const m = new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(0xffffff).lerp(new THREE.Color(tint), opts.body ?? 0.45), metalness: 0, roughness: 0.02, transmission: 1, thickness: opts.thickness ?? 0.7,
       ior: 1.52, attenuationColor: new THREE.Color(tint), attenuationDistance: opts.att ?? 0.9,
-      specularIntensity: 1, clearcoat: 0.25, clearcoatRoughness: 0.04, dispersion: state.dispersion,
+      specularIntensity: 1, clearcoat: 0.25, clearcoatRoughness: 0.04, dispersion: 0,
       envMapIntensity: 1.25, side: THREE.FrontSide,
     });
-    m.userData.base = { att: opts.att ?? 0.9, tint: new THREE.Color(tint) };
+    m.userData.base = { att: opts.att ?? 0.9, tint: new THREE.Color(tint), body: opts.body ?? 0.45 };
+    m.onBeforeCompile = injectFilm; m.customProgramCacheKey = () => 'thinfilm-v1';
     glassMats.push(m); return m;
   }
   const gold = new THREE.MeshPhysicalMaterial({ color: new THREE.Color().setRGB(1.0, 0.6, 0.18), metalness: 1, roughness: 0.12, envMapIntensity: 1.1, clearcoat: 0.3, clearcoatRoughness: 0.05 });
@@ -216,7 +227,7 @@ function boot() {
   const gems = [];
   const gemGeo = brilliantGeo(0.3);
   for (let i = 0; i < 8; i++) {
-    const m = glass('#c04bff', { att: 0.3, thickness: 0.6, body: 0 });
+    const m = glass('#c04bff', { att: 0.3, thickness: 0.6, body: 0 }); m.userData.gem = true; m.emissive = new THREE.Color('#c04bff');
     const mesh = new THREE.Mesh(gemGeo, m);
     mesh.userData.tilt = (rand() - 0.5) * 0.6; mesh.userData.bob = rand() * TAU;
     scene.add(mesh); gems.push(mesh);
@@ -226,7 +237,7 @@ function boot() {
   const composerRT = new THREE.WebGLRenderTarget(2, 2, { type: THREE.HalfFloatType, samples: 4 });
   const composer = new EffectComposer(renderer, composerRT);
   composer.addPass(new RenderPass(scene, camera));
-  const bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.5, 0.32, 2.0);
+  const bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.55, 0.35, 1.5); // above backdrop (1.0) and lit cream lotus; core + emissive gems + hot spec only
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
 
@@ -275,10 +286,12 @@ function boot() {
     const gem = state.material === 'gem';
     for (const m of glassMats) {
       m.ior = gem ? 2.05 : 1.52;
-      m.dispersion = state.dispersion * (gem ? 2.2 : 1);
+      m.dispersion = state.dispersion * 5 * (gem ? 1.6 : 1); // live uniform; three bumps program version only when crossing 0
       m.attenuationDistance = m.userData.base.att * (gem ? 0.45 : 1);
       m.roughness = gem ? 0.0 : 0.02;
     }
+    film.uFilm.value = state.dispersion * (gem ? 0.9 : 0.6);
+    film.uSpread.value = gem ? 2.4 : 1.2;
   }
   applyMaterial();
 
@@ -296,15 +309,30 @@ function boot() {
     const open = THREE.MathUtils.clamp(state.open + breathe, 0, 1);
     for (const [set, k] of petalSets) for (const p of set) p.pivot.rotation.x = open * k - 0.05;
     const pulse = 1 + (reducedMotion ? 0 : 0.12 * Math.sin((t / 3) * TAU));
-    coreMat.emissiveIntensity = 3.8 * pulse; coreLight.intensity = 1.5 * pulse;
+    const gemMode = state.material === 'gem';
+    // Glass mode: bloom emphasis on the cyan core. Gem mode: core dims, gemstones glow.
+    coreMat.emissiveIntensity = (gemMode ? 1.0 : 2.6) * pulse; coreLight.intensity = (gemMode ? 0.6 : 1.5) * pulse;
+    const P = hueT / 6; // hue phase: one cycle per 6 s at 1×
+    film.uHue.value = P;
+    // petal/tile tints drift with the hue clock: subtle in Glass, strong in Gem
+    const amp = gemMode ? 0.2 : 0.03;
+    for (let j = 0; j < glassMats.length; j++) {
+      const m = glassMats[j]; if (m.userData.gem) continue;
+      const b = m.userData.base;
+      tmp.copy(b.tint).offsetHSL(amp * Math.sin((P + j * 0.17) * TAU), 0, 0);
+      m.attenuationColor.copy(tmp); m.color.setRGB(1, 1, 1).lerp(tmp, b.body);
+    }
     shell.rotation.set(mt * 0.2, mt * 0.31, 0);
     for (let i = 0; i < gems.length; i++) {
       const g = gems[i], a = (i / gems.length) * TAU + (mt / 40) * TAU;
       g.position.set(Math.cos(a) * 5.15, Math.sin(a) * 5.15, 0.35 * Math.sin((mt / 8) * TAU + g.userData.bob));
       g.rotation.set(Math.PI / 2 + g.userData.tilt, (mt / 6) * TAU + i, 0);
       // hue: pink (0.92) → purple (0.78) → blue (0.62) and back, phase-offset per gem
-      const h = 0.77 + 0.15 * Math.cos((hueT / 10 + i / gems.length) * TAU);
+      // Glass: pink→purple→blue band. Gem: full spectrum cycle.
+      const h = gemMode ? (((P + i / gems.length) % 1) + 1) % 1 : 0.77 + 0.15 * Math.cos((P + i / gems.length) * TAU);
       tmp.setHSL(h, 0.9, 0.55); g.material.attenuationColor.copy(tmp); g.material.color.setRGB(1, 1, 1).lerp(tmp, 0.45);
+      g.material.emissive.copy(tmp);
+      g.material.emissiveIntensity = (gemMode ? 3.2 : 1.0) * (1 + 0.3 * Math.sin((P * 2 + i / 4) * TAU));
     }
   }
 
