@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MelodicBloom/shader-gallery/tree/main/experiments/wireframe-mandala/presets/preset.schema.json",
+  "title": "Wireframe mandala bounded parameters v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["seed", "points", "copies", "templates", "amplitude", "frequency", "speed", "mode", "phase", "glow"],
+  "properties": {
+    "seed": {"type":"integer", "minimum":0, "maximum":2147483647},
+    "points": {"type":"integer", "minimum":12, "maximum":128},
+    "copies": {"type":"integer", "minimum":3, "maximum":24},
+    "templates": {"type":"integer", "minimum":1, "maximum":16},
+    "amplitude": {"type":"number", "minimum":0, "maximum":0.9},
+    "frequency": {"type":"number", "minimum":0.2, "maximum":12},
+    "speed": {"type":"number", "minimum":0, "maximum":3},
+    "mode": {"enum":["nested", "radial"]},
+    "phase": {"type":"number", "minimum":-10000, "maximum":10000},
+    "glow": {"type":"boolean"}
+  },
+  "$comment": "Additional cross-field constraint: (points-1)*copies*(1 + (mode === nested ? templates : 0)) <= 30000, checked by normalize()."
+}
