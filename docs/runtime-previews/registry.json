@@ -1,0 +1,351 @@
+{
+  "schemaVersion": 1,
+  "repository": "MelodicBloom/shader-gallery",
+  "repositoryId": 1247977168,
+  "teamId": "team_YSZYNUnln7Dn1hb0gVVUymlb",
+  "projectId": "prj_FhJBIL2fief2RIG83kXuGNQ74F99",
+  "generatedAt": "2026-11-06",
+  "audience": "Vercel-protected preview; sign-in required",
+  "trigger": "on-demand API deployment; automatic push deployment is not configured by this change",
+  "browserAcceptance": "Pending: browser encountered Vercel authentication, including with an expiring share link. No successful deployed WebGL draw or interaction is claimed.",
+  "nonClaims": [
+    "physical calibration",
+    "material certification",
+    "cross-device rendering parity",
+    "performance qualification",
+    "production acceptance"
+  ],
+  "demos": [
+    {
+      "id": "noise-kaleidoscope",
+      "label": "Noise Kaleidoscope",
+      "branch": "experiment/noise-kaleidoscope-v0",
+      "sourceSha": "f4f77e997d7eb37ac0f6f265c41b6c306e399e39",
+      "entry": "experiments/noise-kaleidoscope-v0/index.html",
+      "url": "https://shader-gallery-hp6nv1dxx-melodicbloom.vercel.app/experiments/noise-kaleidoscope-v0/index.html",
+      "rootUrl": "https://shader-gallery-hp6nv1dxx-melodicbloom.vercel.app/",
+      "branchAlias": "https://shader-gallery-git-experiment-noise-kaleido-ea7069-melodicbloom.vercel.app",
+      "deploymentId": "dpl_FGoEWZfG7fUfvCz3RSczEW855y7n",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": null,
+        "installCommand": "",
+        "buildCommand": "test -f index.html || printf '<meta http-equiv=refresh content=0;url=experiments/noise-kaleidoscope-v0/index.html>' > index.html",
+        "outputDirectory": "."
+      }
+    },
+    {
+      "id": "benthic-r3f",
+      "label": "Benthic R3F",
+      "branch": "codex/benthic-r3f-proof",
+      "sourceSha": "fe8964de26b980ef05ec49923725b73e8282be7d",
+      "entry": "index.html",
+      "url": "https://shader-gallery-8c68jt862-melodicbloom.vercel.app/index.html",
+      "rootUrl": "https://shader-gallery-8c68jt862-melodicbloom.vercel.app/",
+      "branchAlias": "https://shader-gallery-git-codex-benthic-r3f-proof-melodicbloom.vercel.app",
+      "deploymentId": "dpl_8uyRqUUDS4iN6utmE5unUx7gkM5H",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": "vite",
+        "rootDirectory": "benthic-r3f",
+        "installCommand": "npm ci --ignore-scripts",
+        "buildCommand": "npm run build",
+        "outputDirectory": "dist"
+      }
+    },
+    {
+      "id": "abalone-runtime",
+      "label": "Abalone portfolio runtime",
+      "branch": "feature/issue-11-abalone-runtime",
+      "sourceSha": "8866c0ba40340b6dbe86d2a6f8b5f4a15d3c2a55",
+      "entry": "index.html",
+      "url": "https://shader-gallery-3dqanjb0y-melodicbloom.vercel.app/index.html",
+      "rootUrl": "https://shader-gallery-3dqanjb0y-melodicbloom.vercel.app/",
+      "branchAlias": "https://shader-gallery-git-feature-issue-11-abalone-139a6d-melodicbloom.vercel.app",
+      "deploymentId": "dpl_Dm3NQhsvwrP8rUwPPdF2kMSdsE1Y",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": "vite",
+        "rootDirectory": "portfolio-runtime",
+        "installCommand": "npm ci --ignore-scripts",
+        "buildCommand": "npm run build",
+        "outputDirectory": "dist"
+      }
+    },
+    {
+      "id": "nacre-validation",
+      "label": "Nacre controls",
+      "branch": "feat/issue-11-nacre-validation",
+      "sourceSha": "df9822cf365e943c441ce4cca6ca3c237cf3b2b1",
+      "entry": "index.html",
+      "url": "https://shader-gallery-3xz0c6ilf-melodicbloom.vercel.app/index.html",
+      "rootUrl": "https://shader-gallery-3xz0c6ilf-melodicbloom.vercel.app/",
+      "branchAlias": "https://shader-gallery-git-feat-issue-11-nacre-validation-melodicbloom.vercel.app",
+      "deploymentId": "dpl_6fAUYBNZVSvkRZztEttorNxru3p2",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": "vite",
+        "rootDirectory": "portfolio-runtime",
+        "installCommand": "npm ci --ignore-scripts",
+        "buildCommand": "npm run build",
+        "outputDirectory": "dist"
+      }
+    },
+    {
+      "id": "kaleidoscopic-field",
+      "label": "Kaleidoscopic Field + audio",
+      "branch": "experiment/kaleidoscopic-field-001",
+      "sourceSha": "b2dd178db6198a89b41e32d6be7ac0a8302915fb",
+      "entry": "experiments/kaleidoscopic-field-001/index.html",
+      "url": "https://shader-gallery-4z05pqzfo-melodicbloom.vercel.app/experiments/kaleidoscopic-field-001/index.html",
+      "rootUrl": "https://shader-gallery-4z05pqzfo-melodicbloom.vercel.app/",
+      "branchAlias": "https://shader-gallery-git-experiment-kaleidoscopic-a41a5d-melodicbloom.vercel.app",
+      "deploymentId": "dpl_E8UUzJm7gkZQvHWJ9zxnwcfVdYz5",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": null,
+        "installCommand": "",
+        "buildCommand": "node experiments/kaleidoscopic-field-001/tools/build-fixture.mjs && printf '<meta http-equiv=refresh content=0;url=experiments/kaleidoscopic-field-001/index.html>' > index.html",
+        "outputDirectory": "."
+      }
+    },
+    {
+      "id": "wireframe-mandala",
+      "label": "Wireframe Mandala",
+      "branch": "experiment/wireframe-mandala-001",
+      "sourceSha": "e6ffbfe416239087a149bcea68753b3b562ba58e",
+      "entry": "experiments/wireframe-mandala/index.html",
+      "url": "https://shader-gallery-86s6k5xmh-melodicbloom.vercel.app/experiments/wireframe-mandala/index.html",
+      "rootUrl": "https://shader-gallery-86s6k5xmh-melodicbloom.vercel.app/",
+      "branchAlias": "https://shader-gallery-git-experiment-wireframe-man-f4cb58-melodicbloom.vercel.app",
+      "deploymentId": "dpl_A3id8JVXEgURBCD3RMXr8Zmfs1dM",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": null,
+        "installCommand": "",
+        "buildCommand": "test -f index.html || printf '<meta http-equiv=refresh content=0;url=experiments/wireframe-mandala/index.html>' > index.html",
+        "outputDirectory": "."
+      }
+    },
+    {
+      "id": "material-atlas",
+      "label": "Material Atlas / Precious Opal",
+      "branch": "feat/material-atlas-opal-v0-1",
+      "sourceSha": "04e933418c07b586fec41b4e91fb431b596fd330",
+      "entry": "packages/shader-library-v1/source/material-atlas/index.html",
+      "url": "https://shader-gallery-fgowazf2d-melodicbloom.vercel.app/packages/shader-library-v1/source/material-atlas/index.html",
+      "rootUrl": "https://shader-gallery-fgowazf2d-melodicbloom.vercel.app/",
+      "branchAlias": "https://shader-gallery-git-feat-material-atlas-opal-v0-1-melodicbloom.vercel.app",
+      "deploymentId": "dpl_8MR8HB2ZNvysEwLxHchVHi3uCYks",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": null,
+        "installCommand": "",
+        "buildCommand": "test -f index.html || printf '<meta http-equiv=refresh content=0;url=packages/shader-library-v1/source/material-atlas/index.html>' > index.html",
+        "outputDirectory": "."
+      }
+    },
+    {
+      "id": "optical-studio",
+      "label": "Optical Studio v1.2",
+      "branch": "feat/optical-studio-v1.2-abalone-lab",
+      "sourceSha": "bc84ebc6b13d2d5d1d1dacdfdef5c526ac8597d7",
+      "entry": "optical-studio/index.html",
+      "url": "https://shader-gallery-a9jtc3uo3-melodicbloom.vercel.app/optical-studio/index.html",
+      "rootUrl": "https://shader-gallery-a9jtc3uo3-melodicbloom.vercel.app/",
+      "branchAlias": "https://shader-gallery-git-feat-optical-studio-v12-4c3176-melodicbloom.vercel.app",
+      "deploymentId": "dpl_DTU79UmRSaY8jhkkvE6c6qQQe9TN",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": null,
+        "installCommand": "",
+        "buildCommand": "test -f index.html || printf '<meta http-equiv=refresh content=0;url=optical-studio/index.html>' > index.html",
+        "outputDirectory": "."
+      }
+    },
+    {
+      "id": "optical-studies",
+      "label": "Optical Studies 02",
+      "branch": "feat/optical-studies-02",
+      "sourceSha": "d298296bc04428f01e0238ab7f82c36be9f20406",
+      "entry": "docs/optical-studies-02.html",
+      "url": "https://shader-gallery-1ymgp2ozc-melodicbloom.vercel.app/docs/optical-studies-02.html",
+      "rootUrl": "https://shader-gallery-1ymgp2ozc-melodicbloom.vercel.app/",
+      "branchAlias": "https://shader-gallery-git-feat-optical-studies-02-melodicbloom.vercel.app",
+      "deploymentId": "dpl_ArNg7sJoSTyM2WJV7gEttBasCkiA",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": null,
+        "installCommand": "",
+        "buildCommand": "test -f index.html || printf '<meta http-equiv=refresh content=0;url=docs/optical-studies-02.html>' > index.html",
+        "outputDirectory": "."
+      }
+    },
+    {
+      "id": "benthic-os",
+      "label": "Benthic OS",
+      "branch": "codex/benthic-os-proof",
+      "sourceSha": "9da34fdcf6f6344de405a61962e6e86b9bb3c793",
+      "entry": "benthic-os/index.html",
+      "url": "https://shader-gallery-22qas43xn-melodicbloom.vercel.app/benthic-os/index.html",
+      "rootUrl": "https://shader-gallery-22qas43xn-melodicbloom.vercel.app/",
+      "branchAlias": "https://shader-gallery-git-codex-benthic-os-proof-melodicbloom.vercel.app",
+      "deploymentId": "dpl_5xeFYytmdem5VWqmXYPzqcVmwhzj",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": null,
+        "installCommand": "",
+        "buildCommand": "test -f index.html || printf '<meta http-equiv=refresh content=0;url=benthic-os/index.html>' > index.html",
+        "outputDirectory": "."
+      }
+    },
+    {
+      "id": "landing",
+      "label": "Root landing / PR 37",
+      "branch": "fix/pages-live-entry",
+      "sourceSha": "879161846debf928daccddae4ed5344f02c29901",
+      "entry": "index.html",
+      "url": "https://shader-gallery-b30m0tdya-melodicbloom.vercel.app/index.html",
+      "rootUrl": "https://shader-gallery-b30m0tdya-melodicbloom.vercel.app/",
+      "branchAlias": "https://shader-gallery-git-fix-pages-live-entry-melodicbloom.vercel.app",
+      "deploymentId": "dpl_4XSMQWoeeKvN9C5rJoCfXd2VQA7Z",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": null,
+        "installCommand": "",
+        "buildCommand": "test -f index.html || printf '<meta http-equiv=refresh content=0;url=index.html>' > index.html",
+        "outputDirectory": "."
+      }
+    },
+    {
+      "id": "context-recycling",
+      "label": "Library context recycling",
+      "branch": "fix/webgl-context-recycling",
+      "sourceSha": "e28557bfd44076f4c06baae8cab620f96574ab3c",
+      "entry": "library-v1/index.html",
+      "url": "https://shader-gallery-gc5s30dyj-melodicbloom.vercel.app/library-v1/index.html",
+      "rootUrl": "https://shader-gallery-gc5s30dyj-melodicbloom.vercel.app/",
+      "branchAlias": "https://shader-gallery-git-fix-webgl-context-recycling-melodicbloom.vercel.app",
+      "deploymentId": "dpl_Fc68FMQgGCHgoSJWxiYNAjEiQ9xN",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": null,
+        "installCommand": "",
+        "buildCommand": "test -f index.html || printf '<meta http-equiv=refresh content=0;url=library-v1/index.html>' > index.html",
+        "outputDirectory": "."
+      }
+    },
+    {
+      "id": "geotile",
+      "label": "GEO-TILE map inspector",
+      "branch": "feat/geotile-browser-runtime",
+      "sourceSha": "120a93671b42cadd57a418efa69545acbbf8c31d",
+      "entry": "material-validation-lab/experiments/GEO-TILE-001/browser/index.html",
+      "url": "https://shader-gallery-5ike8k1lr-melodicbloom.vercel.app/material-validation-lab/experiments/GEO-TILE-001/browser/index.html",
+      "rootUrl": "https://shader-gallery-5ike8k1lr-melodicbloom.vercel.app/",
+      "branchAlias": "https://shader-gallery-git-feat-geotile-browser-runtime-melodicbloom.vercel.app",
+      "deploymentId": "dpl_4GwgUXthn29T5RhfejwBsEg4dc4x",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": null,
+        "installCommand": "",
+        "buildCommand": "python3 material-validation-lab/experiments/GEO-TILE-001/browser/build.py && printf '<meta http-equiv=refresh content=0;url=material-validation-lab/experiments/GEO-TILE-001/browser/>' > index.html",
+        "outputDirectory": "."
+      }
+    },
+    {
+      "id": "shader-grammar-example",
+      "label": "Shader Grammar thin-film host",
+      "branch": "feat/shader-grammar-example-runtime",
+      "sourceSha": "709ee370a5db001391d2ea6083921dbe5b3db7d0",
+      "entry": "packages/shader-grammar/examples/runtime/index.html",
+      "url": "https://shader-gallery-awc5dbwgh-melodicbloom.vercel.app/packages/shader-grammar/examples/runtime/index.html",
+      "rootUrl": "https://shader-gallery-awc5dbwgh-melodicbloom.vercel.app/",
+      "branchAlias": "https://shader-gallery-git-feat-shader-grammar-exam-85ea90-melodicbloom.vercel.app",
+      "deploymentId": "dpl_JBkUNjVnaynJZJ8egiVEZuxM74ci",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": null,
+        "installCommand": "",
+        "buildCommand": "test -f index.html || printf '<meta http-equiv=refresh content=0;url=packages/shader-grammar/examples/runtime/index.html>' > index.html",
+        "outputDirectory": "."
+      }
+    },
+    {
+      "id": "mvt-abalone",
+      "label": "mvt-abalone",
+      "branch": "feat/mvt-abalone-001",
+      "sourceSha": "b21f2972b7c1e8662a21aa925082974c8a272a42",
+      "entry": "material-validation-lab/reference/abalone/index.html",
+      "url": "https://shader-gallery-48i4iot7a-melodicbloom.vercel.app/material-validation-lab/reference/abalone/index.html",
+      "rootUrl": "https://shader-gallery-48i4iot7a-melodicbloom.vercel.app/",
+      "branchAlias": "https://shader-gallery-git-feat-mvt-abalone-001-melodicbloom.vercel.app",
+      "deploymentId": "dpl_2yaWewbRikPnzmGjKpiSEViZfnk3",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": null,
+        "installCommand": "",
+        "buildCommand": "cd material-validation-lab/reference/abalone && npm ci --omit=dev --ignore-scripts && npm run fetch-asset && cp -R node_modules/three three && sed -i 's,node_modules/three,three,g' index.html",
+        "outputDirectory": "."
+      }
+    },
+    {
+      "id": "library-original-preview",
+      "label": "Original Library preview",
+      "branch": "agent/pr4-live-shader-preview",
+      "sourceSha": "76b27dddcb02cec737576324f0bcc13a2c80ab06",
+      "entry": "library-v1/index.html",
+      "url": "https://shader-gallery-pzetgz3ng-melodicbloom.vercel.app/library-v1/index.html",
+      "rootUrl": "https://shader-gallery-pzetgz3ng-melodicbloom.vercel.app/",
+      "branchAlias": "https://shader-gallery-git-agent-pr4-live-shader-preview-melodicbloom.vercel.app",
+      "deploymentId": "dpl_4Fa91aKxf2YVxHkUeexq58aVfPmM",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": null,
+        "installCommand": "",
+        "buildCommand": "test -f index.html || printf '<meta http-equiv=refresh content=0;url=library-v1/index.html>' > index.html",
+        "outputDirectory": "."
+      }
+    },
+    {
+      "id": "reverse-orbit",
+      "label": "Abalone reverse orbit",
+      "branch": "fix/reverse-side-iridescence",
+      "sourceSha": "45e4e192c8f6eb0c26f2b9b27069278a9f26b465",
+      "entry": "index.html",
+      "url": "https://shader-gallery-nrjj408li-melodicbloom.vercel.app/index.html",
+      "rootUrl": "https://shader-gallery-nrjj408li-melodicbloom.vercel.app/",
+      "branchAlias": null,
+      "deploymentId": "dpl_HyV5jX1V8akMRj4ZC2w8gzpezecG",
+      "providerState": "READY",
+      "http": 200,
+      "projectSettings": {
+        "framework": "vite",
+        "rootDirectory": "portfolio-runtime",
+        "installCommand": "npm ci --ignore-scripts",
+        "buildCommand": "npm run build",
+        "outputDirectory": "dist"
+      }
+    }
+  ],
+  "newRuntimePullRequests": {
+    "geotile": "https://github.com/MelodicBloom/shader-gallery/pull/45",
+    "shaderGrammarExample": "https://github.com/MelodicBloom/shader-gallery/pull/46"
+  }
+}

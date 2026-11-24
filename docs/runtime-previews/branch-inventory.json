@@ -1,0 +1,1003 @@
+{
+  "captured": "2026-11-06",
+  "original_branch_count": 43,
+  "rows": [
+    {
+      "branch": "agent/pr4-live-shader-preview",
+      "sha": "76b27dddcb02cec737576324f0bcc13a2c80ab06",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "library-original-preview",
+      "disposition": "Dedicated preview of this implementation"
+    },
+    {
+      "branch": "codex/benthic-os-proof",
+      "sha": "9da34fdcf6f6344de405a61962e6e86b9bb3c793",
+      "entry_candidates": [
+        "benthic-os/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "benthic-os/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "benthic-os",
+      "disposition": "Dedicated preview of this implementation"
+    },
+    {
+      "branch": "codex/benthic-r3f-proof",
+      "sha": "fe8964de26b980ef05ec49923725b73e8282be7d",
+      "entry_candidates": [
+        "benthic-os/index.html",
+        "benthic-r3f/index.html",
+        "benthic-r3f/package.json",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "benthic-os/index.html",
+        "benthic-r3f/index.html",
+        "benthic-r3f/package.json",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "benthic-r3f",
+      "disposition": "Dedicated preview of this implementation"
+    },
+    {
+      "branch": "codex/shader-gallery-post-merge-repair",
+      "sha": "1e975b12b5c3c1e1567063a6519f75180f67f65d",
+      "entry_candidates": [
+        "docs/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "codex/shader-grammar-intake",
+      "sha": "ffb1a47948f28df54f71fb580865a1605c5839a6",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-grammar/package.json",
+        "packages/shader-grammar/qa/package.json",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 2,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-grammar/package.json",
+        "packages/shader-grammar/qa/package.json",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "shader-grammar-example",
+      "disposition": "Inherited implementation preview; proposed docs/plans are not a completed shader change"
+    },
+    {
+      "branch": "codex/vma001-g0-abalone",
+      "sha": "8615744466e8682af97ae2d9166c05e9803df4f6",
+      "entry_candidates": [
+        "docs/index.html"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "copilot/2f01487a9836fa5f8fe972d5f7a77170820b364d-checks",
+      "sha": "a39101274a586e31c1f370bbc2e95a69c74129c9",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "docs/design-intent-recovery-20261027",
+      "sha": "2525665a54fe37f836356001a948d629a9cf3e33",
+      "entry_candidates": [
+        "docs/index.html"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "docs/frontier-geometry-protocol-v0-1",
+      "sha": "ba223e254ab59ed5b836308e79c1466632e98fc4",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "docs/live-demo-link",
+      "sha": "720dc6efaacac7bf4e5d4aacabc07927414e2044",
+      "entry_candidates": [
+        "docs/index.html"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "docs/optical-studio-remix-provenance-2026-10-29",
+      "sha": "4797dc9bfd56019fae91d9a1cd9cd0fdbec90168",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "optical-studio/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 7,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "optical-studio/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "optical-studio",
+      "disposition": "Inherited implementation preview; proposed docs/plans are not a completed shader change"
+    },
+    {
+      "branch": "docs/readme-demo-evidence",
+      "sha": "e61000d143c61e8472e33516ef742c6996c95986",
+      "entry_candidates": [],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "experiment/geotile-001-instamat-reconstruction",
+      "sha": "79d5459825d3c7c23d203e6eab3c40ecef5eb90e",
+      "entry_candidates": [
+        "docs/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "geotile",
+      "disposition": "Inherited implementation preview; proposed docs/plans are not a completed shader change"
+    },
+    {
+      "branch": "experiment/kaleidoscopic-field-001",
+      "sha": "b2dd178db6198a89b41e32d6be7ac0a8302915fb",
+      "entry_candidates": [
+        "docs/index.html",
+        "experiments/kaleidoscopic-field-001/index.html",
+        "experiments/kaleidoscopic-field-001/package.json",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "experiments/kaleidoscopic-field-001/index.html",
+        "experiments/kaleidoscopic-field-001/package.json",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "kaleidoscopic-field",
+      "disposition": "Dedicated preview of this implementation"
+    },
+    {
+      "branch": "experiment/noise-kaleidoscope-v0",
+      "sha": "f4f77e997d7eb37ac0f6f265c41b6c306e399e39",
+      "entry_candidates": [
+        "docs/index.html",
+        "experiments/noise-kaleidoscope-v0/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 2,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "experiments/noise-kaleidoscope-v0/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "noise-kaleidoscope",
+      "disposition": "Dedicated preview of this implementation"
+    },
+    {
+      "branch": "experiment/wireframe-mandala-001",
+      "sha": "e6ffbfe416239087a149bcea68753b3b562ba58e",
+      "entry_candidates": [
+        "docs/index.html",
+        "experiments/wireframe-mandala/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "experiments/wireframe-mandala/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "wireframe-mandala",
+      "disposition": "Dedicated preview of this implementation"
+    },
+    {
+      "branch": "feat/dispersion-instrument-0.1",
+      "sha": "698c5fdf31c60540452737f38468072e3c568054",
+      "entry_candidates": [
+        "docs/index.html"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "optical-studio/instruments/dispersion-lab/index.html",
+        "optical-studio/instruments/dispersion-lab/package.json",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "feat/issue-11-nacre-validation",
+      "sha": "df9822cf365e943c441ce4cca6ca3c237cf3b2b1",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json",
+        "portfolio-runtime/index.html",
+        "portfolio-runtime/package.json"
+      ],
+      "changed_shaders": 1,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json",
+        "portfolio-runtime/index.html",
+        "portfolio-runtime/package.json"
+      ],
+      "preview_id": "nacre-validation",
+      "disposition": "Dedicated preview of this implementation"
+    },
+    {
+      "branch": "feat/material-atlas-opal-v0-1",
+      "sha": "04e933418c07b586fec41b4e91fb431b596fd330",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/material-atlas/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 1,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/material-atlas/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "material-atlas",
+      "disposition": "Dedicated preview of this implementation"
+    },
+    {
+      "branch": "feat/material-validation-lab-v0",
+      "sha": "61b3142a66444708196ccad7ec0d407150ba81ab",
+      "entry_candidates": [
+        "docs/index.html"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "feat/mvt-abalone-001",
+      "sha": "b21f2972b7c1e8662a21aa925082974c8a272a42",
+      "entry_candidates": [
+        "docs/index.html",
+        "material-validation-lab/reference/abalone/index.html",
+        "material-validation-lab/reference/abalone/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "material-validation-lab/reference/abalone/index.html",
+        "material-validation-lab/reference/abalone/package.json",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "mvt-abalone",
+      "disposition": "Dedicated preview of this implementation"
+    },
+    {
+      "branch": "feat/optical-gems-lineage-c-map",
+      "sha": "2920d6bb93a0aa53f6f54a26fbbfb1a46196a45c",
+      "entry_candidates": [
+        "docs/index.html"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "feat/optical-studies-02",
+      "sha": "d298296bc04428f01e0238ab7f82c36be9f20406",
+      "entry_candidates": [
+        "docs/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "optical-studies",
+      "disposition": "Dedicated preview of this implementation"
+    },
+    {
+      "branch": "feat/optical-studio-v1.2-abalone-lab",
+      "sha": "bc84ebc6b13d2d5d1d1dacdfdef5c526ac8597d7",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "optical-studio/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 7,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "optical-studio/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "optical-studio",
+      "disposition": "Dedicated preview of this implementation"
+    },
+    {
+      "branch": "feat/radial-field-bloom-webgl2",
+      "sha": "e686dc54e3b62de37bf9d92d6545b83010f33f22",
+      "entry_candidates": [
+        "docs/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "feat/svg-glsl-seam-tranche-1",
+      "sha": "01c4ab4279ead8913709ce5c95be7d7dc2023efb",
+      "entry_candidates": [
+        "docs/index.html"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "feature/federated-evidence-graph",
+      "sha": "3ff0e6e43c3cecea6b4fb6d7149a493a4bb9f117",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "feature/federated-ingestion-contracts",
+      "sha": "84c930288ebba01b6020d8722e3c7a9348e64960",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "feature/issue-11-abalone-runtime",
+      "sha": "8866c0ba40340b6dbe86d2a6f8b5f4a15d3c2a55",
+      "entry_candidates": [
+        "docs/index.html",
+        "portfolio-runtime/index.html",
+        "portfolio-runtime/package.json"
+      ],
+      "changed_shaders": 1,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json",
+        "portfolio-runtime/index.html",
+        "portfolio-runtime/package.json"
+      ],
+      "preview_id": "abalone-runtime",
+      "disposition": "Dedicated preview of this implementation"
+    },
+    {
+      "branch": "feature/jfrog-github-oidc-integration",
+      "sha": "ba2ad07d239586f44c1d55d600f68304d590f79d",
+      "entry_candidates": [
+        "docs/index.html"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/index.html"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "fix/native-validator-library-policy",
+      "sha": "516d15530a517686c3b8211f415faa5aae3b7ea9",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "fix/optical-studio-gem-reverse-side",
+      "sha": "b252a1bba61528ec6c2a385fd9af7422a23bced4",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "optical-studio/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 7,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "optical-studio/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "optical-studio",
+      "disposition": "Inherited implementation preview; proposed docs/plans are not a completed shader change"
+    },
+    {
+      "branch": "fix/optical-studio-lens-ripple-bounds",
+      "sha": "5b6e6083c03070bbffac73a671e60e72c4cb4841",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "optical-studio/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 7,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "optical-studio/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "optical-studio",
+      "disposition": "Inherited implementation preview; proposed docs/plans are not a completed shader change"
+    },
+    {
+      "branch": "fix/pages-live-entry",
+      "sha": "879161846debf928daccddae4ed5344f02c29901",
+      "entry_candidates": [
+        "index.html"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "index.html",
+        "library-v1/index.html",
+        "optical-studio/instruments/dispersion-lab/index.html",
+        "optical-studio/instruments/dispersion-lab/package.json",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "landing",
+      "disposition": "Dedicated preview of this implementation"
+    },
+    {
+      "branch": "fix/pr15-reconciliation",
+      "sha": "dff5326097b5b8a7e7ecbd301d8650b366438a4d",
+      "entry_candidates": [
+        "docs/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "fix/reverse-side-iridescence",
+      "sha": "45e4e192c8f6eb0c26f2b9b27069278a9f26b465",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json",
+        "portfolio-runtime/index.html",
+        "portfolio-runtime/package.json"
+      ],
+      "changed_shaders": 1,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json",
+        "portfolio-runtime/index.html",
+        "portfolio-runtime/package.json"
+      ],
+      "preview_id": "reverse-orbit",
+      "disposition": "Dedicated preview of this implementation"
+    },
+    {
+      "branch": "fix/webgl-context-recycling",
+      "sha": "e28557bfd44076f4c06baae8cab620f96574ab3c",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": "context-recycling",
+      "disposition": "Dedicated preview of this implementation"
+    },
+    {
+      "branch": "jfrog-frogbot-for-shader-gallery-4926f9b7-c991-485d-821d-876d74e780b6",
+      "sha": "88a23165a71f0a29c4e6f3deac2002fa9f47518d",
+      "entry_candidates": [
+        "docs/index.html"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/index.html"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "jfrog-frogbot-for-shader-gallery-7e5838f6-c7d5-4dbe-8ff3-e783d0bb0d3c",
+      "sha": "88a23165a71f0a29c4e6f3deac2002fa9f47518d",
+      "entry_candidates": [
+        "docs/index.html"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/index.html"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "main",
+      "sha": "8b73c4e3e89abedcc33fde82902eafc8f1d7e553",
+      "entry_candidates": [],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/ecosystem/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "optical-studio/instruments/dispersion-lab/index.html",
+        "optical-studio/instruments/dispersion-lab/package.json",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "research/projection-science",
+      "sha": "bbb4487706a27cbdd4f505fbe5374669518c2fac",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "research/shader-corpus",
+      "sha": "a40a00f91323851cadfaed30aa9905ecb78402ff",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "security/pin-actions-by-sha",
+      "sha": "f9b3ad99e51eb4560a4639a842366057aeffb1ae",
+      "entry_candidates": [
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "changed_shaders": 0,
+      "all_entries": [
+        "abalone/index.html",
+        "aurora/index.html",
+        "docs/index.html",
+        "library-v1/index.html",
+        "packages/shader-library-v1/source/docs/index.html",
+        "packages/shader-library-v1/source/live/index.html",
+        "packages/shader-library-v1/source/package.json"
+      ],
+      "preview_id": null,
+      "disposition": "No additional independent browser entry identified; use the existing baseline or main workbench"
+    },
+    {
+      "branch": "feat/geotile-browser-runtime",
+      "sha": "120a93671b42cadd57a418efa69545acbbf8c31d",
+      "preview_id": "geotile",
+      "disposition": "New additive browser host",
+      "all_entries": [
+        "material-validation-lab/experiments/GEO-TILE-001/browser/index.html"
+      ]
+    },
+    {
+      "branch": "feat/shader-grammar-example-runtime",
+      "sha": "709ee370a5db001391d2ea6083921dbe5b3db7d0",
+      "preview_id": "shader-grammar-example",
+      "disposition": "New additive browser host",
+      "all_entries": [
+        "packages/shader-grammar/examples/runtime/index.html"
+      ]
+    }
+  ]
+}
