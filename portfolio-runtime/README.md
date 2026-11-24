@@ -13,7 +13,7 @@ npm run build
 npm test
 ```
 
-The development server uses `http://127.0.0.1:5173/` and refuses to silently choose another port. `dist/` is local build output, ignored by Git. Relative asset paths allow hosting the build in a subdirectory. Publishing is a separate step.
+The development server uses `http://127.0.0.1:5173/` and refuses to silently choose another port. The portfolio index is at `/` and the Abalone renderer is at `/abalone.html`. The index links to pinned branch previews, which may require Vercel access. `dist/` is local build output, ignored by Git. Relative asset paths allow hosting the build in a subdirectory. Publishing is a separate step.
 
 ## State and rendering contract
 
