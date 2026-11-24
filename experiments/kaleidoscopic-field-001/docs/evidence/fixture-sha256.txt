@@ -1,0 +1,3 @@
+14a7e1a0f08cb24874be0a97a8794f2857897f85ce0a929c6ae87f23f4801544  fixtures/benchmark-12s.wav
+04cc22080064cc6bdb53a0ffb0fe8ddcf081a683bf9d40bac404f090c269eb8c  fixtures/envelope-60fps.json
+ada30c3e4be9eb54ba1536149461ccf7b91197dbffc7733efeeba2e8710bd4ff  docs/parameter-schedule.json
