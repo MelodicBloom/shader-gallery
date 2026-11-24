@@ -3,7 +3,7 @@
 <body><canvas id="c"></canvas>
 <script>
 const c=document.getElementById('c'),gl=c.getContext('webgl');
-c.width=innerWidth;c.height=innerHeight;
+c.width=innerWidth;c.height=innerHeight;gl.viewport(0,0,c.width,c.height);
 const v=gl.createShader(gl.VERTEX_SHADER);gl.shaderSource(v,'attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}');gl.compileShader(v);
 const f=gl.createShader(gl.FRAGMENT_SHADER);
 gl.shaderSource(f,`precision mediump float;uniform float u_time;uniform vec2 u_res;
@@ -15,5 +15,10 @@ gl.compileShader(f);const p=gl.createProgram();gl.attachShader(p,v);gl.attachSha
 const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
 const l=gl.getAttribLocation(p,'p');gl.enableVertexAttribArray(l);gl.vertexAttribPointer(l,2,gl.FLOAT,false,0,0);
 const uT=gl.getUniformLocation(p,'u_time'),uR=gl.getUniformLocation(p,'u_res');gl.uniform2f(uR,c.width,c.height);
-let t=0;(function draw(){t+=.016;gl.uniform1f(uT,t);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(draw)})();
+const motion=matchMedia('(prefers-reduced-motion: reduce)');
+let t=0,frame=0;
+function draw(){frame=0;t+=.016;gl.uniform1f(uT,t);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);if(!motion.matches)frame=requestAnimationFrame(draw)}
+function sync(){if(motion.matches){if(frame)cancelAnimationFrame(frame);frame=0;return}if(!frame)frame=requestAnimationFrame(draw)}
+motion.addEventListener('change',sync);
+draw();
 </script></body></html>
