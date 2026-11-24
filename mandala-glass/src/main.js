@@ -145,7 +145,8 @@ function boot() {
     glassMats.push(m); return m;
   }
   const gold = new THREE.MeshPhysicalMaterial({ color: new THREE.Color().setRGB(1.0, 0.6, 0.18), metalness: 1, roughness: 0.12, envMapIntensity: 1.1, clearcoat: 0.3, clearcoatRoughness: 0.05 });
-  const cream = new THREE.MeshPhysicalMaterial({ color: '#f7e3c0', roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.06, sheen: 0.6, sheenColor: new THREE.Color('#ffd9a0'), sheenRoughness: 0.4, transmission: 0.3, thickness: 0.5, attenuationColor: new THREE.Color('#ffcf8a'), attenuationDistance: 1.2, envMapIntensity: 1.0 });
+  const creamTransmission = 0.3;
+  const cream = new THREE.MeshPhysicalMaterial({ color: '#f7e3c0', roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.06, sheen: 0.6, sheenColor: new THREE.Color('#ffd9a0'), sheenRoughness: 0.4, transmission: creamTransmission, thickness: 0.5, attenuationColor: new THREE.Color('#ffcf8a'), attenuationDistance: 1.2, envMapIntensity: 1.0 });
   const coreMat = new THREE.MeshStandardMaterial({ color: '#0a2b33', emissive: new THREE.Color('#3ff4ff'), emissiveIntensity: 3.8, roughness: 0.3 });
   const blueDeep = glass('#0a63ff', { att: 0.2, thickness: 0.9, body: 0.6 });
   const blueSky = glass('#22b0ff', { att: 0.35, thickness: 0.6, body: 0.5 });
@@ -255,10 +256,17 @@ function boot() {
   function applyQuality() {
     const L = LEVELS[qLevel];
     const dpr = Math.min(window.devicePixelRatio || 1, L.dpr);
+    for (const target of [composer.renderTarget1, composer.renderTarget2]) {
+      if (target.samples !== L.samples) {
+        target.samples = L.samples;
+        target.dispose(); // Reallocate even when the target dimensions stay the same.
+      }
+    }
     renderer.setPixelRatio(dpr); composer.setPixelRatio(dpr);
-    composerRT.samples = L.samples; bloom.enabled = L.bloom;
+    bloom.enabled = L.bloom;
     renderer.transmissionResolutionScale = L.tScale;
     const lite = !!L.lite;
+    cream.transmission = lite ? 0 : creamTransmission;
     for (const m of glassMats) if ((m.transmission === 0) !== lite) { m.transmission = lite ? 0 : 1; m.transparent = lite; m.opacity = lite ? 0.8 : 1; m.needsUpdate = true; }
     resize();
     statusEl.textContent = `quality ${qLevel} · dpr ${dpr.toFixed(2)}${L.bloom ? '' : ' · bloom off'}${L.lite ? ' · lite glass' : ''}`;
@@ -338,10 +346,11 @@ function boot() {
 
   // ---------- loop + instrumentation ----------
   let running = true, lost = false, last = performance.now(); const start = last;
+  let frameId;
   const deltas = [], cpu = []; let frames = 0, slowWin = [], cooldown = 0;
   function frame(now) {
     if (!running) return;
-    requestAnimationFrame(frame);
+    frameId = requestAnimationFrame(frame);
     const dt = Math.min(0.1, (now - last) / 1000); deltas.push(now - last); last = now;
     if (deltas.length > 2000) deltas.shift();
     const t = frozenT ?? (now - start) / 1000;
@@ -368,15 +377,17 @@ function boot() {
   const canvas = renderer.domElement;
   canvas.addEventListener('webglcontextlost', (e) => {
     e.preventDefault(); lost = true; running = false;
+    cancelAnimationFrame(frameId);
     showOverlay('<h2>Restoring graphics…</h2><p>The GPU context was lost (driver reset or memory pressure). It will resume automatically.</p>');
     window.__mandala.contextLost = (window.__mandala.contextLost || 0) + 1;
   });
   canvas.addEventListener('webglcontextrestored', () => {
+    if (!lost) return;
     buildEnv(); // PMREM render target content does not survive a context loss
     if (qLevel < 2 && lockQ === null) { qLevel++; } // be conservative after a reset
     applyQuality();
     overlay.hidden = true; lost = false; running = true; last = performance.now();
-    requestAnimationFrame(frame);
+    frameId = requestAnimationFrame(frame);
     window.__mandala.contextRestored = (window.__mandala.contextRestored || 0) + 1;
   });
 
@@ -413,5 +424,5 @@ function boot() {
     get lost() { return lost; },
   };
   applyQuality();
-  requestAnimationFrame(frame);
+  frameId = requestAnimationFrame(frame);
 }

@@ -39,4 +39,10 @@ npm run preview    # serves dist/ on :4173
 - `prefers-reduced-motion`: auto-rotate off, breathing and orbit motion off, hue cycle slowed to 0.3×.
 
 ## QA
-`scripts/qa.mjs` and `scripts/bench4.mjs` run in headless Chromium through Playwright (`npm i playwright@1.55.0` in a scratch folder). Results, screenshots and the full decision log are in [`RECEIPTS.md`](./RECEIPTS.md) and `receipts/`.
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:7cd50bab83b975580bbc799acce60227ca7dc8093b75ccbcd308da908de34e40 -->
+
+`scripts/qa.mjs` and `scripts/bench4.mjs` run in headless Chromium through Playwright. Install Playwright and Chromium from the `mandala-glass/` project directory so both scripts can resolve the package. See [`RECEIPTS.md`](./RECEIPTS.md#build-commands) for the setup and run commands, and `receipts/` for the results and screenshots.
+
+<!-- /coderabbit-ai-generated:v1 -->

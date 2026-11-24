@@ -34,13 +34,32 @@ Commit SHAs, PR and deploy entries are listed at the bottom.
 | Gems | Procedural 8-segment brilliant cut (LatheGeometry) | Licensed gem model | No licensed assets. |
 
 ## Build commands
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:0ea5ef6e9019d19d22adf2118f4b6e93c1e5b876a6b9a858db7dc0581c51e763 -->
+
+In the first terminal, build the app and start the preview server. Leave this terminal running while you run QA.
+
 ```bash
-cd mandala-glass && npm install && npm run build   # vite 8.3.8 → dist/
-npx vite preview --port 4173 --strictPort          # local QA server
-node scripts/qa.mjs                                # shots + bench + sims (needs playwright@1.55.0)
-node scripts/bench4.mjs                            # lite-level bench
+cd mandala-glass
+npm ci
+npm run build
+npm run preview -- --port 4173 --strictPort
 ```
-Dependencies: `three@0.187.0` (runtime), `vite@8.3.8` (dev). QA only: `playwright@1.55.0` with bundled Chromium build 1187, run outside the app's `package.json`.
+
+In a second terminal, from the repository root, install the local QA dependencies and run both scripts:
+
+```bash
+cd mandala-glass
+npm install --no-save --package-lock=false playwright@1.55.0
+npx playwright install chromium
+node scripts/qa.mjs       # shots + bench + sims
+node scripts/bench4.mjs   # lite-level bench
+```
+
+Dependencies: `three@0.187.0` (runtime), `vite@8.3.8` (dev). Playwright and Chromium are only needed for QA. The Playwright install leaves the app manifest and lockfile unchanged.
+
+<!-- /coderabbit-ai-generated:v1 -->
 
 ## QA results (final)
 **Renderer: headless Chromium + SwiftShader (CPU software rasteriser via ANGLE)**, `--use-angle=swiftshader`. The headless browser reports devicePixelRatio 1. These numbers are **not** representative of a real GPU, and no real-GPU or real-phone measurement was taken.
