@@ -1,0 +1,135 @@
+{
+  "tag": "final",
+  "base": "http://localhost:4173/",
+  "when": "Mon Nov 23 2026 04:26:58 GMT-0500 (Eastern Standard Time)",
+  "shots": [
+    {
+      "file": "../repo/mandala-glass/receipts/final-desktop-hero.png",
+      "q": 0,
+      "r": {
+        "gl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "calls": 1,
+        "tris": 1
+      }
+    },
+    {
+      "file": "../repo/mandala-glass/receipts/final-desktop-gem.png",
+      "q": 0,
+      "r": {
+        "gl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "calls": 1,
+        "tris": 1
+      }
+    },
+    {
+      "file": "../repo/mandala-glass/receipts/final-desktop-closed.png",
+      "q": 0,
+      "r": {
+        "gl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "calls": 1,
+        "tris": 1
+      }
+    },
+    {
+      "file": "../repo/mandala-glass/receipts/final-mobile-hero.png",
+      "q": 0,
+      "r": {
+        "gl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "calls": 1,
+        "tris": 1
+      }
+    },
+    {
+      "file": "../repo/mandala-glass/receipts/final-mobile-gem.png",
+      "q": 0,
+      "r": {
+        "gl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "calls": 1,
+        "tris": 1
+      }
+    },
+    {
+      "file": "../repo/mandala-glass/receipts/final-mobile-closed.png",
+      "q": 0,
+      "r": {
+        "gl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "calls": 1,
+        "tris": 1
+      }
+    }
+  ],
+  "errors": [],
+  "bench": [
+    {
+      "viewport": "desktop",
+      "url": "(adaptive)",
+      "n": 300,
+      "rafMedian": 350,
+      "rafP95": 466.59999999999854,
+      "cpuMedian": 1.2999999970197678,
+      "cpuP95": 4.899999998509884,
+      "quality": 2
+    },
+    {
+      "viewport": "desktop",
+      "url": "?q=2",
+      "n": 300,
+      "rafMedian": 283.1999999999971,
+      "rafP95": 383.29999999999563,
+      "cpuMedian": 1.2000000029802322,
+      "cpuP95": 3.300000000745058,
+      "quality": 2
+    },
+    {
+      "viewport": "mobile",
+      "url": "(adaptive)",
+      "n": 300,
+      "rafMedian": 133.20000000000437,
+      "rafP95": 199.89999999999782,
+      "cpuMedian": 1.2000000029802322,
+      "cpuP95": 3.899999998509884,
+      "quality": 3
+    },
+    {
+      "viewport": "mobile",
+      "url": "?q=2",
+      "n": 300,
+      "rafMedian": 133.1999999999989,
+      "rafP95": 183.3000000000029,
+      "cpuMedian": 1.199999999254942,
+      "cpuP95": 4,
+      "quality": 2
+    }
+  ],
+  "sims": {
+    "nowebglParam": {
+      "fallback": true,
+      "overlay": true
+    },
+    "webglDisabledBrowser": {
+      "fallback": true,
+      "reason": "is not available in this browser"
+    },
+    "contextLoss": {
+      "lostSeen": true,
+      "contextLost": 1,
+      "contextRestored": 1,
+      "framesAfter": 8,
+      "quality": 0
+    },
+    "resize": {
+      "canvasCss": [
+        1600,
+        900
+      ],
+      "buffer": [
+        1600,
+        900
+      ]
+    },
+    "reducedMotion": {
+      "autoRotate": false,
+      "hueSpeed": 0.3
+    }
+  }
+}

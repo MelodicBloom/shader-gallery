@@ -1,0 +1,16 @@
+import { chromium } from 'playwright';
+const BASE = process.env.BASE || 'http://localhost:4173/'; const O = '/workspace/mandala-slice/repo/mandala-glass/receipts/';
+const b = await chromium.launch({ args: ['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist'] });
+const errs = [];
+const open = async (q) => { const p = await b.newPage({ viewport: { width: 1280, height: 720 } });
+  p.on('pageerror', e => errs.push(e.message)); p.on('console', m => m.type()==='error' && errs.push(m.text()));
+  await p.goto(BASE + q); await p.waitForFunction(() => window.__mandala?.frames > 8, null, { timeout: 180000 }); return p; };
+const settle = async (p) => { const f = await p.evaluate(() => window.__mandala.frames); await p.waitForFunction((f) => window.__mandala.frames > f + 3, f, { timeout: 120000 }); };
+const pre = process.env.PRE || 'fix';
+let p = await open('?t=7&q=0&hue=1'); await p.screenshot({ path: O + `${pre}-A-base.png` });
+await p.click('#matGem'); await settle(p); await p.screenshot({ path: O + `${pre}-E-gem-live-click.png` }); await p.close();
+p = await open('?t=7&q=0&hue=0'); await p.screenshot({ path: O + `${pre}-B-hue0.png` }); await p.close();
+p = await open('?t=7&q=0&hue=1&disp=0'); await p.screenshot({ path: O + `${pre}-C-disp0.png` });
+await p.$eval('#disp', (el) => { el.value = 1; el.dispatchEvent(new Event('input')); }); await settle(p);
+await p.screenshot({ path: O + `${pre}-D-disp1-live-slider.png` }); await p.close();
+await b.close(); console.log(JSON.stringify({ errs }));

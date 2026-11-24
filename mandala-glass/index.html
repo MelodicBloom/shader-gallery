@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Mandala Glass — procedural dispersive glass study</title>
+<meta name="description" content="A deterministic, procedural 3D mandala in dispersive glass, polished gold and enamel. three.js WebGL2." />
+<meta name="theme-color" content="#f3f1ee" />
+<link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+<div id="app" aria-label="Interactive 3D glass mandala. Drag to orbit, scroll or pinch to zoom."></div>
+<header class="title">
+  <h1>Mandala Glass</h1>
+  <p>Procedural cut-glass · gold filigree · live dispersion</p>
+</header>
+<aside id="panel" class="panel" aria-label="Controls">
+  <button id="panelToggle" class="panel-toggle" aria-expanded="true" aria-controls="panelBody">Controls</button>
+  <div id="panelBody" class="panel-body">
+    <label>Hue cycle <output id="hueOut">1.0×</output><input id="hue" type="range" min="0" max="3" step="0.05" value="1" /></label>
+    <label>Dispersion <output id="dispOut">0.35</output><input id="disp" type="range" min="0" max="1" step="0.01" value="0.35" /></label>
+    <label>Petal bloom <output id="openOut">0.55</output><input id="open" type="range" min="0" max="1" step="0.01" value="0.55" /></label>
+    <div class="row">
+      <label class="check"><input id="rotate" type="checkbox" checked /> Auto-rotate</label>
+      <button id="resetView" class="ghost" type="button">Reset view</button>
+    </div>
+    <div class="seg" role="radiogroup" aria-label="Material">
+      <button id="matGlass" role="radio" aria-checked="true" type="button">Glass</button>
+      <button id="matGem" role="radio" aria-checked="false" type="button">Gem</button>
+    </div>
+    <p id="status" class="status" aria-live="polite"></p>
+  </div>
+</aside>
+<div id="overlay" class="overlay" hidden></div>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
