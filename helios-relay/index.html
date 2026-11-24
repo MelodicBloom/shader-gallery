@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HELIOS RELAY</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect fill='%23110f0c' width='16' height='16'/%3E%3Ccircle fill='none' stroke='%23e2b15c' cx='8' cy='8' r='4'/%3E%3C/svg%3E">
+<style>
+  :root {
+    color-scheme: dark;
+    --ivory: #f4efe6;
+    --muted: #c9bba8;
+    --brass: #e2b15c;
+    --line: rgba(244, 239, 230, 0.16);
+    --danger: #ffd0c8;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #100e0c; color: var(--ivory); }
+  body {
+    font-family: system-ui, sans-serif;
+    overflow: hidden;
+  }
+  canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    touch-action: none;
+  }
+  .skip {
+    position: absolute;
+    left: 12px;
+    top: -40px;
+    z-index: 5;
+    background: #100e0c;
+    color: var(--ivory);
+    padding: 8px 12px;
+  }
+  .skip:focus { top: 12px; }
+  .brand {
+    position: fixed;
+    z-index: 2;
+    top: 16px;
+    left: 18px;
+    max-width: min(520px, calc(100% - 36px));
+    pointer-events: none;
+  }
+  .brand h1 {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+  }
+  .brand .sub {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  #readout {
+    margin: 8px 0 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--ivory);
+  }
+  .dock {
+    position: fixed;
+    z-index: 2;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 8px 12px 10px;
+    background: rgba(10, 9, 8, 0.9);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    max-height: 52vh;
+    overflow: auto;
+    touch-action: pan-y;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 18px;
+  }
+  .control {
+    display: grid;
+    grid-template-columns: 88px 1fr 58px;
+    gap: 8px;
+    align-items: center;
+    min-height: 44px;
+  }
+  .control span { font-size: 12px; letter-spacing: 0.04em; }
+  .control output { font-variant-numeric: tabular-nums; font-size: 12px; text-align: right; color: var(--brass); }
+  input[type="range"] {
+    width: 100%;
+    height: 44px;
+    margin: 0;
+    accent-color: #e2b15c;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-top: 4px;
+  }
+  button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(226, 177, 92, 0.45);
+    background: transparent;
+    color: var(--ivory);
+    font: inherit;
+    font-size: 13px;
+  }
+  button[aria-pressed="true"] { background: rgba(226, 177, 92, 0.16); }
+  #help, #gesture {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  #error {
+    position: fixed;
+    z-index: 4;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(640px, calc(100% - 32px));
+    padding: 12px 14px;
+    background: #3d1814;
+    color: var(--danger);
+    border: 1px solid #ffb0a4;
+    border-radius: 10px;
+    white-space: pre-wrap;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  :focus-visible {
+    outline: 2px solid #f0c27a;
+    outline-offset: 3px;
+  }
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: 1fr; }
+    .brand h1 { letter-spacing: 0.14em; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#controls">Skip to controls</a>
+<canvas id="view"></canvas>
+<header class="brand">
+  <h1>HELIOS RELAY</h1>
+  <p class="sub">Kinetic light vault</p>
+  <p id="readout">Starting</p>
+</header>
+<div id="error" role="alert" hidden></div>
+<form id="controls" class="dock" autocomplete="off">
+  <div class="grid">
+    <label class="control">Aperture
+      <input id="aperture" type="range" min="0" max="1" step="0.01" value="0.45" aria-describedby="help">
+      <output id="aperture-out" for="aperture">0.45</output>
+    </label>
+    <label class="control">Energy
+      <input id="energy" type="range" min="0" max="1" step="0.01" value="0.55" aria-describedby="help">
+      <output id="energy-out" for="energy">0.55</output>
+    </label>
+    <label class="control">Yaw
+      <input id="yaw" type="range" min="-3.141592653589793" max="3.141592653589793" step="0.017453292519943295" value="0" aria-describedby="help">
+      <output id="yaw-out" for="yaw">0°</output>
+    </label>
+    <label class="control">Phase
+      <input id="phase" type="range" min="0" max="0.999" step="0.01" value="0" aria-describedby="help">
+      <output id="phase-out" for="phase">0.00</output>
+    </label>
+  </div>
+  <div class="row">
+    <button id="play" type="button">Play</button>
+    <button id="reset" type="button">Reset</button>
+    <button id="quality" type="button" aria-pressed="true">Quality 64</button>
+    <button id="glow" type="button" aria-pressed="true">Glow on</button>
+  </div>
+  <p id="gesture">Pointer on the vault sets aperture and energy.</p>
+  <p id="help">Aperture hinges all eight ribs from 0° to 65°. Energy sets signal gain from 0.15 to 1.10 and does not move the structure. Yaw turns the whole vault. Phase scrubs the 12 second light cycle. Drag horizontally for aperture and vertically for energy. Two touches: separation sets aperture, angle sets yaw. Keys: arrows, brackets, comma, period, space, R.</p>
+</form>
+<script>
+"use strict";
+
+/* HELIOS RELAY
+   Standalone WebGL2 / GLSL ES 3.00 instrument.
+   State S = aperture, energy, yaw, time, quality, resolution, glow.
+   Same S on the same GPU produces the same shader inputs.
+   The picture is a raster of finite rigid meshes: rounded boxes, capsules,
+   and tori. Quality 64 uses a finer tessellation than quality 32. There is
+   no ray march. The old 80-step ceiling is unused, not a quota.
+   Inspected references are listed in README.md. */
+
+const PI = Math.PI;
+const OPEN = 65 * PI / 180;
+const BREATH = 4 * PI / 180;
+const EPS = 0.0025;
+const PERIOD = 12;
+const G = {
+  hingeR: 1.06,
+  hingeY: 0.16,
+  boxC: [-0.44, 0.15, 0],
+  boxB: [0.46, 0.036, 0.078],
+  boxR: 0.014,
+  inlayA: [-0.8, 0.202, 0],
+  inlayB: [-0.14, 0.202, 0],
+  inlayR: 0.012,
+  pinHalf: 0.12,
+  pinR: 0.024,
+  houseB: [0.058, 0.034, 0.092],
+  houseR: 0.012,
+  plinthR: 1.0,
+  plinthr: 0.12,
+  plinthY: -0.02,
+  railR: 1.2,
+  railr: 0.03,
+  railY: 0.11,
+  hoopR: 0.4,
+  hoopr: 0.026,
+  hoopY: 0.08,
+  seatR: 0.4,
+  seatr: 0.016,
+  seatY: 0.02
+};
+
+const params = new URLSearchParams(location.search);
+const urlDpr = params.has("dpr") ? Number(params.get("dpr")) : null;
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const canvas = document.getElementById("view");
+const els = {
+  aperture: document.getElementById("aperture"),
+  energy: document.getElementById("energy"),
+  yaw: document.getElementById("yaw"),
+  phase: document.getElementById("phase"),
+  apertureOut: document.getElementById("aperture-out"),
+  energyOut: document.getElementById("energy-out"),
+  yawOut: document.getElementById("yaw-out"),
+  phaseOut: document.getElementById("phase-out"),
+  play: document.getElementById("play"),
+  reset: document.getElementById("reset"),
+  quality: document.getElementById("quality"),
+  glow: document.getElementById("glow"),
+  readout: document.getElementById("readout"),
+  gesture: document.getElementById("gesture"),
+  error: document.getElementById("error")
+};
+
+function clamp(v, lo, hi) {
+  if (!Number.isFinite(v)) return lo;
+  return Math.min(hi, Math.max(lo, v));
+}
+
+function canonicalPhase(t) {
+  if (!Number.isFinite(t)) return 0;
+  const turns = t / PERIOD;
+  let f = turns - Math.floor(turns);
+  if (f < 0) f += 1;
+  if (f >= 1 || f < 1e-12 && Object.is(f, -0)) f = 0;
+  if (f >= 1) f = 0;
+  return f;
+}
+
+function fphase(t) {
+  return Math.fround(canonicalPhase(t));
+}
+
+function showError(text) {
+  els.error.hidden = false;
+  els.error.textContent = text;
+}
+
+function hideError() {
+  els.error.hidden = true;
+  els.error.textContent = "";
+}
+
+function num(v) {
+  return Number(v).toFixed(6);
+}
+
+function computeBounds() {
+  const min = [1e9, 1e9, 1e9];
+  const max = [-1e9, -1e9, -1e9];
+  const add = (p, rad) => {
+    const r = rad || 0;
+    for (let k = 0; k < 3; k++) {
+      min[k] = Math.min(min[k], p[k] - r);
+      max[k] = Math.max(max[k], p[k] + r);
+    }
+  };
+  const torus = (R, r, y) => {
+    add([R + r, y, 0]);
+    add([-(R + r), y, 0]);
+    add([0, y + r, R + r]);
+    add([0, y - r, -(R + r)]);
+  };
+  torus(G.plinthR, G.plinthr, G.plinthY);
+  torus(G.railR, G.railr, G.railY);
+  torus(G.hoopR, G.hoopr, G.hoopY);
+  torus(G.seatR, G.seatr, G.seatY);
+  const corners = [];
+  for (const sx of [-1, 1]) {
+    for (const sy of [-1, 1]) {
+      for (const sz of [-1, 1]) {
+        corners.push([
+          G.boxC[0] + sx * G.boxB[0],
+          G.boxC[1] + sy * G.boxB[1],
+          G.boxC[2] + sz * G.boxB[2]
+        ]);
+      }
+    }
+  }
+  for (let j = 0; j < 8; j++) {
+    const theta = j * Math.PI / 4;
+    const c = Math.cos(theta);
+    const s = Math.sin(theta);
+    const place = (lx, ly, lz) => {
+      const x = lx + G.hingeR;
+      const y = ly + G.hingeY;
+      return [x * c + lz * s, y, -x * s + lz * c];
+    };
+    for (let deg = 0; deg <= 65; deg += 5) {
+      const a = deg * PI / 180;
+      const ca = Math.cos(-a);
+      const sa = Math.sin(-a);
+      const spin = (p) => [p[0] * ca - p[1] * sa, p[0] * sa + p[1] * ca, p[2]];
+      for (const corner of corners) add(place(...spin(corner)), G.boxR);
+      add(place(...spin(G.inlayA)), G.inlayR);
+      add(place(...spin(G.inlayB)), G.inlayR);
+    }
+    add(place(0, 0, G.pinHalf), G.pinR);
+    add(place(0, 0, -G.pinHalf), G.pinR);
+    for (const sx of [-1, 1]) {
+      for (const sy of [-1, 1]) {
+        for (const sz of [-1, 1]) {
+          add(place(sx * G.houseB[0], sy * G.houseB[1], sz * G.houseB[2]), G.houseR);
+        }
+      }
+    }
+  }
+  return { min, max };
+}
+
+const rawBounds = computeBounds();
+const bmin = rawBounds.min.map((v) => v - 0.1);
+const bmax = rawBounds.max.map((v) => v + 0.1);
+
+const vertSource = `#version 300 es
+precision highp float;
+layout(location=0) in vec3 aPos;
+layout(location=1) in vec3 aNrm;
+layout(location=2) in vec3 aMeta;
+
+uniform vec4 uState;
+uniform vec2 uResolution;
+uniform float uPass;
+uniform mat4 uYaw;
+uniform mat4 uFixed[8];
+uniform mat4 uHinged[8];
+
+out vec3 vObj;
+out vec3 vNrm;
+out vec3 vWorld;
+out vec3 vLocal;
+flat out float vMat;
+out float vPass;
+
+const float FOCAL = 1.58;
+const vec3 CAM = vec3(1.20, 1.78, 2.18);
+const vec3 LOOK = vec3(0.0, 0.28, 0.0);
+
+void main() {
+  vPass = uPass;
+  vLocal = aPos;
+  if (uPass < 0.5) {
+    gl_Position = vec4(aPos.xy, 0.999, 1.0);
+    vObj = vec3(0.0);
+    vNrm = vec3(0.0, 1.0, 0.0);
+    vWorld = vec3(0.0);
+    vMat = 0.0;
+    return;
+  }
+  float part = aMeta.y;
+  int rib = int(aMeta.z + 0.5);
+  vec3 obj = aPos;
+  vec3 nobj = aNrm;
+  if (part > 0.5) {
+    mat4 B = part < 1.5 ? uFixed[rib] : uHinged[rib];
+    obj = (B * vec4(aPos, 1.0)).xyz;
+    nobj = mat3(B) * aNrm;
+  }
+  vObj = obj;
+  vec3 p = (uYaw * vec4(obj, 1.0)).xyz;
+  vec3 n = mat3(uYaw) * nobj;
+  vWorld = p;
+  vNrm = n;
+  vMat = aMeta.x;
+
+  vec3 ww = normalize(LOOK - CAM);
+  vec3 uu = normalize(cross(ww, vec3(0.0, 1.0, 0.0)));
+  vec3 vv = cross(uu, ww);
+  vec3 rel = p - CAM;
+  float cx = dot(rel, uu);
+  float cy = dot(rel, vv);
+  float cz = dot(rel, ww);
+  float nearP = 0.05;
+  float farP = 40.0;
+  float zterm = cz * (farP + nearP) / (farP - nearP) - (2.0 * farP * nearP) / (farP - nearP);
+  float aspect = uResolution.x / max(uResolution.y, 1.0);
+  gl_Position = vec4(cx * FOCAL * 2.0 / aspect, cy * FOCAL * 2.0, zterm, max(cz, 0.001));
+  if (aMeta.x > 4.5 && aMeta.x < 5.5) gl_Position.z -= 0.0015 * gl_Position.w;
+}
+`;
+
+const fragSource = `#version 300 es
+precision highp float;
+precision highp int;
+
+uniform vec4 uState;
+uniform vec2 uResolution;
+uniform vec3 uFlags;
+uniform vec2 uPulse;
+
+in vec3 vObj;
+in vec3 vNrm;
+in vec3 vWorld;
+in vec3 vLocal;
+flat in float vMat;
+in float vPass;
+
+out vec4 oColor;
+
+const vec3 BOX_C = vec3(${num(G.boxC[0])}, ${num(G.boxC[1])}, ${num(G.boxC[2])});
+const vec3 BOX_B = vec3(${num(G.boxB[0])}, ${num(G.boxB[1])}, ${num(G.boxB[2])});
+const vec3 CAM = vec3(1.20, 1.78, 2.18);
+const vec3 LOOK = vec3(0.0, 0.28, 0.0);
+const float FOCAL = 1.58;
+
+vec2 pack16(float v) {
+  float n = clamp(v * 0.25 + 0.5, 0.0, 1.0);
+  float hi = floor(n * 255.0) / 255.0;
+  float lo = floor(fract(n * 255.0) * 255.0) / 255.0;
+  return vec2(hi, lo);
+}
+
+float gateAt(vec3 p) {
+  float r2 = dot(p.xz, p.xz);
+  float ang = r2 < 1e-10 ? 0.0 : atan(p.z, p.x);
+  float phi = 6.28318530718 * fract(uState.w);
+  float delta = ang - phi;
+  delta = atan(sin(delta), cos(delta));
+  return exp(-delta * delta * 9.0);
+}
+
+void main() {
+  float debug = uFlags.z;
+  if (vPass < 0.5) {
+    if (debug > 0.5 && debug < 1.5) {
+      oColor = vec4(0.0, 0.0, 1.0, 1.0);
+      return;
+    }
+    if (debug > 0.5) {
+      oColor = vec4(0.0, 0.0, 0.0, 1.0);
+      return;
+    }
+    float v = gl_FragCoord.y / max(uResolution.y, 1.0);
+    float u = gl_FragCoord.x / max(uResolution.x, 1.0);
+    vec3 col = mix(vec3(0.030, 0.028, 0.025), vec3(0.072, 0.066, 0.058), v);
+    float vig = (u - 0.5) * (u - 0.5) + (v - 0.42) * (v - 0.42);
+    col *= 1.0 - vig * 0.35;
+    oColor = vec4(sqrt(clamp(col, 0.0, 1.0)), 1.0);
+    return;
+  }
+
+  if (debug > 0.5 && debug < 1.5) {
+    float inner = (vMat > 2.5 && vMat < 3.5) ? 1.0 : 0.0;
+    float occluder = inner > 0.5 ? 0.0 : 1.0;
+    oColor = vec4(occluder, inner, 0.0, 1.0);
+    return;
+  }
+  if (debug > 1.5 && debug < 2.5) {
+    vec2 px = pack16(vObj.x);
+    vec2 pz = pack16(vObj.z);
+    oColor = vec4(px, pz);
+    return;
+  }
+  if (debug > 2.5 && debug < 3.5) {
+    float wgt = 0.0;
+    if (vMat > 2.5 && vMat < 3.5 || vMat > 4.5 && vMat < 5.5) wgt = gateAt(vObj);
+    oColor = vec4(wgt, 1.0, 0.0, 1.0);
+    return;
+  }
+  if (debug > 3.5 && debug < 4.5) {
+    oColor = vec4(1.0, 0.0, 0.0, 1.0);
+    return;
+  }
+
+  vec3 n = vNrm;
+  float nl = dot(n, n);
+  n = nl > 1e-8 ? n * inversesqrt(nl) : vec3(0.0, 1.0, 0.0);
+  const vec3 keyDir = vec3(0.3714, 0.8701, 0.4456);
+  const vec3 fillDir = vec3(-0.7717, 0.3215, -0.4502);
+  float mat = vMat;
+  vec3 albedo = vec3(0.86, 0.80, 0.70);
+  float specK = 0.08;
+  if (mat > 5.5) {
+    albedo = vec3(0.16, 0.155, 0.145);
+    specK = 0.22;
+  } else if (mat > 4.5) {
+    albedo = vec3(0.06, 0.055, 0.05);
+    specK = 0.05;
+  } else if (mat > 3.5) {
+    if (abs(vLocal.z) > BOX_B.z - 0.02 || vLocal.x < BOX_C.x - BOX_B.x + 0.08) {
+      albedo = vec3(0.20, 0.19, 0.17);
+      specK = 0.16;
+    }
+  } else if (mat > 2.5) {
+    albedo = vec3(0.64, 0.44, 0.18);
+    specK = 0.28;
+  } else if (mat > 1.5) {
+    albedo = vec3(0.16, 0.155, 0.145);
+    specK = 0.2;
+  }
+  float ndl = clamp(dot(n, keyDir), 0.0, 1.0);
+  float fill = clamp(dot(n, fillDir), 0.0, 1.0);
+  float up = n.y * 0.5 + 0.5;
+  float spec = ndl * ndl;
+  spec = spec * spec;
+  vec3 col = albedo * (0.16 + 0.10 * up + ndl * 0.78 + fill * 0.08) + vec3(1.0, 0.94, 0.82) * spec * specK;
+
+  float glow = clamp(uFlags.y, 0.0, 1.0);
+  if (glow > 0.0 && mat > 2.5 && mat < 5.5) {
+    float r2 = dot(vObj.xz, vObj.xz);
+    float align = (vObj.x * uPulse.x + vObj.z * uPulse.y) * inversesqrt(max(r2, 1e-6));
+    float gate = max(align, 0.0);
+    gate = gate * gate;
+    gate = gate * gate;
+    vec3 sig = mix(vec3(0.28, 0.86, 0.90), vec3(1.0, 0.52, 0.16), uPulse.x * 0.5 + 0.5);
+    float gain = mix(0.15, 1.10, clamp(uState.y, 0.0, 1.0));
+    if (mat > 4.5) col += sig * gate * gain * 1.05;
+    else if (mat > 3.5) col += sig * gate * gain * 0.34;
+    else col += sig * gate * gain * 0.95;
+  }
+
+  if (!(col.x == col.x) || !(col.y == col.y) || !(col.z == col.z) || isinf(col.x) || isinf(col.y) || isinf(col.z)) {
+    col = vec3(0.35, 0.06, 0.04);
+  }
+  col = clamp(col, 0.0, 1.0);
+  oColor = vec4(sqrt(col), 1.0);
+}
+`;
+
+function sdRoundBox(x, y, z, b, r) {
+  const qx = Math.abs(x) - b[0] + r;
+  const qy = Math.abs(y) - b[1] + r;
+  const qz = Math.abs(z) - b[2] + r;
+  const ax = Math.max(qx, 0);
+  const ay = Math.max(qy, 0);
+  const az = Math.max(qz, 0);
+  const m = Math.min(Math.max(qx, Math.max(qy, qz)), 0);
+  return Math.hypot(ax, ay, az) + m - r;
+}
+
+function projectRound(px, py, pz, b, r) {
+  let x = px;
+  let y = py;
+  let z = pz;
+  for (let k = 0; k < 10; k++) {
+    const d = sdRoundBox(x, y, z, b, r);
+    if (Math.abs(d) < 1e-5) break;
+    const e = 1e-4;
+    const dx = sdRoundBox(x + e, y, z, b, r) - d;
+    const dy = sdRoundBox(x, y + e, z, b, r) - d;
+    const dz = sdRoundBox(x, y, z + e, b, r) - d;
+    const gln = Math.hypot(dx, dy, dz) || 1;
+    x -= d * dx / gln;
+    y -= d * dy / gln;
+    z -= d * dz / gln;
+  }
+  const d = sdRoundBox(x, y, z, b, r);
+  const e = 1e-4;
+  let nx = sdRoundBox(x + e, y, z, b, r) - d;
+  let ny = sdRoundBox(x, y + e, z, b, r) - d;
+  let nz = sdRoundBox(x, y, z + e, b, r) - d;
+  const gln = Math.hypot(nx, ny, nz) || 1;
+  return [x, y, z, nx / gln, ny / gln, nz / gln];
+}
+
+function tessOf(steps) {
+  return steps >= 48
+    ? { key: 64, box: 4, capS: 12, capR: 4, maj: 40, min: 12 }
+    : { key: 32, box: 3, capS: 8, capR: 2, maj: 24, min: 8 };
+}
+
+function buildMesh(steps) {
+  const spec = tessOf(steps);
+  const data = [];
+  function push(p, mat, part, rib) {
+    data.push(p[0], p[1], p[2], p[3], p[4], p[5], mat, part, rib);
+  }
+  function tri(a, b, c, mat, part, rib) {
+    push(a, mat, part, rib);
+    push(b, mat, part, rib);
+    push(c, mat, part, rib);
+  }
+  function addRoundBox(center, b, rad, mat, part, rib, n) {
+    const faces = [
+      [0, 1, 2, 1],
+      [0, 1, 2, -1],
+      [1, 2, 0, 1],
+      [1, 2, 0, -1],
+      [2, 0, 1, 1],
+      [2, 0, 1, -1]
+    ];
+    for (const face of faces) {
+      const u = face[0];
+      const v = face[1];
+      const w = face[2];
+      const sign = face[3];
+      const grid = [];
+      for (let j = 0; j <= n; j++) {
+        for (let i = 0; i <= n; i++) {
+          const p = [0, 0, 0];
+          p[u] = -b[u] + (2 * b[u] * i) / n;
+          p[v] = -b[v] + (2 * b[v] * j) / n;
+          p[w] = sign * b[w];
+          const pr = projectRound(p[0], p[1], p[2], b, rad);
+          pr[0] += center[0];
+          pr[1] += center[1];
+          pr[2] += center[2];
+          grid.push(pr);
+        }
+      }
+      const row = n + 1;
+      for (let j = 0; j < n; j++) {
+        for (let i = 0; i < n; i++) {
+          const i00 = j * row + i;
+          const i10 = i00 + 1;
+          const i01 = i00 + row;
+          const i11 = i01 + 1;
+          if (sign > 0) {
+            tri(grid[i00], grid[i10], grid[i11], mat, part, rib);
+            tri(grid[i00], grid[i11], grid[i01], mat, part, rib);
+          } else {
+            tri(grid[i00], grid[i01], grid[i11], mat, part, rib);
+            tri(grid[i00], grid[i11], grid[i10], mat, part, rib);
+          }
+        }
+      }
+    }
+  }
+  function addCapsule(a, b, rad, mat, part, rib, sides, rings) {
+    const dir = [b[0] - a[0], b[1] - a[1], b[2] - a[2]];
+    const len = Math.hypot(dir[0], dir[1], dir[2]) || 1;
+    dir[0] /= len;
+    dir[1] /= len;
+    dir[2] /= len;
+    const tmp = Math.abs(dir[1]) < 0.85 ? [0, 1, 0] : [1, 0, 0];
+    let s1 = [
+      dir[1] * tmp[2] - dir[2] * tmp[1],
+      dir[2] * tmp[0] - dir[0] * tmp[2],
+      dir[0] * tmp[1] - dir[1] * tmp[0]
+    ];
+    const s1l = Math.hypot(s1[0], s1[1], s1[2]) || 1;
+    s1 = [s1[0] / s1l, s1[1] / s1l, s1[2] / s1l];
+    const s2 = [
+      dir[1] * s1[2] - dir[2] * s1[1],
+      dir[2] * s1[0] - dir[0] * s1[2],
+      dir[0] * s1[1] - dir[1] * s1[0]
+    ];
+    const H = Math.max(2, rings);
+    const C = Math.max(1, rings);
+    const last = H + C + H;
+    function point(i, j) {
+      const ang = (j / sides) * Math.PI * 2;
+      const c = Math.cos(ang);
+      const s = Math.sin(ang);
+      const radial = [s1[0] * c + s2[0] * s, s1[1] * c + s2[1] * s, s1[2] * c + s2[2] * s];
+      let along;
+      let n;
+      if (i < H) {
+        const phi = ((H - i) / H) * (Math.PI / 2);
+        const sp = Math.sin(phi);
+        const cp = Math.cos(phi);
+        along = -rad * sp;
+        n = [radial[0] * cp - dir[0] * sp, radial[1] * cp - dir[1] * sp, radial[2] * cp - dir[2] * sp];
+      } else if (i > H + C) {
+        const phi = ((i - (H + C)) / H) * (Math.PI / 2);
+        const sp = Math.sin(phi);
+        const cp = Math.cos(phi);
+        along = len + rad * sp;
+        n = [radial[0] * cp + dir[0] * sp, radial[1] * cp + dir[1] * sp, radial[2] * cp + dir[2] * sp];
+      } else {
+        along = ((i - H) / C) * len;
+        n = radial;
+      }
+      const center = [a[0] + dir[0] * along, a[1] + dir[1] * along, a[2] + dir[2] * along];
+      const nl = Math.hypot(n[0], n[1], n[2]) || 1;
+      return [
+        center[0] + (n[0] / nl) * rad,
+        center[1] + (n[1] / nl) * rad,
+        center[2] + (n[2] / nl) * rad,
+        n[0] / nl,
+        n[1] / nl,
+        n[2] / nl
+      ];
+    }
+    for (let i = 0; i < last; i++) {
+      for (let j = 0; j < sides; j++) {
+        const a00 = point(i, j);
+        const a10 = point(i, j + 1);
+        const a01 = point(i + 1, j);
+        const a11 = point(i + 1, j + 1);
+        tri(a00, a10, a11, mat, part, rib);
+        tri(a00, a11, a01, mat, part, rib);
+      }
+    }
+  }
+  function addTorus(R, r, y, mat, maj, minr) {
+    function point(i, j) {
+      const u = (i / maj) * Math.PI * 2;
+      const v = (j / minr) * Math.PI * 2;
+      const cu = Math.cos(u);
+      const su = Math.sin(u);
+      const cv = Math.cos(v);
+      const sv = Math.sin(v);
+      const rr = R + r * cv;
+      return [rr * cu, y + r * sv, rr * su, cv * cu, sv, cv * su];
+    }
+    for (let i = 0; i < maj; i++) {
+      for (let j = 0; j < minr; j++) {
+        tri(point(i, j), point(i + 1, j), point(i + 1, j + 1), mat, 0, -1);
+        tri(point(i, j), point(i + 1, j + 1), point(i, j + 1), mat, 0, -1);
+      }
+    }
+  }
+  addTorus(G.plinthR, G.plinthr, G.plinthY, 1, spec.maj, spec.min);
+  addTorus(G.railR, G.railr, G.railY, 2, spec.maj, spec.min);
+  addTorus(G.hoopR, G.hoopr, G.hoopY, 3, spec.maj, spec.min);
+  addTorus(G.seatR, G.seatr, G.seatY, 2, spec.maj, spec.min);
+  for (let rib = 0; rib < 8; rib++) {
+    addCapsule([0, 0, -G.pinHalf], [0, 0, G.pinHalf], G.pinR, 6, 1, rib, spec.capS, spec.capR);
+    addRoundBox([0, 0, 0], G.houseB, G.houseR, 6, 1, rib, spec.box);
+    addRoundBox(G.boxC, G.boxB, G.boxR, 4, 2, rib, spec.box);
+    addCapsule(G.inlayA, G.inlayB, G.inlayR, 5, 2, rib, spec.capS, spec.capR);
+  }
+  return { data: new Float32Array(data), count: data.length / 9, key: spec.key };
+}
+
+const meshCache = {};
+let meshKey = -1;
+let meshCount = 0;
+let meshBuf = null;
+let bgBuf = null;
+
+
+let gl = null;
+let program = null;
+let bufferInfo = { bw: 1, bh: 1, dpr: 1, cssW: 1, cssH: 1 };
+let compileInfo = { vertex: false, fragment: false, link: false, log: "", error: 0 };
+let loc = {};
+let playing = false;
+let visible = !document.hidden;
+let lastStamp = 0;
+let scrubbing = false;
+let lastGesture = "";
+let badShader = false;
+
+const state = {
+  a: 0.45,
+  e: 0.55,
+  yaw: 0,
+  t: 0,
+  steps: 64,
+  glow: 1,
+  debug: 0
+};
+
+function selectDPR(cssW, cssH, deviceRatio, requestedUrl) {
+  let cap;
+  if (requestedUrl != null && Number.isFinite(requestedUrl)) cap = clamp(requestedUrl, 0.25, 2);
+  else cap = Math.min(Number.isFinite(deviceRatio) ? deviceRatio : 1, 1.5);
+  const maxByPixels = Math.sqrt(1250000 / Math.max(1, cssW * cssH));
+  let dpr = Math.min(cap, maxByPixels);
+  if (!Number.isFinite(dpr) || dpr <= 0) dpr = 1;
+  let bw = Math.max(1, Math.round(cssW * dpr));
+  let bh = Math.max(1, Math.round(cssH * dpr));
+  if (bw * bh > 1250000) {
+    const s = Math.sqrt(1250000 / (bw * bh));
+    bw = Math.max(1, Math.floor(bw * s));
+    bh = Math.max(1, Math.floor(bh * s));
+  }
+  return { dpr: bw / cssW, bw, bh, cssW, cssH };
+}
+
+function shader(type, source) {
+  const sh = gl.createShader(type);
+  gl.shaderSource(sh, source);
+  gl.compileShader(sh);
+  const ok = gl.getShaderParameter(sh, gl.COMPILE_STATUS);
+  const log = gl.getShaderInfoLog(sh) || "";
+  return { shader: sh, ok, log };
+}
+
+function linkProgram(fsSource) {
+  if (!gl) return false;
+  const vs = shader(gl.VERTEX_SHADER, vertSource);
+  const fs = shader(gl.FRAGMENT_SHADER, fsSource);
+  compileInfo.vertex = !!vs.ok;
+  compileInfo.fragment = !!fs.ok;
+  compileInfo.log = [vs.log, fs.log].filter(Boolean).join("\n");
+  if (!vs.ok || !fs.ok) {
+    compileInfo.link = false;
+    showError("Shader compile failed.\n" + compileInfo.log);
+    gl.deleteShader(vs.shader);
+    gl.deleteShader(fs.shader);
+    badShader = true;
+    return false;
+  }
+  const next = gl.createProgram();
+  gl.attachShader(next, vs.shader);
+  gl.attachShader(next, fs.shader);
+  gl.linkProgram(next);
+  const linked = !!gl.getProgramParameter(next, gl.LINK_STATUS);
+  const plog = gl.getProgramInfoLog(next) || "";
+  gl.deleteShader(vs.shader);
+  gl.deleteShader(fs.shader);
+  compileInfo.link = linked;
+  if (!linked) {
+    compileInfo.log = plog;
+    showError("Shader link failed.\n" + plog);
+    gl.deleteProgram(next);
+    badShader = true;
+    return false;
+  }
+  if (program) gl.deleteProgram(program);
+  program = next;
+  loc = {
+    resolution: gl.getUniformLocation(program, "uResolution"),
+    state: gl.getUniformLocation(program, "uState"),
+    flags: gl.getUniformLocation(program, "uFlags"),
+    pass: gl.getUniformLocation(program, "uPass"),
+    pulse: gl.getUniformLocation(program, "uPulse"),
+    yaw: gl.getUniformLocation(program, "uYaw"),
+    fixed: gl.getUniformLocation(program, "uFixed[0]"),
+    hinged: gl.getUniformLocation(program, "uHinged[0]")
+  };
+  badShader = false;
+  hideError();
+  return true;
+}
+
+function createGL(target) {
+  const context = target.getContext("webgl2", {
+    alpha: false,
+    antialias: false,
+    depth: true,
+    stencil: false,
+    premultipliedAlpha: false,
+    preserveDrawingBuffer: true,
+    powerPreference: "high-performance",
+    failIfMajorPerformanceCaveat: false
+  });
+  if (!context) {
+    showError("WebGL2 context unavailable. HELIOS RELAY needs a WebGL2 browser.");
+    return null;
+  }
+  return context;
+}
+
+function uploadMesh(built) {
+  if (!meshBuf) meshBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, meshBuf);
+  gl.bufferData(gl.ARRAY_BUFFER, built.data, gl.STATIC_DRAW);
+  meshCount = built.count;
+  meshKey = built.key;
+}
+
+function ensureMesh(steps) {
+  const spec = tessOf(steps);
+  if (meshKey === spec.key && meshBuf) return;
+  if (!meshCache[spec.key]) meshCache[spec.key] = buildMesh(steps);
+  uploadMesh(meshCache[spec.key]);
+}
+
+function bindBackground() {
+  gl.bindBuffer(gl.ARRAY_BUFFER, bgBuf);
+  gl.enableVertexAttribArray(0);
+  gl.disableVertexAttribArray(1);
+  gl.disableVertexAttribArray(2);
+  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 8, 0);
+}
+
+function bindMeshAttribs() {
+  gl.bindBuffer(gl.ARRAY_BUFFER, meshBuf);
+  gl.enableVertexAttribArray(0);
+  gl.enableVertexAttribArray(1);
+  gl.enableVertexAttribArray(2);
+  const stride = 36;
+  gl.vertexAttribPointer(0, 3, gl.FLOAT, false, stride, 0);
+  gl.vertexAttribPointer(1, 3, gl.FLOAT, false, stride, 12);
+  gl.vertexAttribPointer(2, 3, gl.FLOAT, false, stride, 24);
+}
+
+function mul4(a, b) {
+  const o = new Float32Array(16);
+  for (let c = 0; c < 4; c++) {
+    for (let r = 0; r < 4; r++) {
+      o[c * 4 + r] = a[r] * b[c * 4] + a[4 + r] * b[c * 4 + 1] + a[8 + r] * b[c * 4 + 2] + a[12 + r] * b[c * 4 + 3];
+    }
+  }
+  return o;
+}
+
+function matRotY(a) {
+  const c = Math.cos(a);
+  const s = Math.sin(a);
+  return new Float32Array([c, 0, -s, 0, 0, 1, 0, 0, s, 0, c, 0, 0, 0, 0, 1]);
+}
+
+function matOpen(alpha) {
+  const c = Math.cos(alpha);
+  const s = Math.sin(alpha);
+  return new Float32Array([c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+}
+
+function matTrans(x, y, z) {
+  return new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1]);
+}
+
+const poseFixed = new Float32Array(8 * 16);
+const poseHinged = new Float32Array(8 * 16);
+const poseYaw = new Float32Array(16);
+
+function writePose(phase, aperture, yaw) {
+  const y = matRotY(yaw);
+  poseYaw.set(y);
+  for (let rib = 0; rib < 8; rib++) {
+    const theta = rib * Math.PI / 4;
+    const alpha = Math.min(OPEN, Math.max(0, aperture * OPEN + Math.sin(Math.PI * 2 * phase + theta) * BREATH));
+    const place = mul4(matRotY(theta), matTrans(G.hingeR, G.hingeY, 0));
+    poseFixed.set(place, rib * 16);
+    poseHinged.set(mul4(place, matOpen(alpha)), rib * 16);
+  }
+}
+
+function draw(opts) {
+  if (!gl || !program || !meshBuf) return;
+  const debug = opts && opts.debug != null ? opts.debug : state.debug;
+  const steps = opts && opts.steps != null ? opts.steps : state.steps;
+  const glow = opts && opts.glow != null ? opts.glow : state.glow;
+  ensureMesh(steps);
+  const phase = fphase(state.t);
+  const pulse = phase * Math.PI * 2;
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.viewport(0, 0, bufferInfo.bw, bufferInfo.bh);
+  if (debug > 0.5 && debug < 1.5) gl.clearColor(0, 0, 1, 1);
+  else if (debug > 0.5) gl.clearColor(0, 0, 0, 1);
+  else gl.clearColor(0.042, 0.039, 0.035, 1);
+  gl.clearDepth(1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  gl.useProgram(program);
+  gl.uniform2f(loc.resolution, bufferInfo.bw, bufferInfo.bh);
+  gl.uniform4f(loc.state, state.a, state.e, state.yaw, phase);
+  gl.uniform3f(loc.flags, steps, glow, debug);
+  gl.uniform2f(loc.pulse, Math.cos(pulse), Math.sin(pulse));
+  writePose(phase, state.a, state.yaw);
+  gl.uniformMatrix4fv(loc.yaw, false, poseYaw);
+  gl.uniformMatrix4fv(loc.fixed, false, poseFixed);
+  gl.uniformMatrix4fv(loc.hinged, false, poseHinged);
+  gl.enable(gl.DEPTH_TEST);
+  gl.depthFunc(gl.LEQUAL);
+  gl.enable(gl.CULL_FACE);
+  gl.cullFace(gl.BACK);
+  gl.frontFace(gl.CCW);
+  gl.uniform1f(loc.pass, 1);
+  bindMeshAttribs();
+  gl.drawArrays(gl.TRIANGLES, 0, meshCount);
+}
+
+function resize() {
+  const cssW = Math.max(1, canvas.clientWidth || window.innerWidth);
+  const cssH = Math.max(1, canvas.clientHeight || window.innerHeight);
+  bufferInfo = selectDPR(cssW, cssH, window.devicePixelRatio || 1, urlDpr);
+  if (canvas.width !== bufferInfo.bw || canvas.height !== bufferInfo.bh) {
+    canvas.width = bufferInfo.bw;
+    canvas.height = bufferInfo.bh;
+  }
+  draw();
+}
+
+function formatState() {
+  const phase = canonicalPhase(state.t);
+  const mode = playing ? (visible ? "Playing" : "Hidden") : "Paused";
+  const q = state.steps === 32 || state.steps === 64 ? "Q" + state.steps : "steps " + state.steps;
+  const yawDeg = state.yaw * 180 / PI;
+  return "Aperture " + state.a.toFixed(2)
+    + " · Energy " + state.e.toFixed(2)
+    + " · Yaw " + yawDeg.toFixed(0) + "°"
+    + " · Phase " + phase.toFixed(2)
+    + " · " + mode
+    + " · " + q
+    + (state.glow < 0.5 ? " · Glow off" : "");
+}
+
+let lastStatus = 0;
+function updateStatus(force) {
+  const now = performance.now();
+  if (!force && now - lastStatus < 200) return;
+  lastStatus = now;
+  els.readout.textContent = formatState();
+  if (!scrubbing) els.phase.value = canonicalPhase(state.t).toFixed(3);
+  els.phaseOut.textContent = canonicalPhase(state.t).toFixed(2);
+  els.aperture.value = String(state.a);
+  els.energy.value = String(state.e);
+  els.yaw.value = String(state.yaw);
+  els.apertureOut.textContent = state.a.toFixed(2);
+  els.energyOut.textContent = state.e.toFixed(2);
+  els.yawOut.textContent = Math.round(state.yaw * 180 / PI) + "°";
+  els.play.textContent = playing ? "Pause" : "Play";
+  els.play.setAttribute("aria-pressed", playing ? "true" : "false");
+  els.quality.textContent = state.steps === 32 || state.steps === 64 ? "Quality " + state.steps : "Steps " + state.steps;
+  els.glow.textContent = state.glow >= 0.5 ? "Glow on" : "Glow off";
+  els.glow.setAttribute("aria-pressed", state.glow >= 0.5 ? "true" : "false");
+}
+
+function setState(partial, doDraw) {
+  if (partial.a != null) state.a = clamp(Number(partial.a), 0, 1);
+  if (partial.e != null) state.e = clamp(Number(partial.e), 0, 1);
+  if (partial.yaw != null) {
+    let y = Number(partial.yaw);
+    if (!Number.isFinite(y)) y = 0;
+    if (y > PI || y < -PI) {
+      y = Math.atan2(Math.sin(y), Math.cos(y));
+    }
+    state.yaw = clamp(y, -PI, PI);
+  }
+  if (partial.t != null && Number.isFinite(Number(partial.t))) {
+    state.t = Number(partial.t);
+    lastStamp = performance.now();
+  }
+  if (partial.steps != null) state.steps = clamp(Math.round(Number(partial.steps)), 1, 80);
+  if (partial.glow != null) state.glow = clamp(Number(partial.glow), 0, 1) >= 0.5 ? 1 : 0;
+  if (partial.debug != null) state.debug = Number(partial.debug) || 0;
+  updateStatus(true);
+  if (doDraw !== false) draw();
+}
+
+function setGesture(text) {
+  if (text === lastGesture) return;
+  lastGesture = text;
+  els.gesture.textContent = text;
+}
+
+function applyVisibility(hidden, stamp) {
+  visible = !hidden;
+  lastStamp = stamp == null ? performance.now() : stamp;
+  updateStatus(true);
+}
+
+function setPlaying(next, stamp) {
+  playing = !!next;
+  lastStamp = stamp == null ? performance.now() : stamp;
+  updateStatus(true);
+  if (playing) draw();
+}
+
+function stepClock(now) {
+  if (playing && visible) {
+    if (lastStamp > 0) {
+      const dt = (now - lastStamp) / 1000;
+      if (Number.isFinite(dt) && dt > 0) state.t += dt;
+    }
+    lastStamp = now;
+    return true;
+  }
+  lastStamp = now;
+  return false;
+}
+
+function resetState() {
+  setState({ a: 0.45, e: 0.55, yaw: 0, t: 0 });
+  setGesture("Reset. Aperture 0.45, energy 0.55, yaw 0, time 0.");
+}
+
+function glInfo() {
+  if (!gl) return { ok: false };
+  const dbg = gl.getExtension("WEBGL_debug_renderer_info");
+  const timer = gl.getExtension("EXT_disjoint_timer_query_webgl2");
+  const floatBuf = gl.getExtension("EXT_color_buffer_float");
+  const renderer = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+  const vendor = dbg ? gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL) : gl.getParameter(gl.VENDOR);
+  const software = /swiftshader|llvmpipe|softpipe|software|mesa/i.test(String(renderer) + " " + String(vendor));
+  return {
+    ok: true,
+    vendor: String(vendor),
+    renderer: String(renderer),
+    version: String(gl.getParameter(gl.VERSION)),
+    shading: String(gl.getParameter(gl.SHADING_LANGUAGE_VERSION)),
+    software,
+    timer: !!timer,
+    floatBuffer: !!floatBuf,
+    ua: navigator.userAgent,
+    platform: navigator.platform
+  };
+}
+
+function readPixels() {
+  const w = canvas.width;
+  const h = canvas.height;
+  const pix = new Uint8Array(w * h * 4);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, pix);
+  return pix;
+}
+
+function fnv(pix) {
+  let h = 2166136261;
+  for (let i = 0; i < pix.length; i += 16) {
+    h ^= pix[i];
+    h = Math.imul(h, 16777619);
+  }
+  return (h >>> 0).toString(16);
+}
+
+function samePixels(a, b) {
+  if (!a || !b || a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+  return true;
+}
+
+function meanAbs(a, b) {
+  let s = 0;
+  let close = 0;
+  let n = 0;
+  const len = Math.min(a.length, b.length);
+  for (let i = 0; i < len; i += 4) {
+    for (let k = 0; k < 3; k++) {
+      const d = Math.abs(a[i + k] - b[i + k]);
+      s += d;
+      n++;
+      if (d <= 2) close++;
+    }
+  }
+  return { mean: n ? s / n / 255 : 1, within2: n ? close / n : 0 };
+}
+
+function renderDebug(debug, patch) {
+  const prev = { a: state.a, e: state.e, yaw: state.yaw, t: state.t, steps: state.steps, glow: state.glow, debug: state.debug };
+  if (patch) setState(patch, false);
+  draw({ debug, steps: state.steps, glow: state.glow });
+  const pix = readPixels();
+  state.a = prev.a;
+  state.e = prev.e;
+  state.yaw = prev.yaw;
+  state.t = prev.t;
+  state.steps = prev.steps;
+  state.glow = prev.glow;
+  state.debug = prev.debug;
+  draw();
+  return pix;
+}
+
+function coverageOf(pix) {
+  let hit = 0;
+  const n = pix.length / 4;
+  for (let i = 0; i < pix.length; i += 4) {
+    if (pix[i] > 127 || pix[i + 1] > 127) hit++;
+  }
+  return hit / n;
+}
+
+function revealOf(pix, w, h) {
+  const x0 = Math.floor(w * 0.4);
+  const x1 = Math.floor(w * 0.6);
+  const y0 = Math.floor(h * 0.4);
+  const y1 = Math.floor(h * 0.6);
+  let n = 0;
+  let rev = 0;
+  for (let y = y0; y < y1; y++) {
+    for (let x = x0; x < x1; x++) {
+      const i = (y * w + x) * 4;
+      n++;
+      if (pix[i + 1] > 127 || pix[i + 2] > 127) rev++;
+    }
+  }
+  return { reveal: n ? rev / n : 0, n };
+}
+
+function lumaBins(pix) {
+  const bins = new Uint32Array(256);
+  for (let i = 0; i < pix.length; i += 4) {
+    const y = 0.2126 * pix[i] + 0.7152 * pix[i + 1] + 0.0722 * pix[i + 2];
+    bins[Math.min(255, y | 0)]++;
+  }
+  let used = 0;
+  for (let b = 0; b < 256; b++) if (bins[b] > 10) used++;
+  return used;
+}
+
+function unpack16(hi, lo) {
+  return ((hi + lo / 255) * 4) - 2;
+}
+
+function angleError(phase) {
+  const xz = renderDebug(2, { a: 0.45, e: 0.85, yaw: 0, t: phase * PERIOD, steps: 64, glow: 1 });
+  const wpix = renderDebug(3, { a: 0.45, e: 0.85, yaw: 0, t: phase * PERIOD, steps: 64, glow: 1 });
+  let sw = 0;
+  let sx = 0;
+  let sz = 0;
+  let count = 0;
+  for (let i = 0; i < wpix.length; i += 4) {
+    const wgt = wpix[i] / 255;
+    if (wgt > 0.15) {
+      const x = unpack16(xz[i] / 255, xz[i + 1] / 255);
+      const z = unpack16(xz[i + 2] / 255, xz[i + 3] / 255);
+      sw += wgt;
+      sx += wgt * x;
+      sz += wgt * z;
+      count++;
+    }
+  }
+  if (sw <= 0) return { errorDeg: null, count, expected: phase * 360 };
+  const got = Math.atan2(sz, sx);
+  const exp = phase * Math.PI * 2;
+  let e = got - exp;
+  e = Math.atan2(Math.sin(e), Math.cos(e));
+  return { errorDeg: Math.abs(e) * 180 / Math.PI, count, gotDeg: got * 180 / Math.PI, expected: phase * 360 };
+}
+
+function hitStats(pix) {
+  let hits = 0;
+  let maxSteps = 0;
+  let bad = 0;
+  let exhausted = 0;
+  const n = pix.length / 4;
+  for (let i = 0; i < pix.length; i += 4) {
+    if (pix[i] > 127) hits++;
+    const steps = pix[i + 1];
+    if (steps > maxSteps) maxSteps = steps;
+    if (pix[i + 2] > 200) bad++;
+    else if (pix[i + 2] > 80) exhausted++;
+  }
+  return { hits, maxSteps, bad, exhausted, n };
+}
+
+function finiteScan() {
+  const ext = gl.getExtension("EXT_color_buffer_float");
+  if (!ext) return { available: false };
+  const w = canvas.width;
+  const h = canvas.height;
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, w, h, 0, gl.RGBA, gl.FLOAT, null);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  const fb = gl.createFramebuffer();
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+  const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+  if (status !== gl.FRAMEBUFFER_COMPLETE) {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.deleteFramebuffer(fb);
+    gl.deleteTexture(tex);
+    return { available: true, complete: false, status };
+  }
+  gl.useProgram(program);
+  gl.viewport(0, 0, w, h);
+  gl.uniform2f(loc.resolution, w, h);
+  gl.uniform4f(loc.state, state.a, state.e, state.yaw, fphase(state.t));
+  gl.uniform3f(loc.flags, state.steps, state.glow, 0);
+  gl.uniform3f(loc.bmin, bmin[0], bmin[1], bmin[2]);
+  gl.uniform3f(loc.bmax, bmax[0], bmax[1], bmax[2]);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  const pix = new Float32Array(w * h * 4);
+  gl.readPixels(0, 0, w, h, gl.RGBA, gl.FLOAT, pix);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.deleteFramebuffer(fb);
+  gl.deleteTexture(tex);
+  draw();
+  let nonfinite = 0;
+  const sample = Math.max(1, Math.floor(pix.length / 40000));
+  for (let i = 0; i < pix.length; i += 4 * sample) {
+    for (let k = 0; k < 4; k++) {
+      const v = pix[i + k];
+      if (!Number.isFinite(v)) nonfinite++;
+    }
+  }
+  return { available: true, complete: true, nonfinite, sampled: true };
+}
+
+const pointers = new Map();
+let pointerOrder = 0;
+
+function applyPointers() {
+  const rect = canvas.getBoundingClientRect();
+  if (rect.width < 1 || rect.height < 1) return;
+  const all = [...pointers.values()].sort((a, b) => a.order - b.order);
+  const touches = all.filter((p) => p.type === "touch");
+  if (touches.length >= 2) {
+    const p0 = touches[0];
+    const p1 = touches[1];
+    const dx = p1.x - p0.x;
+    const dy = p1.y - p0.y;
+    const sep = Math.hypot(dx, dy);
+    const shortSide = Math.min(rect.width, rect.height);
+    if (sep < 4) {
+      setState({ a: 0, yaw: 0 });
+    } else {
+      const yaw = Math.atan2(dy, dx);
+      setState({ a: clamp(sep / (0.8 * shortSide), 0, 1), yaw: Number.isFinite(yaw) ? yaw : 0 });
+    }
+    setGesture("Two-touch: separation sets aperture, angle sets yaw.");
+    return;
+  }
+  const one = touches.length === 1 ? touches[0] : (all.length === 1 ? all[0] : null);
+  if (!one) {
+    setGesture("Pointer released. State held.");
+    return;
+  }
+  const x = one.x - rect.left;
+  const y = one.y - rect.top;
+  setState({
+    a: clamp(x / rect.width, 0, 1),
+    e: clamp(1 - y / rect.height, 0, 1)
+  });
+  setGesture("Pointer: horizontal sets aperture, vertical sets energy.");
+}
+
+function rememberPointer(e) {
+  pointers.set(e.pointerId, {
+    x: e.clientX,
+    y: e.clientY,
+    order: pointerOrder++,
+    type: e.pointerType || "mouse"
+  });
+}
+
+function onPointerDown(e) {
+  if (e.pointerType === "mouse" && e.button !== 0) return;
+  try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* synthetic events */ }
+  rememberPointer(e);
+  applyPointers();
+}
+function onPointerMove(e) {
+  const p = pointers.get(e.pointerId);
+  if (!p) return;
+  p.x = e.clientX;
+  p.y = e.clientY;
+  applyPointers();
+}
+function onPointerEnd(e) {
+  pointers.delete(e.pointerId);
+  try { canvas.releasePointerCapture(e.pointerId); } catch (err) { /* already released */ }
+  applyPointers();
+}
+
+canvas.addEventListener("pointerdown", onPointerDown);
+canvas.addEventListener("pointermove", onPointerMove);
+canvas.addEventListener("pointerup", onPointerEnd);
+canvas.addEventListener("pointercancel", onPointerEnd);
+canvas.addEventListener("lostpointercapture", (e) => {
+  if (pointers.has(e.pointerId)) {
+    pointers.delete(e.pointerId);
+    applyPointers();
+  }
+});
+
+function onKey(e) {
+  const t = e.target;
+  if (t && t.closest && t.closest("button, input, a, textarea")) return;
+  const big = e.shiftKey ? 5 : 1;
+  let used = true;
+  if (e.key === "ArrowLeft") setState({ a: state.a - 0.02 * big });
+  else if (e.key === "ArrowRight") setState({ a: state.a + 0.02 * big });
+  else if (e.key === "ArrowDown") setState({ e: state.e - 0.02 * big });
+  else if (e.key === "ArrowUp") setState({ e: state.e + 0.02 * big });
+  else if (e.key === "[") setState({ yaw: state.yaw - (5 * PI / 180) * big });
+  else if (e.key === "]") setState({ yaw: state.yaw + (5 * PI / 180) * big });
+  else if (e.key === "," || e.key === "<") setState({ t: state.t - 0.24 * big });
+  else if (e.key === "." || e.key === ">") setState({ t: state.t + 0.24 * big });
+  else if (e.key === " ") setPlaying(!playing);
+  else if (e.key === "r" || e.key === "R") resetState();
+  else if (e.key === "q" || e.key === "Q") setState({ steps: state.steps === 64 ? 32 : 64 });
+  else if (e.key === "g" || e.key === "G") setState({ glow: state.glow > 0.5 ? 0 : 1 });
+  else used = false;
+  if (used) e.preventDefault();
+}
+window.addEventListener("keydown", onKey);
+
+els.aperture.addEventListener("input", () => setState({ a: Number(els.aperture.value) }));
+els.energy.addEventListener("input", () => setState({ e: Number(els.energy.value) }));
+els.yaw.addEventListener("input", () => setState({ yaw: Number(els.yaw.value) }));
+els.phase.addEventListener("pointerdown", () => { scrubbing = true; });
+els.phase.addEventListener("pointerup", () => { scrubbing = false; });
+els.phase.addEventListener("input", () => setState({ t: Number(els.phase.value) * PERIOD }));
+els.play.addEventListener("click", () => setPlaying(!playing));
+els.reset.addEventListener("click", () => resetState());
+els.quality.addEventListener("click", () => setState({ steps: state.steps === 64 ? 32 : 64 }));
+els.glow.addEventListener("click", () => setState({ glow: state.glow > 0.5 ? 0 : 1 }));
+document.getElementById("controls").addEventListener("pointerdown", (e) => e.stopPropagation());
+
+document.addEventListener("visibilitychange", () => applyVisibility(document.hidden));
+
+function bootParams() {
+  const read = (key, lo, hi) => params.has(key) ? clamp(Number(params.get(key)), lo, hi) : null;
+  const a = read("a", 0, 1);
+  const e = read("e", 0, 1);
+  let yaw = params.has("yaw") ? Number(params.get("yaw")) : null;
+  if (yaw != null && !Number.isFinite(yaw)) yaw = 0;
+  let t = null;
+  if (params.has("t")) t = Number(params.get("t"));
+  if (params.has("phase")) t = clamp(Number(params.get("phase")), 0, 0.999) * PERIOD;
+  if (t != null && !Number.isFinite(t)) t = 0;
+  const q = params.get("q");
+  const steps = q === "32" ? 32 : q === "64" ? 64 : null;
+  const glow = params.has("glow") ? (Number(params.get("glow")) > 0 ? 1 : 0) : null;
+  const fixedTime = params.has("t") || params.has("phase");
+  let play = !reducedMotion && !fixedTime;
+  if (params.get("play") === "1") play = true;
+  if (params.get("play") === "0") play = false;
+  if (reducedMotion && params.get("play") !== "1") {
+    play = false;
+    if (!fixedTime) t = 0;
+  }
+  setState({
+    a: a == null ? 0.45 : a,
+    e: e == null ? 0.55 : e,
+    yaw: yaw == null ? 0 : yaw,
+    t: t == null ? 0 : t,
+    steps: steps == null ? 64 : steps,
+    glow: glow == null ? 1 : glow
+  }, false);
+  setPlaying(play);
+}
+
+function rebuild() {
+  if (!gl) return;
+  meshBuf = null;
+  meshKey = -1;
+  bgBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, bgBuf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  linkProgram(fragSource);
+  ensureMesh(state.steps);
+  draw();
+  const err = gl.getError();
+  compileInfo.error = err;
+  if (err !== gl.NO_ERROR) showError("gl.getError returned " + err + " after draw.");
+}
+
+canvas.addEventListener("webglcontextlost", (e) => {
+  e.preventDefault();
+  showError("WebGL context lost. Restoring the instrument.");
+});
+canvas.addEventListener("webglcontextrestored", () => {
+  rebuild();
+  if (program) hideError();
+});
+
+function frame(now) {
+  if (stepClock(now)) {
+    draw();
+    updateStatus(false);
+  }
+  requestAnimationFrame(frame);
+}
+
+async function wait(ms) {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function selfTest() {
+  const checks = [];
+  const check = (name, pass, detail) => checks.push({ name, pass: !!pass, detail });
+  setPlaying(false);
+  setState({ a: 0.45, e: 0.55, yaw: 0, t: 0, steps: 64, glow: 1, debug: 0 });
+  const info = glInfo();
+  check("webgl2-context", !!gl, info);
+  check("compile-vertex", compileInfo.vertex, compileInfo.log);
+  check("compile-fragment", compileInfo.fragment, compileInfo.log);
+  check("link", compileInfo.link, compileInfo.log);
+  const err = gl.getError();
+  check("gl-no-error", err === gl.NO_ERROR && compileInfo.error === gl.NO_ERROR, { err, stored: compileInfo.error });
+  check("source-es300", fragSource.startsWith("#version 300 es"), {});
+  check("no-texture-lookup", !/texture\s*\(/.test(fragSource) && !/sampler2D/.test(fragSource), {});
+  check("no-march-loop", !/i < 80/.test(fragSource) && !/i < 80/.test(vertSource), {
+    note: "Raster meshes. The old 80-step march ceiling is unused."
+  });
+  const v64 = meshCache[64] ? meshCache[64].count : buildMesh(64).count;
+  const v32 = meshCache[32] ? meshCache[32].count : buildMesh(32).count;
+  check("quality-tessellation", v64 > v32 && v32 > 1000, { v64, v32 });
+
+  const w = canvas.width;
+  const h = canvas.height;
+  const mask = renderDebug(1, { a: 0.45, e: 0.55, yaw: 0, t: 0, steps: 64 });
+  const cov = coverageOf(mask);
+  check("coverage-default", cov >= 0.05 && cov <= 0.70, { coverage: cov, w, h });
+  draw();
+  const beauty = readPixels();
+  const bins = lumaBins(beauty);
+  check("luminance-bins", bins >= 32, { bins });
+
+  const closed = renderDebug(1, { a: 0, e: 0.55, yaw: 0, t: 0, steps: 64 });
+  const open = renderDebug(1, { a: 1, e: 0.55, yaw: 0, t: 0, steps: 64 });
+  const rc = revealOf(closed, w, h);
+  const ro = revealOf(open, w, h);
+  check("reveal-delta", ro.reveal - rc.reveal >= 0.15, { closed: rc.reveal, open: ro.reveal, delta: ro.reveal - rc.reveal });
+
+  setState({ a: 0.45, e: 0.55, yaw: 0, t: 0, steps: 64, glow: 1 });
+  const a1 = readPixels();
+  draw();
+  const a2 = readPixels();
+  check("byte-equal-repeat", samePixels(a1, a2), { hash: fnv(a1) });
+
+  setState({ a: 1, e: 0.1, yaw: 1.2, t: 4.5 });
+  draw();
+  setState({ a: 0.45, e: 0.55, yaw: 0, t: 0 });
+  const a3 = readPixels();
+  check("aba-restore", samePixels(a1, a3), {});
+
+  setState({ t: 0 });
+  const p0 = readPixels();
+  setState({ t: 12 });
+  const p12 = readPixels();
+  setState({ t: 24 });
+  const p24 = readPixels();
+  check("period-0-12-24", samePixels(p0, p12) && samePixels(p0, p24), {});
+  setState({ t: 1.25 });
+  const pA = readPixels();
+  setState({ t: 13.25 });
+  const pB = readPixels();
+  const drift = meanAbs(pA, pB);
+  check("period-offset", drift.mean <= 1 / 255 && drift.within2 >= 0.999, drift);
+
+  setState({ a: 0.45, e: 0.55, yaw: 0, t: 0 });
+  const base = readPixels();
+  setState({ a: 1, e: 1, yaw: 3, t: 99 });
+  resetState();
+  const back = readPixels();
+  check("reset-drift", samePixels(base, back), {});
+
+  setState({ yaw: Math.PI });
+  const yp = readPixels();
+  setState({ yaw: -Math.PI });
+  const yn = readPixels();
+  check("yaw-pi-equivalent", samePixels(yp, yn), {});
+
+  const mask64 = renderDebug(1, { a: 0.45, e: 0.55, yaw: 0, t: 0, steps: 64 });
+  const mask32 = renderDebug(1, { a: 0.45, e: 0.55, yaw: 0, t: 0, steps: 32 });
+  const c64 = coverageOf(mask64);
+  const c32 = coverageOf(mask32);
+  check("quality-coverage", c64 >= 0.05 && c64 <= 0.7 && c32 >= 0.05 && c32 <= 0.7 && Math.abs(c64 - c32) < 0.12, { c64, c32 });
+
+  const angles = [0, 0.25, 0.5, 0.75].map((phase) => ({ phase, ...angleError(phase) }));
+  const anglePass = angles.every((a) => a.errorDeg != null && a.errorDeg <= 5 && a.count > 0);
+  check("pulse-angle", anglePass, angles);
+
+  const glowMask = renderDebug(1, { glow: 0, a: 0.45, e: 0, yaw: 0, t: 0, steps: 64 });
+  const glowCov = coverageOf(glowMask);
+  setState({ glow: 0, a: 0.45, e: 0, yaw: 0, t: 0, steps: 64 });
+  const dark = readPixels();
+  let lumaSum = 0;
+  let lumaN = 0;
+  for (let i = 0; i < dark.length; i += 4) {
+    if (glowMask[i] > 127 || glowMask[i + 1] > 127) {
+      lumaSum += 0.2126 * dark[i] + 0.7152 * dark[i + 1] + 0.0722 * dark[i + 2];
+      lumaN++;
+    }
+  }
+  const meanLuma = lumaN ? lumaSum / lumaN / 255 : 0;
+  check("glow-off-architecture", Math.abs(glowCov - cov) < 0.01 && meanLuma > 0.05, { glowCov, cov, meanLuma });
+
+  const corners = [];
+  let cornersOk = true;
+  for (const a of [0, 1]) {
+    for (const e of [0, 1]) {
+      const pix = renderDebug(1, { a, e, yaw: 0, t: 0, steps: 64, glow: 1 });
+      const c = coverageOf(pix);
+      corners.push({ a, e, coverage: c });
+      if (c <= 0.02) cornersOk = false;
+    }
+  }
+  check("corner-states-nonempty", cornersOk, corners);
+
+  const dprHigh = selectDPR(1280, 720, 3, null);
+  const dprUrl = selectDPR(1280, 720, 1, 2);
+  check("dpr-pixel-budget", dprHigh.bw * dprHigh.bh <= 1250000 && dprUrl.bw * dprUrl.bh <= 1250000 && dprHigh.dpr <= 1.5 + 1e-6, { dprHigh, dprUrl });
+
+  pointers.clear();
+  const rect = canvas.getBoundingClientRect();
+  const shortSide = Math.min(rect.width, rect.height);
+  function fire(type, id, x, y) {
+    const cx = Number.isFinite(x) ? x : 0;
+    const cy = Number.isFinite(y) ? y : 0;
+    canvas.dispatchEvent(new PointerEvent(type, {
+      pointerId: id,
+      pointerType: "touch",
+      clientX: rect.left + cx,
+      clientY: rect.top + cy,
+      bubbles: true,
+      cancelable: true
+    }));
+  }
+  setState({ a: 0.2, e: 0.2, yaw: 0.4, t: 0 });
+  fire("pointerdown", 11, rect.width * 0.25, rect.height * 0.2);
+  const case1 = { ...getPlain() };
+  const c1 = Math.abs(case1.a - 0.25) < 0.02 && Math.abs(case1.e - 0.8) < 0.02;
+  const sep = 0.4 * shortSide;
+  fire("pointerdown", 12, rect.width * 0.25 + sep, rect.height * 0.2);
+  const case2 = { ...getPlain() };
+  const c2 = Math.abs(case2.a - 0.5) < 0.03 && Math.abs(case2.e - case1.e) < 1e-6 && Math.abs(case2.yaw) < 0.05;
+  fire("pointermove", 12, rect.width * 0.25, rect.height * 0.2 + sep);
+  const case3 = { ...getPlain() };
+  const c3 = Math.abs(case3.yaw - (Math.PI / 2)) < 0.08 && Math.abs(case3.e - case1.e) < 1e-6;
+  const beforeThird = { ...getPlain() };
+  fire("pointerdown", 13, 4, 4);
+  const case4 = { ...getPlain() };
+  const c4 = case4.a === beforeThird.a && case4.yaw === beforeThird.yaw && case4.e === beforeThird.e;
+  fire("pointerup", 11);
+  const case5 = { ...getPlain() };
+  const c5 = case5.a !== case4.a || Math.abs(case5.yaw - case4.yaw) > 0.2;
+  fire("pointerup", 12);
+  fire("pointerup", 13);
+  pointers.clear();
+  fire("pointerdown", 50, rect.width * 0.2, rect.height * 0.5);
+  fire("pointerdown", 2, rect.width * 0.2 + shortSide * 0.16, rect.height * 0.5);
+  const case6 = { ...getPlain() };
+  const c6 = Math.abs(case6.a - 0.2) < 0.04 && Math.abs(case6.yaw) < 0.08;
+  fire("pointercancel", 2);
+  const case7 = { ...getPlain() };
+  const c7 = Math.abs(case7.a - 0.2) < 0.03 && Number.isFinite(case7.e) && Number.isFinite(case7.yaw);
+  fire("pointerup", 50);
+  fire("pointerdown", 3, 30, 40);
+  fire("pointerdown", 4, 32, 41);
+  const case8 = { ...getPlain() };
+  const c8 = case8.a === 0 && case8.yaw === 0 && Number.isFinite(case8.e);
+  fire("pointerup", 3);
+  fire("pointerup", 4);
+  const case9 = { ...getPlain() };
+  const case9b = { ...getPlain() };
+  const c9 = pointers.size === 0 && case9.a === case9b.a && case9.e === case9b.e && case9.yaw === case9b.yaw && Number.isFinite(case9.a);
+  fire("pointerdown", 8, 20, 20);
+  fire("pointerdown", 9, 80, 20);
+  fire("pointercancel", 8);
+  fire("pointercancel", 9);
+  const case10 = { ...getPlain() };
+  const c10 = Number.isFinite(case10.a) && Number.isFinite(case10.e) && Number.isFinite(case10.yaw) && pointers.size === 0;
+  check("multitouch-10", c1 && c2 && c3 && c4 && c5 && c6 && c7 && c8 && c9 && c10, {
+    c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, case1, case2, case3, case6, case7, case8, case10
+  });
+
+  setState({ a: 0.4, e: 0.4, yaw: 0, t: 0 });
+  els.aperture.value = "0.62";
+  els.aperture.dispatchEvent(new Event("input", { bubbles: true }));
+  const sliderA = state.a;
+  check("slider-not-pointer", Math.abs(sliderA - 0.62) < 1e-6, { sliderA });
+
+  canvas.blur();
+  setState({ a: 0.3, e: 0.3, yaw: 0, t: 1 });
+  window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }));
+  const keyA = Math.abs(state.a - 0.32) < 1e-6;
+  window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp", bubbles: true }));
+  const keyE = Math.abs(state.e - 0.32) < 1e-6;
+  window.dispatchEvent(new KeyboardEvent("keydown", { key: "]", bubbles: true }));
+  const keyY = Math.abs(state.yaw - 5 * PI / 180) < 1e-6;
+  window.dispatchEvent(new KeyboardEvent("keydown", { key: "r", bubbles: true }));
+  const keyR = state.a === 0.45 && state.e === 0.55 && state.yaw === 0 && state.t === 0;
+  check("keyboard", keyA && keyE && keyY && keyR, { keyA, keyE, keyY, keyR, state: getPlain() });
+
+  const clockStart = state.t;
+  setPlaying(false, 1000);
+  applyVisibility(true, 1000);
+  stepClock(1000);
+  stepClock(8000);
+  const hiddenLogic = state.t;
+  applyVisibility(false, 8000);
+  setPlaying(true, 8000);
+  stepClock(8000);
+  stepClock(8600);
+  const playedLogic = state.t;
+  setPlaying(false, 8600);
+  stepClock(12000);
+  const pausedLogic = state.t;
+  check("pause-hidden-logic", hiddenLogic === clockStart && playedLogic > clockStart + 0.5 && pausedLogic === playedLogic, {
+    clockStart, hiddenLogic, playedLogic, pausedLogic
+  });
+  applyVisibility(false);
+  setPlaying(true);
+  state.t = 0;
+  setPlaying(true);
+  let prevT = 0;
+  let advances = 0;
+  for (let i = 0; i < 24; i++) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    if (state.t > prevT + 0.001) advances++;
+    prevT = state.t;
+  }
+  const playedT = state.t;
+  setPlaying(false);
+  const pausedMark = state.t;
+  for (let i = 0; i < 8; i++) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+  const afterPause = state.t;
+  applyVisibility(true);
+  setPlaying(true);
+  const hiddenMark = state.t;
+  for (let i = 0; i < 8; i++) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+  const afterHidden = state.t;
+  setPlaying(false);
+  applyVisibility(false);
+  check("pause-hidden-raf", advances >= 8 && playedT > 0.05 && afterPause === pausedMark && afterHidden === hiddenMark, {
+    advances, playedT, pausedMark, afterPause, hiddenMark, afterHidden, hidden: document.hidden
+  });
+
+  const finite = finiteScan();
+  check("finite-output", !finite.available || (finite.complete && finite.nonfinite === 0), finite);
+
+  const beforeLoss = fnv(readPixels());
+  const lose = gl.getExtension("WEBGL_lose_context");
+  if (!lose) {
+    check("context-restore", false, { reason: "WEBGL_lose_context missing" });
+  } else {
+    await new Promise((resolve) => {
+      const timer = setTimeout(resolve, 1500);
+      canvas.addEventListener("webglcontextrestored", () => {
+        clearTimeout(timer);
+        resolve();
+      }, { once: true });
+      lose.loseContext();
+      setTimeout(() => lose.restoreContext(), 30);
+    });
+    draw();
+    const afterLoss = fnv(readPixels());
+    check("context-restore", beforeLoss === afterLoss && !!program, { beforeLoss, afterLoss });
+  }
+
+  const good = compileInfo.link;
+  const failed = linkProgram("this is not a shader");
+  const errorShown = !els.error.hidden && els.error.textContent.length > 0;
+  const restored = linkProgram(fragSource);
+  draw();
+  check("shader-failure-visible", failed === false && errorShown === true && restored === true && good, {
+    failed, errorShown, restored, text: els.error.textContent.slice(0, 180)
+  });
+  if (restored) hideError();
+
+  const dummy = document.createElement("canvas");
+  dummy.getContext = () => null;
+  const denied = createGL(dummy);
+  const denialText = els.error.textContent;
+  check("webgl-denial-path", denied === null && /WebGL2/.test(denialText), { denialText });
+  if (program) hideError();
+
+  setPlaying(false);
+  setState({ a: 0.45, e: 0.55, yaw: 0, t: 0, steps: 64, glow: 1, debug: 0 });
+  return {
+    checks,
+    pass: checks.filter((c) => c.pass).length,
+    fail: checks.filter((c) => !c.pass).length,
+    gl: info,
+    buffer: { ...bufferInfo },
+    bounds: { bmin, bmax },
+    reducedMotion
+  };
+}
+
+function getPlain() {
+  return {
+    a: state.a,
+    e: state.e,
+    yaw: state.yaw,
+    t: state.t,
+    phase: fphase(state.t),
+    steps: state.steps,
+    glow: state.glow,
+    playing,
+    visible
+  };
+}
+
+async function bench(warmup, frames) {
+  setPlaying(false);
+  const ext = gl.getExtension("EXT_disjoint_timer_query_webgl2");
+  const cpu = [];
+  const raf = [];
+  const gpu = [];
+  const queries = [];
+  let disjoint = 0;
+  let last = performance.now();
+  for (let i = 0; i < warmup; i++) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    draw();
+  }
+  for (let i = 0; i < frames; i++) {
+    const now = await new Promise((resolve) => requestAnimationFrame((t) => resolve(t)));
+    let query = null;
+    if (ext) {
+      query = gl.createQuery();
+      gl.beginQuery(ext.TIME_ELAPSED_EXT, query);
+    }
+    const t0 = performance.now();
+    draw();
+    const t1 = performance.now();
+    if (query) {
+      gl.endQuery(ext.TIME_ELAPSED_EXT);
+      queries.push(query);
+    }
+    raf.push(now - last);
+    cpu.push(t1 - t0);
+    last = now;
+  }
+  if (ext) {
+    const deadline = performance.now() + 2000;
+    for (const query of queries) {
+      let available = false;
+      while (!available && performance.now() < deadline) {
+        available = gl.getQueryParameter(query, gl.QUERY_RESULT_AVAILABLE);
+        if (!available) await wait(1);
+      }
+      const wasDisjoint = gl.getParameter(ext.GPU_DISJOINT_EXT);
+      if (wasDisjoint || !available) {
+        if (wasDisjoint) disjoint++;
+        gpu.push(null);
+      } else {
+        gpu.push(gl.getQueryParameter(query, gl.QUERY_RESULT) / 1e6);
+      }
+      gl.deleteQuery(query);
+    }
+  }
+  const summarize = (arr) => {
+    const vals = arr.filter((v) => Number.isFinite(v)).slice().sort((a, b) => a - b);
+    if (!vals.length) return null;
+    const q = (p) => vals[Math.min(vals.length - 1, Math.max(0, Math.ceil(p * vals.length) - 1))];
+    return { n: vals.length, min: vals[0], median: q(0.5), p95: q(0.95), max: vals[vals.length - 1] };
+  };
+  return {
+    warmup,
+    frames,
+    cpu: summarize(cpu),
+    raf: summarize(raf),
+    gpu: summarize(gpu.filter((v) => v != null)),
+    gpuMissing: gpu.filter((v) => v == null).length,
+    disjoint,
+    timer: !!ext,
+    samples: { cpu, raf, gpu },
+    buffer: { ...bufferInfo },
+    gl: glInfo()
+  };
+}
+
+gl = createGL(canvas);
+if (gl) {
+  rebuild();
+  bootParams();
+  resize();
+  updateStatus(true);
+  requestAnimationFrame(frame);
+  document.body.dataset.ready = program ? "1" : "0";
+} else {
+  document.body.dataset.ready = "0";
+}
+
+window.HELIOS = {
+  setState,
+  getState: getPlain,
+  renderOnce: () => { draw(); return getPlain(); },
+  snapshot: () => canvas.toDataURL("image/png"),
+  resize,
+  selfTest,
+  bench,
+  glInfo,
+  compileInfo,
+  selectDPR,
+  applyVisibility,
+  setPlaying,
+  resetState,
+  fragmentSource: fragSource,
+  vertexSource: vertSource,
+  stepClock,
+  constants: G,
+  bounds: { bmin, bmax },
+  ready: !!program
+};
+</script>
+</body>
+</html>
