@@ -35,7 +35,8 @@ permissions:
 
 jobs:
   validate-live-preview:
-    runs-on: ubuntu-latest
+    # Keep the runner compatible with the pinned Playwright 1.55 browser runtime.
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
 
     steps:

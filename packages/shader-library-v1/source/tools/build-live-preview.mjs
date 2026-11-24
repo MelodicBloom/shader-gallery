@@ -63,6 +63,20 @@ function writePreviewTree({ packageRoot, outputRoot, manifest, reportOutput }) {
   copyJson(path.join(packageRoot, "manifest.json"), path.join(outputRoot, "manifest.json"));
   fs.writeFileSync(path.join(outputRoot, ".nojekyll"), "");
 
+  // Ports have a separate, removable home and are not manifest shader promotions.
+  const portsRoot = path.join(packageRoot, "ports");
+  let portFiles = 0;
+  if (fs.existsSync(portsRoot)) {
+    fs.cpSync(portsRoot, path.join(outputRoot, "ports"), {
+      recursive: true,
+      filter(source) {
+        if (fs.lstatSync(source).isSymbolicLink()) throw new Error(`Port symlinks are not supported: ${source}`);
+        if (fs.statSync(source).isFile()) portFiles += 1;
+        return true;
+      }
+    });
+  }
+
   for (const entry of manifest.shaders) {
     for (const relativePath of [entry.shader, entry.meta, entry.preview]) {
       const source = path.join(packageRoot, relativePath);
@@ -76,7 +90,8 @@ function writePreviewTree({ packageRoot, outputRoot, manifest, reportOutput }) {
     schemaVersion: manifest.schemaVersion,
     shaderCount: manifest.shaders.length,
     output: reportOutput,
-    files: 7 + manifest.shaders.length * 3
+    files: 7 + manifest.shaders.length * 3 + portFiles,
+    ...(portFiles ? { portFiles } : {})
   };
   fs.writeFileSync(path.join(outputRoot, "build-report.json"), `${JSON.stringify(report, null, 2)}\n`);
 }
