@@ -110,7 +110,7 @@ Interpretation: JS work per frame is about 1 ms. The rest is software rasterisat
 | 04:38 | Headless screenshot of live URL (SwiftShader) | `receipts/live-vercel-1280.png`, `receipts/live-vercel-390.png`; 0 console errors; WebGL path (no fallback); auto quality 0 (desktop) and 1 (mobile) |
 | — | Commit 2 (this receipts update) and the draft PR | listed in the PR description. A commit cannot contain its own SHA. |
 
-The Vercel project is **not Git-connected**. Pushing to the branch does not redeploy. To redeploy, run `npx vercel deploy --prod` from `mandala-glass/`.
+Vercel builds Git branch previews with `mandala-glass/` as the project root. Open the preview from the Vercel check on the pull request. The production URL above records the separate CLI deployment. To deploy intentionally to production, run `npx vercel deploy --prod` from `mandala-glass/` after confirming the linked Vercel project.
 
 ---
 

@@ -250,7 +250,10 @@ function boot() {
     { dpr: 0.75, samples: 0, bloom: false, tScale: 0.35 },
     { dpr: 0.75, samples: 0, bloom: false, tScale: 0.35, lite: true }, // last resort: no transmission pass
   ];
-  const lockQ = qs.has('q') ? Math.max(0, Math.min(4, +qs.get('q'))) : null;
+  const requestedQuality = qs.get('q');
+  const qualityOverride = requestedQuality?.trim() ? Number(requestedQuality) : NaN;
+  const lockQ = Number.isInteger(qualityOverride) && qualityOverride >= 0 && qualityOverride < LEVELS.length
+    ? qualityOverride : null;
   const mobile = matchMedia('(pointer: coarse)').matches || Math.min(innerWidth, innerHeight) < 500;
   let qLevel = lockQ ?? (mobile ? 1 : 0);
   function applyQuality() {
