@@ -1,27 +1,62 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="data:"><title>Abalone · Material Study 01</title><meta name="description" content="An orbital WebGL2 material study with layered interference and an inspectable uniform contract."></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive shader and material studies by Jennipher Troup.">
+  <title>Shader Gallery · MelodicBloom</title>
+  <link rel="stylesheet" href="./src/gallery.css">
+</head>
 <body>
-  <header><a href="https://github.com/MelodicBloom/shader-gallery/tree/089326cf4d0279253364ea41afb27d00d2d13818/portfolio-runtime">SOURCE @ 089326C</a><span>MATERIAL STUDY / 01</span><button id="inspector-toggle" aria-controls="inspector" aria-expanded="true">Hide inspector</button></header>
-<main>
-<section class="stage" aria-labelledby="material-title">
-<img id="fallback" alt="Static Abalone interference preview. Live rendering is preparing.">
-<canvas id="surface" tabindex="0" aria-label="Abalone material. Drag to orbit, use arrow keys to rotate, plus and minus to zoom." aria-describedby="orbit-help"></canvas>
-<div class="title"><p class="eyebrow">LAYERED ORGANIC INTERFERENCE</p><h1 id="material-title">Abalone</h1><p>Dark nacre. Light held between layers.</p></div>
-<div class="stage-footer"><p id="orbit-help">Drag to orbit · Arrow keys rotate · + / − zoom</p><p id="render-status" role="status">Preparing WebGL2…</p></div>
-</section>
-<aside id="inspector" aria-label="Material inspector">
-<div class="inspector-heading"><p class="eyebrow">LIVE MATERIAL</p><h2>Inspect the surface</h2><p>One analytic shell. Bounded controls. Reproducible state.</p></div>
-  <p class="control-boundary">These controls are unitless artistic proxies. They are reproducible inputs, not measured nacre properties.</p><div id="uniform-controls"></div>
-<label class="uniform" for="light-heading"><span>Light heading <output id="light-heading-value"></output></span><input id="light-heading" type="range" min="-3.14" max="3.14" step="0.01"></label>
-<div class="motion"><button id="playback">Pause motion</button><label><input id="reduced" type="checkbox"> Reduce motion</label></div>
-  <div class="actions"><button id="reset">Reset study</button><button id="neutral">Neutral comparison</button><button id="export">Export preset</button></div>
-<label class="preset-label" for="preset">Scene preset / JSON</label><textarea id="preset" rows="3" spellcheck="false" aria-describedby="preset-status"></textarea><button id="restore">Restore preset</button><p id="preset-status" role="status">Named preset: Midnight nacre</p>
-<section class="evidence" aria-labelledby="evidence-title"><p class="eyebrow" id="evidence-title">REVIEW RECEIPT</p><label for="evidence-view">Static capture view</label><select id="evidence-view"></select><div class="actions"><button id="apply-evidence">Apply view</button><button id="export-evidence">Export 3 × 3 matrix</button></div><textarea id="evidence-matrix" rows="4" readonly aria-label="Evidence capture matrix"></textarea><p id="evidence-status" role="status">Nine static camera/light inputs are available for visual review.</p></section>
-<details><summary>How it works</summary><p>A camera ray intersects an asymmetric ellipsoid. Object-space bands and three oriented layer responses catch a moving light, while Fresnel color and a polished top reflection reveal depth. This is an artistic optical study, not measured nacre transport.</p><p>GLSL ES 3.00 → typed uniforms → Zustand vanilla store → raw WebGL2. The renderer owns frame time; semantic changes enter the store only on interaction. The 3 × 3 capture matrix records inputs, not visual or performance conclusions.</p></details>
-  <section class="maker" aria-labelledby="maker-title"><p class="eyebrow">ABOUT THE MAKER</p><h3 id="maker-title">Jennipher Troup</h3><p>Jennipher builds real-time GLSL shader studies, material design systems, and evidence-labeled interactive specimens through <a href="https://melodyfire.space">MelodyFire</a>. Her work pairs expressive surfaces with inspectable controls and receipts, so the visual result and the strength of its claims can be reviewed separately.</p></section>
-<details id="error-details" hidden><summary>Rendering diagnostic</summary><pre id="render-error"></pre></details>
-<div class="telemetry"><p id="performance">Frame cadence: sampling…</p><p id="dimensions">Render size: preparing…</p><p>QA: browser verified / physical device coverage pending</p></div>
-</aside>
-</main><script type="module" src="/src/main.ts"></script>
-</body></html>
+  <main>
+    <header>
+      <a class="brand" href="https://github.com/MelodicBloom/shader-gallery">MelodicBloom ↗</a>
+      <h1>Shader Gallery</h1>
+      <p>Interactive studies in light, material, and procedural geometry.</p>
+    </header>
+    <section aria-labelledby="live">
+      <h2 id="live">Live studies</h2>
+      <div class="studies">
+        <article>
+          <img src="./stills/mandala.webp" alt="Blue glass petals and a gold ring around a cyan center">
+          <div class="study"><h3>Mandala Glass</h3><p>Orbit cut glass, adjust dispersion, and open the lotus petals.</p><a class="launch" href="https://mandala-glass.vercel.app/" aria-label="Open Mandala Glass live demo">Open live demo ↗</a></div>
+        </article>
+        <article>
+          <img src="./stills/abalone.webp" alt="Iridescent nacre with bands of green, violet, and blue">
+          <div class="study"><h3>Abalone</h3><p>Orbit a nacre surface and move the light to reveal layered interference.</p><a class="launch" href="./abalone.html" aria-label="Open Abalone live demo">Open live demo ↗</a></div>
+        </article>
+      </div>
+    </section>
+    <section class="branches" aria-labelledby="branches">
+      <h2 id="branches">Branch runtimes</h2>
+      <p>Each preview opens independently. Previews are pinned to a commit and require Vercel access.</p>
+      <ul>
+      <li><div><h3>Mandala Glass</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/394c5b3fdb4e99bfce6bcd36d98e0efabe55bc3e">cursor/mandala-glass-slice <span>· 394c5b3</span></a></div><a class="launch" href="https://mandala-glass-a1bsdxmlj-melodicbloom.vercel.app/" aria-label="Open Mandala Glass branch preview">Open preview ↗</a></li>
+      <li><div><h3>Noise Kaleidoscope</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/f4f77e997d7eb37ac0f6f265c41b6c306e399e39">experiment/noise-kaleidoscope-v0 <span>· f4f77e9</span></a></div><a class="launch" href="https://shader-gallery-ozarb2s9i-melodicbloom.vercel.app/experiments/noise-kaleidoscope-v0/index.html" aria-label="Open Noise Kaleidoscope branch preview">Open preview ↗</a></li>
+      <li><div><h3>Benthic R3F</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/fe8964de26b980ef05ec49923725b73e8282be7d">codex/benthic-r3f-proof <span>· fe8964d</span></a></div><a class="launch" href="https://shader-gallery-i8nip0ii8-melodicbloom.vercel.app/index.html" aria-label="Open Benthic R3F branch preview">Open preview ↗</a></li>
+      <li><div><h3>Abalone portfolio runtime</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/8866c0ba40340b6dbe86d2a6f8b5f4a15d3c2a55">feature/issue-11-abalone-runtime <span>· 8866c0b</span></a></div><a class="launch" href="https://shader-gallery-q0z62ptfa-melodicbloom.vercel.app/index.html" aria-label="Open Abalone portfolio runtime branch preview">Open preview ↗</a></li>
+      <li><div><h3>Nacre controls</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/df9822cf365e943c441ce4cca6ca3c237cf3b2b1">feat/issue-11-nacre-validation <span>· df9822c</span></a></div><a class="launch" href="https://shader-gallery-foxb3qmg7-melodicbloom.vercel.app/index.html" aria-label="Open Nacre controls branch preview">Open preview ↗</a></li>
+      <li><div><h3>Kaleidoscopic Field + audio</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/b2dd178db6198a89b41e32d6be7ac0a8302915fb">experiment/kaleidoscopic-field-001 <span>· b2dd178</span></a></div><a class="launch" href="https://shader-gallery-2m2wi2lm6-melodicbloom.vercel.app/experiments/kaleidoscopic-field-001/index.html" aria-label="Open Kaleidoscopic Field + audio branch preview">Open preview ↗</a></li>
+      <li><div><h3>Wireframe Mandala</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/e6ffbfe416239087a149bcea68753b3b562ba58e">experiment/wireframe-mandala-001 <span>· e6ffbfe</span></a></div><a class="launch" href="https://shader-gallery-74hhkqtjg-melodicbloom.vercel.app/experiments/wireframe-mandala/index.html" aria-label="Open Wireframe Mandala branch preview">Open preview ↗</a></li>
+      <li><div><h3>Material Atlas / Precious Opal</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/04e933418c07b586fec41b4e91fb431b596fd330">feat/material-atlas-opal-v0-1 <span>· 04e9334</span></a></div><a class="launch" href="https://shader-gallery-bylkqhx5m-melodicbloom.vercel.app/packages/shader-library-v1/source/material-atlas/index.html" aria-label="Open Material Atlas / Precious Opal branch preview">Open preview ↗</a></li>
+      <li><div><h3>Optical Studio v1.2</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/bc84ebc6b13d2d5d1d1dacdfdef5c526ac8597d7">feat/optical-studio-v1.2-abalone-lab <span>· bc84ebc</span></a></div><a class="launch" href="https://shader-gallery-62qcpn4e0-melodicbloom.vercel.app/optical-studio/index.html" aria-label="Open Optical Studio v1.2 branch preview">Open preview ↗</a></li>
+      <li><div><h3>Optical Studies 02</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/d298296bc04428f01e0238ab7f82c36be9f20406">feat/optical-studies-02 <span>· d298296</span></a></div><a class="launch" href="https://shader-gallery-5d4jab5tr-melodicbloom.vercel.app/docs/optical-studies-02.html" aria-label="Open Optical Studies 02 branch preview">Open preview ↗</a></li>
+      <li><div><h3>Benthic OS</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/9da34fdcf6f6344de405a61962e6e86b9bb3c793">codex/benthic-os-proof <span>· 9da34fd</span></a></div><a class="launch" href="https://shader-gallery-djgsxkfat-melodicbloom.vercel.app/benthic-os/index.html" aria-label="Open Benthic OS branch preview">Open preview ↗</a></li>
+      <li><div><h3>Root landing / PR 37</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/879161846debf928daccddae4ed5344f02c29901">fix/pages-live-entry <span>· 8791618</span></a></div><a class="launch" href="https://shader-gallery-8a7oyet67-melodicbloom.vercel.app/index.html" aria-label="Open Root landing / PR 37 branch preview">Open preview ↗</a></li>
+      <li><div><h3>Library context recycling</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/e28557bfd44076f4c06baae8cab620f96574ab3c">fix/webgl-context-recycling <span>· e28557b</span></a></div><a class="launch" href="https://shader-gallery-bkgoijmxi-melodicbloom.vercel.app/library-v1/index.html" aria-label="Open Library context recycling branch preview">Open preview ↗</a></li>
+      <li><div><h3>GEO-TILE map inspector</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/120a93671b42cadd57a418efa69545acbbf8c31d">feat/geotile-browser-runtime <span>· 120a936</span></a></div><a class="launch" href="https://shader-gallery-oi2mz7lsl-melodicbloom.vercel.app/material-validation-lab/experiments/GEO-TILE-001/browser/index.html" aria-label="Open GEO-TILE map inspector branch preview">Open preview ↗</a></li>
+      <li><div><h3>Shader Grammar thin-film host</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/709ee370a5db001391d2ea6083921dbe5b3db7d0">feat/shader-grammar-example-runtime <span>· 709ee37</span></a></div><a class="launch" href="https://shader-gallery-80c47kele-melodicbloom.vercel.app/packages/shader-grammar/examples/runtime/index.html" aria-label="Open Shader Grammar thin-film host branch preview">Open preview ↗</a></li>
+      <li><div><h3>mvt-abalone</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/b21f2972b7c1e8662a21aa925082974c8a272a42">feat/mvt-abalone-001 <span>· b21f297</span></a></div><a class="launch" href="https://shader-gallery-79c2v2q8j-melodicbloom.vercel.app/material-validation-lab/reference/abalone/index.html" aria-label="Open mvt-abalone branch preview">Open preview ↗</a></li>
+      <li><div><h3>Original Library preview</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/76b27dddcb02cec737576324f0bcc13a2c80ab06">agent/pr4-live-shader-preview <span>· 76b27dd</span></a></div><a class="launch" href="https://shader-gallery-ajqtxrjtc-melodicbloom.vercel.app/library-v1/index.html" aria-label="Open Original Library preview branch preview">Open preview ↗</a></li>
+      <li><div><h3>Abalone reverse orbit</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/45e4e192c8f6eb0c26f2b9b27069278a9f26b465">fix/reverse-side-iridescence <span>· 45e4e19</span></a></div><a class="launch" href="https://shader-gallery-1kgtauku6-melodicbloom.vercel.app/index.html" aria-label="Open Abalone reverse orbit branch preview">Open preview ↗</a></li>
+      <li><div><h3>Helios Relay</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/b49735082dd373f8af93ea926201f066c5aa7572">cursor/helios-relay-draft-e85d <span>· b497350</span></a></div><a class="launch" href="https://shader-gallery-c3joqwe2j-melodicbloom.vercel.app/helios-relay/index.html" aria-label="Open Helios Relay branch preview">Open preview ↗</a></li>
+      <li><div><h3>Recovered SVG Studies</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/59ca36d0c6ffa1dd1b006223d32adb0bde002d66">cursor/recover-svg-studies-f47c <span>· 59ca36d</span></a></div><a class="launch" href="https://shader-gallery-7mgeb8wzn-melodicbloom.vercel.app/docs/recovered/index.html" aria-label="Open Recovered SVG Studies branch preview">Open preview ↗</a></li>
+      <li><div><h3>Crystal Tunnel V2</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/bbcf2747dc6999ab2bf0fc363a2d9268cc1699b4">feat/crystal-tunnel-v2 <span>· bbcf274</span></a></div><a class="launch" href="https://shader-gallery-onravnryb-melodicbloom.vercel.app/crystal-tunnel/index.html" aria-label="Open Crystal Tunnel V2 branch preview">Open preview ↗</a></li>
+      <li><div><h3>Dispersion Lab</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/a5d9fe296be86e9f6fefd070ad26f39d56fda1f7">fix/dispersion-input-and-serve <span>· a5d9fe2</span></a></div><a class="launch" href="https://shader-gallery-njw6a34gl-melodicbloom.vercel.app/optical-studio/instruments/dispersion-lab/index.html" aria-label="Open Dispersion Lab branch preview">Open preview ↗</a></li>
+      <li><div><h3>Gallery Accessibility</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/e92e3b6b37b528a729934ddf669dc56247a34482">fix/docs-gallery-accessibility-20261115 <span>· e92e3b6</span></a></div><a class="launch" href="https://shader-gallery-e7ytvf52t-melodicbloom.vercel.app/docs/index.html" aria-label="Open Gallery Accessibility branch preview">Open preview ↗</a></li>
+      <li><div><h3>Grain Preview</h3><a class="ref" href="https://github.com/MelodicBloom/shader-gallery/tree/7806105b256b3998a2344d38624916f9d75376f3">verify/grain-preview-evidence <span>· 7806105</span></a></div><a class="launch" href="https://shader-gallery-pszs85231-melodicbloom.vercel.app/library-v1/ports/grain/index.html" aria-label="Open Grain Preview branch preview">Open preview ↗</a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
