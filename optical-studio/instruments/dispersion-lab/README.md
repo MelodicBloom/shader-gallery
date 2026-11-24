@@ -44,6 +44,7 @@ Tests:
 ```sh
 node --test optical-studio/instruments/dispersion-lab/test-cauchy.mjs
 node --test optical-studio/instruments/dispersion-lab/test-crystal-lens-adapter.mjs
+node --test optical-studio/instruments/dispersion-lab/test-input-validation.mjs
 # or from this folder:
 npm test
 ```
@@ -52,7 +53,9 @@ The five material choices are pedagogical approximate `n_d/V_d` pairs described 
 
 The chart shows seven numerical Cauchy samples, not seven WebGL ray paths. The current Crystal Lens is three-proxy-channel Snell GLSL and its controls are not bound to this instrument. Export is candidate-only JSON; do not import to production shader without a material/control-adapter test and a new image/source receipt.
 
-UI bounds for refractive index (`1.01`–`2.55`) and Abbe (`9`–`95`) match the sliders. Incomplete or out-of-range typed values remain editable and disable export until corrected; valid values update the chart and slider.
+UI bounds for refractive index (`1.01`–`2.55`) and Abbe (`9`–`95`) match the sliders. While typing, empty or incomplete values (`''`, `-`, `1.`, `e`) and out-of-range values are never coerced to 0 or clamped: the field keeps what was typed, is marked `aria-invalid` with a red outline, nothing is applied to the chart/slider, and export is disabled. On commit (blur / Enter), a complete finite number is clamped to the bounds and snapped to the slider step; text that is not a complete number stays invalid.
+
+All serve commands above bind to `127.0.0.1` (loopback) only, so the preview is not exposed on other network interfaces.
 
 ## Crystal Lens adapter 0.1
 
