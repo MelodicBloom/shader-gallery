@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090d1a"><title>Material Atlas · 3D Lookdev</title><link rel="stylesheet" href="./style.css"></head>
+<body>
+<a class="skip" href="#inspector">Skip to material controls</a>
+<div class="shell">
+<header><div class="eyebrow">MELODICBLOOM / MATERIAL ATLAS <span>v0.1 · EXPERIMENTAL</span></div><h1>Light as a material.</h1><p class="intro">Explore what changes when geometry, optical structure, the viewing angle and illumination interact. One 3D opal prototype, alongside the existing shader collection.</p></header>
+<div class="workspace">
+<aside class="library" aria-label="Material selection"><div class="heading"><h2>Specimens</h2><span id="count">Loading…</span></div><input id="search" type="search" aria-label="Search specimens" placeholder="Find a material…"><div id="catalog" class="catalog"><p>Loading registry…</p></div><p class="fineprint">Existing 2D shaders retain their own published controls; 3D upgrades are tracked separately.</p></aside>
+<main class="stagePanel"><div class="stageHeader"><div><div class="eyebrow">INTERACTIVE SPECIMEN</div><h2 id="materialName">Precious Opal</h2><p id="materialFamily" class="minor"></p></div><div class="actions"><button id="pause" type="button">Pause</button><button id="resetView" type="button">Reset view</button><button id="capture" type="button">Capture</button></div></div>
+<div class="stage" id="stage"><canvas id="canvas" aria-label="Interactive shader preview" tabindex="0"></canvas><div class="renderStatus" id="renderStatus" role="status">Loading shader…</div><div class="legend">Drag to orbit · Wheel/pinch to zoom · Change light in controls</div></div>
+<div class="stageFooter"><span id="tier">3D shader · experimental</span><span id="drawState">Live</span></div><div class="narrative"><div><strong>State-led appearance</strong><p>Trigger a controlled event to reveal additional internal spectral domains. It is recorded and replayable.</p></div><button id="reveal" type="button" aria-pressed="false">Reveal optical structure</button></div><div class="statusLine" id="statusLine" aria-live="polite"></div></main>
+<aside class="inspector" id="inspector"><div class="heading"><h2>Material anatomy</h2><span id="controlCount">—</span></div><p id="description" class="minor"></p><div id="controls" class="controls"></div><div class="inspectorFooter"><button id="resetMaterial" type="button">Reset parameters</button><button id="copyState" type="button">Copy state</button><p class="fineprint" id="authority"></p></div></aside>
+</div><footer><span>Native WebGL2 · canonical library preserved · cross-renderer parameter contract</span><a href="../live/index.html">Original 15-specimen gallery ↗</a></footer></div>
+<script type="module" src="./app.js"></script></body></html>
