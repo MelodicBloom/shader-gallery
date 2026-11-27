@@ -102,7 +102,7 @@ jobs:
       - name: Install browser QA runtime
         working-directory: packages/shader-library-v1/source
         run: |
-          npm install --no-save --package-lock=false playwright@1.55.0
+          npm install --no-save --package-lock=false playwright@1.65.1
           npx playwright install --with-deps chromium
 
       - name: Run browser QA at mobile, tablet, and desktop widths

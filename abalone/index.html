@@ -29,7 +29,6 @@ function resize() {
   gl.viewport(0, 0, c.width, c.height);
 }
 resize();
-window.addEventListener('resize', resize);
 
 const vert = gl.createShader(gl.VERTEX_SHADER);
 gl.shaderSource(vert, 'attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}');
@@ -74,14 +73,33 @@ gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
 const uTime = gl.getUniformLocation(prog, 'u_time');
 const uRes  = gl.getUniformLocation(prog, 'u_res');
 
-let t = 0;
-(function draw() {
+const motion = matchMedia('(prefers-reduced-motion: reduce)');
+let t = 0, frame = 0;
+function draw() {
+  frame = 0;
   gl.uniform2f(uRes, c.width, c.height);
   t += 0.016;
   gl.uniform1f(uTime, t);
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-  requestAnimationFrame(draw);
-})();
+  if (!motion.matches) frame = requestAnimationFrame(draw);
+}
+function sync() {
+  if (motion.matches) {
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0;
+    draw();
+    return;
+  }
+  if (!frame) frame = requestAnimationFrame(draw);
+}
+motion.addEventListener('change', sync);
+window.addEventListener('resize', () => {
+  resize();
+  // A reduced-motion page has no pending animation frame to repaint after a
+  // canvas resize, so render its stable frame explicitly.
+  if (motion.matches) draw();
+});
+draw();
 </script>
 </body>
 </html>
