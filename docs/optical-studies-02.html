@@ -10,7 +10,12 @@ out vec2 v_uv;
 void main(){vec2 p=vec2(float((gl_VertexID<<1)&2),float(gl_VertexID&2));v_uv=p;gl_Position=vec4(p*2.-1.,0.,1.);}`;
 const $=id=>document.getElementById(id),canvas=$('surface'),fallback=$('fallback'),media=matchMedia('(prefers-reduced-motion: reduce)');
 let gl=null,programs=[],state,displayed=null,previous=performance.now(),dirty=true,lost=false,raf=0;
-const defaults=slug=>({version:1,slug,uniforms:{grain:.48,paletteShift:.32,spectral:.62,roughness:.26},camera:[.35,.18,3.4],light:[-.55,.65,1.1],manualLight:false,time:0,playing:!media.matches});
+function defaults(slug) {
+  const selected = STUDIES.find(study => study.slug === slug);
+  const sliders = Object.entries(selected.uniforms).filter(([, contract]) => contract.ui === 'slider');
+  const uniforms = Object.fromEntries(sliders.map(([name, contract]) => [name, contract.default]));
+  return {version:1,slug,uniforms,camera:[.35,.18,3.4],light:[-.55,.65,1.1],manualLight:false,time:0,playing:!media.matches};
+}
 const requestedStudy=new URLSearchParams(location.search).get('study');
 state=defaults(STUDIES.some(study=>study.slug===requestedStudy)?requestedStudy:STUDIES[0].slug);
 const study=()=>STUDIES.find(x=>x.slug===state.slug);
