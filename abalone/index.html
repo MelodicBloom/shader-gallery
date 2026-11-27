@@ -29,7 +29,6 @@ function resize() {
   gl.viewport(0, 0, c.width, c.height);
 }
 resize();
-window.addEventListener('resize', resize);
 
 const vert = gl.createShader(gl.VERTEX_SHADER);
 gl.shaderSource(vert, 'attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}');
@@ -85,10 +84,21 @@ function draw() {
   if (!motion.matches) frame = requestAnimationFrame(draw);
 }
 function sync() {
-  if (motion.matches) { if (frame) cancelAnimationFrame(frame); frame = 0; return; }
+  if (motion.matches) {
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0;
+    draw();
+    return;
+  }
   if (!frame) frame = requestAnimationFrame(draw);
 }
 motion.addEventListener('change', sync);
+window.addEventListener('resize', () => {
+  resize();
+  // A reduced-motion page has no pending animation frame to repaint after a
+  // canvas resize, so render its stable frame explicitly.
+  if (motion.matches) draw();
+});
 draw();
 </script>
 </body>
